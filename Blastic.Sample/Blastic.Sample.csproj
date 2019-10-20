@@ -8,6 +8,12 @@
 	<RootNamespace>Blastic.Sample</RootNamespace>
 	<AssemblyName>Blastic.Sample</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="Bindables.Fody">
 	  <Version>6.0.0</Version>

@@ -6,6 +6,7 @@
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<RootNamespace>Blastic</RootNamespace>
 	<AssemblyName>Blastic</AssemblyName>
+	<ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Themes\AdaptiveCardConfig.json" />
