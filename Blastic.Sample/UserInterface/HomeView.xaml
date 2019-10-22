@@ -5,6 +5,7 @@
 			 xmlns:cal="http://www.caliburnproject.org"
 			 xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions;assembly=Blastic"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:execution="clr-namespace:Blastic.Execution;assembly=Blastic"
 			 xmlns:local="clr-namespace:Blastic.Sample.UserInterface"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d"
@@ -19,5 +20,9 @@
 										MaxWidth="600"
 										MaxHeight="500"
 										AdaptiveCard="{Binding Card}" />
+
+		<execution:ExecutionContextView Grid.Row="0"
+										Grid.RowSpan="2"
+		                                ExecutionContext="{Binding ExecutionContext}" />
 	</Grid>
 </UserControl>

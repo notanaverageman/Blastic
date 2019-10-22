@@ -1,11 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Diagnostics;
-using PropertyChanged;
 using Blastic.Services.Settings;
 using Caliburn.Micro;
-using Forge.Forms.Annotations;
-using MaterialDesignThemes.Wpf;
+using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
@@ -13,31 +12,24 @@ namespace Blastic.UserInterface.Settings
 	/// An individual setting.
 	/// </summary>
 	/// <typeparam name="T">Type of the value.</typeparam>
-	[AddINotifyPropertyChangedInterface]
-	[Form(Mode = DefaultFields.None)]
-	public class Setting<T>
+	public abstract class Setting<T>
 	{
 		private readonly ISettingsService _settingsService;
+
+		/// <summary>
+		/// Element instance that will be used when setting is shown on UI.
+		/// </summary>
+		public abstract IElement Element { get; }
+
+		/// <summary>
+		/// Presenter that will be shown on UI.
+		/// </summary>
+		public Presenter Presenter => Element.ToPresenter();
 
 		/// <summary>
 		/// Key to be used when writing to the database.
 		/// </summary>
 		public string Key { get; }
-
-		/// <summary>
-		/// Label of the string to be shown on UI.
-		/// </summary>
-		public string Label { get; set; }
-
-		/// <summary>
-		/// Help string to show on UI.
-		/// </summary>
-		public string Help { get; set; }
-
-		/// <summary>
-		/// Icon to show.
-		/// </summary>
-		public PackIconKind? Icon { get; set; }
 
 		/// <summary>
 		/// Default value to be returned when key does not exist in database.
@@ -48,15 +40,23 @@ namespace Blastic.UserInterface.Settings
 		/// This property will be bound to the setting UI. Use this property while
 		/// checking for errors.
 		/// </summary>
-		[Field(
-			Name = "{Binding " + nameof(Label) + "}",
-			Icon = "{Binding " + nameof(Icon) + "}")]
-		public T SettingValue { get; set; }
+		public IReactiveProperty<T> ReactiveSettingValue { get; set; }
+
+		/// <summary>
+		/// This property will be bound to the setting UI. Use this property while
+		/// checking for errors.
+		/// </summary>
+		public T SettingValue => ReactiveSettingValue.Value;
 
 		/// <summary>
 		/// Use this property to check for the effective value of the setting.
 		/// </summary>
-		public T Value { get; set; }
+		public IReactiveProperty<T> ReactiveValue { get; set; }
+
+		/// <summary>
+		/// Use this property to check for the effective value of the setting.
+		/// </summary>
+		public T Value => ReactiveValue.Value;
 
 		public IObservableCollection<DiagnosticMessage> DiagnosticMessages { get; }
 
@@ -67,13 +67,13 @@ namespace Blastic.UserInterface.Settings
 		{
 			_settingsService = settingsService;
 
-			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
-
 			Key = key;
 			DefaultValue = defaultValue;
 
-			Value = DefaultValue;
-			SettingValue = DefaultValue;
+			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
+
+			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
+			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
 		}
 
 		public async Task Read(CancellationToken cancellationToken)
@@ -82,8 +82,8 @@ namespace Blastic.UserInterface.Settings
 
 			await AfterRead(value, cancellationToken);
 
-			Value = value;
-			SettingValue = value;
+			ReactiveValue.Value = value;
+			ReactiveSettingValue.Value = value;
 		}
 
 		public async Task Save(CancellationToken cancellationToken)
@@ -91,7 +91,7 @@ namespace Blastic.UserInterface.Settings
 			T value = await BeforeSave(SettingValue, cancellationToken);
 
 			await _settingsService.Put(Key, value, cancellationToken);
-			Value = SettingValue;
+			ReactiveValue.Value = SettingValue;
 		}
 
 		protected virtual Task<T> AfterRead(T value, CancellationToken cancellationToken)
@@ -106,7 +106,7 @@ namespace Blastic.UserInterface.Settings
 
 		public void Revert()
 		{
-			SettingValue = Value;
+			ReactiveSettingValue.Value = Value;
 		}
 
 		public virtual string CheckError()

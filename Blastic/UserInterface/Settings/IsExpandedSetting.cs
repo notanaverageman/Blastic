@@ -2,7 +2,7 @@
 
 namespace Blastic.UserInterface.Settings
 {
-	public class IsExpandedSetting : Setting<bool>
+	public class IsExpandedSetting : BooleanSetting
 	{
 		public IsExpandedSetting(ISettingsService settingsService, string sectionName)
 			:

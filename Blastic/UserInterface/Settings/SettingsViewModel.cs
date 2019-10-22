@@ -140,6 +140,7 @@ namespace Blastic.UserInterface.Settings
 
 			dynamic settings = new ExpandoObject();
 			settings.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			settings.Owner = Application.Current.MainWindow;
 
 			await ExecutionContext.WindowManager.ShowWindowAsync(this, null, settings);
 		}

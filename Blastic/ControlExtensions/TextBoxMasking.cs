@@ -8,6 +8,7 @@ namespace Blastic.ControlExtensions
     public static class TextBoxMasking
     {
 	    public const string IntegerMask = @"^([+-]?[1-9]\d*|0)$";
+	    public const string FloatingPointMask = @"^([+-]?(?:[[:d:]]+\.?|[[:d:]]*\.[[:d:]]+))(?:[Ee][+-]?[[:d:]]+)?$";
 
 	    public static readonly DependencyProperty MaskProperty = DependencyProperty.RegisterAttached(
 	        nameof(MaskProperty).Replace("Property", ""),

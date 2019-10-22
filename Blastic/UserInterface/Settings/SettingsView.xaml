@@ -4,11 +4,11 @@
 					  xmlns:cal="http://www.caliburnproject.org"
 					  xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 					  xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-					  xmlns:controls1="clr-namespace:Blastic.Controls"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:settings="clr-namespace:Blastic.UserInterface.Settings"
 					  xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+					  xmlns:execution="clr-namespace:Blastic.Execution"
 					  mc:Ignorable="d"
 					  Width="1000"
 					  Height="600"
@@ -24,7 +24,7 @@
 					<ItemsControl.ItemTemplate>
 						<DataTemplate DataType="settings:SettingsSectionViewModel">
 							<Expander Header="{Binding SectionName}"
-							          IsExpanded="{Binding IsExpanded.SettingValue}">
+							          IsExpanded="{Binding IsExpanded.ReactiveSettingValue.Value}">
 								<ContentControl Margin="32,-8,24,16"
 												HorizontalContentAlignment="Stretch"
 												VerticalContentAlignment="Stretch"
@@ -91,6 +91,6 @@
 			</Grid>
 		</simpleChildWindow:ChildWindow>
 
-		<controls1:BusyIndicator ExecutionContext="{Binding ExecutionContext}" />
+		<execution:ExecutionContextView ExecutionContext="{Binding ExecutionContext}" />
 	</Grid>
 </controls:MetroWindow>

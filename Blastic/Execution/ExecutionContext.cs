@@ -1,7 +1,7 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Controls.DynamicControls;
 using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -27,6 +27,9 @@ namespace Blastic.Execution
 		public bool IsCancellationSupported { get; set; }
 		public CancellationTokenSource CancellationTokenSource { get; private set; }
 
+		public bool IsShowingForm { get; set; }
+		public DynamicModel Form { get; set; }
+
 		public ExecutionContext(
 			ILogger<ExecutionContext> logger,
 			IDialogService dialogService,
@@ -44,14 +47,13 @@ namespace Blastic.Execution
 			CancellationTokenSource = new CancellationTokenSource();
 		}
 
-		[MethodImpl(MethodImplOptions.NoInlining)]
 		public async Task Execute(
 			Func<CancellationToken, Task> function,
 			string progressMessage = "",
 			string successMessage = "",
 			string failMessage = "",
 			bool showProgress = true,
-			bool rethrowUnhandledException = true,
+			bool rethrowUnhandledException = false,
 			bool isCancellationSupported = true,
 			CancellationToken? customCancellationToken = null)
 		{
@@ -106,6 +108,26 @@ namespace Blastic.Execution
 				{
 					IsBusy = false;
 				}
+			}
+		}
+
+		public async Task<bool> ShowForm(DynamicModel form)
+		{
+			if (form == null)
+			{
+				throw new ArgumentNullException(nameof(form));
+			}
+
+			try
+			{
+				Form = form;
+				IsShowingForm = true;
+
+				return await Form.WaitCompletion();
+			}
+			finally
+			{
+				IsShowingForm = false;
 			}
 		}
 	}

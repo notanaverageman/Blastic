@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Material/Button.xaml" />
+		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Material/CheckBox.xaml" />
+		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Material/Group.xaml" />
+		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Material/PasswordBox.xaml" />
+		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Material/TextBox.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

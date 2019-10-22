@@ -1,28 +1,22 @@
-﻿using PropertyChanged;
+﻿using Blastic.Controls.DynamicControls.Elements;
+using Blastic.Controls.DynamicControls.Elements.Password;
 using Blastic.Services.Settings;
-using Forge.Forms.Annotations;
 
 namespace Blastic.UserInterface.Settings
 {
-	[AddINotifyPropertyChangedInterface]
-	[Form(Mode = DefaultFields.None)]
-	public class PasswordSetting<T> : Setting<T>
+	public class PasswordSetting : Setting<string>
 	{
-		// TODO: This class should be deleted when there is a way available to add attributes easily.
-
-		[Field(
-			Name = "{Binding " + nameof(Label) + "}",
-			Icon = "{Binding " + nameof(Icon) + "}")]
-		[Password]
-		public new T SettingValue { get; set; }
+		public PasswordField PasswordField { get; }
+		public override IElement Element => PasswordField;
 
 		public PasswordSetting(
 			ISettingsService settingsService,
 			string key,
-			T defaultValue)
+			string defaultValue)
 			:
 			base(settingsService, key, defaultValue)
 		{
+			PasswordField = new PasswordField(ReactiveSettingValue);
 		}
 	}
 }

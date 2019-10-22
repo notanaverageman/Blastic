@@ -1,6 +1,4 @@
 ﻿using Blastic.Execution;
-using Blastic.Services.Dialog;
-using Blastic.Services.Dialog.FileFilters;
 using Blastic.Services.Settings;
 using Blastic.UserInterface.Settings;
 using PropertyChanged;
@@ -16,8 +14,7 @@ namespace Blastic.UserInterface.Logs.Settings
 		
 		public LogSettingsViewModel(
 			ExecutionContextFactory executionContextFactory,
-			ISettingsService settingsService,
-			IDialogService dialogService)
+			ISettingsService settingsService)
 			:
 			base(executionContextFactory, settingsService)
 		{

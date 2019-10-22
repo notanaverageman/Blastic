@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Blastic.Execution.ExecutionContextView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:controls="clr-namespace:Blastic.Controls"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:dynamicControls="clr-namespace:Blastic.Controls.DynamicControls"
+			 xmlns:execution="clr-namespace:Blastic.Execution"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d">
+	<Grid>
+		<dynamicControls:DynamicControl ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}"
+										Form="{Binding ExecutionContext.Form, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
+		<controls:BusyIndicator ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
+	</Grid>
+</UserControl>

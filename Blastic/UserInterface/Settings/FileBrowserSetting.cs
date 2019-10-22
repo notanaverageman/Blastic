@@ -1,31 +1,28 @@
-﻿using Blastic.Services.Dialog;
+﻿using System.Windows;
+using Blastic.Controls.DynamicControls;
+using Blastic.Controls.DynamicControls.Elements;
+using Blastic.Controls.DynamicControls.Elements.Group;
+using Blastic.Services.Dialog;
 using Blastic.Services.Dialog.FileFilters;
 using Blastic.Services.Settings;
-using Forge.Forms;
-using Forge.Forms.Annotations;
 using MaterialDesignThemes.Wpf;
-using PropertyChanged;
+using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	[AddINotifyPropertyChangedInterface]
-	[Form(Mode = DefaultFields.None)]
-	public class FileBrowserSetting : Setting<string>, IActionHandler
+	public class FileBrowserSetting : Setting<string>
 	{
-		// TODO: This class should be deleted when there is a way available to add attributes easily.
-
 		private readonly IDialogService _dialogService;
 		private readonly IFileDialogFilter _filter;
+
+		public GroupElement GroupField { get; }
+		public override IElement Element => GroupField;
 
 		public bool IsFolderPicker { get; set; }
 		public bool IsSaveFilePicker { get; set; }
 
-		[Field(
-			Name = "{Binding " + nameof(Label) + "}",
-			Icon = "{Binding " + nameof(Icon) + "}")]
-		[Action("select", "", Placement = Placement.Inline, Icon = PackIconKind.FolderOpen)]
-		public new string SettingValue { get; set; }
-
+		public ReactiveCommand BrowseCommand { get; }
+		
 		public FileBrowserSetting(
 			ISettingsService settingsService,
 			IDialogService dialogService,
@@ -37,15 +34,26 @@ namespace Blastic.UserInterface.Settings
 		{
 			_dialogService = dialogService;
 			_filter = filter;
+
+			BrowseCommand = new ReactiveCommand().WithSubscribe(Browse);
+
+			GroupField = new GroupElement();
+			
+			// Configure after creating to be able to use internal objects, e.g. Label.
+			GroupField
+				.AddText(ReactiveSettingValue, x => x
+					.WithColumnWidth(new GridLength(1, GridUnitType.Star))
+					.WithLabel(GroupField.Label))
+				.AddAction(BrowseCommand, x => x.WithIcon(PackIconKind.Folder));
 		}
 
-		public void HandleAction(IActionContext actionContext)
+		public void Browse()
 		{
 			void SetIfNotEmpty(string path)
 			{
 				if (!string.IsNullOrEmpty(path))
 				{
-					SettingValue = path;
+					ReactiveSettingValue.Value = path;
 				}
 			}
 

@@ -1,0 +1,86 @@
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using Bindables;
+using Blastic.Controls.DynamicControls.Elements;
+using Blastic.Controls.Help;
+using Blastic.Execution;
+
+namespace Blastic.Controls.DynamicControls
+{
+	[TemplatePart(Name = "PART_RootGrid", Type = typeof(Grid))]
+	public class DynamicControl : Control
+	{
+		static DynamicControl()
+		{
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicControl), new FrameworkPropertyMetadata(typeof(DynamicControl)));
+		}
+
+		private Grid _rootGrid;
+
+		[DependencyProperty]
+		public ExecutionContext ExecutionContext { get; set; }
+
+		[DependencyProperty(OnPropertyChanged = nameof(OnFormChanged))]
+		public DynamicModel Form { get; set; }
+
+		public void Cancel()
+		{
+			Form?.Cancel();
+		}
+
+		public override void OnApplyTemplate()
+		{
+			base.OnApplyTemplate();
+
+			_rootGrid = GetTemplateChild("PART_RootGrid") as Grid;
+
+			if (_rootGrid == null)
+			{
+				throw new ArgumentException("Root grid is not defined in template.");
+			}
+
+			ResetContent();
+		}
+
+		private static void OnFormChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+		{
+			((DynamicControl)o).ResetContent();
+		}
+
+		private void ResetContent()
+		{
+			if (_rootGrid == null)
+			{
+				return;
+			}
+
+			_rootGrid.Children.Clear();
+			_rootGrid.RowDefinitions.Clear();
+
+
+			if (Form == null)
+			{
+				return;
+			}
+
+			int row = 0;
+
+			foreach (IElement element in Form.Elements)
+			{
+				_rootGrid.RowDefinitions.Add(new RowDefinition
+				{
+					Height = GridLength.Auto
+				});
+
+				Presenter presenter = element.ToPresenter();
+
+				Grid.SetRow(presenter, row);
+
+				_rootGrid.Children.Add(presenter);
+
+				row++;
+			}
+		}
+	}
+}
