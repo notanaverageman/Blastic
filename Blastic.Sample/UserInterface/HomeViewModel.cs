@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using AdaptiveCards;
 using Blastic.Caliburn;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
@@ -19,7 +18,6 @@ namespace Blastic.Sample.UserInterface
 		public bool IsFixed => true;
 
 		public string Text { get; set; }
-		public AdaptiveCard Card { get; set; }
 
 		public HomeViewModel(ExecutionContextFactory executionContextFactory) : base(executionContextFactory)
 		{

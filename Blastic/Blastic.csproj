@@ -10,15 +10,6 @@
 	<ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Themes\AdaptiveCardConfig.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Themes\AdaptiveCardConfig.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AdaptiveCards.Rendering.Wpf">
-      <Version>1.2.2</Version>
-    </PackageReference>
     <PackageReference Include="Autofac">
       <Version>4.9.4</Version>
     </PackageReference>
@@ -41,9 +32,6 @@
       <Version>6.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Forge.Forms">
-      <Version>1.1.1</Version>
     </PackageReference>
     <PackageReference Include="gong-wpf-dragdrop">
       <Version>2.0.6</Version>

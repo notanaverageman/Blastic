@@ -27,9 +27,6 @@
 		<!--  Material Design: Dragablz Compatibility  -->
 		<ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MaterialDesign.xaml" />
 
-		<!--  Forge.Forms  -->
-		<ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material.xaml" />
-
 		<ResourceDictionary Source="Theme.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 
