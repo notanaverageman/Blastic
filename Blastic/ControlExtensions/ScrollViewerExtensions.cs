@@ -1,16 +1,18 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
 	public static class ScrollViewerExtensions
 	{
-		[AttachedProperty(OnPropertyChanged = nameof(AutoScrollPropertyChanged))]
-		public static bool AutoScroll { get; set; }
-		public static bool GetAutoScroll(DependencyObject obj) { throw new WillBeImplementedByBindablesException(); }
-		public static void SetAutoScroll(DependencyObject obj, bool value) { }
-
+		public static readonly DependencyProperty AutoScrollProperty = DependencyProperty.RegisterAttached(
+			nameof(AutoScrollProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(ScrollViewerExtensions),
+			new PropertyMetadata(default, AutoScrollPropertyChanged));
+		public static bool GetAutoScroll(DependencyObject obj) => (bool)obj.GetValue(AutoScrollProperty);
+		public static void SetAutoScroll(DependencyObject obj, bool value) => obj.SetValue(AutoScrollProperty, value);
+		
 		public static void AutoScrollPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
 		{
 			if (!(d is ScrollViewer scrollViewer))
@@ -32,6 +34,7 @@ namespace Blastic.ControlExtensions
 		private static void OnScrollChanged(object sender, ScrollChangedEventArgs e)
 		{
 			// Only scroll to bottom when the extent changed. Otherwise you can't scroll up.
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			if (e.ExtentHeightChange == 0)
 			{
 				return;

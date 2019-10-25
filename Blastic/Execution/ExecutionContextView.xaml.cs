@@ -1,11 +1,19 @@
-﻿using Bindables;
+﻿using System.Windows;
 
 namespace Blastic.Execution
 {
 	public partial class ExecutionContextView
 	{
-		[DependencyProperty]
-		public ExecutionContext ExecutionContext { get; set; }
+		public static readonly DependencyProperty ExecutionContextProperty = DependencyProperty.Register(
+			nameof(ExecutionContextProperty).Replace("Property", ""),
+			typeof(ExecutionContext),
+			typeof(ExecutionContextView),
+			new PropertyMetadata(default));
+		public ExecutionContext ExecutionContext
+		{
+			get => (ExecutionContext)GetValue(ExecutionContextProperty);
+			set => SetValue(ExecutionContextProperty, value);
+		}
 
 		public ExecutionContextView()
 		{

@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 
 namespace Blastic.Controls.Help
 {
@@ -11,13 +10,37 @@ namespace Blastic.Controls.Help
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(HelpView), new FrameworkPropertyMetadata(typeof(HelpView)));
 		}
 
-		[DependencyProperty]
-		public object HelpContent { get; set; }
+		public static readonly DependencyProperty HelpContentProperty = DependencyProperty.Register(
+			nameof(HelpContentProperty).Replace("Property", ""),
+			typeof(object),
+			typeof(HelpView),
+			new PropertyMetadata(default));
+		public object HelpContent
+		{
+			get => (object)GetValue(HelpContentProperty);
+			set => SetValue(HelpContentProperty, value);
+		}
 
-		[DependencyProperty]
-		public object DisableInsteadOfCollapse { get; set; }
+		public static readonly DependencyProperty DisableInsteadOfCollapseProperty = DependencyProperty.Register(
+			nameof(DisableInsteadOfCollapseProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(HelpView),
+			new PropertyMetadata(default));
+		public bool DisableInsteadOfCollapse
+		{
+			get => (bool)GetValue(DisableInsteadOfCollapseProperty);
+			set => SetValue(DisableInsteadOfCollapseProperty, value);
+		}
 
-		[DependencyProperty]
-		public Thickness HelpIconMargin { get; set; } = new Thickness(8, 0, 0, 0);
+		public static readonly DependencyProperty HelpIconMarginProperty = DependencyProperty.Register(
+			nameof(HelpIconMarginProperty).Replace("Property", ""),
+			typeof(Thickness),
+			typeof(HelpView),
+			new PropertyMetadata(new Thickness(8, 0, 0, 0)));
+		public Thickness HelpIconMargin
+		{
+			get => (Thickness)GetValue(HelpIconMarginProperty);
+			set => SetValue(HelpIconMarginProperty, value);
+		}
 	}
 }

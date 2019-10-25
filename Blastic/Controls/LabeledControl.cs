@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 using Blastic.ControlExtensions;
 
 namespace Blastic.Controls
@@ -16,8 +15,16 @@ namespace Blastic.Controls
 				new FrameworkPropertyMetadata(typeof(LabeledControl)));
 		}
 
-		[DependencyProperty]
-		public string Label { get; set; }
+		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
+			nameof(LabelProperty).Replace("Property", ""),
+			typeof(string),
+			typeof(LabeledControl),
+			new PropertyMetadata(default));
+		public string Label
+		{
+			get => (string)GetValue(LabelProperty);
+			set => SetValue(LabelProperty, value);
+		}
 
 		public object ButtonContent
 		{

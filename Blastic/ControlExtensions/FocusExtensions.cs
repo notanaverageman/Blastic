@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using Bindables;
 using Caliburn.Micro;
 using ControlzEx;
 
@@ -9,10 +8,13 @@ namespace Blastic.ControlExtensions
 {
 	public static class FocusExtensions
 	{
-		[AttachedProperty(OnPropertyChanged = nameof(OnIsFocusedChanged))]
-		public static bool IsFocused { get; set; }
-		public static bool GetIsFocused(DependencyObject obj) { throw new WillBeImplementedByBindablesException(); }
-		public static void SetIsFocused(DependencyObject obj, bool value) { }
+		public static readonly DependencyProperty IsFocusedProperty = DependencyProperty.RegisterAttached(
+			nameof(IsFocusedProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(FocusExtensions),
+			new PropertyMetadata(default, OnIsFocusedChanged));
+		public static bool GetIsFocused(DependencyObject obj) => (bool)obj.GetValue(IsFocusedProperty);
+		public static void SetIsFocused(DependencyObject obj, bool value) => obj.SetValue(IsFocusedProperty, value);
 
 		public static void OnIsFocusedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
@@ -31,6 +33,7 @@ namespace Blastic.ControlExtensions
 			void IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs args)
 			{
 				FrameworkElement element = (FrameworkElement)sender;
+				
 				if (element.IsVisible && GetIsFocused(element))
 				{
 					element.IsVisibleChanged -= IsVisibleChanged;

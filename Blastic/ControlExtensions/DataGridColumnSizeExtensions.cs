@@ -4,29 +4,34 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
 	public class DataGridColumnSizeExtensions
 	{
-		[AttachedProperty(OnPropertyChanged = nameof(OnFixColumnFillSizeChanged))]
-		public static bool FixColumnFillSize { get; set; }
+		public static readonly DependencyProperty FixColumnFillSizeProperty = DependencyProperty.RegisterAttached(
+			nameof(FixColumnFillSizeProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(DataGridColumnSizeExtensions),
+			new PropertyMetadata(default, OnFixColumnFillSizeChanged));
+		public static bool GetFixColumnFillSizeProperty(DependencyObject obj) => (bool) obj.GetValue(FixColumnFillSizeProperty);
+		public static void SetFixColumnFillSizeProperty(DependencyObject obj, bool value) => obj.SetValue(FixColumnFillSizeProperty, value);
 
-		public static bool GetFixColumnFillSize(DependencyObject element) => throw new WillBeImplementedByBindablesException();
-		public static void SetFixColumnFillSize(DependencyObject element, bool value) { }
+		public static readonly DependencyProperty DataGridItemsSourceProperty = DependencyProperty.RegisterAttached(
+			nameof(DataGridItemsSourceProperty).Replace("Property", ""),
+			typeof(INotifyCollectionChanged),
+			typeof(DataGridColumnSizeExtensions),
+			new PropertyMetadata(default));
+		public static INotifyCollectionChanged GetDataGridItemsSource(DependencyObject obj) => (INotifyCollectionChanged)obj.GetValue(DataGridItemsSourceProperty);
+		public static void SetDataGridItemsSource(DependencyObject obj, INotifyCollectionChanged value) => obj.SetValue(DataGridItemsSourceProperty, value);
 
-		[AttachedProperty]
-		public static INotifyCollectionChanged DataGridItemsSource { get; set; }
-
-		public static INotifyCollectionChanged GetDataGridItemsSource(DependencyObject element) => throw new WillBeImplementedByBindablesException();
-		public static void SetDataGridItemsSource(DependencyObject element, INotifyCollectionChanged value) { }
-
-		[AttachedProperty]
-		public static NotifyCollectionChangedEventHandler CollectionChangedAction { get; set; }
-
-		public static NotifyCollectionChangedEventHandler GetCollectionChangedAction(DependencyObject element) => throw new WillBeImplementedByBindablesException();
-		public static void SetCollectionChangedAction(DependencyObject element, NotifyCollectionChangedEventHandler value) { }
+		public static readonly DependencyProperty CollectionChangedActionProperty = DependencyProperty.RegisterAttached(
+			nameof(CollectionChangedActionProperty).Replace("Property", ""),
+			typeof(NotifyCollectionChangedEventHandler),
+			typeof(DataGridColumnSizeExtensions),
+			new PropertyMetadata(default));
+		public static NotifyCollectionChangedEventHandler GetCollectionChangedAction(DependencyObject obj) => (NotifyCollectionChangedEventHandler)obj.GetValue(CollectionChangedActionProperty);
+		public static void SetCollectionChangedAction(DependencyObject obj, NotifyCollectionChangedEventHandler value) => obj.SetValue(CollectionChangedActionProperty, value);
 
 		private static void OnFixColumnFillSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
@@ -72,7 +77,6 @@ namespace Blastic.ControlExtensions
 			{
 				return;
 			}
-
 
 			void Action(object o, NotifyCollectionChangedEventArgs a)
 			{

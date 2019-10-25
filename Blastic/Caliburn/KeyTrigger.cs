@@ -1,19 +1,34 @@
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using Bindables;
 using Microsoft.Xaml.Behaviors;
 
 namespace Blastic.Caliburn
 {
 	public class KeyTrigger : TriggerBase<UIElement>
 	{
-		[DependencyProperty]
-		public Key Key { get; set; }
+		public static readonly DependencyProperty KeyProperty = DependencyProperty.Register(
+			nameof(KeyProperty).Replace("Property", ""),
+			typeof(Key),
+			typeof(KeyTrigger),
+			new PropertyMetadata(default));
+		public Key Key
+		{
+			get => (Key)GetValue(KeyProperty);
+			set => SetValue(KeyProperty, value);
+		}
 
-		[DependencyProperty]
-		public ModifierKeys Modifiers { get; set; }
-		
+		public static readonly DependencyProperty ModifiersProperty = DependencyProperty.Register(
+			nameof(ModifiersProperty).Replace("Property", ""),
+			typeof(ModifierKeys),
+			typeof(KeyTrigger),
+			new PropertyMetadata(default));
+		public ModifierKeys Modifiers
+		{
+			get => (ModifierKeys)GetValue(ModifiersProperty);
+			set => SetValue(ModifiersProperty, value);
+		}
+
 		protected override void OnAttached()
 		{
 			base.OnAttached();

@@ -1,15 +1,17 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
 	public static class DataGridScrollExtensions
 	{
-		[AttachedProperty(OnPropertyChanged = nameof(OnPropertyChanged))]
-		public static bool TrackSelectedItem { get; set; }
-		public static bool GetTrackSelectedItem(DependencyObject obj) { throw new WillBeImplementedByBindablesException(); }
-		public static void SetTrackSelectedItem(DependencyObject obj, bool value) { }
+		public static readonly DependencyProperty TrackSelectedItemProperty = DependencyProperty.RegisterAttached(
+			nameof(TrackSelectedItemProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(DataGridScrollExtensions),
+			new PropertyMetadata(default, OnPropertyChanged));
+		public static bool GetTrackSelectedItem(DependencyObject obj) => (bool)obj.GetValue(TrackSelectedItemProperty);
+		public static void SetTrackSelectedItem(DependencyObject obj, bool value) => obj.SetValue(TrackSelectedItemProperty, value);
 
 		public static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{

@@ -1,26 +1,25 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
 	public class PasswordBoxExtensions
 	{
-		[AttachedProperty(
-			OnPropertyChanged = nameof(OnPasswordChanged),
-			Options = FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)]
-		public static string BoundPassword { get; set; }
+		public static readonly DependencyProperty BoundPasswordProperty = DependencyProperty.RegisterAttached(
+			nameof(BoundPasswordProperty).Replace("Property", ""),
+			typeof(string),
+			typeof(PasswordBoxExtensions),
+			new FrameworkPropertyMetadata(default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnPasswordChanged));
+		public static string GetBoundPassword(DependencyObject obj) => (string)obj.GetValue(BoundPasswordProperty);
+		public static void SetBoundPassword(DependencyObject obj, string value) => obj.SetValue(BoundPasswordProperty, value);
 
-		[AttachedProperty(OnPropertyChanged = nameof(OnBindPasswordChanged))]
-		public static bool BindPassword { get; set; }
-
-		public static void SetBoundPassword(DependencyObject o, string value)
-		{
-		}
-
-		public static void SetBindPassword(DependencyObject o, bool value)
-		{
-		}
+		public static readonly DependencyProperty BindPasswordProperty = DependencyProperty.RegisterAttached(
+			nameof(BindPasswordProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(PasswordBoxExtensions),
+			new PropertyMetadata(default, OnBindPasswordChanged));
+		public static bool GetBindPassword(DependencyObject obj) => (bool)obj.GetValue(BindPasswordProperty);
+		public static void SetBindPassword(DependencyObject obj, bool value) => obj.SetValue(BindPasswordProperty, value);
 
 		private static void OnPasswordChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{

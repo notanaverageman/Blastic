@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Bindables;
 using GongSolutions.Wpf.DragDrop;
 using DragDrop = GongSolutions.Wpf.DragDrop.DragDrop;
 
@@ -7,10 +6,13 @@ namespace Blastic.ControlExtensions
 {
 	public static class DragDropExtensions
 	{
-		[AttachedProperty(OnPropertyChanged = nameof(OnLimitInsideContainerChanged))]
-		public static bool LimitInsideContainer { get; set; }
-		public static bool GetLimitInsideContainer(DependencyObject obj) { throw new WillBeImplementedByBindablesException(); }
-		public static void SetLimitInsideContainer(DependencyObject obj, bool value) { }
+		public static readonly DependencyProperty LimitInsideContainerProperty = DependencyProperty.RegisterAttached(
+			nameof(LimitInsideContainerProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(DragDropExtensions),
+			new PropertyMetadata(default, OnLimitInsideContainerChanged));
+		public static bool GetLimitInsideContainer(DependencyObject obj) => (bool)obj.GetValue(LimitInsideContainerProperty);
+		public static void SetLimitInsideContainer(DependencyObject obj, bool value) => obj.SetValue(LimitInsideContainerProperty, value);
 
 		private static void OnLimitInsideContainerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{

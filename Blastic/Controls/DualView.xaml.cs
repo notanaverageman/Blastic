@@ -1,18 +1,42 @@
 ﻿using System.Windows;
-using Bindables;
 
 namespace Blastic.Controls
 {
 	public partial class DualView
 	{
-		[DependencyProperty]
-		public bool ShowFirstView { get; set; } = true;
+		public static readonly DependencyProperty ShowFirstViewProperty = DependencyProperty.Register(
+			nameof(ShowFirstViewProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(DualView),
+			new PropertyMetadata(true));
+		public bool ShowFirstView
+		{
+			get => (bool)GetValue(ShowFirstViewProperty);
+			set => SetValue(ShowFirstViewProperty, value);
+		}
 
-		[DependencyProperty]
-		public UIElement FirstView { get; set; }
-		
-		[DependencyProperty]
-		public UIElement SecondView { get; set; }
+
+		public static readonly DependencyProperty FirstViewProperty = DependencyProperty.Register(
+			nameof(FirstViewProperty).Replace("Property", ""),
+			typeof(UIElement),
+			typeof(DualView),
+			new PropertyMetadata(default));
+		public UIElement FirstView
+		{
+			get => (UIElement)GetValue(FirstViewProperty);
+			set => SetValue(FirstViewProperty, value);
+		}
+
+		public static readonly DependencyProperty SecondViewProperty = DependencyProperty.Register(
+			nameof(SecondViewProperty).Replace("Property", ""),
+			typeof(UIElement),
+			typeof(DualView),
+			new PropertyMetadata(default));
+		public UIElement SecondView
+		{
+			get => (UIElement)GetValue(SecondViewProperty);
+			set => SetValue(SecondViewProperty, value);
+		}
 
 		public DualView()
 		{

@@ -2,23 +2,22 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
     public class HorizontalScrollingExtensions
     {
-        [AttachedProperty(OnPropertyChanged = nameof(OnEnableHorizontalScrollingWithShiftKeyChanged))]
-        public static bool EnableHorizontalScrollingWithShiftKey { get; set; }
-
-        public static bool GetEnableHorizontalScrollingWithShiftKey(DependencyObject o) => throw new WillBeImplementedByBindablesException();
-        public static void SetEnableHorizontalScrollingWithShiftKey(DependencyObject o, bool value) { }
-
+		public static readonly DependencyProperty EnableHorizontalScrollingWithShiftKeyProperty = DependencyProperty.RegisterAttached(
+			nameof(EnableHorizontalScrollingWithShiftKeyProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(HorizontalScrollingExtensions),
+			new PropertyMetadata(default, OnEnableHorizontalScrollingWithShiftKeyChanged));
+		public static bool GetEnableHorizontalScrollingWithShiftKey(DependencyObject obj) => (bool)obj.GetValue(EnableHorizontalScrollingWithShiftKeyProperty);
+		public static void SetEnableHorizontalScrollingWithShiftKey(DependencyObject obj, bool value) => obj.SetValue(EnableHorizontalScrollingWithShiftKeyProperty, value);
+		
         private static void OnEnableHorizontalScrollingWithShiftKeyChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
         {
-            UIElement uiElement = dp as UIElement;
-
-            if (uiElement == null)
+	        if (!(dp is UIElement uiElement))
             {
                 return;
             }

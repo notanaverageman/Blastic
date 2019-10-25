@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Bindables;
 using Blastic.Services.Dialog;
 using Blastic.Services.Dialog.FileFilters;
 
@@ -7,20 +6,60 @@ namespace Blastic.Controls
 {
 	public partial class FilePicker
 	{
-		[DependencyProperty(Options = FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)]
-		public string Path { get; set; }
-		
-		[DependencyProperty]
-		public IFileDialogFilter Filter { get; set; }
+		public static readonly DependencyProperty PathProperty = DependencyProperty.Register(
+			nameof(PathProperty).Replace("Property", ""),
+			typeof(string),
+			typeof(FilePicker),
+			new FrameworkPropertyMetadata(default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+		public string Path
+		{
+			get => (string)GetValue(PathProperty);
+			set => SetValue(PathProperty, value);
+		}
 
-		[DependencyProperty]
-		public IDialogService DialogService { get; set; }
+		public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
+			nameof(FilterProperty).Replace("Property", ""),
+			typeof(IFileDialogFilter),
+			typeof(FilePicker),
+			new PropertyMetadata(default));
+		public IFileDialogFilter Filter
+		{
+			get => (IFileDialogFilter)GetValue(FilterProperty);
+			set => SetValue(FilterProperty, value);
+		}
 
-		[DependencyProperty]
-		public bool IsFolderPicker { get; set; }
+		public static readonly DependencyProperty DialogServiceProperty = DependencyProperty.Register(
+			nameof(DialogServiceProperty).Replace("Property", ""),
+			typeof(IDialogService),
+			typeof(FilePicker),
+			new PropertyMetadata(default));
+		public IDialogService DialogService
+		{
+			get => (IDialogService)GetValue(DialogServiceProperty);
+			set => SetValue(DialogServiceProperty, value);
+		}
 
-		[DependencyProperty]
-		public bool IsSaveFilePicker { get; set; }
+		public static readonly DependencyProperty IsFolderPickerProperty = DependencyProperty.Register(
+			nameof(IsFolderPickerProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(FilePicker),
+			new PropertyMetadata(default));
+		public bool IsFolderPicker
+		{
+			get => (bool)GetValue(IsFolderPickerProperty);
+			set => SetValue(IsFolderPickerProperty, value);
+		}
+
+		public static readonly DependencyProperty IsSaveFilePickerProperty = DependencyProperty.Register(
+			nameof(IsSaveFilePickerProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(FilePicker),
+			new PropertyMetadata(default));
+		public bool IsSaveFilePicker
+		{
+			get => (bool)GetValue(IsSaveFilePickerProperty);
+			set => SetValue(IsSaveFilePickerProperty, value);
+		}
 
 		public FilePicker()
 		{

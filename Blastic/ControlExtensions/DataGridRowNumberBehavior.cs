@@ -3,29 +3,30 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
     public class DataGridRowNumberBehavior
     {
-        [AttachedProperty(OnPropertyChanged = nameof(OnDisplayRowNumberChanged))]
-        public static bool DisplayRowNumber { get; set; }
+		public static readonly DependencyProperty DisplayRowNumberProperty = DependencyProperty.RegisterAttached(
+			nameof(DisplayRowNumberProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(DataGridRowNumberBehavior),
+			new PropertyMetadata(default, OnDisplayRowNumberChanged));
+		public static bool GetDisplayRowNumber(DependencyObject obj) => (bool)obj.GetValue(DisplayRowNumberProperty);
+		public static void SetDisplayRowNumber(DependencyObject obj, bool value) => obj.SetValue(DisplayRowNumberProperty, value);
 
-	    public static bool GetDisplayRowNumber(DependencyObject obj) => throw new WillBeImplementedByBindablesException();
-	    public static void SetDisplayRowNumber(DependencyObject obj, bool newValue) { }
-
-        [AttachedProperty]
-        public static int RowNumberOffset { get; set; }
-
-        public static int GetRowNumberOffset(DependencyObject obj) => throw new WillBeImplementedByBindablesException();
-        public static void SetRowNumberOffset(DependencyObject obj, bool newValue) { }
+		public static readonly DependencyProperty RowNumberOffsetProperty = DependencyProperty.RegisterAttached(
+			nameof(RowNumberOffsetProperty).Replace("Property", ""),
+			typeof(int),
+			typeof(DataGridRowNumberBehavior),
+			new PropertyMetadata(default));
+		public static int GetRowNumberOffset(DependencyObject obj) => (int)obj.GetValue(RowNumberOffsetProperty);
+		public static void SetRowNumberOffset(DependencyObject obj, int value) => obj.SetValue(RowNumberOffsetProperty, value);
 
         private static void OnDisplayRowNumberChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
         {
-            DataGrid dataGrid = target as DataGrid;
-
-            if (dataGrid == null)
+	        if (!(target is DataGrid dataGrid))
             {
                 return;
             }

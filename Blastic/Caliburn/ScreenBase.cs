@@ -1,9 +1,9 @@
-using Blastic.Caliburn.Reactive;
 using Blastic.Execution;
+using Caliburn.Micro;
 
 namespace Blastic.Caliburn
 {
-	public class ScreenBase : ReactiveScreen, IHasExecutionContext
+	public class ScreenBase : Screen, IHasExecutionContext
 	{
 		public ExecutionContext ExecutionContext { get; }
 		public ExecutionContextFactory ExecutionContextFactory { get; }

@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
 	public class GridExtensions
 	{
-		[AttachedProperty(OnPropertyChanged = nameof(OnRowDefinitionsChanged))]
-		public static string RowDefinitions { get; set; }
+		public static readonly DependencyProperty RowDefinitionsProperty = DependencyProperty.RegisterAttached(
+			nameof(RowDefinitionsProperty).Replace("Property", ""),
+			typeof(string),
+			typeof(GridExtensions),
+			new PropertyMetadata(default, OnRowDefinitionsChanged));
+		public static string GetRowDefinitions(DependencyObject obj) => (string)obj.GetValue(RowDefinitionsProperty);
+		public static void SetRowDefinitions(DependencyObject obj, string value) => obj.SetValue(RowDefinitionsProperty, value);
 
-		public static void SetRowDefinitions(DependencyObject obj, string value)
-		{
-		}
+		public static readonly DependencyProperty ColumnDefinitionsProperty = DependencyProperty.RegisterAttached(
+			nameof(ColumnDefinitionsProperty).Replace("Property", ""),
+			typeof(string),
+			typeof(GridExtensions),
+			new PropertyMetadata(default, OnColumnDefinitionsChanged));
+		public static string GetColumnDefinitions(DependencyObject obj) => (string)obj.GetValue(ColumnDefinitionsProperty);
+		public static void SetColumnDefinitions(DependencyObject obj, string value) => obj.SetValue(ColumnDefinitionsProperty, value);
 
 		private static void OnRowDefinitionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			Grid targetGrid = d as Grid;
-			string rows = e.NewValue as string;
-
-			if (targetGrid == null || rows == null)
+			if (!(d is Grid targetGrid) || !(e.NewValue is string rows))
 			{
 				return;
 			}
@@ -41,13 +46,6 @@ namespace Blastic.ControlExtensions
 					});
 				}
 			}
-		}
-
-		[AttachedProperty(OnPropertyChanged = nameof(OnColumnDefinitionsChanged))]
-		public static string ColumnDefinitions { get; set; }
-
-		public static void SetColumnDefinitions(DependencyObject obj, string value)
-		{
 		}
 
 		private static void OnColumnDefinitionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

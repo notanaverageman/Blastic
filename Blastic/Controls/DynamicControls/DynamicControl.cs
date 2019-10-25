@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Bindables;
 using Blastic.Controls.DynamicControls.Elements;
-using Blastic.Controls.Help;
 using Blastic.Execution;
 
 namespace Blastic.Controls.DynamicControls
@@ -16,13 +14,29 @@ namespace Blastic.Controls.DynamicControls
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicControl), new FrameworkPropertyMetadata(typeof(DynamicControl)));
 		}
 
+		public static readonly DependencyProperty ExecutionContextProperty = DependencyProperty.Register(
+			nameof(ExecutionContextProperty).Replace("Property", ""),
+			typeof(ExecutionContext),
+			typeof(DynamicControl),
+			new PropertyMetadata(default));
+		public ExecutionContext ExecutionContext
+		{
+			get => (ExecutionContext)GetValue(ExecutionContextProperty);
+			set => SetValue(ExecutionContextProperty, value);
+		}
+
+		public static readonly DependencyProperty FormProperty = DependencyProperty.Register(
+			nameof(FormProperty).Replace("Property", ""),
+			typeof(DynamicModel),
+			typeof(DynamicControl),
+			new PropertyMetadata(default, OnFormChanged));
+		public DynamicModel Form
+		{
+			get => (DynamicModel)GetValue(FormProperty);
+			set => SetValue(FormProperty, value);
+		}
+
 		private Grid _rootGrid;
-
-		[DependencyProperty]
-		public ExecutionContext ExecutionContext { get; set; }
-
-		[DependencyProperty(OnPropertyChanged = nameof(OnFormChanged))]
-		public DynamicModel Form { get; set; }
 
 		public void Cancel()
 		{

@@ -2,32 +2,30 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using Bindables;
 
 namespace Blastic.ControlExtensions
 {
 	public class PanelExtensions
 	{
-		public static Thickness GetPadding(DependencyObject obj) => (Thickness)obj.GetValue(PaddingProperty);
-		public static void SetPadding(DependencyObject obj, Thickness value) => obj.SetValue(PaddingProperty, value);
-		public static readonly DependencyProperty PaddingProperty =
-			DependencyProperty.RegisterAttached(nameof(PaddingProperty).Replace("Property", ""),
+		public static readonly DependencyProperty PaddingProperty = DependencyProperty.RegisterAttached(
+			nameof(PaddingProperty).Replace("Property", ""),
 			typeof(Thickness),
 			typeof(PanelExtensions),
 			new PropertyMetadata(default(Thickness)));
+		public static Thickness GetPadding(DependencyObject obj) => (Thickness)obj.GetValue(PaddingProperty);
+		public static void SetPadding(DependencyObject obj, Thickness value) => obj.SetValue(PaddingProperty, value);
 
-		[AttachedProperty(OnPropertyChanged = nameof(OnEnablePaddingChanged))]
-		public static bool EnablePadding { get; set; }
-
-		public static void SetEnablePadding(DependencyObject obj, bool value)
-		{
-		}
-
+		public static readonly DependencyProperty EnablePaddingProperty = DependencyProperty.RegisterAttached(
+			nameof(EnablePaddingProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(PanelExtensions),
+			new PropertyMetadata(default, OnEnablePaddingChanged));
+		public static bool GetEnablePadding(DependencyObject obj) => (bool)obj.GetValue(EnablePaddingProperty);
+		public static void SetEnablePadding(DependencyObject obj, bool value) => obj.SetValue(EnablePaddingProperty, value);
+		
 		private static void OnEnablePaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			FrameworkElement element = d as FrameworkElement;
-
-			if (element == null)
+			if (!(d is FrameworkElement element))
 			{
 				return;
 			}
