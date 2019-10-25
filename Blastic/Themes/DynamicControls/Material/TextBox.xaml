@@ -32,6 +32,7 @@
 								 VerticalAlignment="Center"
 								 controlExtensions:TextBoxMasking.Mask="{Binding Mask.Value, RelativeSource={RelativeSource AncestorType=text:TextPresenter}}"
 								 materialDesign:HintAssist.Hint="{Binding Label.Value, RelativeSource={RelativeSource AncestorType=text:TextPresenter}}"
+								 IsEnabled="{Binding IsEnabledReactive.Value, RelativeSource={RelativeSource AncestorType=text:TextPresenter}}"
 								 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
 								 Text="{Binding Property.Value, RelativeSource={RelativeSource AncestorType=text:TextPresenter}, UpdateSourceTrigger=PropertyChanged}" />
 

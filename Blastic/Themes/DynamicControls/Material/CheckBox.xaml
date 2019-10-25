@@ -32,6 +32,7 @@
 								  VerticalAlignment="Center"
 								  Content="{Binding Label.Value, RelativeSource={RelativeSource AncestorType=boolean:BooleanPresenter}}"
 								  IsChecked="{Binding Property.Value, RelativeSource={RelativeSource AncestorType=boolean:BooleanPresenter}}"
+								  IsEnabled="{Binding IsEnabledReactive.Value, RelativeSource={RelativeSource AncestorType=boolean:BooleanPresenter}}"
 								  Style="{StaticResource MaterialDesignCheckBox}" />
 
 						<help:HelpView Grid.Column="2"

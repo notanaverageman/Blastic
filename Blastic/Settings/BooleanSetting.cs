@@ -2,7 +2,7 @@
 using Blastic.Controls.DynamicControls.Elements.Boolean;
 using Blastic.Services.Settings;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Settings
 {
 	public class BooleanSetting : Setting<bool>
 	{

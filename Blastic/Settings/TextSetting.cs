@@ -2,7 +2,7 @@
 using Blastic.Controls.DynamicControls.Elements.Text;
 using Blastic.Services.Settings;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Settings
 {
 	public class TextSetting : Setting<string>
 	{

@@ -10,6 +10,8 @@ namespace Blastic.Controls.DynamicControls.Elements
 		IReactiveProperty<string> Label { get; set; }
 		IReactiveProperty<string> Help { get; set; }
 
+		IReactiveProperty<bool> IsEnabled { get; set; }
+
 		Thickness Margin { get; set; }
 		Thickness Padding { get; set; }
 		Thickness IconMargin { get; set; }
@@ -25,6 +27,8 @@ namespace Blastic.Controls.DynamicControls.Elements
 		public IReactiveProperty<string> Label { get; set; }
 		public IReactiveProperty<string> Help { get; set; }
 
+		public IReactiveProperty<bool> IsEnabled { get; set; }
+
 		public Thickness Margin { get; set; }
 		public Thickness Padding { get; set; }
 		public Thickness IconMargin { get; set; }
@@ -37,6 +41,8 @@ namespace Blastic.Controls.DynamicControls.Elements
 			Icon = new ReactivePropertySlim<PackIconKind?>();
 			Label = new ReactivePropertySlim<string>();
 			Help = new ReactivePropertySlim<string>();
+
+			IsEnabled = new ReactivePropertySlim<bool>(true);
 
 			IconSize = 18;
 			Margin = new Thickness(8, 16, 8, 16);
@@ -51,6 +57,8 @@ namespace Blastic.Controls.DynamicControls.Elements
 			presenter.Help = Help;
 			presenter.Label = Label;
 			presenter.IconKind = Icon;
+
+			presenter.IsEnabledReactive = IsEnabled;
 
 			presenter.Margin = Margin;
 			presenter.Padding = Padding;
@@ -100,6 +108,12 @@ namespace Blastic.Controls.DynamicControls.Elements
 		public static T WithHelp<T>(this T element, IReactiveProperty<string> help) where T : IElement
 		{
 			element.Help = help;
+			return element;
+		}
+
+		public static T WithIsEnabled<T>(this T element, IReactiveProperty<bool> isEnabled) where T : IElement
+		{
+			element.IsEnabled = isEnabled;
 			return element;
 		}
 

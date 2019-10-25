@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -9,10 +8,12 @@ using Blastic.Caliburn;
 using Blastic.Diagnostics;
 using Blastic.Execution;
 using Blastic.Services.Settings;
+using Blastic.Settings;
+using Caliburn.Micro;
 
 namespace Blastic.UserInterface.Settings
 {
-	public abstract class SettingsSectionViewModel : ConductorAllActiveBase<object>, ISettingsSectionViewModel, IDataErrorInfo
+	public abstract class SettingsSectionViewModel : ConductorAllActiveBase<object>, ISettingsSectionViewModel
 	{
 		private Dictionary<string, SettingInfo> _settings;
 
@@ -74,34 +75,18 @@ namespace Blastic.UserInterface.Settings
 
 			foreach (SettingInfo info in _settings.Values)
 			{
-				string errorMessage = (string)info.CheckErrorMethod.Invoke(info.Setting, Array.Empty<object>());
+				IObservableCollection<DiagnosticMessage> messages = (IObservableCollection<DiagnosticMessage>)info.DiagnosticMessagesProperty.GetValue(info.Setting);
 
-				if (string.IsNullOrEmpty(errorMessage))
+				if (messages?.Any() != true)
 				{
 					continue;
 				}
 
-				DiagnosticMessage diagnosticMessage = new DiagnosticMessage(Severity.Error, errorMessage);
-				diagnosticMessages.Add(diagnosticMessage);
+				diagnosticMessages.AddRange(messages);
 			}
 
 			return Task.FromResult((IEnumerable<DiagnosticMessage>)diagnosticMessages);
 		}
-
-		public string this[string columnName]
-		{
-			get
-			{
-				if (_settings.TryGetValue(columnName, out SettingInfo info))
-				{
-					return (string)info.CheckErrorMethod.Invoke(info.Setting, Array.Empty<object>());
-				}
-
-				return null;
-			}
-		}
-
-		public string Error => null;
 
 		private static bool IsAssignableToGenericType(Type givenType, Type genericType)
 		{
@@ -137,7 +122,7 @@ namespace Blastic.UserInterface.Settings
 			public MethodInfo SaveMethod { get; }
 			public MethodInfo ReadMethod { get; }
 			public MethodInfo RevertMethod { get; }
-			public MethodInfo CheckErrorMethod { get; }
+			public PropertyInfo DiagnosticMessagesProperty { get; }
 
 			public SettingInfo(PropertyInfo propertyInfo, object setting)
 			{
@@ -146,7 +131,7 @@ namespace Blastic.UserInterface.Settings
 				SaveMethod = GetMethodInfo(nameof(Setting<object>.Save), propertyInfo.PropertyType);
 				ReadMethod = GetMethodInfo(nameof(Setting<object>.Read), propertyInfo.PropertyType);
 				RevertMethod = GetMethodInfo(nameof(Setting<object>.Revert), propertyInfo.PropertyType);
-				CheckErrorMethod = GetMethodInfo(nameof(Setting<object>.CheckError), propertyInfo.PropertyType);
+				DiagnosticMessagesProperty = GetPropertyInfo(nameof(Setting<object>.DiagnosticMessages), propertyInfo.PropertyType);
 			}
 
 			private MethodInfo GetMethodInfo(
@@ -161,6 +146,20 @@ namespace Blastic.UserInterface.Settings
 				}
 
 				return methodInfo;
+			}
+
+			private PropertyInfo GetPropertyInfo(
+				string propertyName,
+				Type propertyType)
+			{
+				PropertyInfo propertyInfo = propertyType.GetProperty(propertyName);
+
+				if (propertyInfo == null)
+				{
+					throw new InvalidOperationException($"{propertyName} property is not found on {propertyType}!");
+				}
+
+				return propertyInfo;
 			}
 		}
 

@@ -13,6 +13,8 @@ namespace Blastic.Controls.DynamicControls.Elements
 		public IReactiveProperty<string> Label { get; set; }
 		public IReactiveProperty<PackIconKind?> IconKind { get; set; }
 
+		public IReactiveProperty<bool> IsEnabledReactive { get; set; }
+
 		public GridLength ColumnWidth { get; set; }
 		public Thickness IconMargin { get; set; }
 		public double IconSize { get; set; }

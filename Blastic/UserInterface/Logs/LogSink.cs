@@ -20,7 +20,7 @@ namespace Blastic.UserInterface.Logs
 
 			string source = "";
 
-			if (properties.TryGetValue("SourceContext", out LogEventPropertyValue sourceValue))
+			if (properties.TryGetValue("ExecutionContextSource", out LogEventPropertyValue sourceValue))
 			{
 				source = sourceValue.ToString();
 			}

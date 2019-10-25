@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Controls.DynamicControls;
@@ -88,7 +90,12 @@ namespace Blastic.Execution
 			}
 			catch (Exception exception)
 			{
-				Logger.LogError(exception, exception.Message);
+				string source = GetFunctionSignature(function);
+
+				using (Logger.BeginScope(new Dictionary<string, object> { { "ExecutionContextSource", source } }))
+				{
+					Logger.LogError(exception, exception.Message);
+				}
 
 				MessageQueue.Enqueue(
 					string.IsNullOrEmpty(failMessage)
@@ -109,6 +116,34 @@ namespace Blastic.Execution
 					IsBusy = false;
 				}
 			}
+		}
+
+		private string GetFunctionSignature(Func<CancellationToken, Task> function)
+		{
+			MethodInfo method = function.Method;
+			Type type = method.DeclaringType;
+
+			while (type?.DeclaringType != null && type.Name.StartsWith("<"))
+			{
+				type = type.DeclaringType;
+			}
+
+			string methodName = method.Name;
+
+			int start = methodName.IndexOf("<");
+			int end = methodName.IndexOf(">");
+
+			if (start >= 0 && end >= 0)
+			{
+				methodName = methodName.Substring(start + 1, end - start - 1);
+			}
+
+			if (type != null)
+			{
+				return type.FullName + "." + methodName;
+			}
+
+			return typeof(ExecutionContext).FullName + "." + nameof(Execute);
 		}
 
 		public async Task<bool> ShowForm(DynamicModel form)

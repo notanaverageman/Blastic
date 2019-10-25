@@ -2,7 +2,7 @@
 using Blastic.Controls.DynamicControls.Elements.Password;
 using Blastic.Services.Settings;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Settings
 {
 	public class PasswordSetting : Setting<string>
 	{

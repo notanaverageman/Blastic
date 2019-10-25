@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Diagnostics;
@@ -6,7 +7,7 @@ using Blastic.Services.Settings;
 using Caliburn.Micro;
 using Reactive.Bindings;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Settings
 {
 	/// <summary>
 	/// An individual setting.
@@ -15,6 +16,7 @@ namespace Blastic.UserInterface.Settings
 	public abstract class Setting<T>
 	{
 		private readonly ISettingsService _settingsService;
+		private IDisposable _isEnabledSubscription;
 
 		/// <summary>
 		/// Element instance that will be used when setting is shown on UI.
@@ -40,7 +42,7 @@ namespace Blastic.UserInterface.Settings
 		/// This property will be bound to the setting UI. Use this property while
 		/// checking for errors.
 		/// </summary>
-		public IReactiveProperty<T> ReactiveSettingValue { get; set; }
+		public ReactiveProperty<T> ReactiveSettingValue { get; set; }
 
 		/// <summary>
 		/// This property will be bound to the setting UI. Use this property while
@@ -51,7 +53,7 @@ namespace Blastic.UserInterface.Settings
 		/// <summary>
 		/// Use this property to check for the effective value of the setting.
 		/// </summary>
-		public IReactiveProperty<T> ReactiveValue { get; set; }
+		public ReactiveProperty<T> ReactiveValue { get; set; }
 
 		/// <summary>
 		/// Use this property to check for the effective value of the setting.
@@ -72,15 +74,22 @@ namespace Blastic.UserInterface.Settings
 
 			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
 
+
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
+
+			ReactiveSettingValue.SetValidateNotifyError(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
+			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
 		}
 
 		public async Task Read(CancellationToken cancellationToken)
 		{
+			_isEnabledSubscription?.Dispose();
+			_isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.ForceValidate());
+
 			T value = await _settingsService.Get(Key, DefaultValue, cancellationToken);
 
-			await AfterRead(value, cancellationToken);
+			value = await AfterRead(value, cancellationToken);
 
 			ReactiveValue.Value = value;
 			ReactiveSettingValue.Value = value;
@@ -116,12 +125,23 @@ namespace Blastic.UserInterface.Settings
 
 		public virtual void PopulateDiagnosticMessages()
 		{
+			string error = CheckError();
+
+			if (!string.IsNullOrEmpty(error))
+			{
+				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error));
+			}
 		}
 
-		// Will be called by Fody.
 		private void OnSettingValueChanged()
 		{
 			DiagnosticMessages.Clear();
+			
+			if (Element?.IsEnabled.Value != true)
+			{
+				return;
+			}
+
 			PopulateDiagnosticMessages();
 		}
 	}

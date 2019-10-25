@@ -6,6 +6,7 @@
 					  xmlns:converters="clr-namespace:Blastic.Converters"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					  xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+					  xmlns:execution="clr-namespace:Blastic.Execution"
 					  xmlns:main="clr-namespace:Blastic.UserInterface.TabbedMain"
 					  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -84,6 +85,7 @@
 				</StackPanel>
 			</Grid>
 
+			<execution:ExecutionContextView ExecutionContext="{Binding ExecutionContext}" />
 			<materialDesign:Snackbar MessageQueue="{Binding ExecutionContext.MessageQueue}" />
 		</Grid>
 	</materialDesign:DialogHost>

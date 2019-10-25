@@ -7,7 +7,7 @@ namespace Blastic.Initialization.Steps
 {
 	public class ReadSettingsStep : IInitializationStep
 	{
-		public static readonly Order Order = new Order(0);
+		public static readonly Order Order = new Order(-1);
 
 		private readonly SettingsViewModel _settingsViewModel;
 

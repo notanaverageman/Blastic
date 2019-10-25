@@ -1,4 +1,5 @@
 ﻿using Blastic.Services.Settings;
+using Blastic.Settings;
 
 namespace Blastic.UserInterface.Settings
 {

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,18 +15,21 @@ namespace Blastic.Data.Migrations
 			Version targetVersion,
 			CancellationToken cancellationToken)
 		{
-			Debug.Assert(connection != null);
-			Debug.Assert(currentVersion != null);
-			Debug.Assert(targetVersion != null);
-
 			if (currentVersion == targetVersion)
 			{
+				return;
+			}
+
+			if (currentVersion == null)
+			{
+				await MigrateUpAsync(connection, cancellationToken);
 				return;
 			}
 
 			if (currentVersion < targetVersion && Version <= targetVersion)
 			{
 				await MigrateUpAsync(connection, cancellationToken);
+				return;
 			}
 
 			if (currentVersion > targetVersion && Version >= targetVersion)

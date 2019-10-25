@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Blastic.Caliburn;
@@ -19,9 +20,15 @@ namespace Blastic.Sample.UserInterface
 
 		public string Text { get; set; }
 
-		public HomeViewModel(ExecutionContextFactory executionContextFactory) : base(executionContextFactory)
+		public HomeViewModel(
+			ExecutionContextFactory executionContextFactory,
+			TestSettingsViewModel testSettings)
+			:
+			base(executionContextFactory)
 		{
 			Order = new Order(1);
+
+			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text = x);
 		}
 
 		protected override Task OnInitializeAsync(CancellationToken cancellationToken)

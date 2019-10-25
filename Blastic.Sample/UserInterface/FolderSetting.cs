@@ -1,7 +1,8 @@
 ﻿using System.IO;
+using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
-using Blastic.UserInterface.Settings;
+using Blastic.Settings;
 
 namespace Blastic.Sample.UserInterface
 {
@@ -16,8 +17,8 @@ namespace Blastic.Sample.UserInterface
 				"Blastic.Sample.Program.WorkspaceFolder",
 				"")
 		{
-			Element.Label.Value = "Workspace folder";
-			Element.Help.Value = "Workspace folder help content.";
+			Element.WithLabel("Workspace folder");
+			Element.WithHelp("Workspace folder help content.");
 
 			IsFolderPicker = true;
 		}
@@ -25,7 +26,7 @@ namespace Blastic.Sample.UserInterface
 		public override string CheckError()
 		{
 			return Directory.Exists(SettingValue)
-				? ""
+				? null
 				: "Workspace directory does not exist.";
 		}
 	}

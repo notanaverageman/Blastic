@@ -1,5 +1,6 @@
-﻿using Blastic.Services.Settings;
-using Blastic.UserInterface.Settings;
+﻿using Blastic.Controls.DynamicControls.Elements;
+using Blastic.Services.Settings;
+using Blastic.Settings;
 
 namespace Blastic.UserInterface.Logs.Settings
 {
@@ -9,8 +10,8 @@ namespace Blastic.UserInterface.Logs.Settings
 			:
 			base(settingsService, "Log.OpenLogsWindowOnError", false)
 		{
-			Element.Label.Value = "Open logs window on error";
-			Element.Help.Value = "Open the logs window whenever an error log is printed.";
+			Element.WithLabel("Open logs window on error");
+			Element.WithHelp("Open the logs window whenever an error log is printed.");
 		}
 	}
 }

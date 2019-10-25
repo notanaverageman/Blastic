@@ -24,19 +24,13 @@ namespace Blastic.Sample
 				}))
 				.Configure(x => x.AddJsonFile("AppSettings.json"))
 				.RegisterViewAssembly<Program>()
+				.RegisterSettingsAssembly<Program>()
+				.RegisterInitializationStepsAssembly<Program>()
 				.RegisterMainTab<HomeViewModel>()
 				.AddLogsWindow()
 				.AddSettingsWindow()
 				.AddSettingsService()
 				.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
-				.Configure(builder =>
-				{
-					builder
-						.RegisterAssemblyTypes(typeof(Program).Assembly)
-						.AssignableTo<ISettingsSectionViewModel>()
-						.AsImplementedInterfaces()
-						.AsSelf();
-				})
 				.Run<TabbedMainViewModel>();
 		}
 	}

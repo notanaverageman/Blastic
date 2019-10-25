@@ -16,6 +16,16 @@ namespace Blastic.Initialization.Extensions
 {
 	public static class ApplicationExtensions
 	{
+		public static BlasticApplication RegisterInitializationStepsAssembly<T>(this BlasticApplication application)
+		{
+			return application.RegisterTypes<T, IInitializationStep>();
+		}
+
+		public static BlasticApplication RegisterSettingsAssembly<T>(this BlasticApplication application)
+		{
+			return application.RegisterTypes<T, ISettingsSectionViewModel>();
+		}
+
 		public static BlasticApplication RegisterMainTab<T>(this BlasticApplication application) where T : IMainTab
 		{
 			return application.Configure(builder =>
@@ -23,6 +33,19 @@ namespace Blastic.Initialization.Extensions
 				builder.RegisterType<T>()
 					.SingleInstance()
 					.As<IMainTab>();
+			});
+		}
+
+		private static BlasticApplication RegisterTypes<TAssembly, TBase>(this BlasticApplication application)
+		{
+			return application.Configure(builder =>
+			{
+				builder
+					.RegisterAssemblyTypes(typeof(TAssembly).Assembly)
+					.AssignableTo<TBase>()
+					.AsImplementedInterfaces()
+					.AsSelf()
+					.SingleInstance();
 			});
 		}
 

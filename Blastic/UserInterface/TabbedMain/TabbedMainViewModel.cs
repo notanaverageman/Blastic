@@ -22,6 +22,7 @@ namespace Blastic.UserInterface.TabbedMain
 		IHandle<OpenLogsEvent>
 	{
 		private readonly List<IInitializationStep> _initializationSteps;
+		private bool _isInitializationStepsRun;
 
 		public ProductInformation ProductInformation { get; }
 		public LogsViewModel LogsViewModel { get; }
@@ -64,8 +65,13 @@ namespace Blastic.UserInterface.TabbedMain
 			}
 		}
 
-		protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+		protected override async Task OnActivateAsync(CancellationToken cancellationToken)
 		{
+			if (_isInitializationStepsRun)
+			{
+				return;
+			}
+
 			foreach (IInitializationStep initializationStep in _initializationSteps)
 			{
 				if (!await initializationStep.ShouldExecute(cancellationToken))
@@ -79,10 +85,12 @@ namespace Blastic.UserInterface.TabbedMain
 					initializationStep.SuccessMessage,
 					initializationStep.FailureMessage,
 					initializationStep.ShowBusyIndicator,
-					rethrowUnhandledException: true,
+					rethrowUnhandledException: false,
 					initializationStep.IsCancellationSupported,
 					cancellationToken);
 			}
+
+			_isInitializationStepsRun = true;
 		}
 
 		public async Task ShowLogs()

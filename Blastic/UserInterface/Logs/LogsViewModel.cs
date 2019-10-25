@@ -69,6 +69,7 @@ namespace Blastic.UserInterface.Logs
 
 			dynamic settings = new ExpandoObject();
 			settings.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			settings.Owner = Application.Current.MainWindow;
 
 			await _windowManager.ShowWindowAsync(this, null, settings);
 		}

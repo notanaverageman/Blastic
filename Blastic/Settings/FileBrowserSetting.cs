@@ -8,7 +8,7 @@ using Blastic.Services.Settings;
 using MaterialDesignThemes.Wpf;
 using Reactive.Bindings;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Settings
 {
 	public class FileBrowserSetting : Setting<string>
 	{

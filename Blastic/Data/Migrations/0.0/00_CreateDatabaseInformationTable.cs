@@ -1,23 +1,23 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Data.ProviderSpecific;
 
-namespace Blastic.Data.ProgramData.Migrations._0._0
+namespace Blastic.Data.Migrations._0._0
 {
-	public class CreateSettingsTable : ProgramDatabaseMigrationBase
+	public class CreateDatabaseInformationTable : MigrationBase
 	{
 		public override Version Version { get; } = new Version(0, 0, 0);
-		public override int Order { get; } = 1;
+		public override int Order { get; } = 0;
 
 		protected override async Task MigrateUpAsync(Connection connection, CancellationToken cancellationToken)
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = $@"CREATE TABLE Settings (
-										Key		{Placeholders.NVarCharMaxColumnPlaceholder} PRIMARY KEY,
-										Value	{Placeholders.NVarCharMaxColumnPlaceholder}
-									);";
+			command.CommandText = "CREATE TABLE DatabaseInformation(Version NVARCHAR(255) PRIMARY KEY)";
+			await command.ExecuteNonQueryAsync(cancellationToken);
+
+			command.CommandText = "INSERT INTO DatabaseInformation (Version) VALUES (@Version)";
+			command.AddParameterWithValue("@Version", Version.ToString());
 
 			await command.ExecuteNonQueryAsync(cancellationToken);
 		}
@@ -26,7 +26,7 @@ namespace Blastic.Data.ProgramData.Migrations._0._0
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "DROP TABLE Settings";
+			command.CommandText = "DROP TABLE DatabaseInformation";
 			await command.ExecuteNonQueryAsync(cancellationToken);
 		}
 	}

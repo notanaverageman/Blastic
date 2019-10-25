@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using Blastic.Data.Migrations;
+using Blastic.Data.Migrations._0._0;
 using Blastic.Data.Tables;
 using Microsoft.Extensions.Logging;
 
@@ -33,38 +34,36 @@ namespace Blastic.Data
 
 		public async Task<bool> IsMigrationAvailable(CancellationToken cancellationToken)
 		{
-			using (Connection connection = ConnectionFactory.CreateConnection())
-			{
-				Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
-				Version newVersion = GetMigrations()
-					.Select(Activator.CreateInstance)
-					.Cast<MigrationBase>()
-					.Max(x => x.Version);
+			using Connection connection = ConnectionFactory.CreateConnection();
 
-				return currentVersion != newVersion;
-			}
+			Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
+			Version newVersion = GetMigrations()
+				.Select(Activator.CreateInstance)
+				.Cast<MigrationBase>()
+				.Max(x => x.Version);
+
+			return currentVersion != newVersion;
 		}
 
 		public async Task MigrateAsync(CancellationToken cancellationToken, Version targetVersion = null)
 		{
-			using (TransactionScope transactionScope = CreateTransactionScope())
-			using (Connection connection = ConnectionFactory.CreateConnection())
-			using (Logger.BeginScope("Applying migrations."))
+			using TransactionScope transactionScope = CreateTransactionScope();
+			using Connection connection = ConnectionFactory.CreateConnection();
+			using IDisposable _ = Logger.BeginScope("Applying migrations.");
+
+			Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
+			Version newVersion = await MigrateAsync(connection, currentVersion, targetVersion, cancellationToken);
+
+			if (currentVersion == newVersion)
 			{
-				Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
-				Version newVersion = await MigrateAsync(connection, currentVersion, targetVersion, cancellationToken);
-
-				if (currentVersion == newVersion)
-				{
-					transactionScope.Complete();
-					return;
-				}
-
-				await DatabaseInformationTable.SetVersion(connection, newVersion, cancellationToken);
 				transactionScope.Complete();
-
-				Logger.LogInformation("Finished migrations. New version: {0}", newVersion);
+				return;
 			}
+
+			await DatabaseInformationTable.SetVersion(connection, newVersion, cancellationToken);
+			transactionScope.Complete();
+
+			Logger.LogInformation("Finished migrations. New version: {0}", newVersion);
 		}
 
 		private async Task<Version> MigrateAsync(
@@ -82,8 +81,7 @@ namespace Blastic.Data
 				.OrderBy(x => x.Key)
 				.ToArray();
 
-			currentVersion = currentVersion ?? new Version(0, 0, 0);
-			targetVersion = targetVersion ?? migrations.Max(x => x.Key);
+			targetVersion ??= migrations.Max(x => x.Key);
 
 			if (currentVersion == targetVersion)
 			{
@@ -109,15 +107,13 @@ namespace Blastic.Data
 		{
 			Assembly assembly = Assembly.GetAssembly(GetType());
 
-			IEnumerable<Type> genericMigrationTypes = assembly.GetTypes()
-				.Where(x => !x.IsAbstract)
-				.Where(x => x.BaseType == typeof(MigrationBase));
-
 			IEnumerable<Type> migrationTypes = assembly.GetTypes()
 				.Where(x => !x.IsAbstract)
 				.Where(x => x.IsSubclassOf(typeof(T)));
 
-			return genericMigrationTypes.Concat(migrationTypes);
+			return Enumerable
+				.Repeat(typeof(CreateDatabaseInformationTable), 1)
+				.Concat(migrationTypes);
 		}
 	}
 }
