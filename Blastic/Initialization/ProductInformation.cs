@@ -1,12 +1,17 @@
 ﻿using System;
-using PropertyChanged;
+using Reactive.Bindings;
 
 namespace Blastic.Initialization
 {
-	[AddINotifyPropertyChangedInterface]
 	public class ProductInformation
 	{
-		public string ProgramName { get; set; }
-		public Version Version { get; set; }
+		public IReactiveProperty<string> ProgramName { get; }
+		public IReactiveProperty<Version> Version { get; }
+
+		public ProductInformation()
+		{
+			ProgramName = new ReactiveProperty<string>();
+			Version = new ReactiveProperty<Version>();
+		}
 	}
 }

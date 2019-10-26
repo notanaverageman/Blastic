@@ -1,17 +1,16 @@
-﻿using PropertyChanged;
+﻿using Reactive.Bindings;
 
 namespace Blastic.Controls.Selectable
 {
-	[AddINotifyPropertyChangedInterface]
 	public class SelectableViewModel<T>
 	{
 		public T Value { get; }
-		public bool IsSelected { get; set; }
+		public IReactiveProperty<bool> IsSelected { get; set; }
 
 		public SelectableViewModel(T value, bool isSelected = false)
 		{
 			Value = value;
-			IsSelected = isSelected;
+			IsSelected = new ReactiveProperty<bool>(isSelected);
 		}
 	}
 }

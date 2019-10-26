@@ -14,11 +14,6 @@ namespace Blastic.Caliburn
 		private static readonly TimeSpan MaximumDelay = TimeSpan.FromSeconds(1);
 
 		/// <summary>
-		///   The key sequences composing the gesture.
-		/// </summary>
-		private readonly KeySequence[] _keySequences;
-
-		/// <summary>
 		///   The index of the current gesture key.
 		/// </summary>
 		private int _currentKeyIndex;
@@ -37,7 +32,7 @@ namespace Blastic.Caliburn
 		///   Gets the key sequences composing the gesture.
 		/// </summary>
 		/// <value> The key sequences composing the gesture. </value>
-		public KeySequence[] KeySequences => _keySequences;
+		public KeySequence[] KeySequences { get; }
 
 		/// <summary>
 		///   Gets the display string.
@@ -72,8 +67,8 @@ namespace Blastic.Caliburn
 			}
 
 			DisplayString = displayString;
-			_keySequences = new KeySequence[sequences.Length];
-			sequences.CopyTo(_keySequences, 0);
+			KeySequences = new KeySequence[sequences.Length];
+			sequences.CopyTo(KeySequences, 0);
 		}
 
 		/// <summary>
@@ -144,7 +139,7 @@ namespace Blastic.Caliburn
 			if (!IsDefinedKey(key))
 				return false;
 
-			KeySequence currentSequence = _keySequences[_currentSequenceIndex];
+			KeySequence currentSequence = KeySequences[_currentSequenceIndex];
 			Key currentKey = currentSequence.Keys[_currentKeyIndex];
 
 			//Check if the key is a modifier...
@@ -185,7 +180,7 @@ namespace Blastic.Caliburn
 			_currentKeyIndex++;
 
 			//Check if the key is the last of the current sequence...
-			if (_currentKeyIndex == _keySequences[_currentSequenceIndex].Keys.Length)
+			if (_currentKeyIndex == KeySequences[_currentSequenceIndex].Keys.Length)
 			{
 				//The key is the last of the current sequence, go to the next sequence...
 				_currentSequenceIndex++;
@@ -193,7 +188,7 @@ namespace Blastic.Caliburn
 			}
 
 			//Check if the sequence is the last one of the gesture...
-			if (_currentSequenceIndex != _keySequences.Length)
+			if (_currentSequenceIndex != KeySequences.Length)
 			{
 				//If the key is not the last one, get the current date time, handle the match event but do nothing...
 				_lastKeyPress = DateTime.Now;

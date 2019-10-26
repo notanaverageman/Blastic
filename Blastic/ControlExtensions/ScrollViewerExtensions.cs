@@ -9,7 +9,7 @@ namespace Blastic.ControlExtensions
 			nameof(AutoScrollProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(ScrollViewerExtensions),
-			new PropertyMetadata(default, AutoScrollPropertyChanged));
+			new PropertyMetadata(default(bool), AutoScrollPropertyChanged));
 		public static bool GetAutoScroll(DependencyObject obj) => (bool)obj.GetValue(AutoScrollProperty);
 		public static void SetAutoScroll(DependencyObject obj, bool value) => obj.SetValue(AutoScrollProperty, value);
 		

@@ -9,7 +9,7 @@ namespace Blastic.Controls
 			nameof(ExecutionContextProperty).Replace("Property", ""),
 			typeof(ExecutionContext),
 			typeof(BusyIndicator),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(ExecutionContext)));
 		public ExecutionContext ExecutionContext
 		{
 			get => (ExecutionContext)GetValue(ExecutionContextProperty);

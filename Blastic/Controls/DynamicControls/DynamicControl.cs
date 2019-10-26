@@ -18,7 +18,7 @@ namespace Blastic.Controls.DynamicControls
 			nameof(ExecutionContextProperty).Replace("Property", ""),
 			typeof(ExecutionContext),
 			typeof(DynamicControl),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(ExecutionContext)));
 		public ExecutionContext ExecutionContext
 		{
 			get => (ExecutionContext)GetValue(ExecutionContextProperty);
@@ -29,7 +29,7 @@ namespace Blastic.Controls.DynamicControls
 			nameof(FormProperty).Replace("Property", ""),
 			typeof(DynamicModel),
 			typeof(DynamicControl),
-			new PropertyMetadata(default, OnFormChanged));
+			new PropertyMetadata(default(DynamicModel), OnFormChanged));
 		public DynamicModel Form
 		{
 			get => (DynamicModel)GetValue(FormProperty);

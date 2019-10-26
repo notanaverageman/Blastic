@@ -12,7 +12,7 @@ namespace Blastic.ControlExtensions
 			nameof(DisplayRowNumberProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(DataGridRowNumberBehavior),
-			new PropertyMetadata(default, OnDisplayRowNumberChanged));
+			new PropertyMetadata(default(bool), OnDisplayRowNumberChanged));
 		public static bool GetDisplayRowNumber(DependencyObject obj) => (bool)obj.GetValue(DisplayRowNumberProperty);
 		public static void SetDisplayRowNumber(DependencyObject obj, bool value) => obj.SetValue(DisplayRowNumberProperty, value);
 
@@ -20,7 +20,7 @@ namespace Blastic.ControlExtensions
 			nameof(RowNumberOffsetProperty).Replace("Property", ""),
 			typeof(int),
 			typeof(DataGridRowNumberBehavior),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(int)));
 		public static int GetRowNumberOffset(DependencyObject obj) => (int)obj.GetValue(RowNumberOffsetProperty);
 		public static void SetRowNumberOffset(DependencyObject obj, int value) => obj.SetValue(RowNumberOffsetProperty, value);
 

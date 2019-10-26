@@ -26,14 +26,9 @@ namespace Blastic.Initialization.Extensions
 			return application.RegisterTypes<T, ISettingsSectionViewModel>();
 		}
 
-		public static BlasticApplication RegisterMainTab<T>(this BlasticApplication application) where T : IMainTab
+		public static BlasticApplication RegisterMainTabs<T>(this BlasticApplication application)
 		{
-			return application.Configure(builder =>
-			{
-				builder.RegisterType<T>()
-					.SingleInstance()
-					.As<IMainTab>();
-			});
+			return application.RegisterTypes<T, IMainTab>();
 		}
 
 		private static BlasticApplication RegisterTypes<TAssembly, TBase>(this BlasticApplication application)

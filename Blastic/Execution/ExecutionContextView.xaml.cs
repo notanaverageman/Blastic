@@ -8,7 +8,7 @@ namespace Blastic.Execution
 			nameof(ExecutionContextProperty).Replace("Property", ""),
 			typeof(ExecutionContext),
 			typeof(ExecutionContextView),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(ExecutionContext)));
 		public ExecutionContext ExecutionContext
 		{
 			get => (ExecutionContext)GetValue(ExecutionContextProperty);

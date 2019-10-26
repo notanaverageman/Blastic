@@ -13,7 +13,7 @@ namespace Blastic.ControlExtensions
 			nameof(FixColumnFillSizeProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(DataGridColumnSizeExtensions),
-			new PropertyMetadata(default, OnFixColumnFillSizeChanged));
+			new PropertyMetadata(default(bool), OnFixColumnFillSizeChanged));
 		public static bool GetFixColumnFillSizeProperty(DependencyObject obj) => (bool) obj.GetValue(FixColumnFillSizeProperty);
 		public static void SetFixColumnFillSizeProperty(DependencyObject obj, bool value) => obj.SetValue(FixColumnFillSizeProperty, value);
 
@@ -21,7 +21,7 @@ namespace Blastic.ControlExtensions
 			nameof(DataGridItemsSourceProperty).Replace("Property", ""),
 			typeof(INotifyCollectionChanged),
 			typeof(DataGridColumnSizeExtensions),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(INotifyCollectionChanged)));
 		public static INotifyCollectionChanged GetDataGridItemsSource(DependencyObject obj) => (INotifyCollectionChanged)obj.GetValue(DataGridItemsSourceProperty);
 		public static void SetDataGridItemsSource(DependencyObject obj, INotifyCollectionChanged value) => obj.SetValue(DataGridItemsSourceProperty, value);
 
@@ -29,7 +29,7 @@ namespace Blastic.ControlExtensions
 			nameof(CollectionChangedActionProperty).Replace("Property", ""),
 			typeof(NotifyCollectionChangedEventHandler),
 			typeof(DataGridColumnSizeExtensions),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(NotifyCollectionChangedEventHandler)));
 		public static NotifyCollectionChangedEventHandler GetCollectionChangedAction(DependencyObject obj) => (NotifyCollectionChangedEventHandler)obj.GetValue(CollectionChangedActionProperty);
 		public static void SetCollectionChangedAction(DependencyObject obj, NotifyCollectionChangedEventHandler value) => obj.SetValue(CollectionChangedActionProperty, value);
 

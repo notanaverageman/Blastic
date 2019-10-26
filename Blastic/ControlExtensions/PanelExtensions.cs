@@ -19,7 +19,7 @@ namespace Blastic.ControlExtensions
 			nameof(EnablePaddingProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(PanelExtensions),
-			new PropertyMetadata(default, OnEnablePaddingChanged));
+			new PropertyMetadata(default(bool), OnEnablePaddingChanged));
 		public static bool GetEnablePadding(DependencyObject obj) => (bool)obj.GetValue(EnablePaddingProperty);
 		public static void SetEnablePadding(DependencyObject obj, bool value) => obj.SetValue(EnablePaddingProperty, value);
 		

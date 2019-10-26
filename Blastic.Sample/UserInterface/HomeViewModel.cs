@@ -9,6 +9,7 @@ using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.Logging;
 using Reactive.Bindings;
 
 namespace Blastic.Sample.UserInterface
@@ -18,7 +19,7 @@ namespace Blastic.Sample.UserInterface
 		public Order Order { get; }
 		public bool IsFixed => true;
 
-		public string Text { get; set; }
+		public IReactiveProperty<string> Text { get; set; }
 
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -27,24 +28,34 @@ namespace Blastic.Sample.UserInterface
 			base(executionContextFactory)
 		{
 			Order = new Order(1);
+			Text = new ReactiveProperty<string>();
 
-			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text = x);
+			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 		}
 
 		protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 		{
-			Text = "Initialized";
+			Text = new ReactiveProperty<string>("Initialized");
 			return Task.CompletedTask;
 		}
 
 		protected override Task OnActivateAsync(CancellationToken cancellationToken)
 		{
-			Text = "Activated";
+			Text.Value = "Activated";
 			return Task.CompletedTask;
 		}
 
 		public async Task Test()
 		{
+			await ExecutionContext.Execute(async x =>
+			{
+				ExecutionContext.Logger.LogError("Aasd");
+				ExecutionContext.ProgressDetails.AddRange(new []{ "Test1", "Test2" });
+				await Task.Delay(3000, x);
+				ExecutionContext.ProgressDetails.AddRange(new[] { "Test1", "Test2" });
+				ExecutionContext.Logger.LogError("Aasd2");
+			});
+
 			ReactiveProperty<string> name = new ReactiveProperty<string>();
 			ReactiveProperty<string> password = new ReactiveProperty<string>();
 			ReactiveProperty<int> age = new ReactiveProperty<int>();

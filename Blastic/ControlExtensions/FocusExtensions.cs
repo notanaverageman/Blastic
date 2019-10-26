@@ -12,7 +12,7 @@ namespace Blastic.ControlExtensions
 			nameof(IsFocusedProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(FocusExtensions),
-			new PropertyMetadata(default, OnIsFocusedChanged));
+			new PropertyMetadata(default(bool), OnIsFocusedChanged));
 		public static bool GetIsFocused(DependencyObject obj) => (bool)obj.GetValue(IsFocusedProperty);
 		public static void SetIsFocused(DependencyObject obj, bool value) => obj.SetValue(IsFocusedProperty, value);
 

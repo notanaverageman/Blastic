@@ -20,7 +20,7 @@ namespace Blastic.Controls
 			nameof(FirstViewProperty).Replace("Property", ""),
 			typeof(UIElement),
 			typeof(DualView),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(UIElement)));
 		public UIElement FirstView
 		{
 			get => (UIElement)GetValue(FirstViewProperty);
@@ -31,7 +31,7 @@ namespace Blastic.Controls
 			nameof(SecondViewProperty).Replace("Property", ""),
 			typeof(UIElement),
 			typeof(DualView),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(UIElement)));
 		public UIElement SecondView
 		{
 			get => (UIElement)GetValue(SecondViewProperty);

@@ -11,7 +11,7 @@ namespace Blastic.ControlExtensions
 			nameof(EnableHorizontalScrollingWithShiftKeyProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(HorizontalScrollingExtensions),
-			new PropertyMetadata(default, OnEnableHorizontalScrollingWithShiftKeyChanged));
+			new PropertyMetadata(default(bool), OnEnableHorizontalScrollingWithShiftKeyChanged));
 		public static bool GetEnableHorizontalScrollingWithShiftKey(DependencyObject obj) => (bool)obj.GetValue(EnableHorizontalScrollingWithShiftKeyProperty);
 		public static void SetEnableHorizontalScrollingWithShiftKey(DependencyObject obj, bool value) => obj.SetValue(EnableHorizontalScrollingWithShiftKeyProperty, value);
 		

@@ -14,10 +14,10 @@ namespace Blastic.Controls.Help
 			nameof(HelpContentProperty).Replace("Property", ""),
 			typeof(object),
 			typeof(HelpView),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(object)));
 		public object HelpContent
 		{
-			get => (object)GetValue(HelpContentProperty);
+			get => GetValue(HelpContentProperty);
 			set => SetValue(HelpContentProperty, value);
 		}
 
@@ -25,7 +25,7 @@ namespace Blastic.Controls.Help
 			nameof(DisableInsteadOfCollapseProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(HelpView),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(bool)));
 		public bool DisableInsteadOfCollapse
 		{
 			get => (bool)GetValue(DisableInsteadOfCollapseProperty);

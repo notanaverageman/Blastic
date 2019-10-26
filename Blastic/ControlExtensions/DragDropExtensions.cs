@@ -10,7 +10,7 @@ namespace Blastic.ControlExtensions
 			nameof(LimitInsideContainerProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(DragDropExtensions),
-			new PropertyMetadata(default, OnLimitInsideContainerChanged));
+			new PropertyMetadata(default(bool), OnLimitInsideContainerChanged));
 		public static bool GetLimitInsideContainer(DependencyObject obj) => (bool)obj.GetValue(LimitInsideContainerProperty);
 		public static void SetLimitInsideContainer(DependencyObject obj, bool value) => obj.SetValue(LimitInsideContainerProperty, value);
 

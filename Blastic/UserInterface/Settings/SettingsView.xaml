@@ -53,7 +53,7 @@
 		</Grid>
 
 		<simpleChildWindow:ChildWindow Title="Please Fix The Errors"
-									   IsOpen="{Binding IsDiagnosticMessagesVisible}"
+									   IsOpen="{Binding IsDiagnosticMessagesVisible.Value}"
 									   ShowCloseButton="True">
 			<Grid Margin="16">
 				<Grid MinWidth="600"

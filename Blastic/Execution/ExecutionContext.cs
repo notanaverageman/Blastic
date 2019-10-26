@@ -7,13 +7,12 @@ using Blastic.Controls.DynamicControls;
 using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
-using PropertyChanged;
 using Blastic.Services.Dialog;
 using Blastic.UserInterface.Events;
+using Reactive.Bindings;
 
 namespace Blastic.Execution
 {
-	[AddINotifyPropertyChangedInterface]
 	public class ExecutionContext
 	{
 		public ILogger Logger { get; }
@@ -22,15 +21,15 @@ namespace Blastic.Execution
 		public IEventAggregator EventAggregator { get; }
 		public ISnackbarMessageQueue MessageQueue { get; }
 
-		public bool IsBusy { get; set; }
-		public string ProgressMessage { get; set; }
+		public IReactiveProperty<bool> IsBusy { get; set; }
+		public IReactiveProperty<string> ProgressMessage { get; set; }
 		public IObservableCollection<string> ProgressDetails { get; }
 
-		public bool IsCancellationSupported { get; set; }
+		public IReactiveProperty<bool> IsCancellationSupported { get; set; }
 		public CancellationTokenSource CancellationTokenSource { get; private set; }
 
-		public bool IsShowingForm { get; set; }
-		public DynamicModel Form { get; set; }
+		public IReactiveProperty<bool> IsShowingForm { get; set; }
+		public IReactiveProperty<DynamicModel> Form { get; set; }
 
 		public ExecutionContext(
 			ILogger<ExecutionContext> logger,
@@ -45,8 +44,15 @@ namespace Blastic.Execution
 			EventAggregator = eventAggregator;
 			MessageQueue = messageQueue;
 
+			IsBusy = new ReactiveProperty<bool>();
+			ProgressMessage = new ReactiveProperty<string>();
 			ProgressDetails = new BindableCollection<string>();
+
+			IsCancellationSupported = new ReactiveProperty<bool>();
 			CancellationTokenSource = new CancellationTokenSource();
+
+			IsShowingForm = new ReactiveProperty<bool>();
+			Form = new ReactiveProperty<DynamicModel>();
 		}
 
 		public async Task Execute(
@@ -63,12 +69,12 @@ namespace Blastic.Execution
 			{
 				if (showProgress)
 				{
-					IsBusy = true;
-					ProgressMessage = progressMessage;
+					IsBusy.Value = true;
+					ProgressMessage.Value = progressMessage;
 				}
 
 				ProgressDetails.Clear();
-				IsCancellationSupported = isCancellationSupported;
+				IsCancellationSupported.Value = isCancellationSupported;
 				
 				if (CancellationTokenSource.IsCancellationRequested)
 				{
@@ -113,7 +119,7 @@ namespace Blastic.Execution
 			{
 				if (showProgress)
 				{
-					IsBusy = false;
+					IsBusy.Value = false;
 				}
 			}
 		}
@@ -155,14 +161,14 @@ namespace Blastic.Execution
 
 			try
 			{
-				Form = form;
-				IsShowingForm = true;
+				Form.Value = form;
+				IsShowingForm.Value = true;
 
-				return await Form.WaitCompletion();
+				return await Form.Value.WaitCompletion();
 			}
 			finally
 			{
-				IsShowingForm = false;
+				IsShowingForm.Value = false;
 			}
 		}
 	}

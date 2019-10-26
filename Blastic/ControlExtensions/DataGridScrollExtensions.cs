@@ -9,7 +9,7 @@ namespace Blastic.ControlExtensions
 			nameof(TrackSelectedItemProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(DataGridScrollExtensions),
-			new PropertyMetadata(default, OnPropertyChanged));
+			new PropertyMetadata(default(bool), OnPropertyChanged));
 		public static bool GetTrackSelectedItem(DependencyObject obj) => (bool)obj.GetValue(TrackSelectedItemProperty);
 		public static void SetTrackSelectedItem(DependencyObject obj, bool value) => obj.SetValue(TrackSelectedItemProperty, value);
 

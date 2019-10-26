@@ -9,7 +9,7 @@ namespace Blastic.ControlExtensions
 			nameof(BoundPasswordProperty).Replace("Property", ""),
 			typeof(string),
 			typeof(PasswordBoxExtensions),
-			new FrameworkPropertyMetadata(default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnPasswordChanged));
+			new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnPasswordChanged));
 		public static string GetBoundPassword(DependencyObject obj) => (string)obj.GetValue(BoundPasswordProperty);
 		public static void SetBoundPassword(DependencyObject obj, string value) => obj.SetValue(BoundPasswordProperty, value);
 
@@ -17,7 +17,7 @@ namespace Blastic.ControlExtensions
 			nameof(BindPasswordProperty).Replace("Property", ""),
 			typeof(bool),
 			typeof(PasswordBoxExtensions),
-			new PropertyMetadata(default, OnBindPasswordChanged));
+			new PropertyMetadata(default(bool), OnBindPasswordChanged));
 		public static bool GetBindPassword(DependencyObject obj) => (bool)obj.GetValue(BindPasswordProperty);
 		public static void SetBindPassword(DependencyObject obj, bool value) => obj.SetValue(BindPasswordProperty, value);
 

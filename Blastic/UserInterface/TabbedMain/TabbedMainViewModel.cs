@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using PropertyChanged;
 using Blastic.Caliburn;
 using Blastic.Execution;
 using Blastic.Initialization;
@@ -14,7 +13,6 @@ using Blastic.UserInterface.Settings;
 
 namespace Blastic.UserInterface.TabbedMain
 {
-	[AddINotifyPropertyChangedInterface]
 	public sealed class TabbedMainViewModel
 		:
 		ConductorOneActiveBase<object>,

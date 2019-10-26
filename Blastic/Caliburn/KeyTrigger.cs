@@ -11,7 +11,7 @@ namespace Blastic.Caliburn
 			nameof(KeyProperty).Replace("Property", ""),
 			typeof(Key),
 			typeof(KeyTrigger),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(Key)));
 		public Key Key
 		{
 			get => (Key)GetValue(KeyProperty);
@@ -22,7 +22,7 @@ namespace Blastic.Caliburn
 			nameof(ModifiersProperty).Replace("Property", ""),
 			typeof(ModifierKeys),
 			typeof(KeyTrigger),
-			new PropertyMetadata(default));
+			new PropertyMetadata(default(ModifierKeys)));
 		public ModifierKeys Modifiers
 		{
 			get => (ModifierKeys)GetValue(ModifiersProperty);

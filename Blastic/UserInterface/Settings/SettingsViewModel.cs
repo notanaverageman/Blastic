@@ -5,14 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using PropertyChanged;
 using Blastic.Caliburn;
 using Blastic.Diagnostics;
 using Blastic.Execution;
+using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	[AddINotifyPropertyChangedInterface]
 	public sealed class SettingsViewModel : ScreenBase
 	{
 		private bool _hasReadSettings;
@@ -22,7 +21,7 @@ namespace Blastic.UserInterface.Settings
 		public IObservableCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
-		public bool IsDiagnosticMessagesVisible { get; set; }
+		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
 
 		public SettingsViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -32,6 +31,8 @@ namespace Blastic.UserInterface.Settings
 		{
 			Items = new BindableCollection<ISettingsSectionViewModel>(sections);
 			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
+
+			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
 			DisplayName = "Settings";
 		}
@@ -103,20 +104,20 @@ namespace Blastic.UserInterface.Settings
 		private Task<bool> ShowDiagnosticMessages()
 		{
 			ShowDiagnosticMessagesTaskCompletionSource = new TaskCompletionSource<bool>();
-			IsDiagnosticMessagesVisible = true;
+			IsDiagnosticMessagesVisible.Value = true;
 
 			return ShowDiagnosticMessagesTaskCompletionSource.Task;
 		}
 
 		public void HideDiagnosticMessages()
 		{
-			IsDiagnosticMessagesVisible = false;
+			IsDiagnosticMessagesVisible.Value = false;
 			ShowDiagnosticMessagesTaskCompletionSource.SetResult(false);
 		}
 
 		public void HideDiagnosticMessagesIgnoreErrors()
 		{
-			IsDiagnosticMessagesVisible = false;
+			IsDiagnosticMessagesVisible.Value = false;
 			ShowDiagnosticMessagesTaskCompletionSource.SetResult(true);
 		}
 

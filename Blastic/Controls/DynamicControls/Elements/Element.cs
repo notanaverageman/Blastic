@@ -38,11 +38,11 @@ namespace Blastic.Controls.DynamicControls.Elements
 
 		public Element()
 		{
-			Icon = new ReactivePropertySlim<PackIconKind?>();
-			Label = new ReactivePropertySlim<string>();
-			Help = new ReactivePropertySlim<string>();
+			Icon = new ReactiveProperty<PackIconKind?>();
+			Label = new ReactiveProperty<string>();
+			Help = new ReactiveProperty<string>();
 
-			IsEnabled = new ReactivePropertySlim<bool>(true);
+			IsEnabled = new ReactiveProperty<bool>(true);
 
 			IconSize = 18;
 			Margin = new Thickness(8, 16, 8, 16);

@@ -10,7 +10,7 @@ namespace Blastic.ControlExtensions
 			nameof(RowDefinitionsProperty).Replace("Property", ""),
 			typeof(string),
 			typeof(GridExtensions),
-			new PropertyMetadata(default, OnRowDefinitionsChanged));
+			new PropertyMetadata(default(string), OnRowDefinitionsChanged));
 		public static string GetRowDefinitions(DependencyObject obj) => (string)obj.GetValue(RowDefinitionsProperty);
 		public static void SetRowDefinitions(DependencyObject obj, string value) => obj.SetValue(RowDefinitionsProperty, value);
 
@@ -18,7 +18,7 @@ namespace Blastic.ControlExtensions
 			nameof(ColumnDefinitionsProperty).Replace("Property", ""),
 			typeof(string),
 			typeof(GridExtensions),
-			new PropertyMetadata(default, OnColumnDefinitionsChanged));
+			new PropertyMetadata(default(string), OnColumnDefinitionsChanged));
 		public static string GetColumnDefinitions(DependencyObject obj) => (string)obj.GetValue(ColumnDefinitionsProperty);
 		public static void SetColumnDefinitions(DependencyObject obj, string value) => obj.SetValue(ColumnDefinitionsProperty, value);
 

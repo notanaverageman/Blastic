@@ -9,7 +9,8 @@
 			 mc:Ignorable="d">
 	<Grid>
 		<dynamicControls:DynamicControl ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}"
-										Form="{Binding ExecutionContext.Form, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
+										Form="{Binding ExecutionContext.Form.Value, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
+		
 		<controls:BusyIndicator ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
 	</Grid>
 </UserControl>

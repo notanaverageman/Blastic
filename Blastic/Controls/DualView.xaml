@@ -10,6 +10,7 @@
 
 	<UserControl.Resources>
 		<converters:InverseVisibilityConverter x:Key="InverseVisibilityConverter" />
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	</UserControl.Resources>
 
 	<Grid>

@@ -28,12 +28,9 @@ namespace Blastic.Services.Dialog
 				? openFileDialog.ShowDialog()
 				: openFileDialog.ShowDialog(options.Owner);
 
-			if (result == true)
-			{
-				return openFileDialog.FileName;
-			}
-
-			return "";
+			return result == true
+				? openFileDialog.FileName
+				: "";
 		}
 
 		public string ShowSaveFileDialog(FileDialogOptions options)
@@ -49,17 +46,14 @@ namespace Blastic.Services.Dialog
 				? saveFileDialog.ShowDialog()
 				: saveFileDialog.ShowDialog(options.Owner);
 
-			if (result == true)
-			{
-				return saveFileDialog.FileName;
-			}
-
-			return "";
+			return result == true
+				? saveFileDialog.FileName
+				: "";
 		}
 
 		public string ShowSelectFolderDialog(FileDialogOptions options)
 		{
-			CommonFileDialog folderBrowserDialog = new CommonOpenFileDialog
+			using CommonFileDialog folderBrowserDialog = new CommonOpenFileDialog
 			{
 				IsFolderPicker = true,
 				InitialDirectory = options?.InitialDirectory ?? ""
@@ -69,12 +63,9 @@ namespace Blastic.Services.Dialog
 				? folderBrowserDialog.ShowDialog()
 				: folderBrowserDialog.ShowDialog(options.Owner);
 
-			if (result == CommonFileDialogResult.Ok)
-			{
-				return folderBrowserDialog.FileName;
-			}
-
-			return "";
+			return result == CommonFileDialogResult.Ok
+				? folderBrowserDialog.FileName
+				: "";
 		}
 	}
 }

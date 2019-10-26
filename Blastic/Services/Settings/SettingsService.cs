@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Data.ProgramData;
-using Blastic.Services.Settings;
 using Newtonsoft.Json;
 
-namespace Blastic.Data.Services
+namespace Blastic.Services.Settings
 {
 	public class SettingsService : ISettingsService
 	{

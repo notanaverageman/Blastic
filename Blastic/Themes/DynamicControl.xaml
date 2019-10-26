@@ -15,7 +15,7 @@
 					<simpleChildWindow:ChildWindow cal:Action.TargetWithoutContext="{Binding RelativeSource={RelativeSource AncestorType=local:DynamicControl}}"
 												   cal:Message.Attach="[Key Escape] = [Cancel]"
 												   CloseByEscape="False"
-												   IsOpen="{Binding ExecutionContext.IsShowingForm, RelativeSource={RelativeSource AncestorType=local:DynamicControl}}"
+												   IsOpen="{Binding ExecutionContext.IsShowingForm.Value, RelativeSource={RelativeSource AncestorType=local:DynamicControl}}"
 												   ShowTitleBar="False">
 						<simpleChildWindow:ChildWindow.Resources>
 							<Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"

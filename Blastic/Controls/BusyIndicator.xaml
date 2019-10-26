@@ -12,7 +12,7 @@
 	<simpleChildWindow:ChildWindow cal:Action.TargetWithoutContext="{Binding RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
 								   cal:Message.Attach="[Key Escape] = [Cancel]"
 								   CloseByEscape="False"
-								   IsOpen="{Binding ExecutionContext.IsBusy, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
+								   IsOpen="{Binding ExecutionContext.IsBusy.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
 								   ShowTitleBar="False">
 
 		<Grid Margin="8,16,8,8"
@@ -23,7 +23,7 @@
 					   MaxWidth="600"
 					   HorizontalAlignment="Left"
 					   VerticalAlignment="Center"
-					   Text="{Binding ExecutionContext.ProgressMessage, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}" />
+					   Text="{Binding ExecutionContext.ProgressMessage.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}" />
 
 			<ScrollViewer Grid.Row="1"
 						  MaxHeight="400"
@@ -44,7 +44,7 @@
 					cal:Action.TargetWithoutContext="{Binding RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
 					cal:Message.Attach="Cancel"
 					Content="Cancel"
-					IsEnabled="{Binding ExecutionContext.IsCancellationSupported, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
+					IsEnabled="{Binding ExecutionContext.IsCancellationSupported.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
 					Style="{StaticResource MaterialDesignFlatButton}" />
 		</Grid>
 	</simpleChildWindow:ChildWindow>

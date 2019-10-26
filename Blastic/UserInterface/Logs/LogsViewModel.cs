@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Dynamic;
@@ -8,12 +9,12 @@ using System.Windows;
 using System.Windows.Data;
 using Blastic.UserInterface.Logs.Settings;
 using Caliburn.Micro;
-using PropertyChanged;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using Serilog.Events;
 
 namespace Blastic.UserInterface.Logs
 {
-	[AddINotifyPropertyChangedInterface]
 	public sealed class LogsViewModel : IViewAware
 	{
 		private readonly IWindowManager _windowManager;
@@ -21,10 +22,10 @@ namespace Blastic.UserInterface.Logs
 
 		private Window _activeWindow;
 
-		public LogEventLevel MinimumLogLevel { get; set; }
+		public IReactiveProperty<LogEventLevel> MinimumLogLevel { get; set; }
 
 		public LogSink LogSink { get; }
-		public IObservableCollection<LogEventLevel> LogLevels { get; }
+		public IEnumerable<LogEventLevel> LogLevels { get; }
 		
 		public LogsViewModel(
 			IWindowManager windowManager,
@@ -34,8 +35,11 @@ namespace Blastic.UserInterface.Logs
 			_windowManager = windowManager;
 			_logSettingsViewModel = logSettingsViewModel;
 			LogSink = logSink;
-			
-			LogLevels = new BindableCollection<LogEventLevel>
+
+			MinimumLogLevel = new ReactiveProperty<LogEventLevel>();
+			MinimumLogLevel.Subscribe(OnMinimumLogLevelChanged);
+
+			LogLevels = new []
 			{
 				LogEventLevel.Fatal,
 				LogEventLevel.Error,
@@ -44,12 +48,12 @@ namespace Blastic.UserInterface.Logs
 				LogEventLevel.Debug
 			};
 
-			MinimumLogLevel = LogEventLevel.Debug;
+			MinimumLogLevel.Value = LogEventLevel.Debug;
 
-			LogSink.Logs.CollectionChanged += LogsChanged;
+			LogSink.Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
 		}
 
-		private async void LogsChanged(object sender, NotifyCollectionChangedEventArgs e)
+		private async void LogsChanged(NotifyCollectionChangedEventArgs e)
 		{
 			bool? hasErrorLog = e.NewItems?.Cast<Log>().Any(x => x.Level >= LogEventLevel.Error);
 
@@ -79,11 +83,10 @@ namespace Blastic.UserInterface.Logs
 			LogSink.Logs.Clear();
 		}
 
-		// Will be called by Fody.
-		private void OnMinimumLogLevelChanged()
+		private void OnMinimumLogLevelChanged(LogEventLevel level)
 		{
 			ICollectionView collectionView = CollectionViewSource.GetDefaultView(LogSink.Logs);
-			collectionView.Filter = o => ((Log)o).Level >= MinimumLogLevel;
+			collectionView.Filter = o => ((Log)o).Level >= level;
 		}
 
 		public void AttachView(object view, object context = null)
