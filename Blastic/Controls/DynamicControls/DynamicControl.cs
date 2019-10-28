@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
+using Reactive.Bindings;
 
 namespace Blastic.Controls.DynamicControls
 {
@@ -38,9 +39,11 @@ namespace Blastic.Controls.DynamicControls
 
 		private Grid _rootGrid;
 
-		public void Cancel()
+		public ReactiveCommand Cancel { get; set; }
+
+		public DynamicControl()
 		{
-			Form?.Cancel();
+			Cancel = new ReactiveCommand().WithSubscribe(() => Form?.Cancel());
 		}
 
 		public override void OnApplyTemplate()

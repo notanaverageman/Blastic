@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Diagnostics;
+using Blastic.LifetimeManagement;
 using Blastic.Services.Settings;
 using Caliburn.Micro;
 using Reactive.Bindings;
@@ -13,10 +14,15 @@ namespace Blastic.Settings
 	/// An individual setting.
 	/// </summary>
 	/// <typeparam name="T">Type of the value.</typeparam>
-	public abstract class Setting<T>
+	public abstract class Setting<T> : IHasLifetime
 	{
 		private readonly ISettingsService _settingsService;
 		private IDisposable _isEnabledSubscription;
+
+		/// <summary>
+		/// Lifetime object that initates the read and save operations.
+		/// </summary>
+		public ILifetime Lifetime { get; }
 
 		/// <summary>
 		/// Element instance that will be used when setting is shown on UI.
@@ -69,17 +75,32 @@ namespace Blastic.Settings
 		{
 			_settingsService = settingsService;
 
+			Lifetime = new Lifetime();
+
 			Key = key;
 			DefaultValue = defaultValue;
 
 			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
-
 
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
 
 			ReactiveSettingValue.SetValidateNotifyError(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
 			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
+
+			Lifetime.Initialize.Subscribe(x => Read(x.Parameter.CancellationToken));
+
+			Lifetime.Close.Subscribe(async x =>
+			{
+				if (x.Parameter.DialogResult == true)
+				{
+					await Save(x.Parameter.CancellationToken);
+				}
+				else
+				{
+					Revert();
+				}
+			});
 		}
 
 		public async Task Read(CancellationToken cancellationToken)

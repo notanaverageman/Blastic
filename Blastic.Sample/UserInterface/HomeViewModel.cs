@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Blastic.Caliburn;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
+using Blastic.LifetimeManagement;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,7 @@ using Reactive.Bindings;
 
 namespace Blastic.Sample.UserInterface
 {
-	public class HomeViewModel : ScreenBase, IMainTab
+	public class HomeViewModel : Screen, IMainTab
 	{
 		public Order Order { get; }
 		public bool IsFixed => true;
@@ -31,15 +30,18 @@ namespace Blastic.Sample.UserInterface
 			Text = new ReactiveProperty<string>();
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
+
+			Lifetime.Initialize.Subscribe(_ => OnInitialize());
+			Lifetime.Activate.Subscribe(_ => OnActivate());
 		}
 
-		protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+		protected Task OnInitialize()
 		{
 			Text = new ReactiveProperty<string>("Initialized");
 			return Task.CompletedTask;
 		}
 
-		protected override Task OnActivateAsync(CancellationToken cancellationToken)
+		protected Task OnActivate()
 		{
 			Text.Value = "Activated";
 			return Task.CompletedTask;

@@ -26,7 +26,9 @@ namespace Blastic.UserInterface.Logs
 
 		public LogSink LogSink { get; }
 		public IEnumerable<LogEventLevel> LogLevels { get; }
-		
+
+		public ReactiveCommand Clear { get; }
+
 		public LogsViewModel(
 			IWindowManager windowManager,
 			LogSettingsViewModel logSettingsViewModel,
@@ -51,6 +53,8 @@ namespace Blastic.UserInterface.Logs
 			MinimumLogLevel.Value = LogEventLevel.Debug;
 
 			LogSink.Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
+
+			Clear = new ReactiveCommand().WithSubscribe(() => LogSink.Logs.Clear());
 		}
 
 		private async void LogsChanged(NotifyCollectionChangedEventArgs e)
@@ -76,11 +80,6 @@ namespace Blastic.UserInterface.Logs
 			settings.Owner = Application.Current.MainWindow;
 
 			await _windowManager.ShowWindowAsync(this, null, settings);
-		}
-
-		public void Clear()
-		{
-			LogSink.Logs.Clear();
 		}
 
 		private void OnMinimumLogLevelChanged(LogEventLevel level)

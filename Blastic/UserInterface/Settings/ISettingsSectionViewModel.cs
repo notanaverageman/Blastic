@@ -2,18 +2,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Diagnostics;
+using Blastic.LifetimeManagement;
 
 namespace Blastic.UserInterface.Settings
 {
-	public interface ISettingsSectionViewModel
+	public interface ISettingsSectionViewModel : IHasLifetime
 	{
 		string SectionName { get; }
 		IsExpandedSetting IsExpanded { get; }
 
 		Task<IEnumerable<DiagnosticMessage>> GetDiagnosticMessages(CancellationToken cancellationToken);
-
-		Task Save(CancellationToken cancellationToken);
-		Task ReadSettings(CancellationToken cancellationToken);
-		void Revert();
 	}
 }

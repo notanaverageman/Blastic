@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Reactive.Bindings;
 
 namespace Blastic.Diagnostics
 {
@@ -11,10 +12,13 @@ namespace Blastic.Diagnostics
 		public Func<Task> Action { get; }
 		public string ActionLabel { get; }
 
+		public AsyncReactiveCommand ActionCommand { get; set; }
+
 		public DiagnosticMessage(Severity severity, string message)
 			:
 			this(severity, message, null, null)
 		{
+			ActionCommand = new AsyncReactiveCommand().WithSubscribe(async () => await Action());
 		}
 
 		public DiagnosticMessage(
@@ -27,11 +31,6 @@ namespace Blastic.Diagnostics
 			Message = message;
 			Action = action;
 			ActionLabel = actionLabel;
-		}
-
-		public async Task RunAction()
-		{
-			await Action();
 		}
 	}
 }

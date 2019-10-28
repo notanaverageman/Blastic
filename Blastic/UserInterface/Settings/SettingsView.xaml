@@ -5,16 +5,20 @@
 					  xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 					  xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:execution="clr-namespace:Blastic.Execution"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:settings="clr-namespace:Blastic.UserInterface.Settings"
 					  xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
-					  xmlns:execution="clr-namespace:Blastic.Execution"
 					  mc:Ignorable="d"
 					  Width="1000"
 					  Height="600"
-					  cal:Message.Attach="[Key Escape] = [Cancel]"
 					  d:DataContext="{d:DesignInstance settings:SettingsViewModel}"
 					  Style="{StaticResource WindowStyle}">
+
+	<controls:MetroWindow.InputBindings>
+		<KeyBinding Key="Escape"
+					Command="{Binding CancelCommand}" />
+	</controls:MetroWindow.InputBindings>
 
 	<Grid>
 		<Grid controlExtensions:GridExtensions.RowDefinitions="*,Auto">
@@ -24,7 +28,7 @@
 					<ItemsControl.ItemTemplate>
 						<DataTemplate DataType="settings:SettingsSectionViewModel">
 							<Expander Header="{Binding SectionName}"
-							          IsExpanded="{Binding IsExpanded.ReactiveSettingValue.Value}">
+									  IsExpanded="{Binding IsExpanded.ReactiveSettingValue.Value}">
 								<ContentControl Margin="32,-8,24,16"
 												HorizontalContentAlignment="Stretch"
 												VerticalContentAlignment="Stretch"
@@ -41,12 +45,13 @@
 						Margin="0,8,16,8"
 						HorizontalAlignment="Right"
 						Orientation="Horizontal">
-				<Button cal:Message.Attach="Save"
+
+				<Button Command="{Binding SaveCommand}"
 						Content="Save"
 						Style="{StaticResource MaterialDesignFlatButton}" />
 
 				<Button Margin="8,0,0,0"
-						cal:Message.Attach="Cancel"
+						Command="{Binding CancelCommand}"
 						Content="Cancel"
 						Style="{StaticResource MaterialDesignFlatButton}" />
 			</StackPanel>
@@ -79,13 +84,13 @@
 								HorizontalAlignment="Right"
 								Orientation="Horizontal">
 
-						<Button cal:Message.Attach="HideDiagnosticMessagesIgnoreErrors"
-						        Content="Save Anyways"
-						        Style="{StaticResource MaterialDesignFlatButton}" />
+						<Button Command="{Binding HideDiagnosticMessagesIgnoreErrorsCommand}"
+								Content="Save Anyways"
+								Style="{StaticResource MaterialDesignFlatButton}" />
 
-						<Button cal:Message.Attach="HideDiagnosticMessages"
-						        Content="Cancel"
-						        Style="{StaticResource MaterialDesignFlatButton}" />
+						<Button Command="{Binding HideDiagnosticMessagesCommand}"
+								Content="Cancel"
+								Style="{StaticResource MaterialDesignFlatButton}" />
 					</StackPanel>
 				</Grid>
 			</Grid>

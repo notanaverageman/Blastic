@@ -4,66 +4,55 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Caliburn.Micro;
-using Blastic.Caliburn;
 using Blastic.Diagnostics;
 using Blastic.Execution;
+using Blastic.LifetimeManagement;
+using Blastic.LifetimeManagement.Contexts;
+using Caliburn.Micro;
 using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	public sealed class SettingsViewModel : ScreenBase
+	public sealed class SettingsViewModel : ConductorAllActive
 	{
 		private bool _hasReadSettings;
 		private Window _activeWindow;
 
-		public IObservableCollection<ISettingsSectionViewModel> Items { get; set; }
 		public IObservableCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
 
+		public AsyncReactiveCommand SaveCommand { get; }
+		public AsyncReactiveCommand CancelCommand { get; }
+
+		public ReactiveCommand HideDiagnosticMessagesCommand { get; }
+		public ReactiveCommand HideDiagnosticMessagesIgnoreErrorsCommand { get; }
+		
 		public SettingsViewModel(
 			ExecutionContextFactory executionContextFactory,
 			IEnumerable<ISettingsSectionViewModel> sections)
 			:
 			base(executionContextFactory)
 		{
-			Items = new BindableCollection<ISettingsSectionViewModel>(sections);
 			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
-
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
-			DisplayName = "Settings";
-		}
+			DisplayName.Value = "Settings";
 
-		protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
-		{
-			await ReadSettings(cancellationToken);
-		}
-		
-		public async Task ReadSettings(CancellationToken cancellationToken)
-		{
-			if (_hasReadSettings)
+			foreach (ISettingsSectionViewModel section in sections)
 			{
-				return;
+				Items.Add(section);
 			}
 
-			async Task ReadSettings(CancellationToken token)
-			{
-				foreach (ISettingsSectionViewModel item in Items)
-				{
-					await ((IScreen)item).ActivateAsync(cancellationToken);
-					await item.ReadSettings(token);
-				}
-			}
+			SaveCommand = new AsyncReactiveCommand().WithSubscribe(Save);
+			CancelCommand = new AsyncReactiveCommand().WithSubscribe(Cancel);
 
-			await ExecutionContext.Execute(ReadSettings, customCancellationToken: cancellationToken);
-
-			_hasReadSettings = true;
+			HideDiagnosticMessagesCommand = new ReactiveCommand().WithSubscribe(HideDiagnosticMessages);
+			HideDiagnosticMessagesIgnoreErrorsCommand = new ReactiveCommand().WithSubscribe(HideDiagnosticMessagesIgnoreErrors);
 		}
 
-		public async void Save()
+		public async Task Save()
 		{
 			async Task Check(CancellationToken cancellationToken)
 			{
@@ -88,17 +77,12 @@ namespace Blastic.UserInterface.Settings
 				}
 			}
 
-			async Task Save(CancellationToken cancellationToken)
+			ClosureContext context = new ClosureContext(CancellationToken.None)
 			{
-				foreach (ISettingsSectionViewModel item in Items)
-				{
-					await item.Save(cancellationToken);
-				}
-			}
+				DialogResult = true
+			};
 
-			await ExecutionContext.Execute(Save);
-
-			await TryCloseAsync();
+			await Lifetime.Close.Execute(context);
 		}
 
 		private Task<bool> ShowDiagnosticMessages()
@@ -123,12 +107,12 @@ namespace Blastic.UserInterface.Settings
 
 		public async Task Cancel()
 		{
-			await TryCloseAsync();
-
-			foreach (ISettingsSectionViewModel item in Items)
+			ClosureContext context = new ClosureContext(CancellationToken.None)
 			{
-				item.Revert();
-			}
+				DialogResult = false
+			};
+
+			await Lifetime.Close.Execute(context);
 		}
 
 		public async Task Show()
@@ -146,14 +130,15 @@ namespace Blastic.UserInterface.Settings
 			await ExecutionContext.WindowManager.ShowWindowAsync(this, null, settings);
 		}
 
-		protected override void OnViewAttached(object view, object context)
-		{
-			_activeWindow = view as Window;
-		}
+		// TODO:
+		//protected override void OnViewAttached(object view, object context)
+		//{
+		//	_activeWindow = view as Window;
+		//}
 
-		public override object GetView(object context = null)
-		{
-			return _activeWindow;
-		}
+		//public override object GetView(object context = null)
+		//{
+		//	return _activeWindow;
+		//}
 	}
 }
