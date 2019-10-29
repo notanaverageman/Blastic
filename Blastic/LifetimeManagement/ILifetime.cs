@@ -9,6 +9,8 @@ namespace Blastic.LifetimeManagement
 		IReadOnlyReactiveProperty<bool> IsInitialized { get; }
 		IReadOnlyReactiveProperty<bool> IsActive { get; }
 
+		IReadOnlyReactiveProperty<bool> IsActivating { get; }
+
 		AsyncCommand<InitializationContext> Initialize { get; }
 		
 		AsyncCommand<ClosureContext> Close { get; }

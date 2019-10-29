@@ -11,9 +11,12 @@ namespace Blastic.LifetimeManagement
 	{
 		private readonly IReactiveProperty<bool> _isInitialized;
 		private readonly IReactiveProperty<bool> _isActive;
+		private readonly IReactiveProperty<bool> _isActivating;
 
 		public IReadOnlyReactiveProperty<bool> IsInitialized { get; }
 		public IReadOnlyReactiveProperty<bool> IsActive { get; }
+
+		public IReadOnlyReactiveProperty<bool> IsActivating { get; }
 
 		public AsyncCommand<InitializationContext> Initialize { get; }
 
@@ -27,9 +30,11 @@ namespace Blastic.LifetimeManagement
 		{
 			_isInitialized = new ReactiveProperty<bool>();
 			_isActive = new ReactiveProperty<bool>();
+			_isActivating = new ReactiveProperty<bool>();
 
 			IsInitialized = new ReadOnlyReactiveProperty<bool>(_isInitialized);
 			IsActive = new ReadOnlyReactiveProperty<bool>(_isActive);
+			IsActivating = new ReadOnlyReactiveProperty<bool>(_isActivating);
 
 			Initialize = IsInitialized
 				.Select(x => !x)
@@ -84,12 +89,15 @@ namespace Blastic.LifetimeManagement
 
 		private async Task PreActivate(AsyncCommandContext<ActivationContext> context)
 		{
+			_isActivating.Value = true;
+
 			InitializationContext initializationContext = new InitializationContext(context.Parameter.CancellationToken);
 			await Initialize.Execute(initializationContext);
 		}
 
 		private Task PostActivate(AsyncCommandContext<ActivationContext> context)
 		{
+			_isActivating.Value = false;
 			_isActive.Value = true;
 			return Task.CompletedTask;
 		}

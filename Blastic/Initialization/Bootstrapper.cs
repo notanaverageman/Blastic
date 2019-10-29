@@ -63,11 +63,12 @@ namespace Blastic.Initialization
 
 		protected override async void OnStartup(object sender, StartupEventArgs e)
 		{
-			await DisplayRootViewForAsync(_mainViewModelType);
-
 			// TODO: Find an appropriate place.
-			object instance = IoC.GetInstance(_mainViewModelType, null);
-			if (instance is IHasLifetime hasLifetime)
+			object viewModel = IoC.GetInstance(_mainViewModelType, null);
+			var windowManager = IoC.Get<IWindowManager>();
+			await windowManager.ShowWindowAsync(viewModel);
+
+			if (viewModel is IHasLifetime hasLifetime)
 			{
 				ActivationContext context = new ActivationContext(default);
 				await hasLifetime.Lifetime.Activate.Execute(context);

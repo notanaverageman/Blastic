@@ -13,21 +13,24 @@ namespace Blastic.LifetimeManagement
 	{
 		private readonly IReadOnlyReactiveProperty<IHasLifetime> _previousActiveItem;
 
-		public IReactiveProperty<IHasLifetime> ActiveItem { get; }
+		public ReactiveProperty<IHasLifetime> ActiveItem { get; }
 
 		public ConductorOneActive(ExecutionContextFactory executionContextFactory) : base(executionContextFactory)
 		{
 			LifetimeChainOptions.ActivateChildrenOnSelfActivation = false;
 
-			ActiveItem = new ReactivePropertySlim<IHasLifetime>();
-			
+			ActiveItem = new ReactiveProperty<IHasLifetime>();
+
 			_previousActiveItem = ActiveItem
-				.Scan<IHasLifetime, IHasLifetime>(default, (accumulator, current) => current)
+				.Scan<IHasLifetime, (IHasLifetime Previous, IHasLifetime Current)>(
+					(null, null),
+					(accumulator, current) => (accumulator.Current, current))
+				.Select(x => x.Previous)
 				.ToReadOnlyReactiveProperty();
 
 			ActiveItem.Subscribe(async x =>
 			{
-				await ChangeActiveItem(x, default);
+				await Activate(ActiveItem.Value);
 			});
 
 			InitializeChildLifetimeSubscriptions();
@@ -35,26 +38,27 @@ namespace Blastic.LifetimeManagement
 
 		public async Task Activate(IHasLifetime item, CancellationToken cancellationToken = default)
 		{
-			if (!Items.Contains(item))
+			if (item != null && !Items.Contains(item))
 			{
 				Items.Add(item);
 			}
 
-			if (!Lifetime.IsActive.Value)
+			bool isActivating = Lifetime.IsActivating.Value;
+			bool isActive = Lifetime.IsActive.Value;
+
+			if (!(isActivating || isActive))
 			{
 				return;
 			}
 
-			await ChangeActiveItem(item, cancellationToken);
+			// This does not cause a stack overflow since equality comparer in ActiveItem.Value
+			// returns early if we set the same item.
+			ActiveItem.Value = item;
+			await ChangeActiveItem(cancellationToken);
 		}
 
 		public async Task Close(IHasLifetime item, CancellationToken cancellationToken = default)
 		{
-			if (Equals(item, ActiveItem.Value))
-			{
-				await ChangeActiveItem(_previousActiveItem.Value, cancellationToken);
-			}
-
 			ClosureContext context = new ClosureContext(cancellationToken);
 			await item.Lifetime.Close.Execute(context);
 
@@ -62,34 +66,35 @@ namespace Blastic.LifetimeManagement
 			{
 				return;
 			}
+			
+			if (Equals(item, ActiveItem.Value))
+			{
+				ActiveItem.Value = _previousActiveItem.Value;
+			}
 
 			Items.Remove(item);
 		}
 
-		private async Task ChangeActiveItem(
-			IHasLifetime newActiveItem,
-			CancellationToken cancellationToken)
+		private async Task ChangeActiveItem(CancellationToken cancellationToken)
 		{
-			if (Equals(newActiveItem, ActiveItem.Value))
+			IHasLifetime previousActiveItem = _previousActiveItem.Value;
+			IHasLifetime activeItem = ActiveItem.Value;
+
+			if (Equals(previousActiveItem, activeItem))
 			{
 				return;
 			}
 
-			if (ActiveItem.Value != null)
+			if (previousActiveItem != null)
 			{
 				DeactivationContext context = new DeactivationContext(cancellationToken);
-				await ActiveItem.Value.Lifetime.Deactivate.Execute(context);
+				await previousActiveItem.Lifetime.Deactivate.Execute(context);
 			}
 
-			if (newActiveItem != null)
+			if (activeItem != null)
 			{
-				ActiveItem.Value = newActiveItem;
-
-				InitializationContext initializationContext = new InitializationContext(cancellationToken);
 				ActivationContext activationContext = new ActivationContext(cancellationToken);
-				
-				await newActiveItem.Lifetime.Initialize.Execute(initializationContext);
-				await newActiveItem.Lifetime.Activate.Execute(activationContext);
+				await activeItem.Lifetime.Activate.Execute(activationContext);
 			}
 		}
 	}
