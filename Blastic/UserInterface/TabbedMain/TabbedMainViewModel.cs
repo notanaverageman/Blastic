@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using Blastic.Execution;
 using Blastic.Initialization;
 using Blastic.Initialization.Steps;
@@ -14,11 +13,7 @@ using Reactive.Bindings;
 
 namespace Blastic.UserInterface.TabbedMain
 {
-	public sealed class TabbedMainViewModel
-		:
-		ConductorOneActive,
-		IHandle<OpenTabEvent>,
-		IHandle<OpenLogsEvent>
+	public sealed class TabbedMainViewModel : ConductorOneActive<IMainTab>
 	{
 		private readonly List<IInitializationStep> _initializationSteps;
 		private bool _isInitializationStepsRun;
@@ -69,7 +64,8 @@ namespace Blastic.UserInterface.TabbedMain
 
 			Lifetime.Initialize.Subscribe(x => ExecuteInitializationSteps(x.Parameter.CancellationToken));
 
-			ExecutionContext.EventAggregator.SubscribeOnPublishedThread(this);
+			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
+			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
 			
 			ShowLogsCommand = new AsyncReactiveCommand().WithSubscribe(ShowLogs);
 			ShowSettingsCommand = new AsyncReactiveCommand().WithSubscribe(ShowSettings);
@@ -119,7 +115,7 @@ namespace Blastic.UserInterface.TabbedMain
 			}
 		}
 		
-		public async Task HandleAsync(OpenTabEvent message, CancellationToken cancellationToken)
+		public async Task OpenTab(OpenTabEvent message)
 		{
 			IMainTab tab = message.ViewModel;
 
@@ -128,12 +124,7 @@ namespace Blastic.UserInterface.TabbedMain
 				Items.Add(tab);
 			}
 
-			await Activate(tab, cancellationToken);
-		}
-
-		public async Task HandleAsync(OpenLogsEvent message, CancellationToken cancellationToken)
-		{
-			await ShowLogs();
+			await Activate(tab);
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace Blastic.Reactive
 			_actions = new ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order>();
 
 			_canExecute = canExecute?.ToReadOnlyReactiveProperty();
-			_canExecute ??= new ReactiveProperty<bool>();
+			_canExecute ??= new ReactiveProperty<bool>(true);
 
 			_canExecute.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
@@ -121,6 +121,15 @@ namespace Blastic.Reactive
 		public static AsyncCommand<T> ToAsyncCommand<T>(this IObservable<bool> canExecute)
 		{
 			return new AsyncCommand<T>(canExecute);
+		}
+
+		public static AsyncCommand WithSubscribe(
+			this AsyncCommand command,
+			Func<AsyncCommandContext, Task> action,
+			Order order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
 		}
 
 		public static AsyncCommand<T> WithSubscribe<T>(

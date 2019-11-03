@@ -6,6 +6,7 @@ using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,8 @@ namespace Blastic.Sample.UserInterface
 
 		public IReactiveProperty<string> Text { get; set; }
 
+		public AsyncCommand TestCommand { get; set; }
+
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
 			TestSettingsViewModel testSettings)
@@ -28,6 +31,7 @@ namespace Blastic.Sample.UserInterface
 		{
 			Order = new Order(1);
 			Text = new ReactiveProperty<string>();
+			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
@@ -52,9 +56,11 @@ namespace Blastic.Sample.UserInterface
 			await ExecutionContext.Execute(async x =>
 			{
 				ExecutionContext.Logger.LogError("Aasd");
-				ExecutionContext.ProgressDetails.AddRange(new []{ "Test1", "Test2" });
+				ExecutionContext.ProgressDetails.Add("Test1");
+				ExecutionContext.ProgressDetails.Add("Test2");
 				await Task.Delay(3000, x);
-				ExecutionContext.ProgressDetails.AddRange(new[] { "Test1", "Test2" });
+				ExecutionContext.ProgressDetails.Add("Test1");
+				ExecutionContext.ProgressDetails.Add("Test2");
 				ExecutionContext.Logger.LogError("Aasd2");
 			});
 

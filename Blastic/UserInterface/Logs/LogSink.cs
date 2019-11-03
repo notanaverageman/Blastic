@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Caliburn.Micro;
+using Reactive.Bindings;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -7,11 +7,11 @@ namespace Blastic.UserInterface.Logs
 {
 	public class LogSink : ILogEventSink
 	{
-		public IObservableCollection<Log> Logs { get; }
+		public ReactiveCollection<Log> Logs { get; }
 
 		public LogSink()
 		{
-			Logs = new BindableCollection<Log>();
+			Logs = new ReactiveCollection<Log>();
 		}
 
 		public void Emit(LogEvent logEvent)

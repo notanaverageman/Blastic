@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,17 +7,16 @@ using Blastic.Diagnostics;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
-using Caliburn.Micro;
+using Blastic.ViewManagement;
 using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	public sealed class SettingsViewModel : ConductorAllActive
+	public sealed class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>, IViewAware
 	{
-		private bool _hasReadSettings;
-		private Window _activeWindow;
+		public IReactiveProperty<UIElement> View { get; }
 
-		public IObservableCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
+		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
@@ -35,7 +33,8 @@ namespace Blastic.UserInterface.Settings
 			:
 			base(executionContextFactory)
 		{
-			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
+			View = new ReactiveProperty<UIElement>();
+			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
 			DisplayName.Value = "Settings";
@@ -61,7 +60,12 @@ namespace Blastic.UserInterface.Settings
 				foreach (ISettingsSectionViewModel item in Items)
 				{
 					IEnumerable<DiagnosticMessage> diagnosticMessages = await item.GetDiagnosticMessages(cancellationToken);
-					DiagnosticMessages.AddRange(diagnosticMessages);
+
+					// TODO: AddRange
+					foreach (DiagnosticMessage diagnosticMessage in diagnosticMessages)
+					{
+						DiagnosticMessages.Add(diagnosticMessage);
+					}
 				}
 			}
 
@@ -117,28 +121,11 @@ namespace Blastic.UserInterface.Settings
 
 		public async Task Show()
 		{
-			if (_activeWindow != null && PresentationSource.FromVisual(_activeWindow) != null)
+			await ExecutionContext.WindowManager.ShowWindow(this, x =>
 			{
-				_activeWindow.Activate();
-				return;
-			}
-
-			dynamic settings = new ExpandoObject();
-			settings.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			settings.Owner = Application.Current.MainWindow;
-
-			await ExecutionContext.WindowManager.ShowWindowAsync(this, null, settings);
+				x.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+				x.Owner = Application.Current.MainWindow;
+			});
 		}
-
-		// TODO:
-		//protected override void OnViewAttached(object view, object context)
-		//{
-		//	_activeWindow = view as Window;
-		//}
-
-		//public override object GetView(object context = null)
-		//{
-		//	return _activeWindow;
-		//}
 	}
 }

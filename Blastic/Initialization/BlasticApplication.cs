@@ -7,16 +7,24 @@ using System.Windows.Threading;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Blastic.Initialization.Extensions;
+using Blastic.LifetimeManagement;
+using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs;
+using Blastic.UserInterface.Settings;
+using Blastic.ViewManagement;
+using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 using Log = Serilog.Log;
 
 namespace Blastic.Initialization
 {
 	public class BlasticApplication
 	{
+		internal static IViewLocator ViewLocator;
+
 		private readonly ConfigurationBuilder _configurationBuilder;
 		private readonly ContainerBuilder _containerBuilder;
 		private readonly ServiceCollection _serviceCollection;
@@ -72,7 +80,23 @@ namespace Blastic.Initialization
 			return this;
 		}
 
-		public void Run<TMainViewModel>()
+		private void AddViewLocator(IEnumerable<Assembly> viewAssemblies)
+		{
+			Configure(builder =>
+			{
+				ViewLocator viewLocator = new ViewLocator()
+					.WithTypeMapper<ISettingsSectionViewModel, FormSettingSectionView>()
+					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"));
+
+				builder
+					.RegisterInstance(viewLocator)
+					.AsImplementedInterfaces()
+					.AsSelf()
+					.SingleInstance();
+			});
+		}
+
+		public async Task Run<TMainViewModel>()
 		{
 			IConfiguration configuration = _configurationBuilder.Build();
 
@@ -80,12 +104,15 @@ namespace Blastic.Initialization
 				.ReadFrom.Configuration(configuration);
 
 			RegisterViewAssembly<BlasticApplication>();
+			AddViewLocator(_viewAssemblies);
 
 			Configure(x => x.RegisterInstance(configuration));
 			Configure(x => x.RegisterType<TMainViewModel>());
 
 			_containerBuilder.Populate(_serviceCollection);
 			IContainer container = _containerBuilder.Build();
+
+			ViewLocator = container.Resolve<IViewLocator>();
 
 			LogSink logSink = container.ResolveOptional<LogSink>();
 
@@ -95,17 +122,22 @@ namespace Blastic.Initialization
 			}
 
 			Log.Logger = loggerConfiguration.CreateLogger();
-
-			Bootstrapper bootstrapper = new Bootstrapper(
-				container,
-				typeof(TMainViewModel),
-				_viewAssemblies);
-
+			
 			SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
 			
 			try
 			{
-				bootstrapper.Initialize();
+				TMainViewModel viewModel = container.Resolve<TMainViewModel>();
+				IWindowManager windowManager = container.Resolve<IWindowManager>();
+
+				await windowManager.ShowWindow(viewModel);
+
+				if (viewModel is IHasLifetime hasLifetime)
+				{
+					ActivationContext context = new ActivationContext(default);
+					await hasLifetime.Lifetime.Activate.Execute(context);
+				}
+
 				_application.Run();
 			}
 			catch (Exception exception)

@@ -5,7 +5,6 @@ using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
 using Blastic.Services.Settings;
-using Caliburn.Micro;
 using Reactive.Bindings;
 
 namespace Blastic.Settings
@@ -66,7 +65,7 @@ namespace Blastic.Settings
 		/// </summary>
 		public T Value => ReactiveValue.Value;
 
-		public IObservableCollection<DiagnosticMessage> DiagnosticMessages { get; }
+		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; }
 
 		public Setting(
 			ISettingsService settingsService,
@@ -80,7 +79,7 @@ namespace Blastic.Settings
 			Key = key;
 			DefaultValue = defaultValue;
 
-			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
+			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);

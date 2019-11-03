@@ -26,7 +26,7 @@
 					  materialDesign:HintAssist.Hint="Minimum Level"
 					  IsReadOnly="True"
 					  ItemsSource="{Binding LogLevels}"
-					  SelectedItem="{Binding MinimumLogLevel, Mode=TwoWay}" />
+					  SelectedItem="{Binding MinimumLogLevel.Value, Mode=TwoWay}" />
 
 			<Button Margin="0,0,8,0"
 					HorizontalAlignment="Right"

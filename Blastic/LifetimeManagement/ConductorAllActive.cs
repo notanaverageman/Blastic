@@ -5,14 +5,14 @@ using Blastic.LifetimeManagement.Contexts;
 
 namespace Blastic.LifetimeManagement
 {
-	public class ConductorAllActive : ConductorBase
+	public class ConductorAllActive<T> : ConductorBase<T> where T : IHasLifetime
 	{
 		public ConductorAllActive(ExecutionContextFactory executionContextFactory) : base(executionContextFactory)
 		{
 			InitializeChildLifetimeSubscriptions();
 		}
 
-		public async Task Activate(IHasLifetime item, CancellationToken cancellationToken = default)
+		public async Task Activate(T item, CancellationToken cancellationToken = default)
 		{
 			if (!Lifetime.IsActive.Value)
 			{
@@ -28,7 +28,7 @@ namespace Blastic.LifetimeManagement
 			await item.Lifetime.Activate.Execute(context);
 		}
 
-		public async Task Deactivate(IHasLifetime item, CancellationToken cancellationToken = default)
+		public async Task Deactivate(T item, CancellationToken cancellationToken = default)
 		{
 			if (!Items.Contains(item))
 			{

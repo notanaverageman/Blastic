@@ -1,7 +1,8 @@
-﻿using Caliburn.Micro;
+﻿using Blastic.Messaging;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
+using Blastic.Services.Windowing;
 
 namespace Blastic.Execution
 {

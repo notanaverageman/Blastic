@@ -9,20 +9,20 @@ using Reactive.Bindings.Extensions;
 
 namespace Blastic.LifetimeManagement
 {
-	public class ConductorBase : Screen
+	public class ConductorBase<T> : Screen where T : IHasLifetime
 	{
-		private readonly Dictionary<IHasLifetime, IDisposable> _lifetimeSubscriptions;
+		private readonly Dictionary<T, IDisposable> _lifetimeSubscriptions;
 
-		public ReactiveCollection<IHasLifetime> Items { get; }
+		public ReactiveCollection<T> Items { get; }
 
 		public ConductorOptions ConductorOptions { get; }
 		public LifetimeChainOptions LifetimeChainOptions { get; }
 
 		public ConductorBase(ExecutionContextFactory executionContextFactory) : base(executionContextFactory)
 		{
-			_lifetimeSubscriptions = new Dictionary<IHasLifetime, IDisposable>();
+			_lifetimeSubscriptions = new Dictionary<T, IDisposable>();
 
-			Items = new ReactiveCollection<IHasLifetime>();
+			Items = new ReactiveCollection<T>();
 
 			ConductorOptions = new ConductorOptions();
 			LifetimeChainOptions = new LifetimeChainOptions();
@@ -39,9 +39,9 @@ namespace Blastic.LifetimeManagement
 				}, Order.AbsoluteMaximum);
 			}
 
-			void AddChildren(IEnumerable<IHasLifetime> items)
+			void AddChildren(IEnumerable<T> items)
 			{
-				foreach (IHasLifetime item in items)
+				foreach (T item in items)
 				{
 					if (_lifetimeSubscriptions.ContainsKey(item))
 					{
@@ -52,9 +52,9 @@ namespace Blastic.LifetimeManagement
 				}
 			}
 
-			void RemoveChildren(IEnumerable<IHasLifetime> items)
+			void RemoveChildren(IEnumerable<T> items)
 			{
-				foreach (IHasLifetime item in items)
+				foreach (T item in items)
 				{
 					_lifetimeSubscriptions[item]?.Dispose();
 					_lifetimeSubscriptions.Remove(item);

@@ -9,21 +9,21 @@ using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 
 namespace Blastic.LifetimeManagement
 {
-	public class ConductorOneActive : ConductorBase
+	public class ConductorOneActive<T> : ConductorBase<T> where T : IHasLifetime
 	{
-		private readonly IReadOnlyReactiveProperty<IHasLifetime> _previousActiveItem;
+		private readonly IReadOnlyReactiveProperty<T> _previousActiveItem;
 
-		public ReactiveProperty<IHasLifetime> ActiveItem { get; }
+		public ReactiveProperty<T> ActiveItem { get; }
 
 		public ConductorOneActive(ExecutionContextFactory executionContextFactory) : base(executionContextFactory)
 		{
 			LifetimeChainOptions.ActivateChildrenOnSelfActivation = false;
 
-			ActiveItem = new ReactiveProperty<IHasLifetime>();
+			ActiveItem = new ReactiveProperty<T>();
 
 			_previousActiveItem = ActiveItem
-				.Scan<IHasLifetime, (IHasLifetime Previous, IHasLifetime Current)>(
-					(null, null),
+				.Scan<T, (T Previous, T Current)>(
+					(default, default),
 					(accumulator, current) => (accumulator.Current, current))
 				.Select(x => x.Previous)
 				.ToReadOnlyReactiveProperty();
@@ -36,7 +36,7 @@ namespace Blastic.LifetimeManagement
 			InitializeChildLifetimeSubscriptions();
 		}
 
-		public async Task Activate(IHasLifetime item, CancellationToken cancellationToken = default)
+		public async Task Activate(T item, CancellationToken cancellationToken = default)
 		{
 			if (item != null && !Items.Contains(item))
 			{
@@ -57,7 +57,7 @@ namespace Blastic.LifetimeManagement
 			await ChangeActiveItem(cancellationToken);
 		}
 
-		public async Task Close(IHasLifetime item, CancellationToken cancellationToken = default)
+		public async Task Close(T item, CancellationToken cancellationToken = default)
 		{
 			ClosureContext context = new ClosureContext(cancellationToken);
 			await item.Lifetime.Close.Execute(context);

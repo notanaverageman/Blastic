@@ -10,11 +10,11 @@ using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.Services.Settings;
 using Blastic.Settings;
-using Caliburn.Micro;
+using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	public abstract class SettingsSectionViewModel : ConductorAllActive, ISettingsSectionViewModel
+	public abstract class SettingsSectionViewModel : ConductorAllActive<IHasLifetime>, ISettingsSectionViewModel
 	{
 		private Dictionary<string, SettingInfo> _settings;
 
@@ -54,7 +54,7 @@ namespace Blastic.UserInterface.Settings
 
 			foreach (SettingInfo info in _settings.Values)
 			{
-				IObservableCollection<DiagnosticMessage> messages = (IObservableCollection<DiagnosticMessage>)info.DiagnosticMessagesProperty.GetValue(info.Setting);
+				ReactiveCollection<DiagnosticMessage> messages = (ReactiveCollection<DiagnosticMessage>)info.DiagnosticMessagesProperty.GetValue(info.Setting);
 
 				if (messages?.Any() != true)
 				{
