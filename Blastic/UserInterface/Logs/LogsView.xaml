@@ -13,7 +13,7 @@
 					  Width="1400"
 					  Height="800"
 					  d:DataContext="{d:DesignInstance logs:LogsViewModel}"
-					  GlowBrush="{StaticResource WindowTitleColorBrush}"
+					  Style="{StaticResource WindowStyle}"
 					  TitleCharacterCasing="Normal">
 
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Common;
@@ -14,9 +12,9 @@ using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	public abstract class SettingsSectionViewModel : ConductorAllActive<IHasLifetime>, ISettingsSectionViewModel
+	public abstract class SettingsSectionViewModel : ConductorAllActive<Setting>, ISettingsSectionViewModel
 	{
-		private Dictionary<string, SettingInfo> _settings;
+		private Dictionary<string, Setting> _settings;
 
 		public abstract string SectionName { get; }
 		public ISettingsService SettingsService { get; }
@@ -40,10 +38,10 @@ namespace Blastic.UserInterface.Settings
 
 			_settings = GetType()
 				.GetProperties()
-				.Where(x => IsAssignableToGenericType(x.PropertyType, typeof(Setting<>)))
+				.Where(x => typeof(Setting).IsAssignableFrom(x.PropertyType))
 				.ToDictionary(
 					x => x.Name,
-					x => new SettingInfo(x, x.GetValue(this)));
+					x => (Setting)x.GetValue(this));
 
 			return Task.CompletedTask;
 		}
@@ -52,9 +50,10 @@ namespace Blastic.UserInterface.Settings
 		{
 			List<DiagnosticMessage> diagnosticMessages = new List<DiagnosticMessage>();
 
-			foreach (SettingInfo info in _settings.Values)
+			foreach (Setting setting in _settings.Values)
 			{
-				ReactiveCollection<DiagnosticMessage> messages = (ReactiveCollection<DiagnosticMessage>)info.DiagnosticMessagesProperty.GetValue(info.Setting);
+				setting.PopulateDiagnosticMessages();
+				ReactiveCollection<DiagnosticMessage> messages = setting.DiagnosticMessages;
 
 				if (messages?.Any() != true)
 				{
@@ -65,61 +64,6 @@ namespace Blastic.UserInterface.Settings
 			}
 
 			return Task.FromResult((IEnumerable<DiagnosticMessage>)diagnosticMessages);
-		}
-
-		private static bool IsAssignableToGenericType(Type givenType, Type genericType)
-		{
-			Type[] interfaceTypes = givenType.GetInterfaces();
-
-			if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
-			{
-				return true;
-			}
-
-			foreach (Type it in interfaceTypes)
-			{
-				if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
-				{
-					return true;
-				}
-			}
-
-			Type baseType = givenType.BaseType;
-
-			if (baseType == null)
-			{
-				return false;
-			}
-
-			return IsAssignableToGenericType(baseType, genericType);
-		}
-
-		private class SettingInfo
-		{
-			public object Setting { get; }
-
-			public PropertyInfo DiagnosticMessagesProperty { get; }
-
-			public SettingInfo(PropertyInfo propertyInfo, object setting)
-			{
-				Setting = setting;
-
-				DiagnosticMessagesProperty = GetPropertyInfo(nameof(Setting<object>.DiagnosticMessages), propertyInfo.PropertyType);
-			}
-
-			private PropertyInfo GetPropertyInfo(
-				string propertyName,
-				Type propertyType)
-			{
-				PropertyInfo propertyInfo = propertyType.GetProperty(propertyName);
-
-				if (propertyInfo == null)
-				{
-					throw new InvalidOperationException($"{propertyName} property is not found on {propertyType}!");
-				}
-
-				return propertyInfo;
-			}
 		}
 
 		protected void RegisterForUI<T>(Setting<T> setting)

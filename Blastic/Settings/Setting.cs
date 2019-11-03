@@ -13,11 +13,9 @@ namespace Blastic.Settings
 	/// <summary>
 	/// An individual setting.
 	/// </summary>
-	/// <typeparam name="T">Type of the value.</typeparam>
-	public abstract class Setting<T> : IHasLifetime
+	public abstract class Setting : IHasLifetime
 	{
-		private readonly ISettingsService _settingsService;
-		private IDisposable _isEnabledSubscription;
+		protected ISettingsService SettingsService { get; }
 
 		/// <summary>
 		/// Lifetime object that initates the read and save operations.
@@ -38,6 +36,60 @@ namespace Blastic.Settings
 		/// Key to be used when writing to the database.
 		/// </summary>
 		public string Key { get; }
+
+		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; }
+
+		public Setting(ISettingsService settingsService, string key)
+		{
+			SettingsService = settingsService;
+
+			Lifetime = new Lifetime();
+
+			Key = key;
+			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
+
+			Lifetime.Initialize.Subscribe(x => Read(x.Parameter.CancellationToken));
+
+			Lifetime.Close.Subscribe(async x =>
+			{
+				if (x.Parameter.DialogResult == true)
+				{
+					await Save(x.Parameter.CancellationToken);
+				}
+				else
+				{
+					Revert();
+				}
+			});
+		}
+
+		public abstract Task Read(CancellationToken cancellationToken);
+		public abstract Task Save(CancellationToken cancellationToken);
+		public abstract void Revert();
+
+		public virtual string CheckError()
+		{
+			return null;
+		}
+
+		public virtual void PopulateDiagnosticMessages()
+		{
+			string error = CheckError();
+
+			if (!string.IsNullOrEmpty(error))
+			{
+				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error));
+			}
+		}
+	}
+
+	/// <summary>
+	/// An individual setting.
+	/// </summary>
+	/// <typeparam name="T">Type of the value.</typeparam>
+	public abstract class Setting<T> : Setting
+	{
+		private IDisposable _isEnabledSubscription;
 
 		/// <summary>
 		/// Default value to be returned when key does not exist in database.
@@ -66,49 +118,28 @@ namespace Blastic.Settings
 		/// </summary>
 		public T Value => ReactiveValue.Value;
 
-		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; }
-
 		public Setting(
 			ISettingsService settingsService,
 			string key,
 			T defaultValue)
+			:
+			base(settingsService, key)
 		{
-			_settingsService = settingsService;
-
-			Lifetime = new Lifetime();
-
-			Key = key;
 			DefaultValue = defaultValue;
-
-			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
 
 			ReactiveSettingValue.SetValidateNotifyError(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
 			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
-
-			Lifetime.Initialize.Subscribe(x => Read(x.Parameter.CancellationToken));
-
-			Lifetime.Close.Subscribe(async x =>
-			{
-				if (x.Parameter.DialogResult == true)
-				{
-					await Save(x.Parameter.CancellationToken);
-				}
-				else
-				{
-					Revert();
-				}
-			});
 		}
 
-		public async Task Read(CancellationToken cancellationToken)
+		public override async Task Read(CancellationToken cancellationToken)
 		{
 			_isEnabledSubscription?.Dispose();
 			_isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.ForceValidate());
 
-			T value = await _settingsService.Get(Key, DefaultValue, cancellationToken);
+			T value = await SettingsService.Get(Key, DefaultValue, cancellationToken);
 
 			value = await AfterRead(value, cancellationToken);
 
@@ -116,11 +147,11 @@ namespace Blastic.Settings
 			ReactiveSettingValue.Value = value;
 		}
 
-		public async Task Save(CancellationToken cancellationToken)
+		public override async Task Save(CancellationToken cancellationToken)
 		{
 			T value = await BeforeSave(SettingValue, cancellationToken);
 
-			await _settingsService.Put(Key, value, cancellationToken);
+			await SettingsService.Put(Key, value, cancellationToken);
 			ReactiveValue.Value = SettingValue;
 		}
 
@@ -134,30 +165,15 @@ namespace Blastic.Settings
 			return Task.FromResult(value);
 		}
 
-		public void Revert()
+		public override void Revert()
 		{
 			ReactiveSettingValue.Value = Value;
-		}
-
-		public virtual string CheckError()
-		{
-			return null;
-		}
-
-		public virtual void PopulateDiagnosticMessages()
-		{
-			string error = CheckError();
-
-			if (!string.IsNullOrEmpty(error))
-			{
-				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error));
-			}
 		}
 
 		private void OnSettingValueChanged()
 		{
 			DiagnosticMessages.Clear();
-			
+
 			if (Element?.IsEnabled.Value != true)
 			{
 				return;
