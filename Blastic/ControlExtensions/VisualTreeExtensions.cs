@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Data;
 using System.Windows.Media;
-using Caliburn.Micro;
 
 namespace Blastic.ControlExtensions
 {
@@ -57,15 +55,7 @@ namespace Blastic.ControlExtensions
 					continue;
 				}
 
-				BindingExpression bindingExpression = GetBindingExpression(child);
-
 				if (child.Name == childName)
-				{
-					foundChild = child;
-					break;
-				}
-
-				if (bindingExpression != null && bindingExpression.ResolvedSourcePropertyName == childName)
 				{
 					foundChild = child;
 					break;
@@ -82,32 +72,9 @@ namespace Blastic.ControlExtensions
 				{
 					break;
 				}
-
-				BindingExpression foundChildBindingExpression = GetBindingExpression(foundChild);
-
-				if (foundChildBindingExpression != null &&
-					foundChildBindingExpression.ResolvedSourcePropertyName == childName)
-				{
-					break;
-				}
 			}
 
 			return foundChild;
-		}
-
-		private static BindingExpression GetBindingExpression(FrameworkElement control)
-		{
-			if (control == null)
-			{
-				return null;
-			}
-
-			ElementConvention convention = ConventionManager.GetElementConvention(control.GetType());
-			DependencyProperty bindableProperty = convention?.GetBindableProperty(control);
-
-			return bindableProperty != null
-				? control.GetBindingExpression(bindableProperty)
-				: null;
 		}
 	}
 }

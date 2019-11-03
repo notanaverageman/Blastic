@@ -2,22 +2,18 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Caliburn.Micro;
-using Blastic.Caliburn;
 using Blastic.Execution;
 using Blastic.Initialization;
 using Blastic.Initialization.Steps;
+using Blastic.LifetimeManagement;
 using Blastic.UserInterface.Events;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Settings;
+using Reactive.Bindings;
 
 namespace Blastic.UserInterface.TabbedMain
 {
-	public sealed class TabbedMainViewModel
-		:
-		ConductorOneActiveBase<object>,
-		IHandle<OpenTabEvent>,
-		IHandle<OpenLogsEvent>
+	public sealed class TabbedMainViewModel : ConductorOneActive<IMainTab>
 	{
 		private readonly List<IInitializationStep> _initializationSteps;
 		private bool _isInitializationStepsRun;
@@ -27,6 +23,9 @@ namespace Blastic.UserInterface.TabbedMain
 		public SettingsViewModel SettingsViewModel { get; }
 
 		public int FixedHeaderCount { get; }
+
+		public AsyncReactiveCommand ShowLogsCommand { get; }
+		public AsyncReactiveCommand ShowSettingsCommand { get; }
 
 		public TabbedMainViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -52,18 +51,27 @@ namespace Blastic.UserInterface.TabbedMain
 
 			FixedHeaderCount = tabs.Count(x => x.IsFixed);
 
-			Items.AddRange(tabs);
-			ActiveItem = Items.FirstOrDefault();
-
-			ExecutionContext.EventAggregator.SubscribeOnPublishedThread(this);
-
-			if (ProductInformation != null)
+			// TODO: AddRange.
+			foreach (IMainTab tab in tabs)
 			{
-				DisplayName = $"{ProductInformation.ProgramName} - {ProductInformation.Version}";
+				Items.Add(tab);
 			}
+
+			Lifetime.Activate.Subscribe(async x =>
+			{
+				await Activate(Items.FirstOrDefault(), x.Parameter.CancellationToken);
+			});
+
+			Lifetime.Initialize.Subscribe(x => ExecuteInitializationSteps(x.Parameter.CancellationToken));
+
+			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
+			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
+			
+			ShowLogsCommand = new AsyncReactiveCommand().WithSubscribe(ShowLogs);
+			ShowSettingsCommand = new AsyncReactiveCommand().WithSubscribe(ShowSettings);
 		}
 
-		protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+		private async Task ExecuteInitializationSteps(CancellationToken cancellationToken)
 		{
 			if (_isInitializationStepsRun)
 			{
@@ -107,21 +115,16 @@ namespace Blastic.UserInterface.TabbedMain
 			}
 		}
 		
-		public async Task HandleAsync(OpenTabEvent message, CancellationToken cancellationToken)
+		public async Task OpenTab(OpenTabEvent message)
 		{
-			object tab = message.ViewModel;
+			IMainTab tab = message.ViewModel;
 
 			if (!Items.Contains(tab))
 			{
 				Items.Add(tab);
 			}
 
-			await ActivateItemAsync(tab, cancellationToken);
-		}
-
-		public async Task HandleAsync(OpenLogsEvent message, CancellationToken cancellationToken)
-		{
-			await ShowLogs();
+			await Activate(tab);
 		}
 	}
 }

@@ -1,12 +1,13 @@
 ﻿using Autofac;
 using Blastic.Execution;
 using Blastic.Initialization.Steps;
+using Blastic.Messaging;
 using Blastic.Services.Dialog;
+using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Logs.Settings;
 using Blastic.UserInterface.Settings;
 using Blastic.UserInterface.TabbedMain;
-using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

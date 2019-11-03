@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs.Settings;
-using Caliburn.Micro;
+using Blastic.ViewManagement;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Serilog.Events;
@@ -20,13 +20,15 @@ namespace Blastic.UserInterface.Logs
 		private readonly IWindowManager _windowManager;
 		private readonly LogSettingsViewModel _logSettingsViewModel;
 
-		private Window _activeWindow;
+		public IReactiveProperty<UIElement> View { get; }
 
 		public IReactiveProperty<LogEventLevel> MinimumLogLevel { get; set; }
 
 		public LogSink LogSink { get; }
 		public IEnumerable<LogEventLevel> LogLevels { get; }
-		
+
+		public ReactiveCommand Clear { get; }
+
 		public LogsViewModel(
 			IWindowManager windowManager,
 			LogSettingsViewModel logSettingsViewModel,
@@ -38,6 +40,7 @@ namespace Blastic.UserInterface.Logs
 
 			MinimumLogLevel = new ReactiveProperty<LogEventLevel>();
 			MinimumLogLevel.Subscribe(OnMinimumLogLevelChanged);
+			MinimumLogLevel.Value = LogEventLevel.Debug;
 
 			LogLevels = new []
 			{
@@ -48,9 +51,11 @@ namespace Blastic.UserInterface.Logs
 				LogEventLevel.Debug
 			};
 
-			MinimumLogLevel.Value = LogEventLevel.Debug;
+			View = new ReactiveProperty<UIElement>();
 
 			LogSink.Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
+
+			Clear = new ReactiveCommand().WithSubscribe(() => LogSink.Logs.Clear());
 		}
 
 		private async void LogsChanged(NotifyCollectionChangedEventArgs e)
@@ -65,22 +70,11 @@ namespace Blastic.UserInterface.Logs
 
 		public async Task Show()
 		{
-			if (_activeWindow != null && PresentationSource.FromVisual(_activeWindow) != null)
+			await _windowManager.ShowWindow(this, x =>
 			{
-				_activeWindow.Activate();
-				return;
-			}
-
-			dynamic settings = new ExpandoObject();
-			settings.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			settings.Owner = Application.Current.MainWindow;
-
-			await _windowManager.ShowWindowAsync(this, null, settings);
-		}
-
-		public void Clear()
-		{
-			LogSink.Logs.Clear();
+				x.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+				x.Owner = Application.Current.MainWindow;
+			});
 		}
 
 		private void OnMinimumLogLevelChanged(LogEventLevel level)
@@ -88,22 +82,5 @@ namespace Blastic.UserInterface.Logs
 			ICollectionView collectionView = CollectionViewSource.GetDefaultView(LogSink.Logs);
 			collectionView.Filter = o => ((Log)o).Level >= level;
 		}
-
-		public void AttachView(object view, object context = null)
-		{
-			_activeWindow = view as Window;
-
-			ViewAttached?.Invoke(this, new ViewAttachedEventArgs
-			{
-				View = view
-			});
-		}
-
-		public object GetView(object context = null)
-		{
-			return _activeWindow;
-		}
-
-		public event EventHandler<ViewAttachedEventArgs> ViewAttached;
 	}
 }

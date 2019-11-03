@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Blastic.Caliburn;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
+using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -14,12 +14,14 @@ using Reactive.Bindings;
 
 namespace Blastic.Sample.UserInterface
 {
-	public class HomeViewModel : ScreenBase, IMainTab
+	public class HomeViewModel : Screen, IMainTab
 	{
 		public Order Order { get; }
 		public bool IsFixed => true;
 
 		public IReactiveProperty<string> Text { get; set; }
+
+		public AsyncCommand TestCommand { get; set; }
 
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -29,17 +31,21 @@ namespace Blastic.Sample.UserInterface
 		{
 			Order = new Order(1);
 			Text = new ReactiveProperty<string>();
+			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
+
+			Lifetime.Initialize.Subscribe(_ => OnInitialize());
+			Lifetime.Activate.Subscribe(_ => OnActivate());
 		}
 
-		protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+		protected Task OnInitialize()
 		{
 			Text = new ReactiveProperty<string>("Initialized");
 			return Task.CompletedTask;
 		}
 
-		protected override Task OnActivateAsync(CancellationToken cancellationToken)
+		protected Task OnActivate()
 		{
 			Text.Value = "Activated";
 			return Task.CompletedTask;
@@ -50,9 +56,11 @@ namespace Blastic.Sample.UserInterface
 			await ExecutionContext.Execute(async x =>
 			{
 				ExecutionContext.Logger.LogError("Aasd");
-				ExecutionContext.ProgressDetails.AddRange(new []{ "Test1", "Test2" });
+				ExecutionContext.ProgressDetails.Add("Test1");
+				ExecutionContext.ProgressDetails.Add("Test2");
 				await Task.Delay(3000, x);
-				ExecutionContext.ProgressDetails.AddRange(new[] { "Test1", "Test2" });
+				ExecutionContext.ProgressDetails.Add("Test1");
+				ExecutionContext.ProgressDetails.Add("Test2");
 				ExecutionContext.Logger.LogError("Aasd2");
 			});
 

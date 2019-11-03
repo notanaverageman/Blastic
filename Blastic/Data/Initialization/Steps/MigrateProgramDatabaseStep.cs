@@ -9,7 +9,7 @@ namespace Blastic.Data.Initialization.Steps
 {
 	public class MigrateProgramDatabaseStep : IInitializationStep
 	{
-		public static readonly Order Order = new Order(int.MinValue);
+		public static readonly Order Order = Order.AbsoluteMinimum;
 
 		private readonly ProgramDatabase _programDatabase;
 		private readonly ILogger<MigrateProgramDatabaseStep> _logger;

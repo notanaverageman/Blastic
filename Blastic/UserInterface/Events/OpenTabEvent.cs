@@ -1,10 +1,12 @@
-﻿namespace Blastic.UserInterface.Events
+﻿using Blastic.UserInterface.TabbedMain;
+
+namespace Blastic.UserInterface.Events
 {
 	public class OpenTabEvent
 	{
-		public object ViewModel { get; }
+		public IMainTab ViewModel { get; }
 
-		public OpenTabEvent(object viewModel)
+		public OpenTabEvent(IMainTab viewModel)
 		{
 			ViewModel = viewModel;
 		}

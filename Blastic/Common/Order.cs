@@ -6,6 +6,12 @@ namespace Blastic.Common
 
 	public class Order : IEquatable<Order>, IComparable<Order>, IComparable
 	{
+		public static readonly Order AbsoluteMinimum = new Order(true, false);
+		public static readonly Order AbsoluteMaximum = new Order(false, true);
+
+		private readonly bool _isAbsoluteMinimum;
+		private readonly bool _isAbsoluteMaximum;
+
 		private readonly List<int> _numbers;
 
 		public IReadOnlyList<int> Numbers => _numbers;
@@ -13,6 +19,14 @@ namespace Blastic.Common
 		public Order(params int[] numbers)
 		{
 			_numbers = new List<int>(numbers);
+		}
+
+		private Order(bool isAbsoluteMinimum, bool isAbsoluteMaximum)
+		{
+			_isAbsoluteMinimum = isAbsoluteMinimum;
+			_isAbsoluteMaximum = isAbsoluteMaximum;
+
+			_numbers = new List<int>(0);
 		}
 
 		public bool Equals(Order other)
@@ -45,6 +59,26 @@ namespace Blastic.Common
 
 		public int CompareTo(Order other)
 		{
+			if (_isAbsoluteMinimum)
+			{
+				return other._isAbsoluteMinimum ? 0 : -1;
+			}
+
+			if (_isAbsoluteMaximum)
+			{
+				return other._isAbsoluteMaximum ? 0 : 1;
+			}
+
+			if (other._isAbsoluteMinimum)
+			{
+				return _isAbsoluteMinimum ? 0 : 1;
+			}
+
+			if (other._isAbsoluteMaximum)
+			{
+				return _isAbsoluteMaximum ? 0 : -1;
+			}
+
 			int maxCount = _numbers.Count < other._numbers.Count
 				? _numbers.Count
 				: other._numbers.Count;

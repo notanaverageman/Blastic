@@ -1,9 +1,9 @@
 ﻿using Blastic.Common;
-using Caliburn.Micro;
+using Blastic.LifetimeManagement;
 
 namespace Blastic.UserInterface.TabbedMain
 {
-	public interface IMainTab : IScreen
+	public interface IMainTab : IHasLifetime
 	{
 		Order Order { get; }
 		bool IsFixed { get; }

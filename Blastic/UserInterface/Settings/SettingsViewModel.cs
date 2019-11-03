@@ -1,69 +1,57 @@
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Caliburn.Micro;
-using Blastic.Caliburn;
 using Blastic.Diagnostics;
 using Blastic.Execution;
+using Blastic.LifetimeManagement;
+using Blastic.LifetimeManagement.Contexts;
+using Blastic.ViewManagement;
 using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
-	public sealed class SettingsViewModel : ScreenBase
+	public sealed class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>, IViewAware
 	{
-		private bool _hasReadSettings;
-		private Window _activeWindow;
+		public IReactiveProperty<UIElement> View { get; }
 
-		public IObservableCollection<ISettingsSectionViewModel> Items { get; set; }
-		public IObservableCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
+		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
 
+		public AsyncReactiveCommand SaveCommand { get; }
+		public AsyncReactiveCommand CancelCommand { get; }
+
+		public ReactiveCommand HideDiagnosticMessagesCommand { get; }
+		public ReactiveCommand HideDiagnosticMessagesIgnoreErrorsCommand { get; }
+		
 		public SettingsViewModel(
 			ExecutionContextFactory executionContextFactory,
 			IEnumerable<ISettingsSectionViewModel> sections)
 			:
 			base(executionContextFactory)
 		{
-			Items = new BindableCollection<ISettingsSectionViewModel>(sections);
-			DiagnosticMessages = new BindableCollection<DiagnosticMessage>();
-
+			View = new ReactiveProperty<UIElement>();
+			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
-			DisplayName = "Settings";
-		}
+			DisplayName.Value = "Settings";
 
-		protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
-		{
-			await ReadSettings(cancellationToken);
-		}
-		
-		public async Task ReadSettings(CancellationToken cancellationToken)
-		{
-			if (_hasReadSettings)
+			foreach (ISettingsSectionViewModel section in sections)
 			{
-				return;
+				Items.Add(section);
 			}
 
-			async Task ReadSettings(CancellationToken token)
-			{
-				foreach (ISettingsSectionViewModel item in Items)
-				{
-					await ((IScreen)item).ActivateAsync(cancellationToken);
-					await item.ReadSettings(token);
-				}
-			}
+			SaveCommand = new AsyncReactiveCommand().WithSubscribe(Save);
+			CancelCommand = new AsyncReactiveCommand().WithSubscribe(Cancel);
 
-			await ExecutionContext.Execute(ReadSettings, customCancellationToken: cancellationToken);
-
-			_hasReadSettings = true;
+			HideDiagnosticMessagesCommand = new ReactiveCommand().WithSubscribe(HideDiagnosticMessages);
+			HideDiagnosticMessagesIgnoreErrorsCommand = new ReactiveCommand().WithSubscribe(HideDiagnosticMessagesIgnoreErrors);
 		}
 
-		public async void Save()
+		public async Task Save()
 		{
 			async Task Check(CancellationToken cancellationToken)
 			{
@@ -72,7 +60,12 @@ namespace Blastic.UserInterface.Settings
 				foreach (ISettingsSectionViewModel item in Items)
 				{
 					IEnumerable<DiagnosticMessage> diagnosticMessages = await item.GetDiagnosticMessages(cancellationToken);
-					DiagnosticMessages.AddRange(diagnosticMessages);
+
+					// TODO: AddRange
+					foreach (DiagnosticMessage diagnosticMessage in diagnosticMessages)
+					{
+						DiagnosticMessages.Add(diagnosticMessage);
+					}
 				}
 			}
 
@@ -88,17 +81,12 @@ namespace Blastic.UserInterface.Settings
 				}
 			}
 
-			async Task Save(CancellationToken cancellationToken)
+			ClosureContext context = new ClosureContext(CancellationToken.None)
 			{
-				foreach (ISettingsSectionViewModel item in Items)
-				{
-					await item.Save(cancellationToken);
-				}
-			}
+				DialogResult = true
+			};
 
-			await ExecutionContext.Execute(Save);
-
-			await TryCloseAsync();
+			await Lifetime.Close.Execute(context);
 		}
 
 		private Task<bool> ShowDiagnosticMessages()
@@ -123,37 +111,21 @@ namespace Blastic.UserInterface.Settings
 
 		public async Task Cancel()
 		{
-			await TryCloseAsync();
-
-			foreach (ISettingsSectionViewModel item in Items)
+			ClosureContext context = new ClosureContext(CancellationToken.None)
 			{
-				item.Revert();
-			}
+				DialogResult = false
+			};
+
+			await Lifetime.Close.Execute(context);
 		}
 
 		public async Task Show()
 		{
-			if (_activeWindow != null && PresentationSource.FromVisual(_activeWindow) != null)
+			await ExecutionContext.WindowManager.ShowWindow(this, x =>
 			{
-				_activeWindow.Activate();
-				return;
-			}
-
-			dynamic settings = new ExpandoObject();
-			settings.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			settings.Owner = Application.Current.MainWindow;
-
-			await ExecutionContext.WindowManager.ShowWindowAsync(this, null, settings);
-		}
-
-		protected override void OnViewAttached(object view, object context)
-		{
-			_activeWindow = view as Window;
-		}
-
-		public override object GetView(object context = null)
-		{
-			return _activeWindow;
+				x.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+				x.Owner = Application.Current.MainWindow;
+			});
 		}
 	}
 }

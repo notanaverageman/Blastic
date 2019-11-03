@@ -4,10 +4,11 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Controls.DynamicControls;
-using Caliburn.Micro;
+using Blastic.Messaging;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
+using Blastic.Services.Windowing;
 using Blastic.UserInterface.Events;
 using Reactive.Bindings;
 
@@ -23,7 +24,7 @@ namespace Blastic.Execution
 
 		public IReactiveProperty<bool> IsBusy { get; set; }
 		public IReactiveProperty<string> ProgressMessage { get; set; }
-		public IObservableCollection<string> ProgressDetails { get; }
+		public ReactiveCollection<string> ProgressDetails { get; }
 
 		public IReactiveProperty<bool> IsCancellationSupported { get; set; }
 		public CancellationTokenSource CancellationTokenSource { get; private set; }
@@ -46,7 +47,7 @@ namespace Blastic.Execution
 
 			IsBusy = new ReactiveProperty<bool>();
 			ProgressMessage = new ReactiveProperty<string>();
-			ProgressDetails = new BindableCollection<string>();
+			ProgressDetails = new ReactiveCollection<string>();
 
 			IsCancellationSupported = new ReactiveProperty<bool>();
 			CancellationTokenSource = new CancellationTokenSource();
@@ -108,7 +109,7 @@ namespace Blastic.Execution
 						? exception.Message
 						: failMessage,
 					"Open Logs",
-					() => EventAggregator.PublishOnUIThreadAsync(new OpenLogsEvent()));
+					() => EventAggregator.Publish(new OpenLogsEvent()));
 
 				if (rethrowUnhandledException)
 				{

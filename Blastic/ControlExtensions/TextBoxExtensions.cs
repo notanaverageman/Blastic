@@ -1,33 +1,40 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
-using Caliburn.Micro;
 
 namespace Blastic.ControlExtensions
 {
 	public static class TextBoxExtensions
 	{
-		public static void SetCaretIndexToEnd(this IViewAware screen, string property)
+		public static readonly DependencyProperty MoveCaretToEndWhenFocusedProperty = DependencyProperty.RegisterAttached(
+			nameof(MoveCaretToEndWhenFocusedProperty).Replace("Property", ""),
+			typeof(bool),
+			typeof(TextBoxExtensions),
+			new PropertyMetadata(default(bool), OnMoveCaretToEndWhenFocusedChanged));
+		public static bool GetMoveCaretToEndWhenFocused(DependencyObject obj) => (bool)obj.GetValue(MoveCaretToEndWhenFocusedProperty);
+		public static void SetMoveCaretToEndWhenFocused(DependencyObject obj, bool value) => obj.SetValue(MoveCaretToEndWhenFocusedProperty, value);
+
+		private static void OnMoveCaretToEndWhenFocusedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			if (!(screen.GetView() is DependencyObject view))
+			if (!(d is TextBox textBox))
 			{
-				return;
+				throw new ArgumentException("This property should be attached to a TextBox");
 			}
 
-			FrameworkElement control = VisualTreeExtensions.FindChild(view, property);
-
-			if (control == null)
+			void GotFocus(object sender, RoutedEventArgs args)
 			{
-				return;
+				TextBox t = (TextBox)sender;
+				t.CaretIndex = int.MaxValue;
 			}
 
-			TextBox textBox = VisualTreeExtensions.FindChild<TextBox>(control);
-
-			if (textBox == null)
+			if ((bool)e.NewValue)
 			{
-				return;
+				textBox.GotFocus += GotFocus;
 			}
-
-			textBox.CaretIndex = textBox.Text.Length;
+			else
+			{
+				textBox.GotFocus -= GotFocus;
+			}
 		}
 	}
 }
