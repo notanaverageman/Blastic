@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Data.ProgramData;
-using Newtonsoft.Json;
 
 namespace Blastic.Services.Settings
 {
@@ -28,12 +28,12 @@ namespace Blastic.Services.Settings
 				return defaultValue;
 			}
 
-			return JsonConvert.DeserializeObject<T>(serializedData);
+			return JsonSerializer.Deserialize<T>(serializedData);
 		}
 
 		public async Task Put<T>(string key, T value, CancellationToken cancellationToken)
 		{
-			string serializedData = JsonConvert.SerializeObject(value);
+			string serializedData = JsonSerializer.Serialize(value);
 			await _database.SettingsTable.Put(key, serializedData, cancellationToken);
 		}
 
