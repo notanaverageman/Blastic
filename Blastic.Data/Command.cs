@@ -6,7 +6,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Data.ProviderSpecific;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Data
@@ -14,7 +13,6 @@ namespace Blastic.Data
 	public class Command : IDisposable
 	{
 		private readonly DbCommand _command;
-		private readonly Connection _connection;
 		private readonly ILogger _logger;
 
 		public string CommandText
@@ -23,10 +21,9 @@ namespace Blastic.Data
 			set => _command.CommandText = value;
 		}
 
-		public Command(DbCommand command, Connection connection, ILogger logger)
+		public Command(DbCommand command, ILogger logger)
 		{
 			_command = command;
-			_connection = connection;
 			_logger = logger;
 
 			// In Azure Db connections the 30 seconds timeout occurs frequently.
@@ -103,18 +100,18 @@ namespace Blastic.Data
 			}
 		}
 
-		public async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
+		public async Task<int> ExecuteNonQuery(CancellationToken cancellationToken)
 		{
 			return await ExecuteAndLogException(async () => await _command.ExecuteNonQueryAsync(cancellationToken));
 		}
 
-		public async Task<T> ExecuteScalarAsync<T>(CancellationToken cancellationToken)
+		public async Task<T> ExecuteScalar<T>(CancellationToken cancellationToken)
 		{
 			object result = await ExecuteAndLogException(async () => await _command.ExecuteScalarAsync(cancellationToken));
 			return DataReader.SafeCast<T>(result);
 		}
 
-		public async Task<DataReader> ExecuteReaderAsync(CancellationToken cancellationToken)
+		public async Task<DataReader> ExecuteReader(CancellationToken cancellationToken)
 		{
 			DbDataReader reader = await ExecuteAndLogException(async () => await _command.ExecuteReaderAsync(cancellationToken));
 			return new DataReader(reader);
@@ -129,7 +126,6 @@ namespace Blastic.Data
 		{
 			try
 			{
-				FixProviderSpecificQuery();
 				return await function();
 			}
 			catch (Exception exception)
@@ -137,21 +133,6 @@ namespace Blastic.Data
 				_logger.LogError(exception, "Error while executing database command.");
 				throw;
 			}
-		}
-
-		private void FixProviderSpecificQuery()
-		{
-			string providerSpecificCommandText = _command.CommandText;
-
-			foreach (KeyValuePair<string, string> pair in Placeholders.ProviderSpecificQueries[_connection.Provider])
-			{
-				string key = pair.Key;
-				string value = pair.Value;
-
-				providerSpecificCommandText = providerSpecificCommandText.Replace(key, value);
-			}
-
-			_command.CommandText = providerSpecificCommandText;
 		}
 	}
 }

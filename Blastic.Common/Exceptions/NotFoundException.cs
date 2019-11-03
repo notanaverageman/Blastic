@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Blastic.Data.Errors
+namespace Blastic.Common.Exceptions
 {
 	public class NotFoundException : Exception
 	{

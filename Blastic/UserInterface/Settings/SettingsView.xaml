@@ -12,6 +12,7 @@
 					  mc:Ignorable="d"
 					  Width="1000"
 					  Height="600"
+					  Title="Settings"
 					  d:DataContext="{d:DesignInstance settings:SettingsViewModel}"
 					  Style="{StaticResource WindowStyle}">
 

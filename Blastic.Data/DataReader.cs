@@ -50,12 +50,14 @@ namespace Blastic.Data
 				return default;
 			}
 
-			if ((typeof(T) == typeof(int) || typeof(T).IsEnum) && value is long l)
+			bool isInt = typeof(T) == typeof(int) || typeof(T) == typeof(int?);
+
+			if ((isInt || typeof(T).IsEnum) && value is long l)
 			{
 				return (T)(object)(int)l;
 			}
 
-			if (typeof(T) == typeof(int) && value is decimal d)
+			if (isInt && value is decimal d)
 			{
 				return (T)(object)(int)d;
 			}

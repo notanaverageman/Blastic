@@ -2,6 +2,7 @@ using System;
 using System.Data.Common;
 using System.Transactions;
 using Blastic.Data.Context;
+using Blastic.Data.ProviderSpecific;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Data
@@ -20,6 +21,7 @@ namespace Blastic.Data
 		private bool _isInTransactionScope;
 
 		public DatabaseProvider Provider { get; private set; }
+		public ProviderSpecifics ProviderSpecifics { get; private set; }
 
 		public Connection(ConnectionFactory connectionFactory, DatabaseProvider provider, ILogger logger)
 		{
@@ -64,6 +66,18 @@ namespace Blastic.Data
 
 				_ambientContext.Save(this);
 			}
+
+			switch (Provider)
+			{
+				case DatabaseProvider.SQLite:
+					ProviderSpecifics = new SqliteProviderSpecifics(this);
+					break;
+				case DatabaseProvider.SQLServer:
+					ProviderSpecifics = new SqlServerProviderSpecifics(this);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		public Command CreateCommand()
@@ -75,7 +89,7 @@ namespace Blastic.Data
 				command.Transaction = _transaction;
 			}
 
-			return new Command(command, this, _logger);
+			return new Command(command, _logger);
 		}
 
 		public void Dispose()
@@ -125,8 +139,9 @@ namespace Blastic.Data
 
 		void IEnlistmentNotification.Rollback(Enlistment enlistment)
 		{
-			_transaction?.Rollback();
-			_transaction?.Dispose();
+			// TODO: Enable and fix this.
+			// _transaction?.Rollback();
+			// _transaction?.Dispose();
 
 			_connection.Close();
 			_connection.Dispose();

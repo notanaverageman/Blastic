@@ -15,7 +15,7 @@ namespace Blastic.Data.Tables
 
 		protected void AddParameterIfChanged<T>(Command command, string columnName, T newValue)
 		{
-			if (EqualityComparer<T>.Default.Equals(newValue, default(T)))
+			if (EqualityComparer<T>.Default.Equals(newValue, default))
 			{
 				return;
 			}

@@ -1,4 +1,4 @@
-﻿namespace Blastic.Diagnostics
+﻿namespace Blastic.Common.Diagnostics
 {
 	public enum Severity
 	{

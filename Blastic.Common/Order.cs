@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Blastic.Common
 {
-
 	public class Order : IEquatable<Order>, IComparable<Order>, IComparable
 	{
 		public static readonly Order AbsoluteMinimum = new Order(true, false);
@@ -135,6 +135,41 @@ namespace Blastic.Common
 		public static bool operator >=(Order left, Order right)
 		{
 			return Comparer<Order>.Default.Compare(left, right) >= 0;
+		}
+
+		public override string ToString()
+		{
+			if (_isAbsoluteMinimum)
+			{
+				return "Absolute Minimum";
+			}
+
+			if (_isAbsoluteMaximum)
+			{
+				return "Absolute Maximum";
+			}
+
+			if (!Numbers.Any())
+			{
+				return "0";
+			}
+
+			return string.Join(".", Numbers);
+		}
+
+		public static Order Parse(string orderString)
+		{
+			if (orderString == "")
+			{
+				return new Order();
+			}
+
+			int[] numbers = orderString
+				.Split('.')
+				.Select(int.Parse)
+				.ToArray();
+
+			return new Order(numbers);
 		}
 	}
 }

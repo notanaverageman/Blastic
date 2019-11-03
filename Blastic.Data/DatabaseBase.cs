@@ -6,9 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using Blastic.Data.Migrations;
-using Blastic.Data.Migrations._0._0;
 using Blastic.Data.Tables;
 using Microsoft.Extensions.Logging;
+using Version = Blastic.Common.Version;
 
 namespace Blastic.Data
 {
@@ -45,14 +45,14 @@ namespace Blastic.Data
 			return currentVersion != newVersion;
 		}
 
-		public async Task MigrateAsync(CancellationToken cancellationToken, Version targetVersion = null)
+		public async Task Migrate(CancellationToken cancellationToken, Version targetVersion = null)
 		{
 			using TransactionScope transactionScope = CreateTransactionScope();
 			using Connection connection = ConnectionFactory.CreateConnection();
 			using IDisposable _ = Logger.BeginScope("Applying migrations.");
 
 			Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
-			Version newVersion = await MigrateAsync(connection, currentVersion, targetVersion, cancellationToken);
+			Version newVersion = await Migrate(connection, currentVersion, targetVersion, cancellationToken);
 
 			if (currentVersion == newVersion)
 			{
@@ -66,7 +66,7 @@ namespace Blastic.Data
 			Logger.LogInformation("Finished migrations. New version: {0}", newVersion);
 		}
 
-		private async Task<Version> MigrateAsync(
+		private async Task<Version> Migrate(
 			Connection connection,
 			Version currentVersion,
 			Version targetVersion,
@@ -74,42 +74,61 @@ namespace Blastic.Data
 		{
 			IEnumerable<Type> allMigrations = GetMigrations();
 
-			IGrouping<Version, MigrationBase>[] migrations = allMigrations
+			IEnumerable<MigrationBase> migrations = allMigrations
 				.Select(Activator.CreateInstance)
 				.Cast<MigrationBase>()
-				.GroupBy(x => x.Version)
-				.OrderBy(x => x.Key)
 				.ToArray();
 
-			targetVersion ??= migrations.Max(x => x.Key);
+			targetVersion ??= migrations.Max(x => x.Version);
+
+			Logger.LogInformation("Current version: {0}. Target version: {1}", currentVersion, targetVersion);
 
 			if (currentVersion == targetVersion)
 			{
 				return targetVersion;
 			}
 
-			Logger.LogInformation("Current version: {0}. Target version: {1}", currentVersion, targetVersion);
+			Func<MigrationBase, Connection, CancellationToken, Task> migrationFunction;
+			Version result;
 
-			foreach (IGrouping<Version, MigrationBase> migrationGroup in migrations)
+			if (currentVersion == null || currentVersion < targetVersion)
 			{
-				foreach (MigrationBase migration in migrationGroup.OrderBy(x => x.Order))
-				{
-					await migration.MigrateAsync(connection, currentVersion, targetVersion, cancellationToken);
-				}
+				migrations = migrations
+					.Where(x => x.Version > currentVersion)
+					.Where(x => x.Version <= targetVersion)
+					.OrderBy(x => x.Version)
+					.ToArray();
+
+				migrationFunction = (x, y, z) => x.MigrateUp(y, z);
+				result = migrations.Last().Version;
+			}
+			else
+			{
+				migrations = migrations
+					.Where(x => x.Version <= currentVersion)
+					.Where(x => x.Version > targetVersion)
+					.OrderByDescending(x => x.Version)
+					.ToArray();
+
+				migrationFunction = (x, y, z) => x.MigrateDown(y, z);
+				result = migrations.First().Version;
 			}
 
-			return migrations
-				.Where(x => x.Key <= targetVersion)
-				.Max(x => x.Key);
+			foreach (MigrationBase migration in migrations)
+			{
+				await migrationFunction(migration, connection, cancellationToken);
+			}
+
+			return result;
 		}
 
-		private IEnumerable<Type> GetMigrations()
+		public IEnumerable<Type> GetMigrations()
 		{
 			Assembly assembly = Assembly.GetAssembly(GetType());
 
 			IEnumerable<Type> migrationTypes = assembly.GetTypes()
 				.Where(x => !x.IsAbstract)
-				.Where(x => x.IsSubclassOf(typeof(T)));
+				.Where(x => typeof(T).IsAssignableFrom(x));
 
 			return Enumerable
 				.Repeat(typeof(CreateDatabaseInformationTable), 1)

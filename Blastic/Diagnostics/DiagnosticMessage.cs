@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blastic.Common.Diagnostics;
 using Reactive.Bindings;
 
 namespace Blastic.Diagnostics

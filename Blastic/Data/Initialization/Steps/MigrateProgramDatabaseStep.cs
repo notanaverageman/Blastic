@@ -43,7 +43,7 @@ namespace Blastic.Data.Initialization.Steps
 		public async Task Execute(CancellationToken cancellationToken)
 		{
 			_logger.LogDebug("Checking and applying migrations.");
-			await _programDatabase.MigrateAsync(cancellationToken);
+			await _programDatabase.Migrate(cancellationToken);
 			_logger.LogDebug("Finished checking and applying migrations.");
 		}
 	}
