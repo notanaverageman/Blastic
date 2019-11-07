@@ -1,9 +1,9 @@
 using System;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Data.SQLite;
 using System.Runtime.CompilerServices;
 using System.Transactions;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Data
@@ -38,7 +38,7 @@ namespace Blastic.Data
 			switch (_databaseConfiguration.DatabaseProvider)
 			{
 				case DatabaseProvider.SQLite:
-					dbConnection = new SQLiteConnection(_databaseConfiguration.ConnectionString);
+					dbConnection = new SqliteConnection(_databaseConfiguration.ConnectionString);
 					break;
 
 				case DatabaseProvider.SQLServer:

@@ -14,10 +14,10 @@ namespace Blastic.Data
 {
 	public abstract class DatabaseBase<T> where T : MigrationBase
 	{
-		protected ConnectionFactory ConnectionFactory { get; }
 		protected ILogger<DatabaseBase<T>> Logger { get; }
-
-		protected DatabaseInformationTable DatabaseInformationTable { get; }
+		
+		public DatabaseInformationTable DatabaseInformationTable { get; }
+		public ConnectionFactory ConnectionFactory { get; }
 
 		protected DatabaseBase(ConnectionFactory connectionFactory, ILogger<DatabaseBase<T>> logger)
 		{

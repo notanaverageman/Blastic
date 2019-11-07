@@ -139,9 +139,8 @@ namespace Blastic.Data
 
 		void IEnlistmentNotification.Rollback(Enlistment enlistment)
 		{
-			// TODO: Enable and fix this.
-			// _transaction?.Rollback();
-			// _transaction?.Dispose();
+			_transaction?.Rollback();
+			_transaction?.Dispose();
 
 			_connection.Close();
 			_connection.Dispose();
