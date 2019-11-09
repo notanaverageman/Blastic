@@ -29,8 +29,7 @@ namespace Blastic.Sample
 				.AddSettingsWindow()
 				.AddSettingsService()
 				.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
-				.Run<TabbedMainViewModel>()
-				.Wait();
+				.Run<TabbedMainViewModel>();
 		}
 	}
 }

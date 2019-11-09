@@ -7,7 +7,6 @@ using System.Windows.Threading;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Blastic.Initialization.Extensions;
-using Blastic.LifetimeManagement;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Settings;
@@ -16,7 +15,6 @@ using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 using Log = Serilog.Log;
 
 namespace Blastic.Initialization
@@ -96,7 +94,7 @@ namespace Blastic.Initialization
 			});
 		}
 
-		public async Task Run<TMainViewModel>()
+		public void Run<TMainViewModel>()
 		{
 			IConfiguration configuration = _configurationBuilder.Build();
 
@@ -130,14 +128,8 @@ namespace Blastic.Initialization
 				TMainViewModel viewModel = container.Resolve<TMainViewModel>();
 				IWindowManager windowManager = container.Resolve<IWindowManager>();
 
-				await windowManager.ShowWindow(viewModel);
-
-				if (viewModel is IHasLifetime hasLifetime)
-				{
-					ActivationContext context = new ActivationContext(default);
-					await hasLifetime.Lifetime.Activate.Execute(context);
-				}
-
+				// Do not await this method as it will freeze the UI.
+				windowManager.ShowWindow(viewModel);
 				_application.Run();
 			}
 			catch (Exception exception)
