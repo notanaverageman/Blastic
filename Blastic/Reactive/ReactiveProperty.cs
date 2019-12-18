@@ -38,13 +38,15 @@ namespace Blastic.Reactive
 
 			_source = new Subject<T>();
 
-			_observable = _source
-				.DistinctUntilChanged(equalityComparer)
+            _observable = _source.DistinctUntilChanged(equalityComparer);
+
+            _observable
 				.Do(x =>
 				{
 					_value = x;
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
-				});
+				})
+                .Subscribe();
 		}
 
 		public IDisposable Subscribe(IObserver<T> observer)

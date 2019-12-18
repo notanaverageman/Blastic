@@ -12,8 +12,8 @@
 					  xmlns:viewManagement="clr-namespace:Blastic.ViewManagement"
 					  Title="{Binding ProductInformation.ProgramName.Value}"
 					  mc:Ignorable="d"
-					  Width="1200"
-					  Height="900"
+					  Width="1000"
+					  Height="600"
 					  d:DataContext="{d:DesignInstance main:TabbedMainViewModel}"
 					  Style="{StaticResource WindowStyle}"
 					  WindowStartupLocation="CenterScreen">

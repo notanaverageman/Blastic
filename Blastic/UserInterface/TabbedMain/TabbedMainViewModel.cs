@@ -53,7 +53,9 @@ namespace Blastic.UserInterface.TabbedMain
 
 			Items.AddRange(tabs);
 
-			Lifetime.Activate.Subscribe(async x =>
+            ActiveItem.Value = Items.FirstOrDefault();
+
+            Lifetime.Activate.Subscribe(async x =>
 			{
 				await Activate(Items.FirstOrDefault(), x.Parameter.CancellationToken);
 			});
