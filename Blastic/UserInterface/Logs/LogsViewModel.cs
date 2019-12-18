@@ -6,11 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using Blastic.Reactive;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs.Settings;
 using Blastic.ViewManagement;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using Serilog.Events;
 
 namespace Blastic.UserInterface.Logs
@@ -27,7 +26,7 @@ namespace Blastic.UserInterface.Logs
 		public LogSink LogSink { get; }
 		public IEnumerable<LogEventLevel> LogLevels { get; }
 
-		public ReactiveCommand Clear { get; }
+		public Command Clear { get; }
 
 		public LogsViewModel(
 			IWindowManager windowManager,
@@ -55,7 +54,7 @@ namespace Blastic.UserInterface.Logs
 
 			LogSink.Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
 
-			Clear = new ReactiveCommand().WithSubscribe(() => LogSink.Logs.Clear());
+			Clear = new Command(() => LogSink.Logs.Clear());
 		}
 
 		private async void LogsChanged(NotifyCollectionChangedEventArgs e)

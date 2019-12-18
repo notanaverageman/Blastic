@@ -2,7 +2,6 @@
 using System.Reactive.Disposables;
 using Blastic.Common;
 using Blastic.Reactive;
-using Reactive.Bindings.Extensions;
 
 namespace Blastic.LifetimeManagement
 {
@@ -18,12 +17,13 @@ namespace Blastic.LifetimeManagement
 
 			void Subscribe<T>(AsyncCommand<T> parent, AsyncCommand<T> child)
 			{
-				parent
+				IDisposable subscription = parent
 					.Subscribe(async x =>
 					{
 						await child.Execute(x);
-					}, order)
-					.AddTo(disposable);
+					}, order);
+
+				disposable.Add(subscription);
 			}
 
 			if (lifetimeChainOptions.InitializeChildrenOnSelfInitialization)

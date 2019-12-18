@@ -1,11 +1,11 @@
 ﻿using System.Windows;
-using Reactive.Bindings;
+using System.Windows.Input;
 
 namespace Blastic.Controls.DynamicControls.Elements.Action
 {
 	public class ActionPresenter : Presenter
 	{
-		public ReactiveCommand Command { get; set; }
+		public ICommand Command { get; set; }
 
 		static ActionPresenter()
 		{

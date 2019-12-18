@@ -6,9 +6,9 @@ using Blastic.Common;
 using Blastic.Diagnostics;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 using Blastic.Services.Settings;
 using Blastic.Settings;
-using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {

@@ -1,13 +1,13 @@
 ﻿using System.Windows;
-using Reactive.Bindings;
+using System.Windows.Input;
 
 namespace Blastic.Controls.DynamicControls.Elements.Action
 {
 	public class ActionElement : Element
 	{
-		public ReactiveCommand Command { get; }
+		public ICommand Command { get; }
 
-		public ActionElement(ReactiveCommand command)
+		public ActionElement(ICommand command)
 		{
 			Command = command;
 

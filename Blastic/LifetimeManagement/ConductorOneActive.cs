@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Execution;
 using Blastic.LifetimeManagement.Contexts;
-using Reactive.Bindings;
+using Blastic.Reactive;
 using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 
 namespace Blastic.LifetimeManagement

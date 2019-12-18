@@ -4,12 +4,41 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Blastic.Common;
-using Reactive.Bindings;
 
 namespace Blastic.Reactive
 {
 	public class AsyncCommand : AsyncCommand<object>
 	{
+		public static readonly Order DefaultOrder = new Order();
+
+		public AsyncCommand() : this((IObservable<bool>) null)
+		{
+		}
+
+		public AsyncCommand(IObservable<bool> canExecute, Func<AsyncCommandContext, Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(IObservable<bool> canExecute, Func<Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(Func<AsyncCommandContext, Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(Func<Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(IObservable<bool> canExecute) : base(canExecute)
+		{
+		}
+
 		public async Task Execute()
 		{
 			await Execute(null);
@@ -21,17 +50,35 @@ namespace Blastic.Reactive
 		}
 	}
 
-	public class AsyncCommand<T> : ICommand, IDisposable
+	public class AsyncCommand<T> : ICommand
 	{
-		public static readonly Order DefaultOrder = new Order();
-
 		private readonly ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order> _actions;
 		private readonly IReadOnlyReactiveProperty<bool> _canExecute;
 
 		public event EventHandler CanExecuteChanged;
 
-		public AsyncCommand() : this(null)
+		public AsyncCommand() : this((IObservable<bool>) null)
 		{
+		}
+
+		public AsyncCommand(IObservable<bool> canExecute, Func<AsyncCommandContext<T>, Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(IObservable<bool> canExecute, Func<Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(Func<AsyncCommandContext<T>, Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public AsyncCommand(Func<Task> action) : this()
+		{
+			Subscribe(action);
 		}
 
 		public AsyncCommand(IObservable<bool> canExecute)
@@ -44,9 +91,14 @@ namespace Blastic.Reactive
 			_canExecute.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
 
+		public IDisposable Subscribe(Func<Task> action, Order order = null)
+		{
+			return Subscribe(async x => await action(), order);
+		}
+
 		public IDisposable Subscribe(Func<AsyncCommandContext<T>, Task> action, Order order = null)
 		{
-			order ??= DefaultOrder;
+			order ??= AsyncCommand.DefaultOrder;
 			_actions[action] = order;
 
 			return new Subscription(this, action);
@@ -93,11 +145,6 @@ namespace Blastic.Reactive
 			}
 		}
 
-		public void Dispose()
-		{
-			_canExecute.Dispose();
-		}
-
 		private class Subscription : IDisposable
 		{
 			private readonly AsyncCommand<T> _command;
@@ -121,6 +168,15 @@ namespace Blastic.Reactive
 		public static AsyncCommand<T> ToAsyncCommand<T>(this IObservable<bool> canExecute)
 		{
 			return new AsyncCommand<T>(canExecute);
+		}
+
+		public static AsyncCommand WithSubscribe(
+			this AsyncCommand command,
+			Func<Task> action,
+			Order order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
 		}
 
 		public static AsyncCommand WithSubscribe(

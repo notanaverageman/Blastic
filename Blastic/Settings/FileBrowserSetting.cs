@@ -2,11 +2,11 @@
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Controls.DynamicControls.Elements.Group;
+using Blastic.Reactive;
 using Blastic.Services.Dialog;
 using Blastic.Services.Dialog.FileFilters;
 using Blastic.Services.Settings;
 using MaterialDesignThemes.Wpf;
-using Reactive.Bindings;
 
 namespace Blastic.Settings
 {
@@ -21,7 +21,7 @@ namespace Blastic.Settings
 		public bool IsFolderPicker { get; set; }
 		public bool IsSaveFilePicker { get; set; }
 
-		public ReactiveCommand BrowseCommand { get; }
+		public Command BrowseCommand { get; }
 		
 		public FileBrowserSetting(
 			ISettingsService settingsService,
@@ -35,7 +35,10 @@ namespace Blastic.Settings
 			_dialogService = dialogService;
 			_filter = filter;
 
-			BrowseCommand = new ReactiveCommand().WithSubscribe(Browse);
+			BrowseCommand = new Command().WithSubscribe(x =>
+			{
+				Browse();
+			});
 
 			GroupField = new GroupElement();
 			

@@ -5,8 +5,8 @@ using Blastic.Common.Diagnostics;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 using Blastic.Services.Settings;
-using Reactive.Bindings;
 
 namespace Blastic.Settings
 {
@@ -130,14 +130,14 @@ namespace Blastic.Settings
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
 
-			ReactiveSettingValue.SetValidateNotifyError(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
+			// TODO: ReactiveSettingValue.SetValidateNotifyError(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
 			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
 		}
 
 		public override async Task Read(CancellationToken cancellationToken)
 		{
 			_isEnabledSubscription?.Dispose();
-			_isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.ForceValidate());
+			// TODO: _isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.ForceValidate());
 
 			T value = await SettingsService.Get(Key, DefaultValue, cancellationToken);
 

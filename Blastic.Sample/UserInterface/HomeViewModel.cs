@@ -10,7 +10,6 @@ using Blastic.Reactive;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
-using Reactive.Bindings;
 
 namespace Blastic.Sample.UserInterface
 {
@@ -68,7 +67,7 @@ namespace Blastic.Sample.UserInterface
 			ReactiveProperty<string> password = new ReactiveProperty<string>();
 			ReactiveProperty<int> age = new ReactiveProperty<int>();
 			ReactiveProperty<bool> boolean = new ReactiveProperty<bool>();
-			ReactiveCommand command = new ReactiveCommand(boolean);
+			Command command = new Command(boolean);
 
 			int asd = 0;
 			command.Subscribe(() =>

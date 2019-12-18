@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Reactive.Bindings;
+using Blastic.Reactive;
 using Serilog.Core;
 using Serilog.Events;
 

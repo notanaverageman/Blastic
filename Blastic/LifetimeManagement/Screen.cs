@@ -1,5 +1,5 @@
 ﻿using Blastic.Execution;
-using Reactive.Bindings;
+using Blastic.Reactive;
 
 namespace Blastic.LifetimeManagement
 {

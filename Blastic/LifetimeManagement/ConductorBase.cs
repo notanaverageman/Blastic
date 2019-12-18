@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blastic.Common;
 using Blastic.Execution;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using Blastic.Reactive;
 
 namespace Blastic.LifetimeManagement
 {
@@ -61,25 +60,27 @@ namespace Blastic.LifetimeManagement
 				}
 			}
 
+			void ReplaceChildren((T[] OldItems, T[] NewItems) items)
+			{
+				RemoveChildren(items.OldItems);
+				AddChildren(items.NewItems);
+			}
+
 			Items
-				.ObserveAddChangedItems()
+				.ObserveAdd<T>()
 				.Subscribe(AddChildren);
 
 			Items
-				.ObserveRemoveChangedItems()
+				.ObserveRemove<T>()
 				.Subscribe(RemoveChildren);
 
 			Items
-				.ObserveResetChanged()
-				.Subscribe(_ => RemoveChildren(_lifetimeSubscriptions.Keys.ToArray()));
+				.ObserveReplace<T>()
+				.Subscribe(ReplaceChildren);
 
 			Items
-				.ObserveReplaceChangedItems()
-				.Subscribe(items =>
-				{
-					AddChildren(items.NewItem);
-					RemoveChildren(items.OldItem);
-				});
+				.ObserveReset<T>()
+				.Subscribe(_ => RemoveChildren(_lifetimeSubscriptions.Keys.ToArray()));
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Blastic.Reactive;
 using MaterialDesignThemes.Wpf;
-using Reactive.Bindings;
 
 namespace Blastic.Controls.DynamicControls.Elements
 {

@@ -8,8 +8,8 @@ using Blastic.Diagnostics;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
+using Blastic.Reactive;
 using Blastic.ViewManagement;
-using Reactive.Bindings;
 
 namespace Blastic.UserInterface.Settings
 {
@@ -22,11 +22,11 @@ namespace Blastic.UserInterface.Settings
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
 
-		public AsyncReactiveCommand SaveCommand { get; }
-		public AsyncReactiveCommand CancelCommand { get; }
+		public AsyncCommand SaveCommand { get; }
+		public AsyncCommand CancelCommand { get; }
 
-		public ReactiveCommand HideDiagnosticMessagesCommand { get; }
-		public ReactiveCommand HideDiagnosticMessagesIgnoreErrorsCommand { get; }
+		public Command HideDiagnosticMessagesCommand { get; }
+		public Command HideDiagnosticMessagesIgnoreErrorsCommand { get; }
 		
 		public SettingsViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -40,16 +40,13 @@ namespace Blastic.UserInterface.Settings
 
 			DisplayName.Value = "Settings";
 
-			foreach (ISettingsSectionViewModel section in sections)
-			{
-				Items.Add(section);
-			}
+			Items.AddRange(sections);
 
-			SaveCommand = new AsyncReactiveCommand().WithSubscribe(Save);
-			CancelCommand = new AsyncReactiveCommand().WithSubscribe(Cancel);
+			SaveCommand = new AsyncCommand(Save);
+			CancelCommand = new AsyncCommand(Cancel);
 
-			HideDiagnosticMessagesCommand = new ReactiveCommand().WithSubscribe(HideDiagnosticMessages);
-			HideDiagnosticMessagesIgnoreErrorsCommand = new ReactiveCommand().WithSubscribe(HideDiagnosticMessagesIgnoreErrors);
+			HideDiagnosticMessagesCommand = new Command(HideDiagnosticMessages);
+			HideDiagnosticMessagesIgnoreErrorsCommand = new Command(HideDiagnosticMessagesIgnoreErrors);
 		}
 
 		public async Task Save()

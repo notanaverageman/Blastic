@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using Blastic.Execution;
-using Reactive.Bindings;
+using Blastic.Reactive;
 
 namespace Blastic.Controls
 {
@@ -17,13 +17,16 @@ namespace Blastic.Controls
 			set => SetValue(ExecutionContextProperty, value);
 		}
 
-		public ReactiveCommand Cancel { get; set; }
+		public Command Cancel { get; }
 
 		public BusyIndicator()
 		{
 			InitializeComponent();
 
-			Cancel = new ReactiveCommand().WithSubscribe(() => ExecutionContext?.CancellationTokenSource?.Cancel());
+			Cancel = new Command().WithSubscribe(x =>
+			{
+				ExecutionContext?.CancellationTokenSource?.Cancel();
+			});
 		}
 	}
 }

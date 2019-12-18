@@ -1,5 +1,5 @@
 ﻿using System;
-using Reactive.Bindings;
+using Blastic.Reactive;
 
 namespace Blastic.Initialization
 {

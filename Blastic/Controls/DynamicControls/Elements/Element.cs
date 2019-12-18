@@ -1,6 +1,6 @@
 ﻿using System.Windows;
+using Blastic.Reactive;
 using MaterialDesignThemes.Wpf;
-using Reactive.Bindings;
 
 namespace Blastic.Controls.DynamicControls.Elements
 {

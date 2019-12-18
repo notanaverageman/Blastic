@@ -7,7 +7,7 @@ using Blastic.Controls.DynamicControls.Elements.Boolean;
 using Blastic.Controls.DynamicControls.Elements.Group;
 using Blastic.Controls.DynamicControls.Elements.Password;
 using Blastic.Controls.DynamicControls.Elements.Text;
-using Reactive.Bindings;
+using Blastic.Reactive;
 
 namespace Blastic.Controls.DynamicControls
 {
@@ -96,7 +96,18 @@ namespace Blastic.Controls.DynamicControls
 
 		public static T AddAction<T>(
 			this T container,
-			ReactiveCommand command,
+			Command command,
+			Action<ActionElement> configure = null) where T : IElementContainer
+		{
+			ActionElement element = new ActionElement(command);
+			container.AddElement(element, configure);
+
+			return container;
+		}
+
+		public static T AddAction<T>(
+			this T container,
+			AsyncCommand command,
 			Action<ActionElement> configure = null) where T : IElementContainer
 		{
 			ActionElement element = new ActionElement(command);

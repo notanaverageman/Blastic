@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Blastic.Common;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
-using Reactive.Bindings;
 
 namespace Blastic.LifetimeManagement
 {

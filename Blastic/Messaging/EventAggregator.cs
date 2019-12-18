@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Reactive.Bindings.Extensions;
 
 namespace Blastic.Messaging
 {
@@ -22,7 +21,7 @@ namespace Blastic.Messaging
 		public IDisposable SubscribeOnUIThread<T>(Action<T> action)
 		{
 			return GetEventBus<T>()
-				.ObserveOnUIDispatcher()
+				.ObserveOnDispatcher()
 				.Subscribe(action);
 		}
 

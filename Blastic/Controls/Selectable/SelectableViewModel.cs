@@ -1,4 +1,4 @@
-﻿using Reactive.Bindings;
+﻿using Blastic.Reactive;
 
 namespace Blastic.Controls.Selectable
 {

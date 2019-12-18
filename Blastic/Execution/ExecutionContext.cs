@@ -5,12 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Controls.DynamicControls;
 using Blastic.Messaging;
+using Blastic.Reactive;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Events;
-using Reactive.Bindings;
 
 namespace Blastic.Execution
 {

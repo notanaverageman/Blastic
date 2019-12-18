@@ -6,10 +6,10 @@ using Blastic.Execution;
 using Blastic.Initialization;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 using Blastic.UserInterface.Events;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Settings;
-using Reactive.Bindings;
 
 namespace Blastic.UserInterface.TabbedMain
 {
@@ -24,8 +24,8 @@ namespace Blastic.UserInterface.TabbedMain
 
 		public int FixedHeaderCount { get; }
 
-		public AsyncReactiveCommand ShowLogsCommand { get; }
-		public AsyncReactiveCommand ShowSettingsCommand { get; }
+		public AsyncCommand ShowLogsCommand { get; }
+		public AsyncCommand ShowSettingsCommand { get; }
 
 		public TabbedMainViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -51,11 +51,7 @@ namespace Blastic.UserInterface.TabbedMain
 
 			FixedHeaderCount = tabs.Count(x => x.IsFixed);
 
-			// TODO: AddRange.
-			foreach (IMainTab tab in tabs)
-			{
-				Items.Add(tab);
-			}
+			Items.AddRange(tabs);
 
 			Lifetime.Activate.Subscribe(async x =>
 			{
@@ -67,8 +63,8 @@ namespace Blastic.UserInterface.TabbedMain
 			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
 			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
 			
-			ShowLogsCommand = new AsyncReactiveCommand().WithSubscribe(ShowLogs);
-			ShowSettingsCommand = new AsyncReactiveCommand().WithSubscribe(ShowSettings);
+			ShowLogsCommand = new AsyncCommand().WithSubscribe(ShowLogs);
+			ShowSettingsCommand = new AsyncCommand().WithSubscribe(ShowSettings);
 		}
 
 		private async Task ExecuteInitializationSteps(CancellationToken cancellationToken)

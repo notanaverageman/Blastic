@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Reactive.Bindings;
+using Blastic.Reactive;
 
 namespace Blastic.ViewManagement
 {
