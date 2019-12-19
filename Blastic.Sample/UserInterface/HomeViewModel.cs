@@ -1,36 +1,43 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
-using System.Windows;
 using Blastic.Common;
-using Blastic.Controls.DynamicControls;
-using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
+using Blastic.Services.Localization;
 using Blastic.UserInterface.TabbedMain;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.Logging;
 
 namespace Blastic.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IMainTab
 	{
+		private readonly ILocalizationService _localizationService;
+
 		public Order Order { get; }
 		public bool IsFixed => true;
 
-		public IReactiveProperty<string> Text { get; set; }
+		public IReactiveProperty<string> Text { get; }
+		public IReactiveProperty<string> Title { get; }
+		public IReactiveProperty<string> ButtonText { get; }
 
-		public AsyncCommand TestCommand { get; set; }
+		public Command TestCommand { get; set; }
 
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
-			TestSettingsViewModel testSettings)
+			TestSettingsViewModel testSettings,
+			ILocalizationService localizationService)
 			:
 			base(executionContextFactory)
 		{
+			_localizationService = localizationService;
 			Order = new Order(1);
+
 			Text = new ReactiveProperty<string>();
-			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
+			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
+			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test");
+
+			TestCommand = new Command().WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
@@ -40,7 +47,7 @@ namespace Blastic.Sample.UserInterface
 
 		protected Task OnInitialize()
 		{
-			Text = new ReactiveProperty<string>("Initialized");
+			Text.Value = "Initialized";
 			return Task.CompletedTask;
 		}
 
@@ -50,63 +57,15 @@ namespace Blastic.Sample.UserInterface
 			return Task.CompletedTask;
 		}
 
-		public async Task Test()
+		private bool _x;
+
+		public void Test()
 		{
-			await ExecutionContext.Execute(async x =>
-			{
-				ExecutionContext.Logger.LogError("Aasd");
-				ExecutionContext.ProgressDetails.Add("Test1");
-				ExecutionContext.ProgressDetails.Add("Test2");
-				await Task.Delay(3000, x);
-				ExecutionContext.ProgressDetails.Add("Test1");
-				ExecutionContext.ProgressDetails.Add("Test2");
-				ExecutionContext.Logger.LogError("Aasd2");
-			});
+			_localizationService.SetCulture(_x
+				? CultureInfo.GetCultureInfo("en-US")
+				: CultureInfo.GetCultureInfo("tr-TR"));
 
-			ReactiveProperty<string> name = new ReactiveProperty<string>();
-			ReactiveProperty<string> password = new ReactiveProperty<string>();
-			ReactiveProperty<int> age = new ReactiveProperty<int>();
-			ReactiveProperty<bool> boolean = new ReactiveProperty<bool>();
-			Command command = new Command(boolean);
-
-			int asd = 0;
-			command.Subscribe(() =>
-			{
-				asd++;
-				name.Value = asd.ToString();
-			});
-
-			DynamicModel form = new DynamicModel()
-				.AddGroup(x => x
-					.WithHelp("Some help content.")
-					.AddText(name, y => y
-						.WithLabel("File path")
-						.WithIcon(PackIconKind.FileExcel)
-						.WithColumnWidth(new GridLength(1, GridUnitType.Star)))
-					.AddAction(command, y => y
-						.WithIcon(PackIconKind.Folder)))
-				.AddText(name, x => x
-					.WithLabel("Name")
-					.WithHelp("Name of the user.")
-					.WithIcon(PackIconKind.User))
-				.AddPassword(password, x => x
-					.WithLabel("Password")
-					.WithHelp("Password of the user.")
-					.WithIcon(PackIconKind.Lock))
-				.AddNumber(age, x => x
-					.WithLabel("Age")
-					.WithHelp("Age of the user.")
-					.WithIcon(PackIconKind.JackOLantern))
-				.AddBoolean(boolean, x => x
-					.WithLabel("Some check")
-					.WithHelp("Some check for the user."))
-				.AddAction(command, x => x
-					.WithLabel("Some Button")
-					.WithIcon(PackIconKind.Add)
-					.WithIconMargin(new Thickness(0, 0, 8, 0))
-					.WithHorizontalAlignment(HorizontalAlignment.Right));
-
-			await ExecutionContext.ShowForm(form);
+			_x = !_x;
 		}
 	}
 }

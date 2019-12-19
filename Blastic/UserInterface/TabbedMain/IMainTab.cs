@@ -1,5 +1,6 @@
 ﻿using Blastic.Common;
 using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 
 namespace Blastic.UserInterface.TabbedMain
 {
@@ -7,5 +8,7 @@ namespace Blastic.UserInterface.TabbedMain
 	{
 		Order Order { get; }
 		bool IsFixed { get; }
+
+		IReactiveProperty<string> Title { get; }
 	}
 }

@@ -3,6 +3,7 @@ using Autofac;
 using Blastic.Data;
 using Blastic.Initialization;
 using Blastic.Initialization.Extensions;
+using Blastic.Sample.Properties;
 using Blastic.UserInterface.TabbedMain;
 using Microsoft.Extensions.Configuration;
 
@@ -28,6 +29,7 @@ namespace Blastic.Sample
 				.AddLogsWindow()
 				.AddSettingsWindow()
 				.AddSettingsService()
+				.AddLocalizationSource(Resources.ResourceManager)
 				.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
 				.Run<TabbedMainViewModel>();
 		}

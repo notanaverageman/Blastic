@@ -11,7 +11,7 @@
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<Button Grid.Row="0"
 				Command="{Binding TestCommand}"
-				Content="Test"
+				Content="{Binding ButtonText.Value}"
 				Style="{StaticResource MaterialDesignFlatButton}" />
 
 		<TextBlock Grid.Row="1"

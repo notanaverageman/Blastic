@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using Blastic.Reactive;
+using Blastic.Services.Localization;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs.Settings;
 using Blastic.ViewManagement;
@@ -19,9 +20,11 @@ namespace Blastic.UserInterface.Logs
 		private readonly IWindowManager _windowManager;
 		private readonly LogSettingsViewModel _logSettingsViewModel;
 
+		public IReactiveProperty<string> Title { get; }
+
 		public IReactiveProperty<UIElement> View { get; }
 
-		public IReactiveProperty<LogEventLevel> MinimumLogLevel { get; set; }
+		public IReactiveProperty<LogEventLevel> MinimumLogLevel { get; }
 
 		public LogSink LogSink { get; }
 		public IEnumerable<LogEventLevel> LogLevels { get; }
@@ -30,12 +33,15 @@ namespace Blastic.UserInterface.Logs
 
 		public LogsViewModel(
 			IWindowManager windowManager,
+			ILocalizationService localizationService,
 			LogSettingsViewModel logSettingsViewModel,
 			LogSink logSink)
 		{
 			_windowManager = windowManager;
 			_logSettingsViewModel = logSettingsViewModel;
 			LogSink = logSink;
+
+			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Logs.Window.Title");
 
 			MinimumLogLevel = new ReactiveProperty<LogEventLevel>();
 			MinimumLogLevel.Subscribe(OnMinimumLogLevelChanged);

@@ -8,7 +8,7 @@
 					  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:serilog="clr-namespace:Serilog.Events;assembly=Serilog"
-					  Title="Logs"
+					  Title="{Binding Title.Value}"
 					  mc:Ignorable="d"
 					  Width="1400"
 					  Height="800"

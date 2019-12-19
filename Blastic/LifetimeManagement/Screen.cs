@@ -1,5 +1,4 @@
 ﻿using Blastic.Execution;
-using Blastic.Reactive;
 
 namespace Blastic.LifetimeManagement
 {
@@ -10,16 +9,12 @@ namespace Blastic.LifetimeManagement
 
 		public ILifetime Lifetime { get; }
 
-		public IReactiveProperty<string> DisplayName { get; }
-
 		public Screen(ExecutionContextFactory executionContextFactory)
 		{
 			ExecutionContextFactory = executionContextFactory;
 			ExecutionContext = executionContextFactory.Create();
 
 			Lifetime = new Lifetime();
-
-			DisplayName = new ReactiveProperty<string>(GetType().ToString());
 		}
 	}
 }

@@ -38,8 +38,6 @@ namespace Blastic.UserInterface.Settings
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
-			DisplayName.Value = "Settings";
-
 			Items.AddRange(sections);
 
 			SaveCommand = new AsyncCommand(Save);

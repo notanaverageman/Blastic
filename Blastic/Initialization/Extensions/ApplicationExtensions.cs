@@ -1,8 +1,12 @@
-﻿using Autofac;
+﻿using System.Resources;
+using Autofac;
+using Blastic.Common;
 using Blastic.Execution;
 using Blastic.Initialization.Steps;
 using Blastic.Messaging;
+using Blastic.Properties;
 using Blastic.Services.Dialog;
+using Blastic.Services.Localization;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Logs.Settings;
@@ -45,6 +49,19 @@ namespace Blastic.Initialization.Extensions
 			});
 		}
 
+		public static BlasticApplication AddLocalizationSource(
+			this BlasticApplication application,
+			ResourceManager resourceManager,
+			Order order = null)
+		{
+			return application.Configure(builder =>
+			{
+				builder
+					.RegisterInstance(new ResourceManagerLocalizationSource(resourceManager, order))
+					.AsImplementedInterfaces();
+			});
+		}
+
 		public static BlasticApplication AddLogsWindow(this BlasticApplication application)
 		{
 			return application.Configure(builder =>
@@ -83,7 +100,8 @@ namespace Blastic.Initialization.Extensions
 		{
 			return application
 				.AddLogging()
-				.AddDefaultServices();
+				.AddDefaultServices()
+				.AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
 		}
 
 		private static BlasticApplication AddLogging(this BlasticApplication application, LogLevel minimumLogLevel = LogLevel.Trace)
@@ -104,6 +122,11 @@ namespace Blastic.Initialization.Extensions
 			{
 				builder
 					.RegisterType<ExecutionContextFactory>()
+					.SingleInstance();
+
+				builder
+					.RegisterType<LocalizationService>()
+					.As<ILocalizationService>()
 					.SingleInstance();
 
 				builder

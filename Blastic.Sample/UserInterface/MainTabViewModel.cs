@@ -7,6 +7,7 @@ using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
+using Blastic.Services.Localization;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -18,18 +19,23 @@ namespace Blastic.Sample.UserInterface
 		public Order Order { get; }
 		public bool IsFixed => true;
 
+		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> Text { get; set; }
 
 		public AsyncCommand TestCommand { get; set; }
 
 		public MainTabViewModel(
 			ExecutionContextFactory executionContextFactory,
-			TestSettingsViewModel testSettings)
+			TestSettingsViewModel testSettings,
+			ILocalizationService localizationService)
 			:
 			base(executionContextFactory)
 		{
 			Order = new Order(2);
+
 			Text = new ReactiveProperty<string>();
+			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
+
 			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
@@ -40,7 +46,7 @@ namespace Blastic.Sample.UserInterface
 
 		protected Task OnInitialize()
 		{
-			Text = new ReactiveProperty<string>("Initialized");
+			Text.Value = "Initialized";
 			return Task.CompletedTask;
 		}
 
