@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Common;
+using Blastic.Data.Tables;
 
 namespace Blastic.Data.Migrations
 {
@@ -14,10 +15,10 @@ namespace Blastic.Data.Migrations
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "CREATE TABLE DatabaseInformation(Version NVARCHAR(255) PRIMARY KEY)";
+			command.CommandText = $"CREATE TABLE {DatabaseInformationTable.TableName}(Version NVARCHAR(255) PRIMARY KEY)";
 			await command.ExecuteNonQuery(cancellationToken);
 
-			command.CommandText = "INSERT INTO DatabaseInformation (Version) VALUES (@Version)";
+			command.CommandText = $"INSERT INTO {DatabaseInformationTable.TableName} (Version) VALUES (@Version)";
 			command.AddParameterWithValue("@Version", Version.ToString());
 
 			await command.ExecuteNonQuery(cancellationToken);
@@ -27,7 +28,7 @@ namespace Blastic.Data.Migrations
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "DROP TABLE DatabaseInformation";
+			command.CommandText = $"DROP TABLE {DatabaseInformationTable.TableName}";
 			await command.ExecuteNonQuery(cancellationToken);
 		}
 	}

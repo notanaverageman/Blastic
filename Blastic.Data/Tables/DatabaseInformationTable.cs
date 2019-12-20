@@ -6,6 +6,8 @@ namespace Blastic.Data.Tables
 {
 	public class DatabaseInformationTable : TableBase
 	{
+		public static string TableName { get; set; } = "DatabaseInformation";
+
 		public DatabaseInformationTable(ConnectionFactory connectionFactory) : base(connectionFactory)
 		{
 		}
@@ -20,7 +22,7 @@ namespace Blastic.Data.Tables
 		public async Task<Version> GetVersion(Connection connection, CancellationToken cancellationToken)
 		{
 			bool tableExists = await connection.ProviderSpecifics.TableExists(
-				"DatabaseInformation",
+				TableName,
 				cancellationToken);
 
 			if (!tableExists)
@@ -30,7 +32,7 @@ namespace Blastic.Data.Tables
 
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "SELECT Version FROM DatabaseInformation";
+			command.CommandText = $"SELECT Version FROM {TableName}";
 			string versionAsString = await command.ExecuteScalar<string>(cancellationToken);
 
 			return Version.Parse(versionAsString);
@@ -47,7 +49,7 @@ namespace Blastic.Data.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "UPDATE DatabaseInformation SET Version=@Version";
+			command.CommandText = $"UPDATE {TableName} SET Version=@Version";
 			command.AddParameterWithValue("@Version", version.ToString());
 
 			await command.ExecuteNonQuery(cancellationToken);
