@@ -4,6 +4,10 @@
 					xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
 					xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.TextBox.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
 	<converters:TextFieldHintVisibilityConverter x:Key="TextFieldHintVisibilityConverter" />
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
