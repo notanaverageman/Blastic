@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Blastic.Common;
@@ -10,7 +11,6 @@ using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.UserInterface.TabbedMain;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.Logging;
 
 namespace Blastic.Sample.UserInterface
 {
@@ -58,17 +58,6 @@ namespace Blastic.Sample.UserInterface
 
 		public async Task Test()
 		{
-			await ExecutionContext.Execute(async x =>
-			{
-				ExecutionContext.Logger.LogError("Aasd");
-				ExecutionContext.ProgressDetails.Add("Test1");
-				ExecutionContext.ProgressDetails.Add("Test2");
-				await Task.Delay(3000, x);
-				ExecutionContext.ProgressDetails.Add("Test1");
-				ExecutionContext.ProgressDetails.Add("Test2");
-				ExecutionContext.Logger.LogError("Aasd2");
-			});
-
 			ReactiveProperty<string> name = new ReactiveProperty<string>();
 			ReactiveProperty<string> password = new ReactiveProperty<string>();
 			ReactiveProperty<int> age = new ReactiveProperty<int>();
@@ -83,6 +72,10 @@ namespace Blastic.Sample.UserInterface
 			});
 
 			DynamicModel form = new DynamicModel()
+				.AddLabel(name)
+				.AddSelection(age, new ReactiveCollection<int>(Enumerable.Range(1, 20)), x => x
+					.WithLabel("Ages")
+					.WithIcon(PackIconKind.AbTesting))
 				.AddGroup(x => x
 					.WithHelp("Some help content.")
 					.AddText(name, y => y

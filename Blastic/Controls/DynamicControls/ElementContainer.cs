@@ -5,7 +5,9 @@ using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Controls.DynamicControls.Elements.Action;
 using Blastic.Controls.DynamicControls.Elements.Boolean;
 using Blastic.Controls.DynamicControls.Elements.Group;
+using Blastic.Controls.DynamicControls.Elements.Label;
 using Blastic.Controls.DynamicControls.Elements.Password;
+using Blastic.Controls.DynamicControls.Elements.Selection;
 using Blastic.Controls.DynamicControls.Elements.Text;
 using Blastic.Reactive;
 
@@ -41,6 +43,17 @@ namespace Blastic.Controls.DynamicControls
 			Action<TextField> configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
+			container.AddElement(element, configure);
+
+			return container;
+		}
+
+		public static T AddLabel<T>(
+			this T container,
+			IReactiveProperty<string> property,
+			Action<LabelField> configure = null) where T : IElementContainer
+		{
+			LabelField element = new LabelField(property);
 			container.AddElement(element, configure);
 
 			return container;
@@ -89,6 +102,18 @@ namespace Blastic.Controls.DynamicControls
 			Action<BooleanField> configure = null) where T : IElementContainer
 		{
 			BooleanField element = new BooleanField(property);
+			container.AddElement(element, configure);
+
+			return container;
+		}
+
+		public static T AddSelection<T, TSelection>(
+			this T container,
+			IReactiveProperty<TSelection> property,
+			ReactiveCollection<TSelection> values,
+			Action<SelectionField<TSelection>> configure = null) where T : IElementContainer
+		{
+			SelectionField<TSelection> element = new SelectionField<TSelection>(property, values);
 			container.AddElement(element, configure);
 
 			return container;

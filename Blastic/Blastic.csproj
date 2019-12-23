@@ -68,4 +68,12 @@
     <ProjectReference Include="..\Blastic.Common\Blastic.Common.csproj" />
     <ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Update="Themes\DynamicControls\Material\ComboBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\DynamicControls\Material\TextBlock.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 </Project>

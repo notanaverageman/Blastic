@@ -45,7 +45,7 @@ namespace Blastic.Controls.DynamicControls.Elements
 			IsEnabled = new ReactiveProperty<bool>(true);
 
 			IconSize = 18;
-			Margin = new Thickness(8, 16, 8, 16);
+			Margin = new Thickness(8, 8, 8, 8);
 			IconMargin = new Thickness(0, 0, 8, 0);
 			HorizontalAlignment = HorizontalAlignment.Stretch;
 		}
