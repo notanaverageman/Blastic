@@ -29,7 +29,7 @@ namespace Blastic.Data
 				command.Transaction = DbTransaction;
 			}
 
-			return new Command(command, Logger);
+			return new Command(command, Provider, Logger);
 		}
 
 		public abstract void Dispose();

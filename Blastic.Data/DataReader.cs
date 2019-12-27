@@ -10,12 +10,14 @@ namespace Blastic.Data
 		public const string ListSeparator = ";";
 
 		private readonly DbDataReader _dataReader;
+		private readonly DatabaseProvider _databaseProvider;
 
 		public bool HasRows => _dataReader.HasRows;
 
-		public DataReader(DbDataReader dataReader)
+		public DataReader(DbDataReader dataReader, DatabaseProvider databaseProvider)
 		{
 			_dataReader = dataReader;
+			_databaseProvider = databaseProvider;
 		}
 
 		public bool Read()
@@ -25,7 +27,7 @@ namespace Blastic.Data
 
 		public T Get<T>(string name)
 		{
-			return SafeCast<T>(_dataReader[name]);
+			return SafeCast<T>(_dataReader[name], _databaseProvider);
 		}
 
 		public List<T> GetEnumList<T>(string name)
@@ -35,10 +37,10 @@ namespace Blastic.Data
 
 		public T Get<T>(int index)
 		{
-			return SafeCast<T>(_dataReader[index]);
+			return SafeCast<T>(_dataReader[index], _databaseProvider);
 		}
 
-		internal static T SafeCast<T>(object value)
+		internal static T SafeCast<T>(object value, DatabaseProvider databaseProvider)
 		{
 			if (value == null)
 			{
@@ -60,6 +62,11 @@ namespace Blastic.Data
 			if (isInt && value is decimal d)
 			{
 				return (T)(object)(int)d;
+			}
+
+			if (databaseProvider == DatabaseProvider.SQLite && typeof(T) == typeof(DateTime) || typeof(T) == typeof(DateTime?))
+			{
+				return (T)(object)DateTime.FromFileTimeUtc((long)value);
 			}
 
 			return (T)value;

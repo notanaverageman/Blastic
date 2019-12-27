@@ -13,6 +13,7 @@ namespace Blastic.Data
 	public class Command : IDisposable
 	{
 		private readonly DbCommand _command;
+		private readonly DatabaseProvider _databaseProvider;
 		private readonly ILogger _logger;
 
 		public string CommandText
@@ -21,9 +22,10 @@ namespace Blastic.Data
 			set => _command.CommandText = value;
 		}
 
-		public Command(DbCommand command, ILogger logger)
+		public Command(DbCommand command, DatabaseProvider databaseProvider, ILogger logger)
 		{
 			_command = command;
+			_databaseProvider = databaseProvider;
 			_logger = logger;
 
 			// In Azure Db connections the 30 seconds timeout occurs frequently.
@@ -61,6 +63,11 @@ namespace Blastic.Data
 			if (value == null)
 			{
 				value = DBNull.Value;
+			}
+
+			if (_databaseProvider == DatabaseProvider.SQLite && value is DateTime dateTime)
+			{
+				value = dateTime.ToFileTimeUtc();
 			}
 
 			if (DataReader.IsListOfEnums(value))
@@ -103,13 +110,13 @@ namespace Blastic.Data
 		public async Task<T> ExecuteScalar<T>(CancellationToken cancellationToken)
 		{
 			object result = await ExecuteAndLogException(async () => await _command.ExecuteScalarAsync(cancellationToken));
-			return DataReader.SafeCast<T>(result);
+			return DataReader.SafeCast<T>(result, _databaseProvider);
 		}
 
 		public async Task<DataReader> ExecuteReader(CancellationToken cancellationToken)
 		{
 			DbDataReader reader = await ExecuteAndLogException(async () => await _command.ExecuteReaderAsync(cancellationToken));
-			return new DataReader(reader);
+			return new DataReader(reader, _databaseProvider);
 		}
 
 		public void Dispose()
