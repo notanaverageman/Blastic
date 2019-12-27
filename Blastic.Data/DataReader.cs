@@ -62,11 +62,6 @@ namespace Blastic.Data
 				return (T)(object)(int)d;
 			}
 
-			if (typeof(T) == typeof(DateTime) || typeof(T) == typeof(DateTime?))
-			{
-				return (T)(object)DateTime.FromFileTimeUtc((long)value);
-			}
-
 			return (T)value;
 		}
 

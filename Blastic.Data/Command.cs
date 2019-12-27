@@ -63,11 +63,6 @@ namespace Blastic.Data
 				value = DBNull.Value;
 			}
 
-			if (value is DateTime dateTime)
-			{
-				value = dateTime.ToFileTimeUtc();
-			}
-
 			if (DataReader.IsListOfEnums(value))
 			{
 				IEnumerable<object> list = ((IList) value).Cast<object>();

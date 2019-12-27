@@ -3,7 +3,7 @@
 	public class SqlServerProviderSpecifics : ProviderSpecifics
 	{
 		protected override string GetColumnsQueryColumnName => "COLUMN_NAME";
-		protected override int MaximumQueryParameter => 2099;
+		protected override int MaximumQueryParameter => 999;
 
 		public override string IdentityColumn => "IDENTITY(1,1)";
 		public override string NVarCharMaxColumn => "NVARCHAR(MAX)";

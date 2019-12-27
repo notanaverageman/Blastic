@@ -16,8 +16,8 @@ namespace Blastic.Data.ProgramData.Migrations
 			using Command command = connection.CreateCommand();
 
 			command.CommandText = $@"CREATE TABLE Settings (
-                                        Key   {providerSpecifics.NVarCharMaxColumn} PRIMARY KEY,
-                                        Value {providerSpecifics.NVarCharMaxColumn}
+                                        Setting NVARCHAR(255) PRIMARY KEY,
+                                        Value   {providerSpecifics.NVarCharMaxColumn}
                                     );";
 
 			await command.ExecuteNonQuery(cancellationToken);

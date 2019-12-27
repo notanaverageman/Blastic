@@ -15,8 +15,8 @@ namespace Blastic.Data.ProgramData.Tables
 			using Connection connection = ConnectionFactory.CreateConnection();
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "SELECT * FROM Settings WHERE Key=@Key";
-			command.AddParameterWithValue("@Key", key);
+			command.CommandText = "SELECT * FROM Settings WHERE Setting=@Setting";
+			command.AddParameterWithValue("@Setting", key);
 
 			using DataReader reader = await command.ExecuteReader(cancellationToken);
 
@@ -52,8 +52,8 @@ namespace Blastic.Data.ProgramData.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = "SELECT 1 FROM Settings WHERE Key=@Key";
-			command.AddParameterWithValue("@Key", key);
+			command.CommandText = "SELECT 1 FROM Settings WHERE Setting=@Setting";
+			command.AddParameterWithValue("@Setting", key);
 
 			using DataReader reader = await command.ExecuteReader(cancellationToken);
 			return reader.HasRows;
@@ -64,8 +64,8 @@ namespace Blastic.Data.ProgramData.Tables
 			using Connection connection = ConnectionFactory.CreateConnection();
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = @"DELETE FROM Settings WHERE Key=@Key";
-			command.AddParameterWithValue("@Key", key);
+			command.CommandText = @"DELETE FROM Settings WHERE Setting=@Setting";
+			command.AddParameterWithValue("@Setting", key);
 
 			await command.ExecuteNonQuery(cancellationToken);
 		}
@@ -74,9 +74,9 @@ namespace Blastic.Data.ProgramData.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = @"INSERT INTO Settings (Key, Value) VALUES (@Key, @Value)";
+			command.CommandText = @"INSERT INTO Settings (Setting, Value) VALUES (@Setting, @Value)";
 				
-			command.AddParameterWithValue("@Key", key);
+			command.AddParameterWithValue("@Setting", key);
 			command.AddParameterWithValue("@Value", value);
 
 			await command.ExecuteNonQuery(cancellationToken);
@@ -86,10 +86,10 @@ namespace Blastic.Data.ProgramData.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = @"UPDATE Settings SET Value=@Value WHERE Key=@Key";
+			command.CommandText = @"UPDATE Settings SET Value=@Value WHERE Setting=@Setting";
 				
 			command.AddParameterWithValue("@Value", value);
-			command.AddParameterWithValue("@Key", key);
+			command.AddParameterWithValue("@Setting", key);
 
 			await command.ExecuteNonQuery(cancellationToken);
 		}
