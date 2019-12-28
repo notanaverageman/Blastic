@@ -13,12 +13,18 @@ namespace Blastic.Controls.DynamicControls
 
 		public void Ok()
 		{
-			_taskCompletionSource.SetResult(true);
+			if (!_taskCompletionSource.Task.IsCompleted)
+			{
+				_taskCompletionSource.SetResult(true);
+			}
 		}
 
 		public void Cancel()
 		{
-			_taskCompletionSource.SetResult(false);
+			if (!_taskCompletionSource.Task.IsCompleted)
+			{
+				_taskCompletionSource.SetResult(false);
+			}
 		}
 
 		public Task<bool> WaitCompletion()

@@ -8,9 +8,8 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d">
 	<Grid>
-		<dynamicControls:DynamicControl ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}"
-										Form="{Binding ExecutionContext.Form.Value, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
-		
+		<dynamicControls:Form ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
+
 		<controls:BusyIndicator ExecutionContext="{Binding ExecutionContext, RelativeSource={RelativeSource AncestorType=execution:ExecutionContextView}}" />
 	</Grid>
 </UserControl>

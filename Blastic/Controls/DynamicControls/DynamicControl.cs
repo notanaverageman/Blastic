@@ -2,8 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using Blastic.Controls.DynamicControls.Elements;
-using Blastic.Execution;
-using Blastic.Reactive;
 
 namespace Blastic.Controls.DynamicControls
 {
@@ -15,39 +13,18 @@ namespace Blastic.Controls.DynamicControls
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicControl), new FrameworkPropertyMetadata(typeof(DynamicControl)));
 		}
 
-		public static readonly DependencyProperty ExecutionContextProperty = DependencyProperty.Register(
-			nameof(ExecutionContextProperty).Replace("Property", ""),
-			typeof(ExecutionContext),
-			typeof(DynamicControl),
-			new PropertyMetadata(default(ExecutionContext)));
-		public ExecutionContext ExecutionContext
-		{
-			get => (ExecutionContext)GetValue(ExecutionContextProperty);
-			set => SetValue(ExecutionContextProperty, value);
-		}
-
-		public static readonly DependencyProperty FormProperty = DependencyProperty.Register(
-			nameof(FormProperty).Replace("Property", ""),
+		public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(
+			nameof(ModelProperty).Replace("Property", ""),
 			typeof(DynamicModel),
 			typeof(DynamicControl),
 			new PropertyMetadata(default(DynamicModel), OnFormChanged));
-		public DynamicModel Form
+		public DynamicModel Model
 		{
-			get => (DynamicModel)GetValue(FormProperty);
-			set => SetValue(FormProperty, value);
+			get => (DynamicModel)GetValue(ModelProperty);
+			set => SetValue(ModelProperty, value);
 		}
 
 		private Grid _rootGrid;
-
-		public Command Cancel { get; }
-
-		public DynamicControl()
-		{
-			Cancel = new Command().WithSubscribe(x =>
-			{
-				Form?.Cancel();
-			});
-		}
 
 		public override void OnApplyTemplate()
 		{
@@ -79,14 +56,14 @@ namespace Blastic.Controls.DynamicControls
 			_rootGrid.RowDefinitions.Clear();
 
 
-			if (Form == null)
+			if (Model == null)
 			{
 				return;
 			}
 
 			int row = 0;
 
-			foreach (IElement element in Form.Elements)
+			foreach (IElement element in Model.Elements)
 			{
 				_rootGrid.RowDefinitions.Add(new RowDefinition
 				{

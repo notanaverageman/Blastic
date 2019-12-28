@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="Blastic.Controls.DynamicControls.Form"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:dynamicControls="clr-namespace:Blastic.Controls.DynamicControls"
+			 xmlns:mah="http://metro.mahapps.com/winfx/xaml/simplechildwindow"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d">
+	<Grid>
+		<mah:ChildWindow CloseByEscape="False"
+						 IsOpen="{Binding ExecutionContext.IsShowingForm.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}"
+						 ShowTitleBar="False">
+
+			<mah:ChildWindow.InputBindings>
+				<KeyBinding Key="Escape"
+							Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
+			</mah:ChildWindow.InputBindings>
+
+			<dynamicControls:DynamicControl Model="{Binding ExecutionContext.Form.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
+		</mah:ChildWindow>
+	</Grid>
+</UserControl>
