@@ -61,6 +61,9 @@ namespace Blastic.Controls.DynamicControls
 				return;
 			}
 
+			_rootGrid.MinWidth = Model.MinWidth;
+			_rootGrid.MinHeight = Model.MinHeight;
+
 			int row = 0;
 
 			foreach (IElement element in Model.Elements)

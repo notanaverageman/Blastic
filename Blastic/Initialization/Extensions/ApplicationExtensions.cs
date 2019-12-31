@@ -7,6 +7,7 @@ using Blastic.Messaging;
 using Blastic.Properties;
 using Blastic.Services.Dialog;
 using Blastic.Services.Localization;
+using Blastic.Services.Notifications;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Logs.Settings;
@@ -127,6 +128,11 @@ namespace Blastic.Initialization.Extensions
 				builder
 					.RegisterType<LocalizationService>()
 					.As<ILocalizationService>()
+					.SingleInstance();
+
+				builder
+					.RegisterType<NotificationService>()
+					.As<INotificationService>()
 					.SingleInstance();
 
 				builder

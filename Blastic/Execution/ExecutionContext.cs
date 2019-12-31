@@ -9,6 +9,7 @@ using Blastic.Reactive;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
+using Blastic.Services.Notifications;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Events;
 
@@ -20,6 +21,7 @@ namespace Blastic.Execution
 		public IDialogService DialogService { get; }
 		public IWindowManager WindowManager { get; }
 		public IEventAggregator EventAggregator { get; }
+		public INotificationService NotificationService { get; }
 		public ISnackbarMessageQueue MessageQueue { get; }
 
 		public IReactiveProperty<bool> IsBusy { get; set; }
@@ -37,12 +39,14 @@ namespace Blastic.Execution
 			IDialogService dialogService,
 			IWindowManager windowManager,
 			IEventAggregator eventAggregator,
+			INotificationService notificationService,
 			ISnackbarMessageQueue messageQueue)
 		{
 			Logger = logger;
 			DialogService = dialogService;
 			WindowManager = windowManager;
 			EventAggregator = eventAggregator;
+			NotificationService = notificationService;
 			MessageQueue = messageQueue;
 
 			IsBusy = new ReactiveProperty<bool>();

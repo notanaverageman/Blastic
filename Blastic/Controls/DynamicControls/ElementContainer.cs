@@ -15,12 +15,18 @@ namespace Blastic.Controls.DynamicControls
 {
 	public interface IElementContainer
 	{
+		double MinWidth { get; set; }
+		double MinHeight { get; set; }
+
 		List<IElement> Elements { get; }
 		void AddElement<TElement>(TElement element, Action<TElement> configure) where TElement : IElement;
 	}
 
 	public class ElementContainer : IElementContainer
 	{
+		public double MinWidth { get; set; }
+		public double MinHeight { get; set; }
+
 		public List<IElement> Elements { get; }
 
 		public ElementContainer()
@@ -37,6 +43,22 @@ namespace Blastic.Controls.DynamicControls
 
 	public static class ElementContainerExtensions
 	{
+		public static T WithMinWidth<T>(
+			this T container,
+			double minWidth) where T : IElementContainer
+		{
+			container.MinWidth = minWidth;
+			return container;
+		}
+
+		public static T WithMinHeight<T>(
+			this T container,
+			double minHeight) where T : IElementContainer
+		{
+			container.MinHeight = minHeight;
+			return container;
+		}
+
 		public static T AddText<T>(
 			this T container,
 			IReactiveProperty<string> property,

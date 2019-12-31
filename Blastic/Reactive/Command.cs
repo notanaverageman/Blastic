@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows.Input;
 using Blastic.Common;
 
@@ -52,9 +53,10 @@ namespace Blastic.Reactive
 	public class Command<T> : ICommand
 	{
 		private readonly ConcurrentDictionary<Action<CommandContext<T>>, Order> _actions;
-		private readonly IReadOnlyReactiveProperty<bool> _canExecute;
 
 		public event EventHandler CanExecuteChanged;
+
+		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
 
 		public Command() : this((IObservable<bool>) null)
 		{
@@ -84,10 +86,12 @@ namespace Blastic.Reactive
 		{
 			_actions = new ConcurrentDictionary<Action<CommandContext<T>>, Order>();
 
-			_canExecute = canExecute?.ToReadOnlyReactiveProperty();
-			_canExecute ??= new ReactiveProperty<bool>(true);
+			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty();
+			CanExecuteObservable ??= new ReactiveProperty<bool>(true);
 
-			_canExecute.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+			CanExecuteObservable
+				.ObserveOnDispatcher()
+				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
 
 		public IDisposable Subscribe(Action action, Order order = null)
@@ -108,7 +112,7 @@ namespace Blastic.Reactive
 
 		public bool CanExecute()
 		{
-			return _canExecute.Value;
+			return CanExecuteObservable.Value;
 		}
 
 		public void Execute(T parameter)
@@ -119,7 +123,7 @@ namespace Blastic.Reactive
 
 		public void Execute(CommandContext<T> context)
 		{
-			if (!_canExecute.Value)
+			if (!CanExecuteObservable.Value)
 			{
 				return;
 			}
@@ -167,6 +171,11 @@ namespace Blastic.Reactive
 
 	public static class CommandExtensions
 	{
+		public static Command ToCommand(this IObservable<bool> canExecute)
+		{
+			return new Command(canExecute);
+		}
+
 		public static Command<T> ToCommand<T>(this IObservable<bool> canExecute)
 		{
 			return new Command<T>(canExecute);

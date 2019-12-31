@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace Blastic.Reactive
@@ -30,7 +31,7 @@ namespace Blastic.Reactive
 		protected override void SetItem(int index, T item) => OnUIThread(() => SetItemBase(index, item));
 		protected virtual void SetItemBase(int index, T item) => base.SetItem(index, item);
 
-		protected override void RemoveItem(int index) => OnUIThread(() => RemoveItem(index));
+		protected override void RemoveItem(int index) => OnUIThread(() => RemoveItemBase(index));
 		protected virtual void RemoveItemBase(int index) => base.RemoveItem(index);
 
 		protected override void ClearItems() => OnUIThread(ClearItemsBase);
@@ -105,7 +106,9 @@ namespace Blastic.Reactive
 
 		private void OnUIThread(Action action)
 		{
-			if (Dispatcher.CurrentDispatcher.CheckAccess())
+			Dispatcher dispatcher = Application.Current.Dispatcher;
+
+			if (dispatcher == null || dispatcher.CheckAccess())
 			{
 				action();
 				return;
@@ -113,7 +116,7 @@ namespace Blastic.Reactive
 
 			// TODO: Extension method.
 			// TODO: Initialize dispatcher from UI thread and take it from DI.
-			Dispatcher.CurrentDispatcher.Invoke(action);
+			dispatcher.Invoke(action);
 		}
 	}
 

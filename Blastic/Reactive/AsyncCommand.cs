@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Blastic.Common;
@@ -53,9 +54,10 @@ namespace Blastic.Reactive
 	public class AsyncCommand<T> : ICommand
 	{
 		private readonly ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order> _actions;
-		private readonly IReadOnlyReactiveProperty<bool> _canExecute;
 
 		public event EventHandler CanExecuteChanged;
+
+		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
 
 		public AsyncCommand() : this((IObservable<bool>) null)
 		{
@@ -85,10 +87,12 @@ namespace Blastic.Reactive
 		{
 			_actions = new ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order>();
 
-			_canExecute = canExecute?.ToReadOnlyReactiveProperty();
-			_canExecute ??= new ReactiveProperty<bool>(true);
+			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty();
+			CanExecuteObservable ??= Observable.Repeat(true, 1).ToReadOnlyReactiveProperty();
 
-			_canExecute.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+			CanExecuteObservable
+				.ObserveOnDispatcher()
+				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
 
 		public IDisposable Subscribe(Func<Task> action, Order order = null)
@@ -109,7 +113,7 @@ namespace Blastic.Reactive
 
 		public bool CanExecute()
 		{
-			return _canExecute.Value;
+			return CanExecuteObservable.Value;
 		}
 
 		public async Task Execute(T parameter)
@@ -120,12 +124,12 @@ namespace Blastic.Reactive
 
 		public async Task Execute(AsyncCommandContext<T> context)
 		{
-			if (!_canExecute.Value)
+			if (!CanExecuteObservable.Value)
 			{
 				return;
 			}
 
-			if (!context.ContinueExecution)
+			if (context?.ContinueExecution == false)
 			{
 				return;
 			}
@@ -136,7 +140,7 @@ namespace Blastic.Reactive
 
 			foreach (IGrouping<Order, Func<AsyncCommandContext<T>, Task>> actionGroup in orderedActions)
 			{
-				if (!context.ContinueExecution)
+				if (context?.ContinueExecution == false)
 				{
 					break;
 				}
@@ -165,6 +169,11 @@ namespace Blastic.Reactive
 
 	public static class AsyncCommandExtensions
 	{
+		public static AsyncCommand ToAsyncCommand(this IObservable<bool> canExecute)
+		{
+			return new AsyncCommand(canExecute);
+		}
+
 		public static AsyncCommand<T> ToAsyncCommand<T>(this IObservable<bool> canExecute)
 		{
 			return new AsyncCommand<T>(canExecute);

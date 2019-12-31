@@ -9,14 +9,15 @@
 					  xmlns:main="clr-namespace:Blastic.UserInterface.TabbedMain"
 					  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					  xmlns:notifications="clr-namespace:Blastic.Controls.Notifications"
 					  xmlns:viewManagement="clr-namespace:Blastic.ViewManagement"
 					  Title="{Binding ProductInformation.ProgramName.Value}"
-					  mc:Ignorable="d"
 					  Width="1000"
 					  Height="600"
 					  d:DataContext="{d:DesignInstance main:TabbedMainViewModel}"
 					  Style="{StaticResource WindowStyle}"
-					  WindowStartupLocation="CenterScreen">
+					  WindowStartupLocation="CenterScreen"
+					  mc:Ignorable="d">
 
 	<controls:MetroWindow.Resources>
 		<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
@@ -87,6 +88,9 @@
 
 			<execution:ExecutionContextView ExecutionContext="{Binding ExecutionContext}" />
 			<materialDesign:Snackbar MessageQueue="{Binding ExecutionContext.MessageQueue}" />
+			<notifications:NotificationAreaView HorizontalAlignment="Right"
+												VerticalAlignment="Bottom"
+												NotificationService="{Binding ExecutionContext.NotificationService}" />
 		</Grid>
 	</materialDesign:DialogHost>
 </controls:MetroWindow>

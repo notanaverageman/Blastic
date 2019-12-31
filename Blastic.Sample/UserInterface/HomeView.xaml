@@ -6,8 +6,8 @@
 			 xmlns:execution="clr-namespace:Blastic.Execution;assembly=Blastic"
 			 xmlns:local="clr-namespace:Blastic.Sample.UserInterface"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 mc:Ignorable="d"
-			 d:DataContext="{d:DesignInstance local:HomeViewModel}">
+			 d:DataContext="{d:DesignInstance local:HomeViewModel}"
+			 mc:Ignorable="d">
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<Button Grid.Row="0"
 				Command="{Binding TestCommand}"

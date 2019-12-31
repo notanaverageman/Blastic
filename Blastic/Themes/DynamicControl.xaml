@@ -11,8 +11,6 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:DynamicControl}">
 					<Grid Name="PART_RootGrid"
-						  MinWidth="400"
-						  MinHeight="200"
 						  Margin="{TemplateBinding Padding}">
 
 						<Grid.Resources>

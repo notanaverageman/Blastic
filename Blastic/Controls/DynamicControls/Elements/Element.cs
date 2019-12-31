@@ -18,6 +18,9 @@ namespace Blastic.Controls.DynamicControls.Elements
 		GridLength ColumnWidth { get; set; }
 		HorizontalAlignment HorizontalAlignment { get; set; }
 
+		double MinWidth { get; set; }
+		double MinHeight { get; set; }
+
 		Presenter ToPresenter();
 	}
 
@@ -35,6 +38,9 @@ namespace Blastic.Controls.DynamicControls.Elements
 		public double IconSize { get; set; }
 		public GridLength ColumnWidth { get; set; }
 		public HorizontalAlignment HorizontalAlignment { get; set; }
+
+		public double MinWidth { get; set; }
+		public double MinHeight { get; set; }
 
 		public Element()
 		{
@@ -66,6 +72,9 @@ namespace Blastic.Controls.DynamicControls.Elements
 			presenter.IconSize = IconSize;
 			presenter.ColumnWidth = ColumnWidth;
 			presenter.HorizontalAlignment = HorizontalAlignment;
+
+			presenter.MinWidth = MinWidth;
+			presenter.MinHeight = MinHeight;
 
 			return presenter;
 		}
@@ -144,6 +153,18 @@ namespace Blastic.Controls.DynamicControls.Elements
 		public static T WithHorizontalAlignment<T>(this T element, HorizontalAlignment alignment) where T : IElement
 		{
 			element.HorizontalAlignment = alignment;
+			return element;
+		}
+
+		public static T WithMinWidth<T>(this T element, double minWidth) where T : IElement
+		{
+			element.MinWidth = minWidth;
+			return element;
+		}
+
+		public static T WithMinHeight<T>(this T element, double minHeight) where T : IElement
+		{
+			element.MinHeight = minHeight;
 			return element;
 		}
 	}

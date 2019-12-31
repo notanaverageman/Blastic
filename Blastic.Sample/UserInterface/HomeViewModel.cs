@@ -2,10 +2,13 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Blastic.Common;
+using Blastic.Controls.DynamicControls;
+using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
+using Blastic.Services.Notifications;
 using Blastic.UserInterface.TabbedMain;
 
 namespace Blastic.Sample.UserInterface
@@ -21,7 +24,7 @@ namespace Blastic.Sample.UserInterface
 		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> ButtonText { get; }
 
-		public Command TestCommand { get; set; }
+		public AsyncCommand TestCommand { get; set; }
 
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -31,13 +34,14 @@ namespace Blastic.Sample.UserInterface
 			base(executionContextFactory)
 		{
 			_localizationService = localizationService;
+
 			Order = new Order(1);
 
 			Text = new ReactiveProperty<string>();
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
 			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test");
 
-			TestCommand = new Command().WithSubscribe(_ => Test());
+			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
@@ -59,13 +63,23 @@ namespace Blastic.Sample.UserInterface
 
 		private bool _x;
 
-		public void Test()
+		public async Task Test()
 		{
 			_localizationService.SetCulture(_x
 				? CultureInfo.GetCultureInfo("en-US")
 				: CultureInfo.GetCultureInfo("tr-TR"));
 
 			_x = !_x;
+
+			ExecutionContext.NotificationService.MaximumActiveNotificationCount = 2;
+
+			DynamicModel model = new DynamicModel()
+				.AddAction(TestCommand, x => x
+					.WithLabel("Action"))
+				.AddLabel(new ReactiveProperty<string>("Label"))
+				.AddText(Text);
+
+			await ExecutionContext.NotificationService.Enqueue(new Notification(model));
 		}
 	}
 }
