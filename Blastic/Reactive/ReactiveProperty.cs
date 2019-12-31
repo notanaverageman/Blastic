@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
@@ -9,11 +11,15 @@ namespace Blastic.Reactive
 	public class ReactiveProperty<T> : IReactiveProperty<T>
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		private readonly Subject<T> _source;
 		private readonly IObservable<T> _observable;
 
+		private readonly List<Func<T, string>> _validators;
+
 		private T _value;
+		private IEnumerable<string> _errors;
 
 		public T Value
 		{
@@ -28,6 +34,8 @@ namespace Blastic.Reactive
 			set => Value = (T)value;
 		}
 
+		public bool HasErrors => _errors != null;
+
 		public ReactiveProperty(
 			T initialValue = default,
 			IEqualityComparer<T> equalityComparer = null)
@@ -36,6 +44,7 @@ namespace Blastic.Reactive
 
 			equalityComparer ??= EqualityComparer<T>.Default;
 
+			_validators = new List<Func<T, string>>();
 			_source = new Subject<T>();
 
             _observable = _source.DistinctUntilChanged(equalityComparer);
@@ -44,6 +53,13 @@ namespace Blastic.Reactive
 				.Do(x =>
 				{
 					_value = x;
+
+					_errors = _validators
+						.Select(y => y(x))
+						.Where(y => !string.IsNullOrEmpty(y))
+						.ToList();
+
+					ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
 				})
                 .Subscribe();
@@ -66,9 +82,19 @@ namespace Blastic.Reactive
 			return disposable;
 		}
 
+		public void AddValidator(Func<T, string> validator)
+		{
+			_validators.Add(validator);
+		}
+
 		public void Dispose()
 		{
 			_source?.Dispose();
+		}
+
+		public IEnumerable GetErrors(string propertyName)
+		{
+			return _errors;
 		}
 	}
 }

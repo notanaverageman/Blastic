@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 
 namespace Blastic.Reactive
@@ -8,11 +10,17 @@ namespace Blastic.Reactive
 	public class ReadOnlyReactiveProperty<T> : IReadOnlyReactiveProperty<T>
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+		private IEnumerable<string> _errors;
 
 		private readonly IObservable<T> _source;
+		private readonly List<Func<T, string>> _validators;
 
 		public T Value { get; private set; }
 		object IReadOnlyReactiveProperty.Value => Value;
+
+		public bool HasErrors => _errors != null;
 
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
@@ -23,11 +31,20 @@ namespace Blastic.Reactive
 
 			Value = initialValue;
 
+			_validators = new List<Func<T, string>>();
+
 			_source = source
 				.DistinctUntilChanged(equalityComparer)
 				.Do(x =>
 				{
 					Value = x;
+
+					_errors = _validators
+						.Select(y => y(x))
+						.Where(y => !string.IsNullOrEmpty(y))
+						.ToList();
+
+					ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
 				});
 		}
@@ -47,6 +64,16 @@ namespace Blastic.Reactive
 			}
 
 			return disposable;
+		}
+
+		public void AddValidator(Func<T, string> validator)
+		{
+			_validators.Add(validator);
+		}
+
+		public IEnumerable GetErrors(string propertyName)
+		{
+			return _errors;
 		}
 	}
 

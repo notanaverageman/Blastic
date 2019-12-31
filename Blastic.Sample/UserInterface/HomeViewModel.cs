@@ -47,6 +47,9 @@ namespace Blastic.Sample.UserInterface
 
 			Lifetime.Initialize.Subscribe(_ => OnInitialize());
 			Lifetime.Activate.Subscribe(_ => OnActivate());
+
+			Text.AddValidator(x => x?.Length > 4 ? "" : "Length is not valid.");
+			Text.AddValidator(x => x?.StartsWith("a") == true ? "" : "Does not start with a.");
 		}
 
 		protected Task OnInitialize()
@@ -74,10 +77,11 @@ namespace Blastic.Sample.UserInterface
 			ExecutionContext.NotificationService.MaximumActiveNotificationCount = 2;
 
 			DynamicModel model = new DynamicModel()
-				.AddAction(TestCommand, x => x
-					.WithLabel("Action"))
 				.AddLabel(new ReactiveProperty<string>("Label"))
-				.AddText(Text);
+				.AddText(Text, x => x
+					.WithLabel("Text"))
+				.AddAction(TestCommand, x => x
+					.WithLabel("Action"));
 
 			await ExecutionContext.NotificationService.Enqueue(new Notification(model));
 		}
