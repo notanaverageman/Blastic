@@ -54,12 +54,8 @@ namespace Blastic.Reactive
 				{
 					_value = x;
 
-					_errors = _validators
-						.Select(y => y(x))
-						.Where(y => !string.IsNullOrEmpty(y))
-						.ToList();
+					TriggerValidation();
 
-					ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
 				})
                 .Subscribe();
@@ -85,6 +81,16 @@ namespace Blastic.Reactive
 		public void AddValidator(Func<T, string> validator)
 		{
 			_validators.Add(validator);
+		}
+
+		public void TriggerValidation()
+		{
+			_errors = _validators
+				.Select(y => y(Value))
+				.Where(y => !string.IsNullOrEmpty(y))
+				.ToList();
+
+			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 		}
 
 		public void Dispose()

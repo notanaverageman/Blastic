@@ -130,14 +130,14 @@ namespace Blastic.Settings
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
 
-			// TODO: ReactiveSettingValue.SetValidateNotifyError(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
+			ReactiveSettingValue.AddValidator(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
 			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
 		}
 
 		public override async Task Read(CancellationToken cancellationToken)
 		{
 			_isEnabledSubscription?.Dispose();
-			// TODO: _isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.ForceValidate());
+			_isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.TriggerValidation());
 
 			T value = await SettingsService.Get(Key, DefaultValue, cancellationToken);
 

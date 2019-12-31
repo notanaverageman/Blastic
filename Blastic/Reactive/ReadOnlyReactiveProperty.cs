@@ -39,12 +39,8 @@ namespace Blastic.Reactive
 				{
 					Value = x;
 
-					_errors = _validators
-						.Select(y => y(x))
-						.Where(y => !string.IsNullOrEmpty(y))
-						.ToList();
+					TriggerValidation();
 
-					ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
 				});
 		}
@@ -74,6 +70,16 @@ namespace Blastic.Reactive
 		public IEnumerable GetErrors(string propertyName)
 		{
 			return _errors;
+		}
+
+		public void TriggerValidation()
+		{
+			_errors = _validators
+				.Select(y => y(Value))
+				.Where(y => !string.IsNullOrEmpty(y))
+				.ToList();
+
+			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 		}
 	}
 

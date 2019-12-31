@@ -13,6 +13,8 @@ namespace Blastic.Reactive
 		new T Value { get; }
 
 		IDisposable Subscribe(IObserver<T> observer, bool raiseLatestValue);
+
 		void AddValidator(Func<T, string> validator);
+		void TriggerValidation();
 	}
 }
