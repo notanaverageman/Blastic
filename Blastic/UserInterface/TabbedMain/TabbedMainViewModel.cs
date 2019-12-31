@@ -53,18 +53,21 @@ namespace Blastic.UserInterface.TabbedMain
 
 			Items.AddRange(tabs);
 
-            ActiveItem.Value = Items.FirstOrDefault();
+			ActiveItem.Value = Items.FirstOrDefault();
 
-            Lifetime.Activate.Subscribe(async x =>
+			Lifetime.Initialize.Subscribe(async x =>
 			{
-				await Activate(Items.FirstOrDefault(), x.Parameter.CancellationToken);
+				await ExecuteInitializationSteps(x.Parameter.CancellationToken);
 			});
 
-			Lifetime.Initialize.Subscribe(x => ExecuteInitializationSteps(x.Parameter.CancellationToken));
+			Lifetime.Activate.Subscribe(async x =>
+			{
+				await Activate(ActiveItem.Value, x.Parameter.CancellationToken);
+			});
 
 			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
 			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
-			
+
 			ShowLogsCommand = new AsyncCommand().WithSubscribe(ShowLogs);
 			ShowSettingsCommand = new AsyncCommand().WithSubscribe(ShowSettings);
 		}
@@ -112,7 +115,7 @@ namespace Blastic.UserInterface.TabbedMain
 				await SettingsViewModel.Show();
 			}
 		}
-		
+
 		public async Task OpenTab(OpenTabEvent message)
 		{
 			IMainTab tab = message.ViewModel;

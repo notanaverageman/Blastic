@@ -34,7 +34,7 @@ namespace Blastic.Reactive
 			set => Value = (T)value;
 		}
 
-		public bool HasErrors => _errors != null;
+		public bool HasErrors => _errors?.Any() == true;
 
 		public ReactiveProperty(
 			T initialValue = default,
@@ -50,15 +50,14 @@ namespace Blastic.Reactive
             _observable = _source.DistinctUntilChanged(equalityComparer);
 
             _observable
-				.Do(x =>
+                .Subscribe(x =>
 				{
 					_value = x;
 
 					TriggerValidation();
 
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
-				})
-                .Subscribe();
+				});
 		}
 
 		public IDisposable Subscribe(IObserver<T> observer)

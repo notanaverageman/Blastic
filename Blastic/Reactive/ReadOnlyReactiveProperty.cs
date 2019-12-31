@@ -20,7 +20,7 @@ namespace Blastic.Reactive
 		public T Value { get; private set; }
 		object IReadOnlyReactiveProperty.Value => Value;
 
-		public bool HasErrors => _errors != null;
+		public bool HasErrors => _errors?.Any() == true;
 
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
@@ -33,16 +33,16 @@ namespace Blastic.Reactive
 
 			_validators = new List<Func<T, string>>();
 
-			_source = source
-				.DistinctUntilChanged(equalityComparer)
-				.Do(x =>
-				{
-					Value = x;
+			_source = source.DistinctUntilChanged(equalityComparer);
 
-					TriggerValidation();
+			_source.Subscribe(x =>
+			{
+				Value = x;
 
-					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
-				});
+				TriggerValidation();
+
+				PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
+			});
 		}
 
 		public IDisposable Subscribe(IObserver<T> observer)
