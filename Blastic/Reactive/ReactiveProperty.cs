@@ -35,6 +35,7 @@ namespace Blastic.Reactive
 		}
 
 		public bool HasErrors => _errors?.Any() == true;
+		public IObservable<bool> HasErrorObservable { get; }
 
 		public ReactiveProperty(
 			T initialValue = default,
@@ -58,6 +59,11 @@ namespace Blastic.Reactive
 
 					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
 				});
+
+            HasErrorObservable = Observable.FromEventPattern<DataErrorsChangedEventArgs>(
+		            x => ErrorsChanged += x,
+		            x => ErrorsChanged -= x)
+	            .Select(x => HasErrors);
 		}
 
 		public IDisposable Subscribe(IObserver<T> observer)
@@ -94,7 +100,8 @@ namespace Blastic.Reactive
 
 		public void Dispose()
 		{
-			_source?.Dispose();
+			_source.OnCompleted();
+			_source.Dispose();
 		}
 
 		public IEnumerable GetErrors(string propertyName)

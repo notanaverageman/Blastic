@@ -17,6 +17,9 @@ namespace Blastic.Controls.Notifications
 			set => SetValue(NotificationProperty, value);
 		}
 
+		private bool _hasMouseFocus;
+		private bool _hasKeyboardFocus;
+
 		public NotificationView()
 		{
 			InitializeComponent();
@@ -24,12 +27,36 @@ namespace Blastic.Controls.Notifications
 
 		protected override void OnMouseEnter(MouseEventArgs e)
 		{
+			_hasMouseFocus = true;
+
 			Notification?.StopTimeout();
 		}
 
 		protected override void OnMouseLeave(MouseEventArgs e)
 		{
-			Notification?.StartTimeout();
+			_hasMouseFocus = false;
+
+			if (!_hasKeyboardFocus)
+			{
+				Notification?.StartTimeout();
+			}
+		}
+
+		protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+		{
+			_hasKeyboardFocus = true;
+
+			Notification?.StopTimeout();
+		}
+
+		protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+		{
+			_hasKeyboardFocus = false;
+
+			if (!_hasMouseFocus)
+			{
+				Notification?.StartTimeout();
+			}
 		}
 	}
 }

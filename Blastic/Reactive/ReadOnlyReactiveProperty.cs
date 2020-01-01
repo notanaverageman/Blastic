@@ -21,6 +21,7 @@ namespace Blastic.Reactive
 		object IReadOnlyReactiveProperty.Value => Value;
 
 		public bool HasErrors => _errors?.Any() == true;
+		public IObservable<bool> HasErrorObservable { get; }
 
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
@@ -43,6 +44,11 @@ namespace Blastic.Reactive
 
 				PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
 			});
+
+			HasErrorObservable = Observable.FromEventPattern<DataErrorsChangedEventArgs>(
+					x => ErrorsChanged += x,
+					x => ErrorsChanged -= x)
+				.Select(x => HasErrors);
 		}
 
 		public IDisposable Subscribe(IObserver<T> observer)

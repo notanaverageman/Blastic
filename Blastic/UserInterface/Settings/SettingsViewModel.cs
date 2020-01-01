@@ -56,12 +56,7 @@ namespace Blastic.UserInterface.Settings
 				foreach (ISettingsSectionViewModel item in Items)
 				{
 					IEnumerable<DiagnosticMessage> diagnosticMessages = await item.GetDiagnosticMessages(cancellationToken);
-
-					// TODO: AddRange
-					foreach (DiagnosticMessage diagnosticMessage in diagnosticMessages)
-					{
-						DiagnosticMessages.Add(diagnosticMessage);
-					}
+					DiagnosticMessages.AddRange(diagnosticMessages);
 				}
 			}
 

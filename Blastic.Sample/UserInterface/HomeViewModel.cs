@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
@@ -41,7 +42,7 @@ namespace Blastic.Sample.UserInterface
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
 			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test");
 
-			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
+			TestCommand = new AsyncCommand(Text.HasErrorObservable.Select(x => !x)).WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
@@ -49,7 +50,7 @@ namespace Blastic.Sample.UserInterface
 			Lifetime.Activate.Subscribe(_ => OnActivate());
 
 			Text.AddValidator(x => x?.Length > 4 ? "" : "Length is not valid.");
-			Text.AddValidator(x => x?.StartsWith("a") == true ? "" : "Does not start with a.");
+			Text.AddValidator(x => x?.StartsWith("A") == true ? "" : "Does not start with A.");
 		}
 
 		protected Task OnInitialize()

@@ -6,6 +6,9 @@ namespace Blastic.Reactive
 	public interface IReadOnlyReactiveProperty : INotifyPropertyChanged, INotifyDataErrorInfo
 	{
 		object Value { get; }
+
+		void TriggerValidation();
+		IObservable<bool> HasErrorObservable { get; }
 	}
 
 	public interface IReadOnlyReactiveProperty<T> : IReadOnlyReactiveProperty, IObservable<T>
@@ -13,8 +16,6 @@ namespace Blastic.Reactive
 		new T Value { get; }
 
 		IDisposable Subscribe(IObserver<T> observer, bool raiseLatestValue);
-
 		void AddValidator(Func<T, string> validator);
-		void TriggerValidation();
 	}
 }
