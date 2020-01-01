@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
@@ -17,9 +16,9 @@ namespace Blastic.Reactive
 		private readonly IObservable<T> _observable;
 
 		private readonly List<Func<T, string>> _validators;
+		private readonly List<string> _errors;
 
 		private T _value;
-		private IEnumerable<string> _errors;
 
 		public T Value
 		{
@@ -34,7 +33,7 @@ namespace Blastic.Reactive
 			set => Value = (T)value;
 		}
 
-		public bool HasErrors => _errors?.Any() == true;
+		public bool HasErrors => _errors.Count > 0;
 		public IObservable<bool> HasErrorObservable { get; }
 
 		public ReactiveProperty(
@@ -46,9 +45,10 @@ namespace Blastic.Reactive
 			equalityComparer ??= EqualityComparer<T>.Default;
 
 			_validators = new List<Func<T, string>>();
-			_source = new Subject<T>();
+			_errors = new List<string>();
 
-            _observable = _source.DistinctUntilChanged(equalityComparer);
+			_source = new Subject<T>();
+			_observable = _source.DistinctUntilChanged(equalityComparer);
 
             _observable
                 .Subscribe(x =>
@@ -90,10 +90,19 @@ namespace Blastic.Reactive
 
 		public void TriggerValidation()
 		{
-			_errors = _validators
-				.Select(y => y(Value))
-				.Where(y => !string.IsNullOrEmpty(y))
-				.ToList();
+			_errors.Clear();
+
+			foreach (Func<T, string> validator in _validators)
+			{
+				string error = validator(Value);
+
+				if (string.IsNullOrEmpty(error))
+				{
+					continue;
+				}
+
+				_errors.Add(error);
+			}
 
 			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 		}

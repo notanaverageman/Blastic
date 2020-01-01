@@ -12,7 +12,7 @@ namespace Blastic.Reactive
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-		private IEnumerable<string> _errors;
+		private readonly List<string> _errors;
 
 		private readonly IObservable<T> _source;
 		private readonly List<Func<T, string>> _validators;
@@ -33,6 +33,7 @@ namespace Blastic.Reactive
 			Value = initialValue;
 
 			_validators = new List<Func<T, string>>();
+			_errors = new List<string>();
 
 			_source = source.DistinctUntilChanged(equalityComparer);
 
@@ -80,10 +81,19 @@ namespace Blastic.Reactive
 
 		public void TriggerValidation()
 		{
-			_errors = _validators
-				.Select(y => y(Value))
-				.Where(y => !string.IsNullOrEmpty(y))
-				.ToList();
+			_errors.Clear();
+
+			foreach (Func<T, string> validator in _validators)
+			{
+				string error = validator(Value);
+
+				if (string.IsNullOrEmpty(error))
+				{
+					continue;
+				}
+
+				_errors.Add(error);
+			}
 
 			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
 		}
