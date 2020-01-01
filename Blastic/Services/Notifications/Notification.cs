@@ -3,10 +3,10 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding;
 using Blastic.Controls.DynamicControls;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
-using Blastic.Reactive;
 
 namespace Blastic.Services.Notifications
 {

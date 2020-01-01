@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Blastic.Commanding;
 using Blastic.Common.Diagnostics;
 using Blastic.Diagnostics;
 using Blastic.Execution;

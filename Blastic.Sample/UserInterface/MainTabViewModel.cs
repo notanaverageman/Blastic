@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Blastic.Commanding;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
@@ -22,7 +23,7 @@ namespace Blastic.Sample.UserInterface
 		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> Text { get; set; }
 
-		public AsyncCommand TestCommand { get; set; }
+		public AsyncCommand TestCommand { get; }
 
 		public MainTabViewModel(
 			ExecutionContextFactory executionContextFactory,

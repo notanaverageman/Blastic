@@ -1,8 +1,8 @@
 ﻿using System.Windows;
+using Blastic.Commanding;
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Controls.DynamicControls.Elements.Group;
-using Blastic.Reactive;
 using Blastic.Services.Dialog;
 using Blastic.Services.Dialog.FileFilters;
 using Blastic.Services.Settings;

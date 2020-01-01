@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using Blastic.Commanding;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.Services.Windowing;

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Blastic.Commanding;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
@@ -28,7 +29,7 @@ namespace Blastic.Sample.UserInterface
 		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> ButtonText { get; }
 
-		public AsyncCommand TestCommand { get; set; }
+		public AsyncCommand TestCommand { get; }
 
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
