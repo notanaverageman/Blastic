@@ -1,7 +1,7 @@
-﻿using Blastic.Messaging;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
+using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
 using Blastic.Services.Windowing;
 
