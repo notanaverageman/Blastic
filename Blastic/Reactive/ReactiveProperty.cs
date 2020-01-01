@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
 namespace Blastic.Reactive
 {
-	public class ReactiveProperty<T> : IReactiveProperty<T>
+	public class ReactiveProperty<T> : ReactivePropertyBase<T>, IReactiveProperty<T>
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
-		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
 		private readonly Subject<T> _source;
-		private readonly IObservable<T> _observable;
-
-		private readonly List<Func<T, string>> _validators;
-		private readonly List<string> _errors;
 
 		private T _value;
+
+		protected override IObservable<T> Source { get; }
 
 		public T Value
 		{
@@ -33,78 +26,18 @@ namespace Blastic.Reactive
 			set => Value = (T)value;
 		}
 
-		public bool HasErrors => _errors.Count > 0;
-		public IObservable<bool> HasErrorObservable { get; }
-
 		public ReactiveProperty(
 			T initialValue = default,
 			IEqualityComparer<T> equalityComparer = null)
 		{
 			_value = initialValue;
+			_source = new Subject<T>();
 
 			equalityComparer ??= EqualityComparer<T>.Default;
 
-			_validators = new List<Func<T, string>>();
-			_errors = new List<string>();
+			Source = _source.DistinctUntilChanged(equalityComparer);
 
-			_source = new Subject<T>();
-			_observable = _source.DistinctUntilChanged(equalityComparer);
-
-            _observable
-                .Subscribe(x =>
-				{
-					_value = x;
-
-					TriggerValidation();
-
-					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
-				});
-
-            HasErrorObservable = Observable.FromEventPattern<DataErrorsChangedEventArgs>(
-		            x => ErrorsChanged += x,
-		            x => ErrorsChanged -= x)
-	            .Select(x => HasErrors);
-		}
-
-		public IDisposable Subscribe(IObserver<T> observer)
-		{
-			return Subscribe(observer, true);
-		}
-
-		public IDisposable Subscribe(IObserver<T> observer, bool raiseLatestValue)
-		{
-			IDisposable disposable = _observable.Subscribe(observer);
-
-			if (raiseLatestValue)
-			{
-				observer.OnNext(Value);
-			}
-
-			return disposable;
-		}
-
-		public void AddValidator(Func<T, string> validator)
-		{
-			_validators.Add(validator);
-		}
-
-		public void TriggerValidation()
-		{
-			_errors.Clear();
-
-			foreach (Func<T, string> validator in _validators)
-			{
-				string error = validator(Value);
-
-				if (string.IsNullOrEmpty(error))
-				{
-					continue;
-				}
-
-				_errors.Add(error);
-			}
-
-			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
+			Initialize();
 		}
 
 		public void Dispose()
@@ -113,9 +46,14 @@ namespace Blastic.Reactive
 			_source.Dispose();
 		}
 
-		public IEnumerable GetErrors(string propertyName)
+		protected override T GetValue()
 		{
-			return _errors;
+			return Value;
+		}
+
+		protected override void SetValue(T value)
+		{
+			_value = value;
 		}
 	}
 }

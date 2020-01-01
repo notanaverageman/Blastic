@@ -1,27 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reactive.Linq;
 
 namespace Blastic.Reactive
 {
-	public class ReadOnlyReactiveProperty<T> : IReadOnlyReactiveProperty<T>
+	public class ReadOnlyReactiveProperty<T> : ReactivePropertyBase<T>, IReadOnlyReactiveProperty<T>
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
-		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-		private readonly List<string> _errors;
-
-		private readonly IObservable<T> _source;
-		private readonly List<Func<T, string>> _validators;
+		protected override IObservable<T> Source { get; }
 
 		public T Value { get; private set; }
 		object IReadOnlyReactiveProperty.Value => Value;
-
-		public bool HasErrors => _errors?.Any() == true;
-		public IObservable<bool> HasErrorObservable { get; }
 
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
@@ -30,72 +18,20 @@ namespace Blastic.Reactive
 		{
 			equalityComparer ??= EqualityComparer<T>.Default;
 
+			Source = source.DistinctUntilChanged(equalityComparer);
 			Value = initialValue;
 
-			_validators = new List<Func<T, string>>();
-			_errors = new List<string>();
-
-			_source = source.DistinctUntilChanged(equalityComparer);
-
-			_source.Subscribe(x =>
-			{
-				Value = x;
-
-				TriggerValidation();
-
-				PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
-			});
-
-			HasErrorObservable = Observable.FromEventPattern<DataErrorsChangedEventArgs>(
-					x => ErrorsChanged += x,
-					x => ErrorsChanged -= x)
-				.Select(x => HasErrors);
+			Initialize();
 		}
 
-		public IDisposable Subscribe(IObserver<T> observer)
+		protected override T GetValue()
 		{
-			return Subscribe(observer, true);
+			return Value;
 		}
 
-		public IDisposable Subscribe(IObserver<T> observer, bool raiseLatestValue)
+		protected override void SetValue(T value)
 		{
-			IDisposable disposable = _source.Subscribe(observer);
-
-			if (raiseLatestValue)
-			{
-				observer.OnNext(Value);
-			}
-
-			return disposable;
-		}
-
-		public void AddValidator(Func<T, string> validator)
-		{
-			_validators.Add(validator);
-		}
-
-		public IEnumerable GetErrors(string propertyName)
-		{
-			return _errors;
-		}
-
-		public void TriggerValidation()
-		{
-			_errors.Clear();
-
-			foreach (Func<T, string> validator in _validators)
-			{
-				string error = validator(Value);
-
-				if (string.IsNullOrEmpty(error))
-				{
-					continue;
-				}
-
-				_errors.Add(error);
-			}
-
-			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
+			Value = value;
 		}
 	}
 
