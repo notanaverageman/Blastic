@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Blastic.Common;
 using Blastic.Controls.DynamicControls;
 using Blastic.Controls.DynamicControls.Elements;
@@ -11,12 +12,14 @@ using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.Services.Notifications;
 using Blastic.UserInterface.TabbedMain;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IMainTab
 	{
 		private readonly ILocalizationService _localizationService;
+		private readonly IServiceProvider _serviceProvider;
 
 		public Order Order { get; }
 		public bool IsFixed => true;
@@ -30,11 +33,13 @@ namespace Blastic.Sample.UserInterface
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
 			TestSettingsViewModel testSettings,
-			ILocalizationService localizationService)
+			ILocalizationService localizationService,
+			IServiceProvider serviceProvider)
 			:
 			base(executionContextFactory)
 		{
 			_localizationService = localizationService;
+			_serviceProvider = serviceProvider;
 
 			Order = new Order(1);
 
@@ -42,7 +47,11 @@ namespace Blastic.Sample.UserInterface
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
 			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test");
 
-			TestCommand = new AsyncCommand(Text.HasErrorObservable.Select(x => !x)).WithSubscribe(_ => Test());
+			TestCommand = Text.HasErrorObservable
+				.Select(x => !x)
+				.CombineLatest(Lifetime.IsActive, (x, y) => x && y)
+				.ToAsyncCommand()
+				.WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
@@ -55,6 +64,9 @@ namespace Blastic.Sample.UserInterface
 
 		protected Task OnInitialize()
 		{
+			TabbedMainViewModel mainViewModel = _serviceProvider.GetService<TabbedMainViewModel>();
+			TestCommand.AddInputGesture(new KeyGesture(Key.A, ModifierKeys.Control), mainViewModel);
+
 			Text.Value = "Initialized";
 			return Task.CompletedTask;
 		}

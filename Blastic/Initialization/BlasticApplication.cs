@@ -105,7 +105,7 @@ namespace Blastic.Initialization
 			AddViewLocator(_viewAssemblies);
 
 			Configure(x => x.RegisterInstance(configuration));
-			Configure(x => x.RegisterType<TMainViewModel>());
+			Configure(x => x.RegisterType<TMainViewModel>().SingleInstance());
 
 			_containerBuilder.Populate(_serviceCollection);
 			IContainer container = _containerBuilder.Build();

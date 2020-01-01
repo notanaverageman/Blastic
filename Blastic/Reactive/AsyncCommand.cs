@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Blastic.Common;
+using Blastic.ViewManagement;
 
 namespace Blastic.Reactive
 {
@@ -149,6 +150,19 @@ namespace Blastic.Reactive
 			}
 		}
 
+		public void AddInputGesture(InputGesture gesture, IViewAware context)
+		{
+			context.View.Subscribe(x =>
+			{
+				if (x == null)
+				{
+					return;
+				}
+
+				x.InputBindings.Add(new InputBinding(this, gesture));
+			});
+		}
+
 		private class Subscription : IDisposable
 		{
 			private readonly AsyncCommand<T> _command;
@@ -203,6 +217,24 @@ namespace Blastic.Reactive
 			Order order = null)
 		{
 			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static AsyncCommand WithInputGesture(
+			this AsyncCommand command,
+			InputGesture gesture,
+			IViewAware context)
+		{
+			command.AddInputGesture(gesture, context);
+			return command;
+		}
+
+		public static AsyncCommand<T> WithInputGesture<T>(
+			this AsyncCommand<T> command,
+			InputGesture gesture,
+			IViewAware context)
+		{
+			command.AddInputGesture(gesture, context);
 			return command;
 		}
 	}

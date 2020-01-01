@@ -9,14 +9,11 @@ using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
-using Blastic.ViewManagement;
 
 namespace Blastic.UserInterface.Settings
 {
-	public sealed class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>, IViewAware
+	public sealed class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>
 	{
-		public IReactiveProperty<UIElement> View { get; }
-
 		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
@@ -34,7 +31,6 @@ namespace Blastic.UserInterface.Settings
 			:
 			base(executionContextFactory)
 		{
-			View = new ReactiveProperty<UIElement>();
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
