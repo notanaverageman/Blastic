@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Blastic.Commanding;
 using Blastic.Common;
@@ -10,9 +11,11 @@ using Blastic.Controls.DynamicControls.Elements;
 using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
+using Blastic.Sample.Automation;
 using Blastic.Services.Localization;
 using Blastic.Services.Notifications;
 using Blastic.UserInterface.TabbedMain;
+using InputSimulatorStandard;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Sample.UserInterface
@@ -30,6 +33,7 @@ namespace Blastic.Sample.UserInterface
 		public IReactiveProperty<string> ButtonText { get; }
 
 		public AsyncCommand TestCommand { get; }
+		public AsyncCommand HelpCommand { get; }
 
 		public HomeViewModel(
 			ExecutionContextFactory executionContextFactory,
@@ -47,6 +51,8 @@ namespace Blastic.Sample.UserInterface
 			Text = new ReactiveProperty<string>();
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
 			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test");
+
+			HelpCommand = InitializeHelpCommand();
 
 			TestCommand = Text.HasErrorObservable
 				.Select(x => !x)
@@ -75,7 +81,23 @@ namespace Blastic.Sample.UserInterface
 		protected Task OnActivate()
 		{
 			Text.Value = "Activated";
+
+			Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+			{
+				await this.MoveMouseTo(HelpCommand);
+				new InputSimulator().Mouse.LeftButtonClick();
+			}));
+
 			return Task.CompletedTask;
+		}
+
+		private AsyncCommand InitializeHelpCommand()
+		{
+			return Lifetime.IsActive.ToAsyncCommand().WithSubscribe(async () =>
+			{
+				await Text.SetText("Some text", TimeSpan.FromSeconds(1.0));
+				await this.SetSelection(Text, 0, 6);
+			});
 		}
 
 		private bool _x;

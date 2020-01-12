@@ -4,6 +4,6 @@ namespace Blastic.ViewManagement
 {
 	public interface IViewLocator
 	{
-		UIElement Locate(object model);
+		FrameworkElement Locate(object model);
 	}
 }

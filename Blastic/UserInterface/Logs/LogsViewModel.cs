@@ -23,7 +23,7 @@ namespace Blastic.UserInterface.Logs
 
 		public IReactiveProperty<string> Title { get; }
 
-		public IReactiveProperty<UIElement> View { get; }
+		public IReactiveProperty<FrameworkElement> View { get; }
 
 		public IReactiveProperty<LogEventLevel> MinimumLogLevel { get; }
 
@@ -57,7 +57,7 @@ namespace Blastic.UserInterface.Logs
 				LogEventLevel.Debug
 			};
 
-			View = new ReactiveProperty<UIElement>();
+			View = new ReactiveProperty<FrameworkElement>();
 
 			LogSink.Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
 

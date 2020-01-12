@@ -4,12 +4,13 @@
 	<TargetFramework>netcoreapp3.1</TargetFramework>
 	<OutputType>WinExe</OutputType>
 	<UseWPF>true</UseWPF>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<RootNamespace>Blastic.Sample</RootNamespace>
-	<AssemblyName>Blastic.Sample</AssemblyName>
+	<StartupObject>Blastic.Sample.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Blastic\Blastic.csproj"/>
+    <PackageReference Include="InputSimulatorStandard" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\Blastic\Blastic.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AppSettings.json">

@@ -27,11 +27,11 @@ namespace Blastic.ViewManagement
 			return this;
 		}
 
-		public UIElement Locate(object model)
+		public FrameworkElement Locate(object model)
 		{
 			if (model is IViewAware viewAware)
 			{
-				UIElement view = LocateCached(viewAware);
+				FrameworkElement view = LocateCached(viewAware);
 
 				if (view != null)
 				{
@@ -43,19 +43,24 @@ namespace Blastic.ViewManagement
 				viewAware = null;
 			}
 
-			UIElement uiElement = Locate(model.GetType());
+			FrameworkElement element = Locate(model.GetType());
 
 			if (viewAware != null)
 			{
-				viewAware.View.Value = uiElement;
+				viewAware.View.Value = element;
+
+				element.Unloaded += (sender, args) =>
+				{
+					viewAware.View.Value = null;
+				};
 			}
 			
-			return uiElement;
+			return element;
 		}
 
-		private UIElement LocateCached(IViewAware viewAware)
+		private FrameworkElement LocateCached(IViewAware viewAware)
 		{
-			UIElement view = viewAware.View.Value;
+			FrameworkElement view = viewAware.View.Value;
 
 			if (view == null)
 			{
@@ -75,7 +80,7 @@ namespace Blastic.ViewManagement
 			return null;
 		}
 
-		private UIElement Locate(Type modelType)
+		private FrameworkElement Locate(Type modelType)
 		{
 			Type viewType = GetViewTypeForModelType(modelType);
 
@@ -102,7 +107,7 @@ namespace Blastic.ViewManagement
 			return null;
 		}
 
-		private UIElement CreateView(Type viewType)
+		private FrameworkElement CreateView(Type viewType)
 		{
 			if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
 			{
@@ -112,7 +117,7 @@ namespace Blastic.ViewManagement
 				};
 			}
 
-			return (UIElement)Activator.CreateInstance(viewType);
+			return (FrameworkElement)Activator.CreateInstance(viewType);
 		}
 	}
 }

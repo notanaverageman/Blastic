@@ -1,10 +1,28 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Media;
+using Blastic.Reactive;
 
 namespace Blastic.ControlExtensions
 {
 	public static class VisualTreeExtensions
 	{
+		private static readonly Dictionary<Type, HashSet<DependencyProperty>> DefaultDependencyProperties;
+
+		static VisualTreeExtensions()
+		{
+			DefaultDependencyProperties = new Dictionary<Type, HashSet<DependencyProperty>>();
+
+			AddDefaultDependencyProperty<TextBox>(TextBox.TextProperty);
+			AddDefaultDependencyProperty<TextBlock>(TextBlock.TextProperty);
+			AddDefaultDependencyProperty<ButtonBase>(ButtonBase.CommandProperty);
+		}
+
 		public static T FindChild<T>(DependencyObject parent) where T : DependencyObject
 		{
 			if (parent == null)
@@ -37,44 +55,93 @@ namespace Blastic.ControlExtensions
 			return foundChild;
 		}
 
-		public static FrameworkElement FindChild(DependencyObject parent, string childName)
+		public static FrameworkElement FindChild(DependencyObject parent, object source)
 		{
-			if (parent == null || string.IsNullOrWhiteSpace(childName))
+			if (parent == null)
 			{
 				return null;
 			}
 
 			FrameworkElement foundChild = null;
-
 			int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
-			for (int i = 0; i < childrenCount; i++)
+			for (int childIndex = 0; childIndex < childrenCount; childIndex++)
 			{
-				if (!(VisualTreeHelper.GetChild(parent, i) is FrameworkElement child))
+				if (VisualTreeHelper.GetChild(parent, childIndex) is FrameworkElement child)
 				{
-					continue;
-				}
+					foreach (DependencyProperty dependencyProperty in GetDefaultDependencyProperties(child))
+					{
+						if (QueryBinding(child, dependencyProperty, source))
+						{
+							return child;
+						}
+					}
 
-				if (child.Name == childName)
-				{
-					foundChild = child;
-					break;
-				}
+					foundChild = FindChild(child, source);
 
-				foundChild = FindChild(child, childName);
-
-				if (foundChild == null)
-				{
-					continue;
-				}
-
-				if (foundChild.Name == childName)
-				{
-					break;
+					if (foundChild != null)
+					{
+						break;
+					}
 				}
 			}
-
 			return foundChild;
+		}
+
+		private static bool QueryBinding(
+			DependencyObject dependencyObject,
+			DependencyProperty dependencyProperty,
+			object source)
+		{
+			BindingExpression bindingExpression = BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty);
+
+			if (bindingExpression == null)
+			{
+				return false;
+			}
+
+			if (source is IReactiveProperty)
+			{
+				return bindingExpression.ResolvedSource == source;
+			}
+
+			object resolvedSource = bindingExpression.ResolvedSource;
+
+			if (resolvedSource == null)
+			{
+				return false;
+			}
+
+			object bindingSource = bindingExpression.ResolvedSource
+				?.GetType()
+				 .GetProperty(bindingExpression.ResolvedSourcePropertyName)
+				?.GetValue(bindingExpression.ResolvedSource);
+
+			return bindingSource == source;
+		}
+
+		private static IEnumerable<DependencyProperty> GetDefaultDependencyProperties(DependencyObject dependencyObject)
+		{
+			Type objectType = dependencyObject.GetType();
+			IEnumerable<DependencyProperty> result = Enumerable.Empty<DependencyProperty>();
+
+			foreach (Type index in DefaultDependencyProperties.Keys.Where(x => x.IsAssignableFrom(objectType)))
+			{
+				result = result.Concat(DefaultDependencyProperties[index]);
+			}
+
+			return result;
+		}
+
+		public static void AddDefaultDependencyProperty<T>(DependencyProperty dependencyProperty)
+		{
+			if (!DefaultDependencyProperties.TryGetValue(typeof(T), out HashSet<DependencyProperty> properties))
+			{
+				properties = new HashSet<DependencyProperty>();
+				DefaultDependencyProperties[typeof(T)] = properties;
+			}
+
+			properties.Add(dependencyProperty);
 		}
 	}
 }

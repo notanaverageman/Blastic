@@ -3,9 +3,6 @@
   <PropertyGroup>
 	<TargetFramework>netcoreapp3.1</TargetFramework>
 	<UseWPF>true</UseWPF>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<RootNamespace>Blastic</RootNamespace>
-	<AssemblyName>Blastic</AssemblyName>
 	<LangVersion>preview</LangVersion>
 	<ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
   </PropertyGroup>

@@ -5,6 +5,6 @@ namespace Blastic.ViewManagement
 {
 	public interface IViewAware
 	{
-		IReactiveProperty<UIElement> View { get; }
+		IReactiveProperty<FrameworkElement> View { get; }
 	}
 }

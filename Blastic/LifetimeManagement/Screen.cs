@@ -12,7 +12,7 @@ namespace Blastic.LifetimeManagement
 
 		public ILifetime Lifetime { get; }
 
-		public IReactiveProperty<UIElement> View { get; }
+		public IReactiveProperty<FrameworkElement> View { get; }
 
 		public Screen(ExecutionContextFactory executionContextFactory)
 		{
@@ -20,7 +20,7 @@ namespace Blastic.LifetimeManagement
 			ExecutionContext = executionContextFactory.Create();
 
 			Lifetime = new Lifetime();
-			View = new ReactiveProperty<UIElement>();
+			View = new ReactiveProperty<FrameworkElement>();
 		}
 	}
 }

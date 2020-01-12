@@ -31,7 +31,7 @@ namespace Blastic.Sample
 				.AddSettingsService()
 				.AddLocalizationSource(Resources.ResourceManager)
 				.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
-				.Run<TabbedMainViewModel>();
+				.Run<App, TabbedMainViewModel>();
 		}
 	}
 }

@@ -6,18 +6,23 @@
 			 xmlns:execution="clr-namespace:Blastic.Execution;assembly=Blastic"
 			 xmlns:local="clr-namespace:Blastic.Sample.UserInterface"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 d:DataContext="{d:DesignInstance local:HomeViewModel}"
-			 mc:Ignorable="d">
+			 mc:Ignorable="d"
+			 d:DataContext="{d:DesignInstance local:HomeViewModel}">
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
-		<Button Grid.Row="0"
-				Command="{Binding TestCommand}"
-				Content="{Binding ButtonText.Value}"
-				Style="{StaticResource MaterialDesignFlatButton}" />
+		<StackPanel Grid.Row="0">
+			<Button Command="{Binding TestCommand}"
+					Content="{Binding ButtonText.Value}"
+					Style="{StaticResource MaterialDesignFlatButton}" />
 
-		<TextBlock Grid.Row="1"
-				   HorizontalAlignment="Center"
-				   VerticalAlignment="Center"
-				   Text="{Binding Text.Value}" />
+			<Button Command="{Binding HelpCommand}"
+					Content="Help"
+					Style="{StaticResource MaterialDesignFlatButton}" />
+		</StackPanel>
+
+		<TextBox Grid.Row="1"
+				 HorizontalAlignment="Center"
+				 VerticalAlignment="Center"
+				 Text="{Binding Text.Value, UpdateSourceTrigger=PropertyChanged}" />
 
 		<execution:ExecutionContextView Grid.Row="0"
 										Grid.RowSpan="2"

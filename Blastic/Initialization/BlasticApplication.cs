@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ namespace Blastic.Initialization
 
 		private readonly HashSet<Assembly> _viewAssemblies;
 
-		private readonly App _application;
+		private readonly List<Func<DispatcherUnhandledExceptionEventArgs, Task>> _unhandledExceptionHandlers;
 
 		public BlasticApplication()
 		{
@@ -39,18 +40,14 @@ namespace Blastic.Initialization
 
 			_viewAssemblies = new HashSet<Assembly>();
 
-			_application = new App();
+			_unhandledExceptionHandlers = new List<Func<DispatcherUnhandledExceptionEventArgs, Task>>();
 
 			this.AddDefaults();
 		}
 
 		public BlasticApplication OnUnhandledException(Func<DispatcherUnhandledExceptionEventArgs, Task> func)
 		{
-			_application.DispatcherUnhandledException += async (sender, args) =>
-			{
-				await func(args);
-			};
-
+			_unhandledExceptionHandlers.Add(func);
 			return this;
 		}
 
@@ -94,7 +91,7 @@ namespace Blastic.Initialization
 			});
 		}
 
-		public void Run<TMainViewModel>()
+		public void Run<TApp, TMainViewModel>() where TApp : Application
 		{
 			IConfiguration configuration = _configurationBuilder.Build();
 
@@ -106,6 +103,7 @@ namespace Blastic.Initialization
 
 			Configure(x => x.RegisterInstance(configuration));
 			Configure(x => x.RegisterType<TMainViewModel>().SingleInstance());
+			Configure(x => x.RegisterType<TApp>().SingleInstance());
 
 			_containerBuilder.Populate(_serviceCollection);
 			IContainer container = _containerBuilder.Build();
@@ -125,12 +123,22 @@ namespace Blastic.Initialization
 			
 			try
 			{
+				TApp application = container.Resolve<TApp>();
+
+				foreach (Func<DispatcherUnhandledExceptionEventArgs, Task> handler in _unhandledExceptionHandlers)
+				{
+					application.DispatcherUnhandledException += async (sender, args) =>
+					{
+						await handler(args);
+					};
+				}
+
 				TMainViewModel viewModel = container.Resolve<TMainViewModel>();
 				IWindowManager windowManager = container.Resolve<IWindowManager>();
 
 				// Do not await this method as it will freeze the UI.
 				windowManager.ShowWindow(viewModel);
-				_application.Run();
+				application.Run();
 			}
 			catch (Exception exception)
 			{
