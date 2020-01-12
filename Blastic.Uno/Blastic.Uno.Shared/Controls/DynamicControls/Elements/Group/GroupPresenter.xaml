@@ -1,0 +1,16 @@
+﻿<elements:Presenter x:Class="Blastic.Uno.Shared.Controls.DynamicControls.Elements.Group.GroupPresenter"
+					xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:elements="using:Blastic.Controls.DynamicControls.Elements"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					xmlns:group="using:Blastic.Uno.Shared.Controls.DynamicControls.Elements.Group"
+					mc:Ignorable="d"
+					IsTabStop="False">
+
+	<elements:Presenter.Template>
+		<ControlTemplate TargetType="group:GroupPresenter">
+			<Grid Name="RootGrid" />
+		</ControlTemplate>
+	</elements:Presenter.Template>
+</elements:Presenter>

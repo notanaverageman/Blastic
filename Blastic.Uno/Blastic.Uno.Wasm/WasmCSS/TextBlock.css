@@ -1,0 +1,8 @@
+﻿.uno-textblock {
+	-webkit-touch-callout: initial; /* Safari */
+	-webkit-user-select: initial; /* iOSSafari */
+	-khtml-user-select: initial; /* Konqueror HTML */
+	-moz-user-select: initial; /* Firefox */
+	-ms-user-select: initial; /* Internet Explorer/Edge */
+	user-select: initial; /* Non-prefixed version, currently supported by Chrome and Opera */
+}

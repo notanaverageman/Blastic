@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+	<LangVersion>8.0</LangVersion>
+    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="Uno.UI" Version="2.0.530" />
+    <PackageReference Include="Reactive.Wasm" Version="1.2.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='uap10.0.16299'">
+	<PackageReference Include="System.Reactive" Version="4.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Controls\BusyIndicator.xaml" />
+    <None Remove="Controls\ChildWindow.xaml" />
+    <None Remove="Controls\DualView.xaml" />
+    <None Remove="Controls\DynamicControls\DynamicControl.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Action\ActionPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Boolean\BooleanPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Group\GroupPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Label\LabelPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Password\PasswordPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Selection\SelectionPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Elements\Text\TextPresenter.xaml" />
+    <None Remove="Controls\DynamicControls\Form.xaml" />
+    <None Remove="Controls\HelpView.xaml" />
+    <None Remove="Controls\Notifications\NotificationAreaView.xaml" />
+    <None Remove="Controls\Notifications\NotificationView.xaml" />
+    <None Remove="Execution\ExecutionContextView.xaml" />
+    <None Remove="Themes\Button.xaml" />
+    <None Remove="UserInterface\HomeView.xaml" />
+    <None Remove="UserInterface\MainTabView.xaml" />
+    <None Remove="UserInterface\Settings\FormSettingSectionView.xaml" />
+    <None Remove="UserInterface\TabbedMain\TabbedMainView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\BusyIndicator.xaml" />
+    <UpToDateCheckInput Remove="Controls\ChildWindow.xaml" />
+    <UpToDateCheckInput Remove="Controls\DualView.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\DynamicControl.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Action\ActionPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Boolean\BooleanPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Group\GroupPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Label\LabelPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Password\PasswordPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Selection\SelectionPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Elements\Text\TextPresenter.xaml" />
+    <UpToDateCheckInput Remove="Controls\DynamicControls\Form.xaml" />
+    <UpToDateCheckInput Remove="Controls\HelpView.xaml" />
+    <UpToDateCheckInput Remove="Controls\Notifications\NotificationAreaView.xaml" />
+    <UpToDateCheckInput Remove="Controls\Notifications\NotificationView.xaml" />
+    <UpToDateCheckInput Remove="Execution\ExecutionContextView.xaml" />
+    <UpToDateCheckInput Remove="Themes\Button.xaml" />
+    <UpToDateCheckInput Remove="UserInterface\HomeView.xaml" />
+    <UpToDateCheckInput Remove="UserInterface\MainTabView.xaml" />
+    <UpToDateCheckInput Remove="UserInterface\Settings\FormSettingSectionView.xaml" />
+    <UpToDateCheckInput Remove="UserInterface\TabbedMain\TabbedMainView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Blastic.Common\Blastic.Common.csproj" />
+  </ItemGroup>
+</Project>

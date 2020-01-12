@@ -1,0 +1,74 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Style x:Name="LightweightButton"
+		   TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid x:Name="ButtonLayoutGrid"
+						  Background="{ThemeResource TextControlButtonBackground}"
+						  BorderBrush="{ThemeResource TextControlButtonBorderBrush}"
+						  BorderThickness="{TemplateBinding BorderThickness}">
+						<TextBlock x:Name="GlyphElement"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   AutomationProperties.AccessibilityView="Raw"
+								   FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								   FontSize="12"
+								   FontStyle="Normal"
+								   Foreground="{ThemeResource TextControlButtonForeground}"
+								   Text="&#xE10A;">
+
+							<TextBlock.RenderTransform>
+								<CompositeTransform x:Name="TextBlockTransform"
+													CenterX="5"
+													CenterY="5" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal" />
+
+								<VisualState x:Name="PointerOver">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphElement"
+																	   Storyboard.TargetProperty="Foreground">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{ThemeResource TextControlButtonForegroundPointerOver}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+
+								<VisualState x:Name="Pressed">
+									<VisualState.Setters>
+										<Setter Target="TextBlockTransform.ScaleX" Value="1.2" />
+										<Setter Target="TextBlockTransform.ScaleY" Value="1.2" />
+									</VisualState.Setters>
+
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphElement"
+																	   Storyboard.TargetProperty="Foreground">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{ThemeResource TextControlButtonForegroundPointerOver}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="ButtonLayoutGrid"
+														 Storyboard.TargetProperty="Opacity"
+														 To="0.6"
+														 Duration="0" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

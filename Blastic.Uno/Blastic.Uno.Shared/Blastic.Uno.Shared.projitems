@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6279c845-92f8-4333-ab99-3d213163593c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Blastic.Uno.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Commanding\AsyncCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commanding\AsyncCommandContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commanding\Command.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commanding\CommandContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ControlExtensions\GridExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ControlExtensions\PasswordBoxExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ControlExtensions\ScrollViewerExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ControlExtensions\TextBoxMasking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BusyIndicator.xaml.cs">
+      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ChildWindow.xaml.cs">
+      <DependentUpon>ChildWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DualView.xaml.cs">
+      <DependentUpon>DualView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\DynamicControl.xaml.cs">
+      <DependentUpon>DynamicControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Action\ActionPresenter.xaml.cs">
+      <DependentUpon>ActionPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Boolean\BooleanPresenter.xaml.cs">
+      <DependentUpon>BooleanPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Group\GroupPresenter.xaml.cs">
+      <DependentUpon>GroupPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Label\LabelPresenter.xaml.cs">
+      <DependentUpon>LabelPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Password\PasswordPresenter.xaml.cs">
+      <DependentUpon>PasswordPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Selection\SelectionPresenter.xaml.cs">
+      <DependentUpon>SelectionPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Text\TextPresenter.xaml.cs">
+      <DependentUpon>TextPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Form.xaml.cs">
+      <DependentUpon>Form.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\HelpView.xaml.cs">
+      <DependentUpon>HelpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Notifications\NotificationAreaView.xaml.cs">
+      <DependentUpon>NotificationAreaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Notifications\NotificationView.xaml.cs">
+      <DependentUpon>NotificationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Selectable\SelectableViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\CountToBoolConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\CountToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\IntToByteSizeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\InverseBoolConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\InverseBoolToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\InverseVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\NullToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\NumberToStarGridLengthConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ObjectToTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\TypeOfConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ValueConverterGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\DynamicModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\ElementContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Action\ActionElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Boolean\BooleanField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Element.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Field.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Group\GroupElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Label\LabelField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Password\PasswordField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Presenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Selection\SelectionField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Text\TextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\DiagnosticMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Execution\ExecutionContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Execution\ExecutionContextFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Execution\ExecutionContextView.xaml.cs">
+      <DependentUpon>ExecutionContextView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Execution\IHasExecutionContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Initialization\BlasticApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Initialization\Extensions\ApplicationExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Initialization\ProductInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Initialization\Steps\IInitializationStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Initialization\Steps\ReadSettingsStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\ConductorAllActive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\ConductorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\ConductorOneActive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\ConductorOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\Contexts\ActivationContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\Contexts\ClosureContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\Contexts\DeactivationContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\Contexts\InitializationContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\IHasLifetime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\ILifetime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\Lifetime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\LifetimeChainOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\LifetimeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LifetimeManagement\Screen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\IReactiveProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\IReadOnlyReactiveProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\LocalizableReactiveProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\ReactiveCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\ReactiveProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\ReactivePropertyBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\ReadOnlyReactiveProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reactive\Singletons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Dialog\FileDialogOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Dialog\FileFilters\FileDialogFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Dialog\FileFilters\FileDialogFilterCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Dialog\FileFilters\FileDialogFilters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Dialog\FileFilters\IFileDialogFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Dialog\IDialogService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Localization\ILocalizationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Localization\ILocalizationSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Localization\LocalizationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Localization\ResourceLoaderLocalizationSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Localization\ResourceManagerLocalizationSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Messaging\EventAggregator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Messaging\IEventAggregator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Notifications\INotificationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Notifications\Notification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Notifications\NotificationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Settings\ISettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Windowing\IWindowManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\BooleanSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\FileBrowserSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\PasswordSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\Setting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\TextSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Events\OpenLogsEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Events\OpenTabEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\HomeViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Logs\Log.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Logs\LogSink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Logs\LogsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Logs\Settings\LogSettingsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Logs\Settings\OpenWindowOnErrorSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\MainTabView.xaml.cs">
+      <DependentUpon>MainTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\MainTabViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Settings\FormSettingSectionView.xaml.cs">
+      <DependentUpon>FormSettingSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Settings\ISettingsSectionViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Settings\IsExpandedSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Settings\SettingsSectionViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\Settings\SettingsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\TabbedMain\IMainTab.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\TabbedMain\TabbedMainView.xaml.cs">
+      <DependentUpon>TabbedMainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UserInterface\TabbedMain\TabbedMainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\IViewAware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\IViewLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\TypeMappers\InheritanceTypeMapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\TypeMappers\ITypeMapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\TypeMappers\SuffixTypeMapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\View.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewManagement\ViewLocator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\BusyIndicator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\ChildWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DualView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\DynamicControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Action\ActionPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Boolean\BooleanPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Group\GroupPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Label\LabelPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Password\PasswordPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Selection\SelectionPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Elements\Text\TextPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DynamicControls\Form.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\HelpView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Notifications\NotificationAreaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Notifications\NotificationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Execution\ExecutionContextView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UserInterface\HomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UserInterface\MainTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UserInterface\Settings\FormSettingSectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UserInterface\TabbedMain\TabbedMainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+</Project>

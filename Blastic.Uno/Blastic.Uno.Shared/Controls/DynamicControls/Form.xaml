@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Blastic.Controls.DynamicControls.Form"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:controls="using:Blastic.Uno.Shared.Controls"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:viewManagement="using:Blastic.ViewManagement"
+			 mc:Ignorable="d"
+			 KeyTipPlacementMode="Hidden">
+	<controls:ChildWindow IsOpen="{x:Bind ExecutionContext.IsShowingForm.Value, Mode=OneWay}">
+
+		<ContentControl HorizontalContentAlignment="Stretch"
+						VerticalContentAlignment="Stretch"
+						viewManagement:View.Model="{x:Bind ExecutionContext.Form.Value, Mode=OneWay}"
+						IsTabStop="False" />
+	</controls:ChildWindow>
+</UserControl>

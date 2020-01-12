@@ -1,0 +1,37 @@
+﻿<elements:Presenter x:Class="Blastic.Uno.Shared.Controls.DynamicControls.Elements.Selection.SelectionPresenter"
+					xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:controlExtensions="using:Blastic.ControlExtensions"
+					xmlns:converters="using:Blastic.Converters"
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:elements="using:Blastic.Controls.DynamicControls.Elements"
+					xmlns:help="using:Blastic.Uno.Shared.Controls.Help"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					Name="Root"
+					mc:Ignorable="d"
+					IsTabStop="False">
+
+	<elements:Presenter.Resources>
+		<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+	</elements:Presenter.Resources>
+
+	<Grid controlExtensions:GridExtensions.ColumnDefinitions="Auto,*,Auto">
+		<SymbolIcon Grid.Column="0"
+					Width="{Binding IconSize, ElementName=Root}"
+					Height="{Binding IconSize, ElementName=Root}"
+					Margin="{Binding IconMargin, ElementName=Root}"
+					Symbol="{Binding Icon.Value, ElementName=Root}"
+					Visibility="{Binding Icon.Value, ElementName=Root, Converter={StaticResource NullToVisibilityConverter}}" />
+
+		<ComboBox Grid.Column="1"
+				  VerticalAlignment="Center"
+				  IsEnabled="{Binding IsEnabledReactive.Value, ElementName=Root}"
+				  ItemsSource="{Binding Values, ElementName=Root}"
+				  PlaceholderText="{Binding Label.Value, ElementName=Root}"
+				  SelectedItem="{Binding Property.Value, ElementName=Root}" />
+
+		<help:HelpView Grid.Column="2"
+					   HelpContent="{Binding Help.Value, ElementName=Root}"
+					   Visibility="{Binding Help.Value, ElementName=Root, Converter={StaticResource NullToVisibilityConverter}}" />
+	</Grid>
+</elements:Presenter>
