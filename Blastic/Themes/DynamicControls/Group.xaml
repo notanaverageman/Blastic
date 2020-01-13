@@ -2,7 +2,7 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 					xmlns:converters="clr-namespace:Blastic.Converters"
-					xmlns:group="clr-namespace:Blastic.Controls.DynamicControls.Elements.Group"
+					xmlns:group="clr-namespace:Blastic.DynamicControls.Presenters"
 					xmlns:help="clr-namespace:Blastic.Controls.Help">
 
 	<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />

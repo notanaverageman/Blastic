@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:action="clr-namespace:Blastic.Controls.DynamicControls.Elements.Action"
+					xmlns:action="clr-namespace:Blastic.DynamicControls.Presenters"
 					xmlns:converters="clr-namespace:Blastic.Converters">
 
 	<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />

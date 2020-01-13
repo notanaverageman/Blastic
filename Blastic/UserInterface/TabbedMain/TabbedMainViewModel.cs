@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
-using Blastic.Execution;
 using Blastic.Initialization;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
+using Blastic.Services.Messaging;
 using Blastic.UserInterface.Events;
 using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Settings;
@@ -28,14 +28,12 @@ namespace Blastic.UserInterface.TabbedMain
 		public AsyncCommand ShowSettingsCommand { get; }
 
 		public TabbedMainViewModel(
-			ExecutionContextFactory executionContextFactory,
+			IEventAggregator eventAggregator,
 			IEnumerable<IMainTab> mainTabs,
 			IEnumerable<IInitializationStep> initializationSteps,
 			ProductInformation productInformation = null,
 			LogsViewModel logsViewModel = null,
 			SettingsViewModel settingsViewModel = null)
-			:
-			base(executionContextFactory)
 		{
 			ProductInformation = productInformation;
 			LogsViewModel = logsViewModel;
@@ -65,8 +63,8 @@ namespace Blastic.UserInterface.TabbedMain
 				await Activate(ActiveItem.Value, x.Parameter.CancellationToken);
 			});
 
-			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
-			ExecutionContext.EventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
+			eventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
+			eventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
 
 			ShowLogsCommand = new AsyncCommand().WithSubscribe(ShowLogs);
 			ShowSettingsCommand = new AsyncCommand().WithSubscribe(ShowSettings);
@@ -89,8 +87,6 @@ namespace Blastic.UserInterface.TabbedMain
 				await ExecutionContext.Execute(
 					initializationStep.Execute,
 					initializationStep.Description,
-					initializationStep.SuccessMessage,
-					initializationStep.FailureMessage,
 					initializationStep.ShowBusyIndicator,
 					rethrowUnhandledException: false,
 					initializationStep.IsCancellationSupported,

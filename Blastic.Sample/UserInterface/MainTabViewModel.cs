@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Blastic.Commanding;
-using Blastic.Common;
-using Blastic.Controls.DynamicControls;
-using Blastic.Controls.DynamicControls.Elements;
-using Blastic.Execution;
+using Blastic.DynamicControls;
+using Blastic.DynamicControls.Properties;
 using Blastic.LifetimeManagement;
+using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.UserInterface.TabbedMain;
@@ -28,12 +26,9 @@ namespace Blastic.Sample.UserInterface
 		public AsyncCommand TestCommand { get; }
 
 		public MainTabViewModel(
-			ExecutionContextFactory executionContextFactory,
 			TestSettingsViewModel testSettings,
 			ILocalizationService localizationService,
 			ILogger<MainTabViewModel> logger)
-			:
-			base(executionContextFactory)
 		{
 			_logger = logger;
 			Order = new Order(2);

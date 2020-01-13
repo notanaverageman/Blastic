@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using Blastic.Commanding;
 using Blastic.Reactive;
@@ -23,7 +22,7 @@ namespace Blastic.UserInterface.Logs
 
 		public IReactiveProperty<string> Title { get; }
 
-		public IReactiveProperty<FrameworkElement> View { get; }
+		public IReactiveProperty<object> View { get; }
 
 		public IReactiveProperty<LogLevel> MinimumLogLevel { get; }
 
@@ -59,7 +58,7 @@ namespace Blastic.UserInterface.Logs
 				LogLevel.Trace
 			};
 
-			View = new ReactiveProperty<FrameworkElement>();
+			View = new ReactiveProperty<object>();
 
 			Clear = new Command(() => Logs.Clear());
 		}
@@ -76,11 +75,7 @@ namespace Blastic.UserInterface.Logs
 
 		public async Task Show()
 		{
-			await _windowManager.ShowWindow(this, x =>
-			{
-				x.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-				x.Owner = Application.Current.MainWindow;
-			});
+			await _windowManager.ShowWindow(this);
 		}
 
 		private void OnMinimumLogLevelChanged(LogLevel level)

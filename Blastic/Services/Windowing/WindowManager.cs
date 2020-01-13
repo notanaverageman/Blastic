@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using Blastic.Common;
 using Blastic.LifetimeManagement;
+using Blastic.Ordering;
 using Blastic.ViewManagement;
 using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 
@@ -12,14 +12,14 @@ namespace Blastic.Services.Windowing
 {
 	public class WindowManager : IWindowManager
 	{
-		private readonly IViewLocator _viewLocator;
+		private readonly IViewLocator<FrameworkElement> _viewLocator;
 
-		public WindowManager(IViewLocator viewLocator)
+		public WindowManager(IViewLocator<FrameworkElement> viewLocator)
 		{
 			_viewLocator = viewLocator;
 		}
 
-		public async Task ShowWindow(object model, Action<Window> configure)
+		public async Task ShowWindow(object model)
 		{
 			UIElement view = _viewLocator.Locate(model);
 
@@ -29,7 +29,6 @@ namespace Blastic.Services.Windowing
 			}
 
 			window.DataContext = model;
-			configure?.Invoke(window);
 
 			if (window.IsLoaded && new WindowInteropHelper(window).Handle != IntPtr.Zero)
 			{

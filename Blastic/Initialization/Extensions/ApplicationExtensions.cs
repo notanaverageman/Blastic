@@ -1,7 +1,7 @@
 ﻿using System.Resources;
-using Blastic.Common;
-using Blastic.Execution;
+using Blastic.DynamicControls;
 using Blastic.Initialization.Steps;
+using Blastic.Ordering;
 using Blastic.Properties;
 using Blastic.Services.Dialog;
 using Blastic.Services.Localization;
@@ -92,12 +92,12 @@ namespace Blastic.Initialization.Extensions
 		{
 			return application.Configure(x =>
 			{
-				x.AddSingleton<ExecutionContextFactory>();
 				x.AddSingleton<ILocalizationService, LocalizationService>();
 				x.AddSingleton<INotificationService, NotificationService>();
 				x.AddSingleton<IDialogService, DialogService>();
 				x.AddSingleton<IWindowManager, WindowManager>();
 				x.AddSingleton<IEventAggregator, EventAggregator>();
+				x.AddSingleton<IPresenterSource, PresenterSource>(y => PresenterSource.Instance);
 			});
 		}
 	}

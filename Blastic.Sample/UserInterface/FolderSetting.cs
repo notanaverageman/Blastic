@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Blastic.Controls.DynamicControls.Elements;
+using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
 using Blastic.Settings;
@@ -8,10 +8,14 @@ namespace Blastic.Sample.UserInterface
 {
 	public sealed class FolderSetting : FileBrowserSetting
 	{
-		public FolderSetting(ISettingsService settingsService, IDialogService dialogService)
+		public FolderSetting(
+			ISettingsService settingsService,
+			IPresenterSource presenterSource,
+			IDialogService dialogService)
 			:
 			base(
 				settingsService,
+				presenterSource,
 				dialogService,
 				default,
 				"Blastic.Sample.Program.WorkspaceFolder",

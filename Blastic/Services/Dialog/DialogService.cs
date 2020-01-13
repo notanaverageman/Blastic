@@ -8,8 +8,13 @@ namespace Blastic.Services.Dialog
 {
 	public class DialogService : IDialogService
 	{
-		public bool? ShowDialog<T>(object viewModel) where T : Window
+		public bool? ShowDialog<T>(object viewModel)
 		{
+			if (typeof(Window).IsAssignableFrom(typeof(T)))
+			{
+				throw new InvalidOperationException($"{typeof(T)} should inherit from {typeof(Window)}.");
+			}
+
 			Window dialog = (Window) Activator.CreateInstance(typeof(T));
 			dialog.DataContext = viewModel;
 
@@ -25,9 +30,7 @@ namespace Blastic.Services.Dialog
 				InitialDirectory = options?.InitialDirectory ?? ""
 			};
 
-			bool? result = options?.Owner == null
-				? openFileDialog.ShowDialog()
-				: openFileDialog.ShowDialog(options.Owner);
+			bool? result = openFileDialog.ShowDialog();
 
 			return result == true
 				? openFileDialog.FileName
@@ -43,9 +46,7 @@ namespace Blastic.Services.Dialog
 				AddExtension = true
 			};
 
-			bool? result = options?.Owner == null
-				? saveFileDialog.ShowDialog()
-				: saveFileDialog.ShowDialog(options.Owner);
+			bool? result = saveFileDialog.ShowDialog();
 
 			return result == true
 				? saveFileDialog.FileName

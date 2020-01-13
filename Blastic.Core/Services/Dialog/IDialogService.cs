@@ -1,0 +1,12 @@
+﻿namespace Blastic.Services.Dialog
+{
+	public interface IDialogService
+	{
+		bool? ShowDialog<T>(object viewModel);
+
+		string ShowOpenFileDialog(FileDialogOptions options = default);
+		string ShowSaveFileDialog(FileDialogOptions options = default);
+
+		string ShowSelectFolderDialog(FileDialogOptions options = default);
+	}
+}

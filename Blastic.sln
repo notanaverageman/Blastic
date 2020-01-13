@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic", "Blastic\Blastic.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Data", "Blastic.Data\Blastic.Data.csproj", "{554E027F-D0B0-4F93-AFCB-0C6A873A069E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Common", "Blastic.Common\Blastic.Common.csproj", "{8053D133-AEAD-46D3-AECF-81ED5332FD27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Core", "Blastic.Core\Blastic.Core.csproj", "{0C9F41A4-6551-45E6-B98A-1F6E787557AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{554E027F-D0B0-4F93-AFCB-0C6A873A069E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{554E027F-D0B0-4F93-AFCB-0C6A873A069E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{554E027F-D0B0-4F93-AFCB-0C6A873A069E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8053D133-AEAD-46D3-AECF-81ED5332FD27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8053D133-AEAD-46D3-AECF-81ED5332FD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8053D133-AEAD-46D3-AECF-81ED5332FD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8053D133-AEAD-46D3-AECF-81ED5332FD27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C9F41A4-6551-45E6-B98A-1F6E787557AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C9F41A4-6551-45E6-B98A-1F6E787557AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C9F41A4-6551-45E6-B98A-1F6E787557AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C9F41A4-6551-45E6-B98A-1F6E787557AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

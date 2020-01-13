@@ -14,10 +14,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Reactive" Version="4.2.0" />
+    <PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Blastic.Common\Blastic.Common.csproj" />
+    <ProjectReference Include="..\Blastic.Core\Blastic.Core.csproj" />
     <ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
   </ItemGroup>
 </Project>

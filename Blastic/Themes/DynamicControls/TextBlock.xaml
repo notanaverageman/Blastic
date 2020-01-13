@@ -3,7 +3,7 @@
 					xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 					xmlns:converters="clr-namespace:Blastic.Converters"
 					xmlns:help="clr-namespace:Blastic.Controls.Help"
-					xmlns:label="clr-namespace:Blastic.Controls.DynamicControls.Elements.Label">
+					xmlns:label="clr-namespace:Blastic.DynamicControls.Presenters">
 
 	<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 

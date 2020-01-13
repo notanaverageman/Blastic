@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Common;
 using Blastic.Data.ProviderSpecific;
+using Blastic.Ordering;
 
 namespace Blastic.Data.ProgramData.Migrations
 {

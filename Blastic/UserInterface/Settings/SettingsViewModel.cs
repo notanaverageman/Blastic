@@ -2,19 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Blastic.Commanding;
-using Blastic.Common.Diagnostics;
 using Blastic.Diagnostics;
-using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
+using Blastic.Services.Windowing;
 
 namespace Blastic.UserInterface.Settings
 {
 	public sealed class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>
 	{
+		private readonly IWindowManager _windowManager;
+
 		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
@@ -27,11 +27,10 @@ namespace Blastic.UserInterface.Settings
 		public Command HideDiagnosticMessagesIgnoreErrorsCommand { get; }
 		
 		public SettingsViewModel(
-			ExecutionContextFactory executionContextFactory,
+			IWindowManager windowManager,
 			IEnumerable<ISettingsSectionViewModel> sections)
-			:
-			base(executionContextFactory)
 		{
+			_windowManager = windowManager;
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
@@ -109,11 +108,7 @@ namespace Blastic.UserInterface.Settings
 
 		public async Task Show()
 		{
-			await ExecutionContext.WindowManager.ShowWindow(this, x =>
-			{
-				x.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-				x.Owner = Application.Current.MainWindow;
-			});
+			await _windowManager.ShowWindow(this);
 		}
 	}
 }

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blastic.Common\Blastic.Common.csproj" />
+    <ProjectReference Include="..\Blastic.Core\Blastic.Core.csproj" />
   </ItemGroup>
 
 </Project>

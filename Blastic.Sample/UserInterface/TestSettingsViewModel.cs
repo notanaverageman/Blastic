@@ -1,4 +1,4 @@
-﻿using Blastic.Execution;
+﻿using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
 using Blastic.UserInterface.Settings;
@@ -12,13 +12,13 @@ namespace Blastic.Sample.UserInterface
 		public FolderSetting FolderSetting { get; }
 
 		public TestSettingsViewModel(
-			ExecutionContextFactory executionContextFactory,
 			ISettingsService settingsService,
+			IPresenterSource presenterSource,
 			IDialogService dialogService)
 			:
-			base(executionContextFactory, settingsService)
+			base(settingsService, presenterSource)
 		{
-			FolderSetting = new FolderSetting(settingsService, dialogService);
+			FolderSetting = new FolderSetting(settingsService, presenterSource, dialogService);
 			RegisterForUI(FolderSetting);
 		}
 	}

@@ -8,7 +8,7 @@ using System.Transactions;
 using Blastic.Data.Migrations;
 using Blastic.Data.Tables;
 using Microsoft.Extensions.Logging;
-using Version = Blastic.Common.Version;
+using Version = Blastic.Ordering.Version;
 
 namespace Blastic.Data
 {

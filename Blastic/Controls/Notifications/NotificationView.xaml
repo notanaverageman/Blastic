@@ -3,10 +3,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:dynamicControls="clr-namespace:Blastic.Controls.DynamicControls"
+			 xmlns:dynamicControls="clr-namespace:Blastic.DynamicControls"
 			 xmlns:local="clr-namespace:Blastic.Controls.Notifications"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:notifications="clr-namespace:Blastic.Services.Notifications"
+			 xmlns:notifications="clr-namespace:Blastic.Services.Notifications;assembly=Blastic.Core"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance notifications:Notification}">
 

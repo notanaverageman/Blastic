@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Common;
 using Blastic.Diagnostics;
-using Blastic.Execution;
+using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
+using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Settings;
 using Blastic.Settings;
@@ -14,6 +14,8 @@ namespace Blastic.UserInterface.Settings
 {
 	public abstract class SettingsSectionViewModel : ConductorAllActive<Setting>, ISettingsSectionViewModel
 	{
+		private readonly IPresenterSource _presenterSource;
+
 		private Dictionary<string, Setting> _settings;
 
 		public abstract string SectionName { get; }
@@ -22,11 +24,10 @@ namespace Blastic.UserInterface.Settings
 		public IsExpandedSetting IsExpanded { get; private set; }
 
 		protected SettingsSectionViewModel(
-			ExecutionContextFactory executionContextFactory,
-			ISettingsService settingsService)
-			:
-			base(executionContextFactory)
+			ISettingsService settingsService,
+			IPresenterSource presenterSource)
 		{
+			_presenterSource = presenterSource;
 			SettingsService = settingsService;
 
 			Lifetime.Initialize.Subscribe(x => OnInitialize(), new Order(int.MinValue));
@@ -34,7 +35,7 @@ namespace Blastic.UserInterface.Settings
 
 		private Task OnInitialize()
 		{
-			IsExpanded = new IsExpandedSetting(SettingsService, SectionName);
+			IsExpanded = new IsExpandedSetting(SettingsService, _presenterSource, SectionName);
 
 			_settings = GetType()
 				.GetProperties()

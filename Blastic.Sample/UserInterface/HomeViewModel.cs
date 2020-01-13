@@ -6,11 +6,9 @@ using System.Windows;
 using System.Windows.Input;
 using Blastic.Automation;
 using Blastic.Commanding;
-using Blastic.Common;
-using Blastic.Controls.DynamicControls;
-using Blastic.Controls.DynamicControls.Elements;
-using Blastic.Execution;
+using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
+using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.Services.Notifications;
@@ -23,6 +21,7 @@ namespace Blastic.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IMainTab
 	{
+		private readonly INotificationService _notificationService;
 		private readonly ILocalizationService _localizationService;
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<HomeViewModel> _logger;
@@ -38,14 +37,13 @@ namespace Blastic.Sample.UserInterface
 		public AsyncCommand HelpCommand { get; }
 
 		public HomeViewModel(
-			ExecutionContextFactory executionContextFactory,
 			TestSettingsViewModel testSettings,
+			INotificationService notificationService,
 			ILocalizationService localizationService,
 			IServiceProvider serviceProvider,
 			ILogger<HomeViewModel> logger)
-			:
-			base(executionContextFactory)
 		{
+			_notificationService = notificationService;
 			_localizationService = localizationService;
 			_serviceProvider = serviceProvider;
 			_logger = logger;
@@ -121,7 +119,7 @@ namespace Blastic.Sample.UserInterface
 
 			_x = !_x;
 
-			ExecutionContext.NotificationService.MaximumActiveNotificationCount = 2;
+			_notificationService.MaximumActiveNotificationCount = 2;
 
 			DynamicModel model = new DynamicModel()
 				.AddLabel(new ReactiveProperty<string>("Label"))
@@ -130,7 +128,7 @@ namespace Blastic.Sample.UserInterface
 				.AddAction(TestCommand, x => x
 					.WithLabel("Action"));
 
-			await ExecutionContext.NotificationService.Enqueue(new Notification(model, TimeSpan.FromHours(1)));
+			await _notificationService.Enqueue(new Notification(model, TimeSpan.FromHours(1)));
 		}
 	}
 }

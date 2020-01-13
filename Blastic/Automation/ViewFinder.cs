@@ -8,9 +8,7 @@ namespace Blastic.Automation
 	{
 		public static FrameworkElement GetView(this IViewAware viewAware, object bindingSource)
 		{
-			FrameworkElement view = viewAware.View.Value;
-
-			if (view == null)
+			if (!(viewAware.View.Value is FrameworkElement view))
 			{
 				return null;
 			}

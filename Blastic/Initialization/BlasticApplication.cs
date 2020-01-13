@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Blastic.Initialization.Extensions;
+using Blastic.Platform;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Settings;
 using Blastic.ViewManagement;
@@ -18,7 +19,7 @@ namespace Blastic.Initialization
 {
 	public class BlasticApplication
 	{
-		internal static IViewLocator ViewLocator;
+		internal static IViewLocator<FrameworkElement> ViewLocator;
 
 		private readonly ConfigurationBuilder _configurationBuilder;
 		private readonly ServiceCollection _serviceCollection;
@@ -67,11 +68,11 @@ namespace Blastic.Initialization
 		{
 			Configure(x =>
 			{
-				ViewLocator viewLocator = new ViewLocator()
+				IViewLocator<FrameworkElement> viewLocator = new ViewLocator()
 					.WithTypeMapper<ISettingsSectionViewModel, FormSettingSectionView>()
 					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"));
 
-				x.AddSingleton<IViewLocator, ViewLocator>(y => viewLocator);
+				x.AddSingleton(y => viewLocator);
 			});
 		}
 
@@ -88,7 +89,7 @@ namespace Blastic.Initialization
 
 			ServiceProvider serviceProvider = _serviceCollection.BuildServiceProvider();
 
-			ViewLocator = serviceProvider.GetRequiredService<IViewLocator>();
+			ViewLocator = serviceProvider.GetRequiredService<IViewLocator<FrameworkElement>>();
 
 			ILogger logger = serviceProvider.GetService<ILogger>();
 
@@ -97,6 +98,8 @@ namespace Blastic.Initialization
 			try
 			{
 				TApp application = serviceProvider.GetRequiredService<TApp>();
+
+				PlatformSpecifics.Current = new WpfPlatformSpecifics(application.Dispatcher);
 
 				foreach (Func<DispatcherUnhandledExceptionEventArgs, Task> handler in _unhandledExceptionHandlers)
 				{
