@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using Blastic.Reactive;
 using Blastic.ViewManagement;
 
-namespace Blastic.Sample.Automation
+namespace Blastic.Automation
 {
 	public static partial class AutomationExtensions
 	{

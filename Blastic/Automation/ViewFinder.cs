@@ -2,7 +2,7 @@
 using Blastic.ControlExtensions;
 using Blastic.ViewManagement;
 
-namespace Blastic.Sample.Automation
+namespace Blastic.Automation
 {
 	public static partial class AutomationExtensions
 	{
