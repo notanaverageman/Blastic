@@ -5,18 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Blastic.Initialization.Extensions;
 using Blastic.Services.Windowing;
-using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Log = Serilog.Log;
+using Microsoft.Extensions.Logging;
 
 namespace Blastic.Initialization
 {
@@ -25,7 +21,6 @@ namespace Blastic.Initialization
 		internal static IViewLocator ViewLocator;
 
 		private readonly ConfigurationBuilder _configurationBuilder;
-		private readonly ContainerBuilder _containerBuilder;
 		private readonly ServiceCollection _serviceCollection;
 
 		private readonly HashSet<Assembly> _viewAssemblies;
@@ -35,7 +30,6 @@ namespace Blastic.Initialization
 		public BlasticApplication()
 		{
 			_configurationBuilder = new ConfigurationBuilder();
-			_containerBuilder = new ContainerBuilder();
 			_serviceCollection = new ServiceCollection();
 
 			_viewAssemblies = new HashSet<Assembly>();
@@ -57,12 +51,6 @@ namespace Blastic.Initialization
 			return this;
 		}
 
-		public BlasticApplication Configure(Action<ContainerBuilder> action)
-		{
-			action(_containerBuilder);
-			return this;
-		}
-
 		public BlasticApplication Configure(Action<IServiceCollection> action)
 		{
 			action(_serviceCollection);
@@ -77,53 +65,38 @@ namespace Blastic.Initialization
 
 		private void AddViewLocator(IEnumerable<Assembly> viewAssemblies)
 		{
-			Configure(builder =>
+			Configure(x =>
 			{
 				ViewLocator viewLocator = new ViewLocator()
 					.WithTypeMapper<ISettingsSectionViewModel, FormSettingSectionView>()
 					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"));
 
-				builder
-					.RegisterInstance(viewLocator)
-					.AsImplementedInterfaces()
-					.AsSelf()
-					.SingleInstance();
+				x.AddSingleton<IViewLocator, ViewLocator>(y => viewLocator);
 			});
 		}
 
-		public void Run<TApp, TMainViewModel>() where TApp : Application
+		public void Run<TApp, TMainViewModel>() where TApp : Application where TMainViewModel : class
 		{
 			IConfiguration configuration = _configurationBuilder.Build();
-
-			LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
-				.ReadFrom.Configuration(configuration);
 
 			RegisterViewAssembly<BlasticApplication>();
 			AddViewLocator(_viewAssemblies);
 
-			Configure(x => x.RegisterInstance(configuration));
-			Configure(x => x.RegisterType<TMainViewModel>().SingleInstance());
-			Configure(x => x.RegisterType<TApp>().SingleInstance());
+			Configure(x => x.AddSingleton(configuration));
+			Configure(x => x.AddSingleton<TMainViewModel>());
+			Configure(x => x.AddSingleton<TApp>());
 
-			_containerBuilder.Populate(_serviceCollection);
-			IContainer container = _containerBuilder.Build();
+			ServiceProvider serviceProvider = _serviceCollection.BuildServiceProvider();
 
-			ViewLocator = container.Resolve<IViewLocator>();
+			ViewLocator = serviceProvider.GetRequiredService<IViewLocator>();
 
-			LogSink logSink = container.ResolveOptional<LogSink>();
+			ILogger logger = serviceProvider.GetService<ILogger>();
 
-			if (logSink != null)
-			{
-				loggerConfiguration.WriteTo.Sink(logSink);
-			}
-
-			Log.Logger = loggerConfiguration.CreateLogger();
-			
 			SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
 			
 			try
 			{
-				TApp application = container.Resolve<TApp>();
+				TApp application = serviceProvider.GetRequiredService<TApp>();
 
 				foreach (Func<DispatcherUnhandledExceptionEventArgs, Task> handler in _unhandledExceptionHandlers)
 				{
@@ -133,8 +106,8 @@ namespace Blastic.Initialization
 					};
 				}
 
-				TMainViewModel viewModel = container.Resolve<TMainViewModel>();
-				IWindowManager windowManager = container.Resolve<IWindowManager>();
+				TMainViewModel viewModel = serviceProvider.GetRequiredService<TMainViewModel>();
+				IWindowManager windowManager = serviceProvider.GetRequiredService<IWindowManager>();
 
 				// Do not await this method as it will freeze the UI.
 				windowManager.ShowWindow(viewModel);
@@ -142,7 +115,7 @@ namespace Blastic.Initialization
 			}
 			catch (Exception exception)
 			{
-				Log.Error(exception, exception.Message);
+				logger?.LogError(exception, exception.Message);
 				throw;
 			}
 		}

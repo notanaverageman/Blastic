@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using ControlzEx;
 
 namespace Blastic.ControlExtensions
 {
@@ -34,7 +33,7 @@ namespace Blastic.ControlExtensions
 				if (element.IsVisible && GetIsFocused(element))
 				{
 					element.IsVisibleChanged -= IsVisibleChanged;
-					KeyboardNavigationEx.Focus(element);
+					element.Focus();
 				}
 			}
 
@@ -51,7 +50,7 @@ namespace Blastic.ControlExtensions
 
 			if ((bool)e.NewValue)
 			{
-				KeyboardNavigationEx.Focus(control);
+				control.Focus();
 			}
 		}
 	}

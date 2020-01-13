@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Controls.DynamicControls;
 using Blastic.Reactive;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
 using Blastic.Services.Messaging;
@@ -22,7 +21,6 @@ namespace Blastic.Execution
 		public IWindowManager WindowManager { get; }
 		public IEventAggregator EventAggregator { get; }
 		public INotificationService NotificationService { get; }
-		public ISnackbarMessageQueue MessageQueue { get; }
 
 		public IReactiveProperty<bool> IsBusy { get; set; }
 		public IReactiveProperty<string> ProgressMessage { get; set; }
@@ -39,15 +37,13 @@ namespace Blastic.Execution
 			IDialogService dialogService,
 			IWindowManager windowManager,
 			IEventAggregator eventAggregator,
-			INotificationService notificationService,
-			ISnackbarMessageQueue messageQueue)
+			INotificationService notificationService)
 		{
 			Logger = logger;
 			DialogService = dialogService;
 			WindowManager = windowManager;
 			EventAggregator = eventAggregator;
 			NotificationService = notificationService;
-			MessageQueue = messageQueue;
 
 			IsBusy = new ReactiveProperty<bool>();
 			ProgressMessage = new ReactiveProperty<string>();
@@ -93,7 +89,7 @@ namespace Blastic.Execution
 
 				if (!string.IsNullOrEmpty(successMessage))
 				{
-					MessageQueue.Enqueue(successMessage);
+					// TODO: Notification.
 				}
 			}
 			catch (TaskCanceledException)
@@ -108,12 +104,13 @@ namespace Blastic.Execution
 					Logger.LogError(exception, exception.Message);
 				}
 
-				MessageQueue.Enqueue(
-					string.IsNullOrEmpty(failMessage)
-						? exception.Message
-						: failMessage,
-					"Open Logs",
-					() => EventAggregator.Publish(new OpenLogsEvent()));
+				// TODO: Notification.
+				//MessageQueue.Enqueue(
+				//	string.IsNullOrEmpty(failMessage)
+				//		? exception.Message
+				//		: failMessage,
+				//	"Open Logs",
+				//	() => EventAggregator.Publish(new OpenLogsEvent()));
 
 				if (rethrowUnhandledException)
 				{

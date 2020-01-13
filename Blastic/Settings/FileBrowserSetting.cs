@@ -6,7 +6,6 @@ using Blastic.Controls.DynamicControls.Elements.Group;
 using Blastic.Services.Dialog;
 using Blastic.Services.Dialog.FileFilters;
 using Blastic.Services.Settings;
-using MaterialDesignThemes.Wpf;
 
 namespace Blastic.Settings
 {
@@ -47,7 +46,9 @@ namespace Blastic.Settings
 				.AddText(ReactiveSettingValue, x => x
 					.WithColumnWidth(new GridLength(1, GridUnitType.Star))
 					.WithLabel(GroupField.Label))
-				.AddAction(BrowseCommand, x => x.WithIcon(PackIconKind.Folder));
+				.AddAction(BrowseCommand, x => x
+					.WithLabel("Browse"));
+			// TODO: Icon
 		}
 
 		public void Browse()

@@ -1,12 +1,11 @@
 ﻿using System.Windows;
 using Blastic.Reactive;
-using MaterialDesignThemes.Wpf;
 
 namespace Blastic.Controls.DynamicControls.Elements
 {
 	public interface IElement
 	{
-		IReactiveProperty<PackIconKind?> Icon { get; set; }
+		IReactiveProperty<object> Icon { get; set; }
 		IReactiveProperty<string> Label { get; set; }
 		IReactiveProperty<string> Help { get; set; }
 
@@ -26,7 +25,7 @@ namespace Blastic.Controls.DynamicControls.Elements
 
 	public abstract class Element : IElement
 	{
-		public IReactiveProperty<PackIconKind?> Icon { get; set; }
+		public IReactiveProperty<object> Icon { get; set; }
 		public IReactiveProperty<string> Label { get; set; }
 		public IReactiveProperty<string> Help { get; set; }
 
@@ -44,7 +43,7 @@ namespace Blastic.Controls.DynamicControls.Elements
 
 		public Element()
 		{
-			Icon = new ReactiveProperty<PackIconKind?>();
+			Icon = new ReactiveProperty<object>();
 			Label = new ReactiveProperty<string>();
 			Help = new ReactiveProperty<string>();
 
@@ -62,7 +61,7 @@ namespace Blastic.Controls.DynamicControls.Elements
 
 			presenter.Help = Help;
 			presenter.Label = Label;
-			presenter.IconKind = Icon;
+			presenter.Icon = Icon;
 
 			presenter.IsEnabledReactive = IsEnabled;
 
@@ -84,13 +83,13 @@ namespace Blastic.Controls.DynamicControls.Elements
 
 	public static class ElementExtensions
 	{
-		public static T WithIcon<T>(this T element, PackIconKind? icon) where T : IElement
+		public static T WithIcon<T>(this T element, object icon) where T : IElement
 		{
 			element.Icon.Value = icon;
 			return element;
 		}
 
-		public static T WithIcon<T>(this T element, IReactiveProperty<PackIconKind?> icon) where T : IElement
+		public static T WithIcon<T>(this T element, IReactiveProperty<object> icon) where T : IElement
 		{
 			element.Icon = icon;
 			return element;

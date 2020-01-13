@@ -5,24 +5,27 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:dynamicControls="clr-namespace:Blastic.Controls.DynamicControls"
 			 xmlns:local="clr-namespace:Blastic.Controls.Notifications"
-			 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:notifications="clr-namespace:Blastic.Services.Notifications"
-			 d:DataContext="{d:DesignInstance notifications:Notification}"
-			 mc:Ignorable="d">
-	<Grid>
-		<materialDesign:Card>
-			<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
-				<Button Grid.Row="0"
-						HorizontalAlignment="Right"
-						Command="{Binding Dismiss}"
-						Style="{StaticResource MaterialDesignToolButton}">
-					<materialDesign:PackIcon Kind="Close" />
-				</Button>
+			 mc:Ignorable="d"
+			 d:DataContext="{d:DesignInstance notifications:Notification}">
 
-				<dynamicControls:DynamicControl Grid.Row="1"
-												Model="{Binding Notification.Model, RelativeSource={RelativeSource AncestorType=local:NotificationView}}" />
-			</Grid>
-		</materialDesign:Card>
-	</Grid>
+	<Border Padding="8"
+			Background="White"
+			BorderBrush="Black"
+			BorderThickness="1">
+		<Border.Effect>
+			<DropShadowEffect />
+		</Border.Effect>
+
+		<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
+			<Button Grid.Row="0"
+					HorizontalAlignment="Right"
+					Command="{Binding Dismiss}"
+					Content="×" />
+
+			<dynamicControls:DynamicControl Grid.Row="1"
+											Model="{Binding Notification.Model, RelativeSource={RelativeSource AncestorType=local:NotificationView}}" />
+		</Grid>
+	</Border>
 </UserControl>

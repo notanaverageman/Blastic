@@ -1,29 +1,23 @@
-﻿<controls:MetroWindow x:Class="Blastic.UserInterface.Logs.LogsView"
-					  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					  xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
-					  xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-					  xmlns:logs="clr-namespace:Blastic.UserInterface.Logs"
-					  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-					  xmlns:serilog="clr-namespace:Serilog.Events;assembly=Serilog"
-					  Title="{Binding Title.Value}"
-					  mc:Ignorable="d"
-					  Width="1400"
-					  Height="800"
-					  d:DataContext="{d:DesignInstance logs:LogsViewModel}"
-					  Style="{StaticResource WindowStyle}"
-					  TitleCharacterCasing="Normal">
+﻿<Window x:Class="Blastic.UserInterface.Logs.LogsView"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
+		xmlns:logs="clr-namespace:Blastic.UserInterface.Logs"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		Title="{Binding Title.Value}"
+		mc:Ignorable="d"
+		Width="1400"
+		Height="800"
+		d:DataContext="{d:DesignInstance logs:LogsViewModel}"
+		Style="{StaticResource WindowStyle}">
 
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
-		<Grid Grid.Row="0"
-			  Background="{StaticResource MaterialDesignPaper}">
+		<Grid Grid.Row="0">
 
 			<ComboBox Margin="16,0,0,0"
 					  HorizontalAlignment="Left"
-					  materialDesign:ComboBoxAssist.ShowSelectedItem="True"
-					  materialDesign:HintAssist.Hint="Minimum Level"
 					  IsReadOnly="True"
 					  ItemsSource="{Binding LogLevels}"
 					  SelectedItem="{Binding MinimumLogLevel.Value, Mode=TwoWay}" />
@@ -31,14 +25,13 @@
 			<Button Margin="0,0,8,0"
 					HorizontalAlignment="Right"
 					Command="{Binding Clear}"
-					Content="{materialDesign:PackIcon Delete}"
-					Style="{StaticResource MaterialDesignToolButton}" />
+					Content="Clear" />
 		</Grid>
 
 		<DataGrid Grid.Row="1"
 				  AutoGenerateColumns="False"
 				  IsReadOnly="True"
-				  ItemsSource="{Binding LogSink.Logs}">
+				  ItemsSource="{Binding Logs}">
 
 			<DataGrid.Columns>
 				<DataGridTextColumn Width="Auto"
@@ -48,17 +41,6 @@
 				<DataGridTextColumn Width="Auto"
 									Binding="{Binding Level}"
 									Header="Level" />
-
-				<DataGridTextColumn Width="200"
-									Binding="{Binding Source}"
-									Header="Source">
-
-					<DataGridTextColumn.ElementStyle>
-						<Style>
-							<Setter Property="TextBlock.TextTrimming" Value="CharacterEllipsis" />
-						</Style>
-					</DataGridTextColumn.ElementStyle>
-				</DataGridTextColumn>
 
 				<DataGridTextColumn Width="*"
 									Binding="{Binding Message}"
@@ -78,37 +60,37 @@
 
 					<Style.Triggers>
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static serilog:LogEventLevel.Fatal}">
+									 Value="{x:Static logging:LogLevel.Critical}">
 
 							<Setter Property="Foreground" Value="DarkRed" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static serilog:LogEventLevel.Error}">
+									 Value="{x:Static logging:LogLevel.Error}">
 
 							<Setter Property="Foreground" Value="Red" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static serilog:LogEventLevel.Warning}">
+									 Value="{x:Static logging:LogLevel.Warning}">
 
 							<Setter Property="Foreground" Value="DarkOrange" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static serilog:LogEventLevel.Information}">
+									 Value="{x:Static logging:LogLevel.Information}">
 
 							<Setter Property="Foreground" Value="CornflowerBlue" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static serilog:LogEventLevel.Debug}">
+									 Value="{x:Static logging:LogLevel.Debug}">
 
 							<Setter Property="Foreground" Value="Green" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static serilog:LogEventLevel.Verbose}">
+									 Value="{x:Static logging:LogLevel.Trace}">
 
 							<Setter Property="Foreground" Value="DarkGray" />
 						</DataTrigger>
@@ -117,4 +99,4 @@
 			</DataGrid.RowStyle>
 		</DataGrid>
 	</Grid>
-</controls:MetroWindow>
+</Window>

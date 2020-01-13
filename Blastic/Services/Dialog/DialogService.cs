@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
-using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Windows.Forms;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace Blastic.Services.Dialog
 {
@@ -53,18 +54,15 @@ namespace Blastic.Services.Dialog
 
 		public string ShowSelectFolderDialog(FileDialogOptions options)
 		{
-			using CommonFileDialog folderBrowserDialog = new CommonOpenFileDialog
+			FolderBrowserDialog dialog = new FolderBrowserDialog
 			{
-				IsFolderPicker = true,
-				InitialDirectory = options?.InitialDirectory ?? ""
+				SelectedPath = options?.InitialDirectory ?? ""
 			};
 
-			CommonFileDialogResult result = options?.Owner == null
-				? folderBrowserDialog.ShowDialog()
-				: folderBrowserDialog.ShowDialog(options.Owner);
+			DialogResult result = dialog.ShowDialog();
 
-			return result == CommonFileDialogResult.Ok
-				? folderBrowserDialog.FileName
+			return result == DialogResult.OK
+				? dialog.SelectedPath
 				: "";
 		}
 	}

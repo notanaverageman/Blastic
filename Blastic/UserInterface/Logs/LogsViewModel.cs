@@ -12,7 +12,7 @@ using Blastic.Services.Localization;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Logs.Settings;
 using Blastic.ViewManagement;
-using Serilog.Events;
+using Microsoft.Extensions.Logging;
 
 namespace Blastic.UserInterface.Logs
 {
@@ -25,48 +25,48 @@ namespace Blastic.UserInterface.Logs
 
 		public IReactiveProperty<FrameworkElement> View { get; }
 
-		public IReactiveProperty<LogEventLevel> MinimumLogLevel { get; }
+		public IReactiveProperty<LogLevel> MinimumLogLevel { get; }
 
-		public LogSink LogSink { get; }
-		public IEnumerable<LogEventLevel> LogLevels { get; }
+		public ReactiveCollection<Log> Logs { get; }
+		public IEnumerable<LogLevel> LogLevels { get; }
 
 		public Command Clear { get; }
 
 		public LogsViewModel(
 			IWindowManager windowManager,
 			ILocalizationService localizationService,
-			LogSettingsViewModel logSettingsViewModel,
-			LogSink logSink)
+			LogSettingsViewModel logSettingsViewModel)
 		{
 			_windowManager = windowManager;
 			_logSettingsViewModel = logSettingsViewModel;
-			LogSink = logSink;
 
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Logs.Window.Title");
 
-			MinimumLogLevel = new ReactiveProperty<LogEventLevel>();
+			Logs = UILogger.Instance.Logs;
+			Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
+
+			MinimumLogLevel = new ReactiveProperty<LogLevel>();
 			MinimumLogLevel.Subscribe(OnMinimumLogLevelChanged);
-			MinimumLogLevel.Value = LogEventLevel.Debug;
+			MinimumLogLevel.Value = LogLevel.Debug;
 
 			LogLevels = new []
 			{
-				LogEventLevel.Fatal,
-				LogEventLevel.Error,
-				LogEventLevel.Warning,
-				LogEventLevel.Information,
-				LogEventLevel.Debug
+				LogLevel.Critical,
+				LogLevel.Error,
+				LogLevel.Warning,
+				LogLevel.Information,
+				LogLevel.Debug,
+				LogLevel.Trace
 			};
 
 			View = new ReactiveProperty<FrameworkElement>();
 
-			LogSink.Logs.CollectionChangedAsObservable().Subscribe(LogsChanged);
-
-			Clear = new Command(() => LogSink.Logs.Clear());
+			Clear = new Command(() => Logs.Clear());
 		}
 
 		private async void LogsChanged(NotifyCollectionChangedEventArgs e)
 		{
-			bool? hasErrorLog = e.NewItems?.Cast<Log>().Any(x => x.Level >= LogEventLevel.Error);
+			bool? hasErrorLog = e.NewItems?.Cast<Log>().Any(x => x.Level >= LogLevel.Error);
 
 			if (hasErrorLog == true && _logSettingsViewModel.OpenWindowOnErrorSetting.Value)
 			{
@@ -83,9 +83,11 @@ namespace Blastic.UserInterface.Logs
 			});
 		}
 
-		private void OnMinimumLogLevelChanged(LogEventLevel level)
+		private void OnMinimumLogLevelChanged(LogLevel level)
 		{
-			ICollectionView collectionView = CollectionViewSource.GetDefaultView(LogSink.Logs);
+			UILogger.Instance.MinimumLogLevel = level;
+
+			ICollectionView collectionView = CollectionViewSource.GetDefaultView(Logs);
 			collectionView.Filter = o => ((Log)o).Level >= level;
 		}
 	}

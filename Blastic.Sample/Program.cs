@@ -1,11 +1,12 @@
 ﻿using System;
-using Autofac;
 using Blastic.Data;
 using Blastic.Initialization;
 using Blastic.Initialization.Extensions;
 using Blastic.Sample.Properties;
+using Blastic.Sample.UserInterface;
 using Blastic.UserInterface.TabbedMain;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Sample
 {
@@ -20,12 +21,12 @@ namespace Blastic.Sample
 			productInformation.Version.Value = typeof(Program).Assembly.GetName().Version;
 
 			new BlasticApplication()
-				.Configure(x => x.RegisterInstance(productInformation))
+				.Configure(x => x.AddSingleton(productInformation))
 				.Configure(x => x.AddJsonFile("AppSettings.json"))
 				.RegisterViewAssembly<Program>()
-				.RegisterSettingsAssembly<Program>()
-				.RegisterInitializationStepsAssembly<Program>()
-				.RegisterMainTabs<Program>()
+				.AddSetting<TestSettingsViewModel>()
+				.AddMainTab<HomeViewModel>()
+				.AddMainTab<MainTabViewModel>()
 				.AddLogsWindow()
 				.AddSettingsWindow()
 				.AddSettingsService()

@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Blastic.Reactive;
-using MaterialDesignThemes.Wpf;
 
 namespace Blastic.Controls.DynamicControls.Elements
 {
@@ -11,7 +10,7 @@ namespace Blastic.Controls.DynamicControls.Elements
 
 		public IReactiveProperty<string> Help { get; set; }
 		public IReactiveProperty<string> Label { get; set; }
-		public IReactiveProperty<PackIconKind?> IconKind { get; set; }
+		public IReactiveProperty<object> Icon { get; set; }
 
 		public IReactiveProperty<bool> IsEnabledReactive { get; set; }
 

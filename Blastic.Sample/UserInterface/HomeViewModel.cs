@@ -17,6 +17,7 @@ using Blastic.Services.Notifications;
 using Blastic.UserInterface.TabbedMain;
 using InputSimulatorStandard;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Blastic.Sample.UserInterface
 {
@@ -24,6 +25,7 @@ namespace Blastic.Sample.UserInterface
 	{
 		private readonly ILocalizationService _localizationService;
 		private readonly IServiceProvider _serviceProvider;
+		private readonly ILogger<HomeViewModel> _logger;
 
 		public Order Order { get; }
 		public bool IsFixed => true;
@@ -39,12 +41,14 @@ namespace Blastic.Sample.UserInterface
 			ExecutionContextFactory executionContextFactory,
 			TestSettingsViewModel testSettings,
 			ILocalizationService localizationService,
-			IServiceProvider serviceProvider)
+			IServiceProvider serviceProvider,
+			ILogger<HomeViewModel> logger)
 			:
 			base(executionContextFactory)
 		{
 			_localizationService = localizationService;
 			_serviceProvider = serviceProvider;
+			_logger = logger;
 
 			Order = new Order(1);
 
@@ -88,6 +92,13 @@ namespace Blastic.Sample.UserInterface
 				new InputSimulator().Mouse.LeftButtonClick();
 			}));
 
+			_logger.LogTrace("Activated");
+			_logger.LogDebug("Activated");
+			_logger.LogInformation("Activated");
+			_logger.LogWarning("Activated");
+			_logger.LogError("Activated");
+			_logger.LogCritical("Activated");
+
 			return Task.CompletedTask;
 		}
 
@@ -119,7 +130,7 @@ namespace Blastic.Sample.UserInterface
 				.AddAction(TestCommand, x => x
 					.WithLabel("Action"));
 
-			await ExecutionContext.NotificationService.Enqueue(new Notification(model));
+			await ExecutionContext.NotificationService.Enqueue(new Notification(model, TimeSpan.FromHours(1)));
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System.Resources;
-using Autofac;
 using Blastic.Common;
 using Blastic.Execution;
 using Blastic.Initialization.Steps;
@@ -13,41 +12,35 @@ using Blastic.UserInterface.Logs;
 using Blastic.UserInterface.Logs.Settings;
 using Blastic.UserInterface.Settings;
 using Blastic.UserInterface.TabbedMain;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace Blastic.Initialization.Extensions
 {
 	public static class ApplicationExtensions
 	{
-		public static BlasticApplication RegisterInitializationStepsAssembly<T>(this BlasticApplication application)
+		public static BlasticApplication AddInitializationStep<T>(this BlasticApplication application) where T : class, IInitializationStep
 		{
-			return application.RegisterTypes<T, IInitializationStep>();
+			return application.RegisterType<IInitializationStep, T>();
 		}
 
-		public static BlasticApplication RegisterSettingsAssembly<T>(this BlasticApplication application)
+		public static BlasticApplication AddSetting<T>(this BlasticApplication application) where T : class, ISettingsSectionViewModel
 		{
-			return application.RegisterTypes<T, ISettingsSectionViewModel>();
+			return application.RegisterType<ISettingsSectionViewModel, T>();
 		}
 
-		public static BlasticApplication RegisterMainTabs<T>(this BlasticApplication application)
+		public static BlasticApplication AddMainTab<T>(this BlasticApplication application) where T : class, IMainTab
 		{
-			return application.RegisterTypes<T, IMainTab>();
+			return application.RegisterType<IMainTab, T>();
 		}
 
-		private static BlasticApplication RegisterTypes<TAssembly, TBase>(this BlasticApplication application)
+		private static BlasticApplication RegisterType<T, TImplementation>(this BlasticApplication application)
+			where T : class
+			where TImplementation : class, T
 		{
-			return application.Configure(builder =>
-			{
-				builder
-					.RegisterAssemblyTypes(typeof(TAssembly).Assembly)
-					.AssignableTo<TBase>()
-					.AsImplementedInterfaces()
-					.AsSelf()
-					.SingleInstance();
-			});
+			return application
+				.Configure(x => x.AddSingleton<TImplementation>())
+				.Configure(x => x.AddSingleton<T, TImplementation>(y => y.GetService<TImplementation>()));
 		}
 
 		public static BlasticApplication AddLocalizationSource(
@@ -55,105 +48,56 @@ namespace Blastic.Initialization.Extensions
 			ResourceManager resourceManager,
 			Order order = null)
 		{
-			return application.Configure(builder =>
+			return application.Configure(x =>
 			{
-				builder
-					.RegisterInstance(new ResourceManagerLocalizationSource(resourceManager, order))
-					.AsImplementedInterfaces();
+				x.AddSingleton<ILocalizationSource>(new ResourceManagerLocalizationSource(resourceManager, order));
 			});
 		}
 
 		public static BlasticApplication AddLogsWindow(this BlasticApplication application)
 		{
-			return application.Configure(builder =>
-			{
-				builder
-					.RegisterType<LogsViewModel>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<LogSink>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<LogSettingsViewModel>()
-					.SingleInstance()
-					.AsImplementedInterfaces()
-					.AsSelf();
-			});
+			return application
+				.Configure(x =>
+				{
+					x.AddSingleton(UILogger.Instance);
+					x.AddSingleton<LogsViewModel>();
+					x.AddSingleton<LogSettingsViewModel>();
+					
+					x.AddLogging(y =>
+					{
+						y.AddProvider(new UILoggerProvider());
+						y.AddFilter<UILoggerProvider>(_ => true);
+					});
+				})
+				.AddSetting<LogSettingsViewModel>();
 		}
 
 		public static BlasticApplication AddSettingsWindow(this BlasticApplication application)
 		{
-			return application.Configure(builder =>
+			return application.Configure(x =>
 			{
-				builder
-					.RegisterType<SettingsViewModel>()
-					.SingleInstance();
-
-				builder.RegisterType<ReadSettingsStep>()
-					.SingleInstance()
-					.As<IInitializationStep>();
+				x.AddSingleton<SettingsViewModel>();
+				x.AddSingleton<IInitializationStep, ReadSettingsStep>();
 			});
 		}
 
 		internal static BlasticApplication AddDefaults(this BlasticApplication application)
 		{
 			return application
-				.AddLogging()
 				.AddDefaultServices()
 				.AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
 		}
 
-		private static BlasticApplication AddLogging(this BlasticApplication application, LogLevel minimumLogLevel = LogLevel.Trace)
+		private static BlasticApplication AddDefaultServices(this BlasticApplication application)
 		{
 			return application.Configure(x =>
 			{
-				x.AddLogging(builder =>
-				{
-					builder.SetMinimumLevel(minimumLogLevel);
-					builder.AddSerilog();
-				});
-			});
-		}
-
-		private static BlasticApplication AddDefaultServices(this BlasticApplication application)
-		{
-			return application.Configure(builder =>
-			{
-				builder
-					.RegisterType<ExecutionContextFactory>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<LocalizationService>()
-					.As<ILocalizationService>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<NotificationService>()
-					.As<INotificationService>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<DialogService>()
-					.As<IDialogService>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<WindowManager>()
-					.As<IWindowManager>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<EventAggregator>()
-					.As<IEventAggregator>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<SnackbarMessageQueue>()
-					.As<ISnackbarMessageQueue>()
-					.SingleInstance();
+				x.AddSingleton<ExecutionContextFactory>();
+				x.AddSingleton<ILocalizationService, LocalizationService>();
+				x.AddSingleton<INotificationService, NotificationService>();
+				x.AddSingleton<IDialogService, DialogService>();
+				x.AddSingleton<IWindowManager, WindowManager>();
+				x.AddSingleton<IEventAggregator, EventAggregator>();
 			});
 		}
 	}

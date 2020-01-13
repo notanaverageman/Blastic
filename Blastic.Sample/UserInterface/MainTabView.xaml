@@ -11,8 +11,7 @@
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<Button Grid.Row="0"
 				Command="{Binding TestCommand}"
-				Content="Test"
-				Style="{StaticResource MaterialDesignFlatButton}" />
+				Content="Test" />
 
 		<TextBlock Grid.Row="1"
 				   HorizontalAlignment="Center"

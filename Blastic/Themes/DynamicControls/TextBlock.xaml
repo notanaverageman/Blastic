@@ -3,13 +3,7 @@
 					xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 					xmlns:converters="clr-namespace:Blastic.Converters"
 					xmlns:help="clr-namespace:Blastic.Controls.Help"
-					xmlns:label="clr-namespace:Blastic.Controls.DynamicControls.Elements.Label"
-					xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-
-	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Material/Common.xaml" />
-		<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.TextBox.xaml" />
-	</ResourceDictionary.MergedDictionaries>
+					xmlns:label="clr-namespace:Blastic.Controls.DynamicControls.Elements.Label">
 
 	<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
@@ -18,14 +12,6 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type label:LabelPresenter}">
 					<Grid controlExtensions:GridExtensions.ColumnDefinitions="Auto,*,Auto">
-						<materialDesign:PackIcon Grid.Column="0"
-												 Width="{Binding IconSize, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}}"
-												 Height="{Binding IconSize, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}}"
-												 Margin="{Binding IconMargin, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}}"
-												 Kind="{Binding IconKind.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}}"
-												 Style="{StaticResource MaterialColoredIconStyle}"
-												 Visibility="{Binding IconKind.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}, Converter={StaticResource NullToVisibilityConverter}}" />
-
 						<TextBlock Name="PropertyControl"
 								   Grid.Column="1"
 								   Margin="0,-14,0,0"

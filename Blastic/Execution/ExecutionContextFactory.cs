@@ -1,5 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Blastic.Services.Dialog;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
@@ -14,22 +13,19 @@ namespace Blastic.Execution
 		private readonly IWindowManager _windowManager;
 		private readonly IEventAggregator _eventAggregator;
 		private readonly INotificationService _notificationService;
-		private readonly ISnackbarMessageQueue _messageQueue;
 
 		public ExecutionContextFactory(
 			ILogger<ExecutionContext> logger,
 			IDialogService dialogService,
 			IWindowManager windowManager,
 			IEventAggregator eventAggregator,
-			INotificationService notificationService,
-			ISnackbarMessageQueue messageQueue)
+			INotificationService notificationService)
 		{
 			_logger = logger;
 			_dialogService = dialogService;
 			_windowManager = windowManager;
 			_eventAggregator = eventAggregator;
 			_notificationService = notificationService;
-			_messageQueue = messageQueue;
 		}
 
 		public ExecutionContext Create()
@@ -39,8 +35,7 @@ namespace Blastic.Execution
 				_dialogService,
 				_windowManager,
 				_eventAggregator,
-				_notificationService,
-				_messageQueue);
+				_notificationService);
 		}
 	}
 }

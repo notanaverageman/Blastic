@@ -11,12 +11,10 @@
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<StackPanel Grid.Row="0">
 			<Button Command="{Binding TestCommand}"
-					Content="{Binding ButtonText.Value}"
-					Style="{StaticResource MaterialDesignFlatButton}" />
+					Content="{Binding ButtonText.Value}" />
 
 			<Button Command="{Binding HelpCommand}"
-					Content="Help"
-					Style="{StaticResource MaterialDesignFlatButton}" />
+					Content="Help" />
 		</StackPanel>
 
 		<TextBox Grid.Row="1"

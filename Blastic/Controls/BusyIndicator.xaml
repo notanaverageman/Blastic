@@ -5,17 +5,14 @@
 			 xmlns:controls="clr-namespace:Blastic.Controls"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
 			 mc:Ignorable="d">
 
-	<simpleChildWindow:ChildWindow CloseByEscape="False"
-								   IsOpen="{Binding ExecutionContext.IsBusy.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
-								   ShowTitleBar="False">
+	<controls:ChildWindow IsOpen="{Binding ExecutionContext.IsBusy.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}">
 
-		<simpleChildWindow:ChildWindow.InputBindings>
+		<controls:ChildWindow.InputBindings>
 			<KeyBinding Key="Escape"
 						Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}" />
-		</simpleChildWindow:ChildWindow.InputBindings>
+		</controls:ChildWindow.InputBindings>
 
 		<Grid Margin="8,16,8,8"
 			  controlExtensions:GridExtensions.RowDefinitions="Auto,*,Auto,Auto">
@@ -40,13 +37,11 @@
 						 VerticalAlignment="Center"
 						 IsIndeterminate="True" />
 
-			<Button Name="CancelButton"
-					Grid.Row="3"
+			<Button Grid.Row="3"
 					HorizontalAlignment="Right"
 					Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
 					Content="Cancel"
-					IsEnabled="{Binding ExecutionContext.IsCancellationSupported.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
-					Style="{StaticResource MaterialDesignFlatButton}" />
+					IsEnabled="{Binding ExecutionContext.IsCancellationSupported.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}" />
 		</Grid>
-	</simpleChildWindow:ChildWindow>
+	</controls:ChildWindow>
 </UserControl>

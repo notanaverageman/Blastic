@@ -1,9 +1,9 @@
-﻿using Autofac;
-using Blastic.Data.Initialization.Steps;
+﻿using Blastic.Data.Initialization.Steps;
 using Blastic.Data.ProgramData;
 using Blastic.Initialization;
-using Blastic.Initialization.Steps;
+using Blastic.Initialization.Extensions;
 using Blastic.Services.Settings;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Data
 {
@@ -14,34 +14,23 @@ namespace Blastic.Data
 			DatabaseProvider databaseProvider,
 			string connectionString)
 		{
-			return application.Configure(builder =>
-			{
-				DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(databaseProvider, connectionString);
+			return application
+				.Configure(x =>
+				{
+					DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(databaseProvider, connectionString);
 
-				builder.RegisterInstance(databaseConfiguration);
-
-				builder
-					.RegisterType<ConnectionFactory>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<ProgramDatabase>()
-					.SingleInstance();
-
-				builder
-					.RegisterType<MigrateProgramDatabaseStep>()
-					.SingleInstance()
-					.As<IInitializationStep>();
-			});
+					x.AddSingleton(y => databaseConfiguration);
+					x.AddSingleton<ConnectionFactory>();
+					x.AddSingleton<ProgramDatabase>();
+				})
+				.AddInitializationStep<MigrateProgramDatabaseStep>();
 		}
 
 		public static BlasticApplication AddSettingsService(this BlasticApplication application)
 		{
-			return application.Configure(builder =>
+			return application.Configure(x =>
 			{
-				builder.RegisterType<SettingsService>()
-					.SingleInstance()
-					.As<ISettingsService>();
+				x.AddSingleton<ISettingsService, SettingsService>();
 			});
 		}
 	}
