@@ -56,6 +56,8 @@ namespace Blastic.Reactive
 		{
 			void AddRange()
 			{
+				List<T> addedItems = new List<T>();
+
 				int index = Count;
 
 				bool previousNotificationSetting = _isNotifying;
@@ -65,13 +67,15 @@ namespace Blastic.Reactive
 				{
 					InsertItemBase(index, item);
 					index++;
+
+					addedItems.Add(item);
 				}
 
 				_isNotifying = previousNotificationSetting;
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addedItems));
 			}
 
 			OnUIThread(AddRange);
@@ -81,6 +85,8 @@ namespace Blastic.Reactive
 		{
 			void RemoveRange()
 			{
+				List<T> removedItems = new List<T>();
+
 				bool previousNotificationSetting = _isNotifying;
 				_isNotifying = false;
 
@@ -89,6 +95,7 @@ namespace Blastic.Reactive
 					int index = IndexOf(item);
 					if (index >= 0)
 					{
+						removedItems.Add(this[index]);
 						RemoveItemBase(index);
 					}
 				}
@@ -97,7 +104,7 @@ namespace Blastic.Reactive
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems));
 			}
 
 			OnUIThread(RemoveRange);
