@@ -13,6 +13,7 @@ namespace Blastic.UserInterface.Settings
 			:
 			base(settingsService, presenterSource, $"Blastic.Settings.IsExpanded.{sectionName}", false)
 		{
+			ShowOnUI.Value = false;
 		}
 	}
 }

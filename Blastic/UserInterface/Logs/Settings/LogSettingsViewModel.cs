@@ -17,8 +17,6 @@ namespace Blastic.UserInterface.Logs.Settings
 			base(settingsService, presenterSource)
 		{
 			OpenWindowOnErrorSetting = new OpenWindowOnErrorSetting(settingsService, presenterSource);
-
-			RegisterForUI(OpenWindowOnErrorSetting);
 		}
 	}
 }

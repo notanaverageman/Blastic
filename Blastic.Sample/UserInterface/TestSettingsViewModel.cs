@@ -19,7 +19,6 @@ namespace Blastic.Sample.UserInterface
 			base(settingsService, presenterSource)
 		{
 			FolderSetting = new FolderSetting(settingsService, presenterSource, dialogService);
-			RegisterForUI(FolderSetting);
 		}
 	}
 }

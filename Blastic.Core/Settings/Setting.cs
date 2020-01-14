@@ -18,6 +18,8 @@ namespace Blastic.Settings
 
 		protected ISettingsService SettingsService { get; }
 
+		public IReactiveProperty<bool> ShowOnUI { get; }
+
 		/// <summary>
 		/// Lifetime object that initates the read and save operations.
 		/// </summary>
@@ -46,12 +48,13 @@ namespace Blastic.Settings
 			string key)
 		{
 			_presenterSource = presenterSource;
+
 			SettingsService = settingsService;
+			Key = key;
 
 			Lifetime = new Lifetime();
-
-			Key = key;
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
+			ShowOnUI = new ReactiveProperty<bool>(true);
 
 			Lifetime.Initialize.Subscribe(x => Read(x.Parameter.CancellationToken));
 

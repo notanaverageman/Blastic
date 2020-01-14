@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +45,21 @@ namespace Blastic.UserInterface.Settings
 					x => x.Name,
 					x => (Setting)x.GetValue(this));
 
+			foreach (Setting setting in _settings.Values)
+			{
+				setting.ShowOnUI.Subscribe(x =>
+				{
+					if (x)
+					{
+						Items.Add(setting);
+					}
+					else
+					{
+						Items.Remove(setting);
+					}
+				});
+			}
+
 			return Task.CompletedTask;
 		}
 
@@ -65,47 +81,6 @@ namespace Blastic.UserInterface.Settings
 			}
 
 			return Task.FromResult((IEnumerable<DiagnosticMessage>)diagnosticMessages);
-		}
-
-		protected void RegisterForUI<T>(Setting<T> setting)
-		{
-			Items.Add(setting);
-		}
-
-		protected void RegisterForUI<T1, T2>(Setting<T1> setting1, Setting<T2> setting2)
-		{
-			RegisterForUI(setting1);
-			RegisterForUI(setting2);
-		}
-
-		protected void RegisterForUI<T1, T2, T3>(
-			Setting<T1> setting1,
-			Setting<T2> setting2,
-			Setting<T3> setting3)
-		{
-			RegisterForUI(setting1, setting2);
-			RegisterForUI(setting3);
-		}
-
-		protected void RegisterForUI<T1, T2, T3, T4>(
-			Setting<T1> setting1,
-			Setting<T2> setting2,
-			Setting<T3> setting3,
-			Setting<T4> setting4)
-		{
-			RegisterForUI(setting1, setting2, setting3);
-			RegisterForUI(setting4);
-		}
-
-		protected void RegisterForUI<T1, T2, T3, T4, T5>(
-			Setting<T1> setting1,
-			Setting<T2> setting2,
-			Setting<T3> setting3,
-			Setting<T4> setting4,
-			Setting<T5> setting5)
-		{
-			RegisterForUI(setting1, setting2, setting3, setting4);
-			RegisterForUI(setting5);
 		}
 	}
 }
