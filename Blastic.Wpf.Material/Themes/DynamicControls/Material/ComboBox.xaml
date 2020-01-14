@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions;assembly=Blastic.Wpf"
+					xmlns:converters="clr-namespace:Blastic.Wpf.Converters;assembly=Blastic.Wpf"
+					xmlns:help="clr-namespace:Blastic.Wpf.Controls.Help;assembly=Blastic.Wpf"
+					xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+					xmlns:presenters="clr-namespace:Blastic.Wpf.DynamicControls.Presenters;assembly=Blastic.Wpf">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/DynamicControls/Material/Common.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.ComboBox.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+
+	<Style TargetType="{x:Type presenters:SelectionPresenter}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type presenters:SelectionPresenter}">
+					<Grid controlExtensions:GridExtensions.ColumnDefinitions="Auto,*,Auto">
+						<materialDesign:PackIcon Grid.Column="0"
+												 Width="{Binding IconSize, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+												 Height="{Binding IconSize, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+												 Margin="{Binding IconMargin, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+												 Kind="{Binding Icon.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+												 Style="{StaticResource MaterialColoredIconStyle}"
+												 Visibility="{Binding Icon.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}, Converter={StaticResource NullToVisibilityConverter}}" />
+
+						<ComboBox Name="PropertyControl"
+								  Grid.Column="1"
+								  VerticalAlignment="Center"
+								  materialDesign:HintAssist.Hint="{Binding Label.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+								  IsEnabled="{Binding IsEnabledReactive.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+								  ItemsSource="{Binding Values, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+								  SelectedItem="{Binding Property.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+								  Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+						<help:HelpView Grid.Column="2"
+									   HelpContent="{Binding Help.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}}"
+									   Visibility="{Binding Help.Value, RelativeSource={RelativeSource AncestorType=presenters:SelectionPresenter}, Converter={StaticResource NullToVisibilityConverter}}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

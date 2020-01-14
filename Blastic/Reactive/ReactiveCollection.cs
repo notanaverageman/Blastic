@@ -73,6 +73,11 @@ namespace Blastic.Reactive
 
 				_isNotifying = previousNotificationSetting;
 
+				if (!addedItems.Any())
+				{
+					return;
+				}
+
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
 				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addedItems));
@@ -101,6 +106,11 @@ namespace Blastic.Reactive
 				}
 
 				_isNotifying = previousNotificationSetting;
+
+				if (!removedItems.Any())
+				{
+					return;
+				}
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));

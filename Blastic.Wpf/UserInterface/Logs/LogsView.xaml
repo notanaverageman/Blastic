@@ -4,14 +4,11 @@
 		xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:logs="clr-namespace:Blastic.Wpf.UserInterface.Logs"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		Title="{Binding Title.Value}"
 		mc:Ignorable="d"
-		Width="1400"
-		Height="800"
-		d:DataContext="{d:DesignInstance logs:LogsViewModel}"
-		Style="{StaticResource WindowStyle}">
+		d:DataContext="{d:DesignInstance logs:LogsViewModel}">
 
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<Grid Grid.Row="0">

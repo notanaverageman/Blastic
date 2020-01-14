@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:local="clr-namespace:Blastic.Wpf.DynamicControls;assembly=Blastic.Wpf">
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.TextBox.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<Style TargetType="{x:Type local:DynamicControl}">
+		<Setter Property="Padding" Value="16" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:DynamicControl}">
+					<Grid Name="PART_RootGrid"
+						  Margin="{TemplateBinding Padding}">
+
+						<Grid.Resources>
+							<Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
+								   TargetType="TextBox" />
+						</Grid.Resources>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

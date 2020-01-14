@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Blastic.Wpf.Material\Blastic.Wpf.Material.csproj" />
     <ProjectReference Include="..\Blastic.Wpf\Blastic.Wpf.csproj" />
   </ItemGroup>
   <ItemGroup>

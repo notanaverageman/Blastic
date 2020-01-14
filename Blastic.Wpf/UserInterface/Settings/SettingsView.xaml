@@ -10,10 +10,7 @@
 		xmlns:viewManagement="clr-namespace:Blastic.Wpf.ViewManagement"
 		Title="Settings"
 		mc:Ignorable="d"
-		Width="1000"
-		Height="600"
-		d:DataContext="{d:DesignInstance settings:SettingsViewModel}"
-		Style="{StaticResource WindowStyle}">
+		d:DataContext="{d:DesignInstance settings:SettingsViewModel}">
 
 	<Window.InputBindings>
 		<KeyBinding Key="Escape"
