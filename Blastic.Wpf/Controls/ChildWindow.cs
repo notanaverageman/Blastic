@@ -1,20 +1,13 @@
 ﻿using System.Windows;
-using System.Windows.Markup;
+using System.Windows.Controls;
 
 namespace Blastic.Wpf.Controls
 {
-	[ContentProperty(nameof(ChildContent))]
-	public partial class ChildWindow
+	public class ChildWindow : ContentControl
 	{
-		public static readonly DependencyProperty ChildContentProperty = DependencyProperty.Register(
-			nameof(ChildContent).Replace("Property", ""),
-			typeof(object),
-			typeof(ChildWindow),
-			new PropertyMetadata(default));
-		public object ChildContent
+		static ChildWindow()
 		{
-			get => GetValue(ChildContentProperty);
-			set => SetValue(ChildContentProperty, value);
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(ChildWindow), new FrameworkPropertyMetadata(typeof(ChildWindow)));
 		}
 
 		public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
@@ -26,11 +19,6 @@ namespace Blastic.Wpf.Controls
 		{
 			get => (bool)GetValue(IsOpenProperty);
 			set => SetValue(IsOpenProperty, value);
-		}
-
-		public ChildWindow()
-		{
-			InitializeComponent();
 		}
 
 		private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

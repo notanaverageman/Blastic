@@ -1,11 +1,17 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Blastic.Commanding;
 using Blastic.Execution;
 
 namespace Blastic.Wpf.Controls
 {
-	public partial class BusyIndicator
+	public class BusyIndicator : Control
 	{
+		static BusyIndicator()
+		{
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(BusyIndicator), new FrameworkPropertyMetadata(typeof(BusyIndicator)));
+		}
+
 		public static readonly DependencyProperty ExecutionContextProperty = DependencyProperty.Register(
 			nameof(ExecutionContextProperty).Replace("Property", ""),
 			typeof(ExecutionContext),
@@ -21,8 +27,6 @@ namespace Blastic.Wpf.Controls
 
 		public BusyIndicator()
 		{
-			InitializeComponent();
-
 			Cancel = new Command().WithSubscribe(x =>
 			{
 				ExecutionContext?.CancellationTokenSource?.Cancel();

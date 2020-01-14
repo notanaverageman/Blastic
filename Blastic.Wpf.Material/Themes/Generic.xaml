@@ -1,8 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/HelpView.xaml" />
-		<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/DynamicControl.xaml" />
-		<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/DiagnosticMessage.xaml" />
-		<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/DynamicControls/DynamicControls.xaml" />
-	</ResourceDictionary.MergedDictionaries>
-</ResourceDictionary>

@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions"
+					xmlns:controls="clr-namespace:Blastic.Wpf.Controls"
 					xmlns:converters="clr-namespace:Blastic.Wpf.Converters"
-					xmlns:label="clr-namespace:Blastic.Wpf.DynamicControls.Presenters"
-					xmlns:help="clr-namespace:Blastic.Wpf.Controls.Help">
+					xmlns:label="clr-namespace:Blastic.Wpf.DynamicControls.Presenters">
 
 	<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
@@ -18,9 +18,9 @@
 								   VerticalAlignment="Center"
 								   Text="{Binding Property.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}, UpdateSourceTrigger=PropertyChanged}" />
 
-						<help:HelpView Grid.Column="2"
-									   HelpContent="{Binding Help.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}}"
-									   Visibility="{Binding Help.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}, Converter={StaticResource NullToVisibilityConverter}}" />
+						<controls:HelpView Grid.Column="2"
+										   HelpContent="{Binding Help.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}}"
+										   Visibility="{Binding Help.Value, RelativeSource={RelativeSource AncestorType=label:LabelPresenter}, Converter={StaticResource NullToVisibilityConverter}}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

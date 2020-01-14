@@ -1,11 +1,17 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Blastic.Services.Notifications;
 
-namespace Blastic.Wpf.Controls.Notifications
+namespace Blastic.Wpf.Controls
 {
-	public partial class NotificationView
+	public class NotificationView : Control
 	{
+		static NotificationView()
+		{
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(NotificationView), new FrameworkPropertyMetadata(typeof(NotificationView)));
+		}
+
 		public static readonly DependencyProperty NotificationProperty = DependencyProperty.Register(
 			nameof(NotificationProperty).Replace("Property", ""),
 			typeof(Notification),
@@ -19,11 +25,6 @@ namespace Blastic.Wpf.Controls.Notifications
 
 		private bool _hasMouseFocus;
 		private bool _hasKeyboardFocus;
-
-		public NotificationView()
-		{
-			InitializeComponent();
-		}
 
 		protected override void OnMouseEnter(MouseEventArgs e)
 		{

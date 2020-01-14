@@ -1,9 +1,15 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Blastic.Wpf.Controls
 {
-	public partial class DualView
+	public class DualView : Control
 	{
+		static DualView()
+		{
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(DualView), new FrameworkPropertyMetadata(typeof(DualView)));
+		}
+
 		public static readonly DependencyProperty ShowFirstViewProperty = DependencyProperty.Register(
 			nameof(ShowFirstViewProperty).Replace("Property", ""),
 			typeof(bool),
@@ -14,7 +20,6 @@ namespace Blastic.Wpf.Controls
 			get => (bool)GetValue(ShowFirstViewProperty);
 			set => SetValue(ShowFirstViewProperty, value);
 		}
-
 
 		public static readonly DependencyProperty FirstViewProperty = DependencyProperty.Register(
 			nameof(FirstViewProperty).Replace("Property", ""),
@@ -36,11 +41,6 @@ namespace Blastic.Wpf.Controls
 		{
 			get => (UIElement)GetValue(SecondViewProperty);
 			set => SetValue(SecondViewProperty, value);
-		}
-
-		public DualView()
-		{
-			InitializeComponent();
 		}
 	}
 }

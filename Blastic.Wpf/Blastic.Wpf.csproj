@@ -20,4 +20,23 @@
     <ProjectReference Include="..\Blastic\Blastic.csproj" />
     <ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Controls\ChildWindow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Themes\NotificationAreaView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\BusyIndicator.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ChildWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\DualView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 </Project>

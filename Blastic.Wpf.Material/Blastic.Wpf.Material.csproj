@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Blastic.Wpf\Blastic.Wpf.csproj" />
     <ProjectReference Include="..\Blastic\Blastic.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Update="Themes\NotificationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 </Project>

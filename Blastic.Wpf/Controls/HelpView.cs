@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Blastic.Wpf.Controls.Help
+namespace Blastic.Wpf.Controls
 {
 	public class HelpView : ContentControl
 	{

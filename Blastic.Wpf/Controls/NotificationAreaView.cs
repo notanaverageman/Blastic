@@ -1,10 +1,16 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Blastic.Services.Notifications;
 
-namespace Blastic.Wpf.Controls.Notifications
+namespace Blastic.Wpf.Controls
 {
-	public partial class NotificationAreaView
+	public class NotificationAreaView : Control
 	{
+		static NotificationAreaView()
+		{
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(NotificationAreaView), new FrameworkPropertyMetadata(typeof(NotificationAreaView)));
+		}
+
 		public static readonly DependencyProperty NotificationServiceProperty = DependencyProperty.Register(
 			nameof(NotificationServiceProperty).Replace("Property", ""),
 			typeof(INotificationService),
@@ -14,11 +20,6 @@ namespace Blastic.Wpf.Controls.Notifications
 		{
 			get => (INotificationService)GetValue(NotificationServiceProperty);
 			set => SetValue(NotificationServiceProperty, value);
-		}
-
-		public NotificationAreaView()
-		{
-			InitializeComponent();
 		}
 	}
 }
