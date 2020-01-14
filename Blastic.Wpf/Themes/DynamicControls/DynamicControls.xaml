@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Button.xaml" />
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/CheckBox.xaml" />
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/ComboBox.xaml" />
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/Group.xaml" />
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/PasswordBox.xaml" />
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/TextBlock.xaml" />
-		<ResourceDictionary Source="/Blastic;component/Themes/DynamicControls/TextBox.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/Button.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/CheckBox.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/ComboBox.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/Group.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/PasswordBox.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/TextBlock.xaml" />
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DynamicControls/TextBox.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

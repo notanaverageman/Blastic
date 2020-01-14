@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Blastic.Sample.Properties {
+namespace Blastic.Wpf.Sample.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Blastic.Sample.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Blastic.Sample.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Blastic.Wpf.Sample.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,33 @@ namespace Blastic.Sample.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Logs.
+        /// </summary>
+        internal static string Blastic_Logs_Window_Title {
+            get {
+                return ResourceManager.GetString("Blastic.Logs.Window.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homepage.
+        /// </summary>
+        internal static string Blastic_Sample_Homepage {
+            get {
+                return ResourceManager.GetString("Blastic.Sample.Homepage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        internal static string Blastic_Sample_Test {
+            get {
+                return ResourceManager.GetString("Blastic.Sample.Test", resourceCulture);
             }
         }
     }

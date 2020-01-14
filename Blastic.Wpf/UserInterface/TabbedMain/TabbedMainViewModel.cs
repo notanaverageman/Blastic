@@ -7,6 +7,7 @@ using Blastic.Initialization;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
 using Blastic.Services.Messaging;
+using Blastic.Services.Notifications;
 using Blastic.Wpf.UserInterface.Events;
 using Blastic.Wpf.UserInterface.Logs;
 using Blastic.Wpf.UserInterface.Settings;
@@ -17,6 +18,8 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 	{
 		private readonly List<IInitializationStep> _initializationSteps;
 		private bool _isInitializationStepsRun;
+
+		public INotificationService NotificationService { get; }
 
 		public ProductInformation ProductInformation { get; }
 		public LogsViewModel LogsViewModel { get; }
@@ -29,12 +32,14 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 
 		public TabbedMainViewModel(
 			IEventAggregator eventAggregator,
+			INotificationService notificationService,
 			IEnumerable<IMainTab> mainTabs,
 			IEnumerable<IInitializationStep> initializationSteps,
 			ProductInformation productInformation = null,
 			LogsViewModel logsViewModel = null,
 			SettingsViewModel settingsViewModel = null)
 		{
+			NotificationService = notificationService;
 			ProductInformation = productInformation;
 			LogsViewModel = logsViewModel;
 			SettingsViewModel = settingsViewModel;

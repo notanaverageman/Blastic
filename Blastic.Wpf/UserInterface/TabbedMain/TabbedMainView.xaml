@@ -2,18 +2,17 @@
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:execution="clr-namespace:Blastic.Execution"
+		xmlns:execution="clr-namespace:Blastic.Wpf.Execution"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:viewManagement="clr-namespace:Blastic.ViewManagement"
+		xmlns:viewManagement="clr-namespace:Blastic.Wpf.ViewManagement"
 		xmlns:converters="clr-namespace:Blastic.Wpf.Converters"
-		xmlns:viewManagement1="clr-namespace:Blastic.Wpf.ViewManagement"
-		xmlns:execution1="clr-namespace:Blastic.Wpf.Execution"
 		xmlns:notifications="clr-namespace:Blastic.Wpf.Controls.Notifications"
+		xmlns:tabbedMain="clr-namespace:Blastic.Wpf.UserInterface.TabbedMain"
 		Title="{Binding ProductInformation.ProgramName.Value}"
 		mc:Ignorable="d"
 		Width="1000"
 		Height="600"
-		d:DataContext="{d:DesignInstance main:TabbedMainViewModel}"
+		d:DataContext="{d:DesignInstance tabbedMain:TabbedMainViewModel}"
 		Style="{StaticResource WindowStyle}"
 		WindowStartupLocation="CenterScreen">
 
@@ -35,7 +34,7 @@
 				<DataTemplate>
 					<ContentControl HorizontalContentAlignment="Stretch"
 									VerticalContentAlignment="Stretch"
-									viewManagement1:View.Model="{Binding}"
+									viewManagement:View.Model="{Binding}"
 									IsTabStop="False" />
 				</DataTemplate>
 			</TabControl.ContentTemplate>
@@ -58,9 +57,9 @@
 			</StackPanel>
 		</Grid>
 
-		<execution1:ExecutionContextView ExecutionContext="{Binding ExecutionContext}" />
+		<execution:ExecutionContextView ExecutionContext="{Binding ExecutionContext}" />
 		<notifications:NotificationAreaView HorizontalAlignment="Right"
 											VerticalAlignment="Bottom"
-											NotificationService="{Binding ExecutionContext.NotificationService}" />
+											NotificationService="{Binding NotificationService}" />
 	</Grid>
 </Window>

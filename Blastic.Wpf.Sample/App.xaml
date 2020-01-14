@@ -4,7 +4,7 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/Blastic;component/Themes/ApplicationResources.xaml" />
+				<ResourceDictionary Source="/Blastic.Wpf;component/Themes/ApplicationResources.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

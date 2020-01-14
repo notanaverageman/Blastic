@@ -1,15 +1,14 @@
 ﻿<UserControl x:Class="Blastic.Wpf.Sample.UserInterface.MainTabView"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions;assembly=Blastic.Wpf"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions;assembly=Blastic.Wpf"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:execution="clr-namespace:Blastic.Execution;assembly=Blastic.Wpf"
+			 xmlns:execution="clr-namespace:Blastic.Wpf.Execution;assembly=Blastic.Wpf"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:controlExtensions1="clr-namespace:Blastic.Wpf.ControlExtensions;assembly=Blastic.Wpf"
-			 xmlns:execution1="clr-namespace:Blastic.Wpf.Execution;assembly=Blastic.Wpf"
+			 xmlns:userInterface="clr-namespace:Blastic.Wpf.Sample.UserInterface"
 			 mc:Ignorable="d"
-			 d:DataContext="{d:DesignInstance local:HomeViewModel}">
-	<Grid controlExtensions1:GridExtensions.RowDefinitions="Auto,*">
+			 d:DataContext="{d:DesignInstance userInterface:HomeViewModel}">
+	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<Button Grid.Row="0"
 				Command="{Binding TestCommand}"
 				Content="Test" />
@@ -19,7 +18,7 @@
 				   VerticalAlignment="Center"
 				   Text="{Binding Text.Value}" />
 
-		<execution1:ExecutionContextView Grid.Row="0"
+		<execution:ExecutionContextView Grid.Row="0"
 										Grid.RowSpan="2"
 										ExecutionContext="{Binding ExecutionContext}" />
 	</Grid>

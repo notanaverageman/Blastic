@@ -1,10 +1,10 @@
 ﻿<UserControl x:Class="Blastic.Wpf.Controls.ChildWindow"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:controlExtensions1="clr-namespace:Blastic.Wpf.ControlExtensions"
+			 xmlns:controls="clr-namespace:Blastic.Wpf.Controls"
 			 mc:Ignorable="d">
 
 	<UserControl.Resources>
@@ -20,7 +20,7 @@
 
 		<Grid HorizontalAlignment="Center"
 		      VerticalAlignment="Center"
-		      controlExtensions1:GridExtensions.RowDefinitions="*,Auto">
+		      controlExtensions:GridExtensions.RowDefinitions="*,Auto">
 
 			<ScrollViewer HorizontalScrollBarVisibility="Disabled"
 			              IsTabStop="False"

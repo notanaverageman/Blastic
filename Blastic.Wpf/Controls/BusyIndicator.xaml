@@ -1,11 +1,10 @@
 ﻿<UserControl x:Class="Blastic.Wpf.Controls.BusyIndicator"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:controls="clr-namespace:Blastic.Wpf.Controls"
-			 xmlns:controlExtensions1="clr-namespace:Blastic.Wpf.ControlExtensions"
 			 mc:Ignorable="d">
 
 	<controls:ChildWindow IsOpen="{Binding ExecutionContext.IsBusy.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}">
@@ -16,7 +15,7 @@
 		</controls:ChildWindow.InputBindings>
 
 		<Grid Margin="8,16,8,8"
-			  controlExtensions1:GridExtensions.RowDefinitions="Auto,*,Auto,Auto">
+			  controlExtensions:GridExtensions.RowDefinitions="Auto,*,Auto,Auto">
 
 			<TextBlock Grid.Row="0"
 					   MinWidth="400"
@@ -28,7 +27,7 @@
 			<ScrollViewer Grid.Row="1"
 						  MaxHeight="400"
 						  Margin="8,8,0,0"
-						  controlExtensions1:ScrollViewerExtensions.AutoScroll="True"
+						  controlExtensions:ScrollViewerExtensions.AutoScroll="True"
 						  VerticalScrollBarVisibility="Auto">
 				<ItemsControl ItemsSource="{Binding ExecutionContext.ProgressDetails, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}" />
 			</ScrollViewer>

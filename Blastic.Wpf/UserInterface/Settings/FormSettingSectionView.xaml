@@ -3,7 +3,8 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:settings="clr-namespace:Blastic.Settings"
+			 xmlns:settings="clr-namespace:Blastic.Settings;assembly=Blastic"
+			 xmlns:local="clr-namespace:Blastic.Wpf.UserInterface.Settings"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance local:SettingsSectionViewModel}">
 

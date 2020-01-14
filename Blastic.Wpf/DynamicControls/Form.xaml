@@ -2,10 +2,9 @@
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:dynamicControls="clr-namespace:Blastic.DynamicControls"
+			 xmlns:dynamicControls="clr-namespace:Blastic.Wpf.DynamicControls"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:controls="clr-namespace:Blastic.Wpf.Controls"
-			 xmlns:dynamicControls1="clr-namespace:Blastic.Wpf.DynamicControls"
 			 mc:Ignorable="d">
 	<Grid>
 		<controls:ChildWindow IsOpen="{Binding ExecutionContext.IsShowingForm.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}">
@@ -15,7 +14,7 @@
 							Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
 			</controls:ChildWindow.InputBindings>
 
-			<dynamicControls1:DynamicControl Model="{Binding ExecutionContext.Form.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
+			<dynamicControls:DynamicControl Model="{Binding ExecutionContext.Form.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
 		</controls:ChildWindow>
 	</Grid>
 </UserControl>

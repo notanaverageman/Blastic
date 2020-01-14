@@ -1,7 +1,7 @@
 ﻿using System;
 using Blastic.Data;
 using Blastic.Initialization;
-using Blastic.Sample.Properties;
+using Blastic.Wpf.Sample.Properties;
 using Blastic.Wpf.Data;
 using Blastic.Wpf.Initialization;
 using Blastic.Wpf.Initialization.Extensions;
