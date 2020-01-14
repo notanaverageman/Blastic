@@ -4,7 +4,7 @@
 	<TargetFramework>netcoreapp3.1</TargetFramework>
 	<OutputType>WinExe</OutputType>
 	<UseWPF>true</UseWPF>
-	<StartupObject>Blastic.Sample.Program</StartupObject>
+	<StartupObject>Blastic.Wpf.Sample.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="InputSimulatorStandard" Version="1.0.0" />

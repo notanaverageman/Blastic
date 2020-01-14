@@ -1,9 +1,9 @@
 ﻿using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
-using Blastic.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.Settings;
 
-namespace Blastic.Sample.UserInterface
+namespace Blastic.Wpf.Sample.UserInterface
 {
 	public class TestSettingsViewModel : SettingsSectionViewModel
 	{

@@ -2,7 +2,7 @@
 using Blastic.Ordering;
 using Blastic.Reactive;
 
-namespace Blastic.UserInterface.TabbedMain
+namespace Blastic.Wpf.UserInterface.TabbedMain
 {
 	public interface IMainTab : IHasLifetime
 	{

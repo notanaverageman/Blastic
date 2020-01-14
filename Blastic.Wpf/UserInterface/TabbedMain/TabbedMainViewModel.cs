@@ -7,11 +7,11 @@ using Blastic.Initialization;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
 using Blastic.Services.Messaging;
-using Blastic.UserInterface.Events;
-using Blastic.UserInterface.Logs;
-using Blastic.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.Events;
+using Blastic.Wpf.UserInterface.Logs;
+using Blastic.Wpf.UserInterface.Settings;
 
-namespace Blastic.UserInterface.TabbedMain
+namespace Blastic.Wpf.UserInterface.TabbedMain
 {
 	public sealed class TabbedMainViewModel : ConductorOneActive<IMainTab>
 	{

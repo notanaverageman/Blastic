@@ -8,14 +8,18 @@ using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
 using Blastic.Services.Windowing;
-using Blastic.UserInterface.Logs;
-using Blastic.UserInterface.Logs.Settings;
-using Blastic.UserInterface.Settings;
-using Blastic.UserInterface.TabbedMain;
+using Blastic.Wpf.DynamicControls;
+using Blastic.Wpf.Initialization.Steps;
+using Blastic.Wpf.Services.Dialog;
+using Blastic.Wpf.Services.Windowing;
+using Blastic.Wpf.UserInterface.Logs;
+using Blastic.Wpf.UserInterface.Logs.Settings;
+using Blastic.Wpf.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.TabbedMain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.Initialization.Extensions
+namespace Blastic.Wpf.Initialization.Extensions
 {
 	public static class ApplicationExtensions
 	{

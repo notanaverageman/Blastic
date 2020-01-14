@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Blastic.ViewManagement;
 
-namespace Blastic.Commanding
+namespace Blastic.Wpf.Commanding
 {
 	public static class CommandExtensions
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace Blastic.DynamicControls.Presenters
+namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class ActionPresenter : Presenter
 	{

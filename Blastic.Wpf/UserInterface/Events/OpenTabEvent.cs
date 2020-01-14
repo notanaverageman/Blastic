@@ -1,6 +1,6 @@
-﻿using Blastic.UserInterface.TabbedMain;
+﻿using Blastic.Wpf.UserInterface.TabbedMain;
 
-namespace Blastic.UserInterface.Events
+namespace Blastic.Wpf.UserInterface.Events
 {
 	public class OpenTabEvent
 	{

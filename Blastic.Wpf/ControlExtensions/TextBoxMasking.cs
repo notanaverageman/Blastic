@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Blastic.ControlExtensions
+namespace Blastic.Wpf.ControlExtensions
 {
     public static class TextBoxMasking
     {

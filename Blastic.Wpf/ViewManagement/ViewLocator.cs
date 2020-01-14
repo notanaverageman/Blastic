@@ -2,8 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
+using Blastic.ViewManagement;
 
-namespace Blastic.ViewManagement
+namespace Blastic.Wpf.ViewManagement
 {
 	public class ViewLocator : ViewLocatorBase<FrameworkElement>
 	{

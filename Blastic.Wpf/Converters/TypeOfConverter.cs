@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace Blastic.Converters
+namespace Blastic.Wpf.Converters
 {
 	public class TypeOfConverter : IValueConverter
 	{

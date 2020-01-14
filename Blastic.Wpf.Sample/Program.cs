@@ -1,14 +1,16 @@
 ﻿using System;
 using Blastic.Data;
 using Blastic.Initialization;
-using Blastic.Initialization.Extensions;
 using Blastic.Sample.Properties;
-using Blastic.Sample.UserInterface;
-using Blastic.UserInterface.TabbedMain;
+using Blastic.Wpf.Data;
+using Blastic.Wpf.Initialization;
+using Blastic.Wpf.Initialization.Extensions;
+using Blastic.Wpf.Sample.UserInterface;
+using Blastic.Wpf.UserInterface.TabbedMain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blastic.Sample
+namespace Blastic.Wpf.Sample
 {
 	public class Program
 	{

@@ -1,4 +1,4 @@
-﻿namespace Blastic.UserInterface.Settings
+﻿namespace Blastic.Wpf.UserInterface.Settings
 {
 	public partial class FormSettingSectionView
 	{

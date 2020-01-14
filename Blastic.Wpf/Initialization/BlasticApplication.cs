@@ -5,17 +5,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Blastic.Initialization.Extensions;
 using Blastic.Platform;
 using Blastic.Services.Windowing;
-using Blastic.UserInterface.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
+using Blastic.Wpf.Initialization.Extensions;
+using Blastic.Wpf.Platform;
+using Blastic.Wpf.UserInterface.Settings;
+using Blastic.Wpf.ViewManagement;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.Initialization
+namespace Blastic.Wpf.Initialization
 {
 	public class BlasticApplication
 	{

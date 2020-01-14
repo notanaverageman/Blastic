@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Blastic.Controls
+namespace Blastic.Wpf.Controls
 {
 	public partial class DualView
 	{

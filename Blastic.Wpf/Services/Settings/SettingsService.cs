@@ -1,9 +1,10 @@
 ﻿using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Data.ProgramData;
+using Blastic.Services.Settings;
+using Blastic.Wpf.Data.ProgramData;
 
-namespace Blastic.Services.Settings
+namespace Blastic.Wpf.Services.Settings
 {
 	public class SettingsService : ISettingsService
 	{

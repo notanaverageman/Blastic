@@ -1,8 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Data;
 using Blastic.Data.Tables;
 
-namespace Blastic.Data.ProgramData.Tables
+namespace Blastic.Wpf.Data.ProgramData.Tables
 {
 	public class SettingsTable : TableBase
 	{

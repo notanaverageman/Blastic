@@ -2,7 +2,7 @@
 using Blastic.Reactive;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.UserInterface.Logs
+namespace Blastic.Wpf.UserInterface.Logs
 {
 	internal class UILogger : ILogger
 	{

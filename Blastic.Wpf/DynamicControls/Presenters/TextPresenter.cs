@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Blastic.Reactive;
 
-namespace Blastic.DynamicControls.Presenters
+namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class TextPresenter : Presenter
 	{

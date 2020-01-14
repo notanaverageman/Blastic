@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Blastic.ControlExtensions
+namespace Blastic.Wpf.ControlExtensions
 {
 	public static class FocusExtensions
 	{

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
+using Blastic.Execution;
 
-namespace Blastic.Execution
+namespace Blastic.Wpf.Execution
 {
 	public partial class ExecutionContextView
 	{

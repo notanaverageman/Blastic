@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.UserInterface.Logs
+namespace Blastic.Wpf.UserInterface.Logs
 {
 	public class Log
 	{

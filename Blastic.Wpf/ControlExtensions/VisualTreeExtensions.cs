@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Blastic.Reactive;
 
-namespace Blastic.ControlExtensions
+namespace Blastic.Wpf.ControlExtensions
 {
 	public static class VisualTreeExtensions
 	{

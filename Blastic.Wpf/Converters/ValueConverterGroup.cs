@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Blastic.Converters
+namespace Blastic.Wpf.Converters
 {
 	public class ValueConverterGroup : List<IValueConverter>, IValueConverter
 	{

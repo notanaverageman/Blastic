@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Blastic.ControlExtensions
+namespace Blastic.Wpf.ControlExtensions
 {
 	public static class TextBoxExtensions
 	{

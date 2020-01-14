@@ -1,10 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
-using Blastic.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.Settings;
 
-namespace Blastic.Initialization.Steps
+namespace Blastic.Wpf.Initialization.Steps
 {
 	public class ReadSettingsStep : IInitializationStep
 	{

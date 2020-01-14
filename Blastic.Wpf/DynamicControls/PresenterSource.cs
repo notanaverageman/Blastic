@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
+using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
-using Blastic.DynamicControls.Presenters;
+using Blastic.Wpf.DynamicControls.Presenters;
 
-namespace Blastic.DynamicControls
+namespace Blastic.Wpf.DynamicControls
 {
 	public class PresenterSource : IPresenterSource
 	{

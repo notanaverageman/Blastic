@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Windows;
 
-namespace Blastic.DynamicControls.Presenters
+namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class SelectionPresenter : Presenter
 	{

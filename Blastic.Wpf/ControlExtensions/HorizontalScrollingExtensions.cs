@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Blastic.ControlExtensions
+namespace Blastic.Wpf.ControlExtensions
 {
     public class HorizontalScrollingExtensions
     {

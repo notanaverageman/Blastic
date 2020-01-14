@@ -1,8 +1,9 @@
+using Blastic.Data;
+using Blastic.Wpf.Data.ProgramData.Migrations;
+using Blastic.Wpf.Data.ProgramData.Tables;
 using Microsoft.Extensions.Logging;
-using Blastic.Data.ProgramData.Migrations;
-using Blastic.Data.ProgramData.Tables;
 
-namespace Blastic.Data.ProgramData
+namespace Blastic.Wpf.Data.ProgramData
 {
 	public class ProgramDatabase : DatabaseBase<ProgramDatabaseMigrationBase>
 	{

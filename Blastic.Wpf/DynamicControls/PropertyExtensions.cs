@@ -1,7 +1,7 @@
 ﻿using System;
 using Blastic.DynamicControls.Properties;
 
-namespace Blastic.DynamicControls
+namespace Blastic.Wpf.DynamicControls
 {
 	public static class PropertyExtensions
 	{

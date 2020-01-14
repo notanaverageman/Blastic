@@ -1,8 +1,8 @@
 ﻿using Blastic.DynamicControls;
 using Blastic.Services.Settings;
-using Blastic.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.Settings;
 
-namespace Blastic.UserInterface.Logs.Settings
+namespace Blastic.Wpf.UserInterface.Logs.Settings
 {
 	public class LogSettingsViewModel : SettingsSectionViewModel
 	{

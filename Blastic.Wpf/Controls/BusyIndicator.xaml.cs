@@ -2,7 +2,7 @@
 using Blastic.Commanding;
 using Blastic.Execution;
 
-namespace Blastic.Controls
+namespace Blastic.Wpf.Controls
 {
 	public partial class BusyIndicator
 	{

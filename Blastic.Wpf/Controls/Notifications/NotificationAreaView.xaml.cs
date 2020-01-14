@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Blastic.Services.Notifications;
 
-namespace Blastic.Controls.Notifications
+namespace Blastic.Wpf.Controls.Notifications
 {
 	public partial class NotificationAreaView
 	{

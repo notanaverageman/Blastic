@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Blastic.DynamicControls.Presenters;
+using Blastic.DynamicControls;
+using Blastic.Wpf.DynamicControls.Presenters;
 
-namespace Blastic.DynamicControls
+namespace Blastic.Wpf.DynamicControls
 {
 	[TemplatePart(Name = "PART_RootGrid", Type = typeof(Grid))]
 	public class DynamicControl : Control

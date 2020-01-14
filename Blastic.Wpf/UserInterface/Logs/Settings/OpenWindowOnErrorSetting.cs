@@ -2,7 +2,7 @@
 using Blastic.Services.Settings;
 using Blastic.Settings;
 
-namespace Blastic.UserInterface.Logs.Settings
+namespace Blastic.Wpf.UserInterface.Logs.Settings
 {
 	public sealed class OpenWindowOnErrorSetting : BooleanSetting
 	{

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using Blastic.ControlExtensions;
 using Blastic.ViewManagement;
+using Blastic.Wpf.ControlExtensions;
 
-namespace Blastic.Automation
+namespace Blastic.Wpf.Automation
 {
 	public static partial class AutomationExtensions
 	{

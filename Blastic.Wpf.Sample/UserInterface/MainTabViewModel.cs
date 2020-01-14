@@ -8,10 +8,10 @@ using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
-using Blastic.UserInterface.TabbedMain;
+using Blastic.Wpf.UserInterface.TabbedMain;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.Sample.UserInterface
+namespace Blastic.Wpf.Sample.UserInterface
 {
 	public class MainTabViewModel : Screen, IMainTab
 	{

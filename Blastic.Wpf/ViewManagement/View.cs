@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Markup;
-using Blastic.Initialization;
+using Blastic.Wpf.Initialization;
 
-namespace Blastic.ViewManagement
+namespace Blastic.Wpf.ViewManagement
 {
 	public static class View
 	{

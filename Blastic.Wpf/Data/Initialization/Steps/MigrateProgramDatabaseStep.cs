@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Data.ProgramData;
 using Blastic.Initialization.Steps;
 using Blastic.Ordering;
+using Blastic.Wpf.Data.ProgramData;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.Data.Initialization.Steps
+namespace Blastic.Wpf.Data.Initialization.Steps
 {
 	public class MigrateProgramDatabaseStep : IInitializationStep
 	{

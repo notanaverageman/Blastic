@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using Blastic.Services.Notifications;
 
-namespace Blastic.Controls.Notifications
+namespace Blastic.Wpf.Controls.Notifications
 {
 	public partial class NotificationView
 	{

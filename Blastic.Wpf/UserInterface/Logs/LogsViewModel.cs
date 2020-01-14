@@ -9,11 +9,11 @@ using Blastic.Commanding;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.Services.Windowing;
-using Blastic.UserInterface.Logs.Settings;
 using Blastic.ViewManagement;
+using Blastic.Wpf.UserInterface.Logs.Settings;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.UserInterface.Logs
+namespace Blastic.Wpf.UserInterface.Logs
 {
 	public sealed class LogsViewModel : IViewAware
 	{

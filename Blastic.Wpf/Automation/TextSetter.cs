@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Reactive;
 
-namespace Blastic.Automation
+namespace Blastic.Wpf.Automation
 {
 	public static partial class AutomationExtensions
 	{

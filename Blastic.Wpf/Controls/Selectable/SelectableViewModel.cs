@@ -1,6 +1,6 @@
 ﻿using Blastic.Reactive;
 
-namespace Blastic.Controls.Selectable
+namespace Blastic.Wpf.Controls.Selectable
 {
 	public class SelectableViewModel<T>
 	{

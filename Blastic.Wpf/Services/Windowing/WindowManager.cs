@@ -5,10 +5,11 @@ using System.Windows;
 using System.Windows.Interop;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
+using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 
-namespace Blastic.Services.Windowing
+namespace Blastic.Wpf.Services.Windowing
 {
 	public class WindowManager : IWindowManager
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Blastic.DynamicControls.Presenters
+namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class PasswordPresenter : Presenter
 	{

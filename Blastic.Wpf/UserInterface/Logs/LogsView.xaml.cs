@@ -1,4 +1,4 @@
-﻿namespace Blastic.UserInterface.Logs
+﻿namespace Blastic.Wpf.UserInterface.Logs
 {
 	public partial class LogsView
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Markup;
 
-namespace Blastic.Controls
+namespace Blastic.Wpf.Controls
 {
 	[ContentProperty(nameof(ChildContent))]
 	public partial class ChildWindow

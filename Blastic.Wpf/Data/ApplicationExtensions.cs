@@ -1,11 +1,13 @@
-﻿using Blastic.Data.Initialization.Steps;
-using Blastic.Data.ProgramData;
-using Blastic.Initialization;
-using Blastic.Initialization.Extensions;
+﻿using Blastic.Data;
 using Blastic.Services.Settings;
+using Blastic.Wpf.Data.Initialization.Steps;
+using Blastic.Wpf.Data.ProgramData;
+using Blastic.Wpf.Initialization;
+using Blastic.Wpf.Initialization.Extensions;
+using Blastic.Wpf.Services.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blastic.Data
+namespace Blastic.Wpf.Data
 {
 	public static class ApplicationExtensions
 	{

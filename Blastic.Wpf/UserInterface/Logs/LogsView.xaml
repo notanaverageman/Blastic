@@ -1,11 +1,11 @@
-﻿<Window x:Class="Blastic.UserInterface.Logs.LogsView"
+﻿<Window x:Class="Blastic.Wpf.UserInterface.Logs.LogsView"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:controlExtensions="clr-namespace:Blastic.ControlExtensions"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
-		xmlns:logs="clr-namespace:Blastic.UserInterface.Logs"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:controlExtensions1="clr-namespace:Blastic.Wpf.ControlExtensions"
 		Title="{Binding Title.Value}"
 		mc:Ignorable="d"
 		Width="1400"
@@ -13,7 +13,7 @@
 		d:DataContext="{d:DesignInstance logs:LogsViewModel}"
 		Style="{StaticResource WindowStyle}">
 
-	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
+	<Grid controlExtensions1:GridExtensions.RowDefinitions="Auto,*">
 		<Grid Grid.Row="0">
 
 			<ComboBox Margin="16,0,0,0"

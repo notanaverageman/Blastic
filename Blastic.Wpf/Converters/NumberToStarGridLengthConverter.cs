@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Blastic.Converters
+namespace Blastic.Wpf.Converters
 {
 	public class NumberToStarGridLengthConverter : IValueConverter
 	{

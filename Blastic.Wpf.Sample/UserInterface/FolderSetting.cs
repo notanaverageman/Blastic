@@ -4,7 +4,7 @@ using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
 using Blastic.Settings;
 
-namespace Blastic.Sample.UserInterface
+namespace Blastic.Wpf.Sample.UserInterface
 {
 	public sealed class FolderSetting : FileBrowserSetting
 	{

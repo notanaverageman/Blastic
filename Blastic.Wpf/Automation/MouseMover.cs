@@ -6,7 +6,7 @@ using System.Windows;
 using Blastic.ViewManagement;
 using Point = System.Drawing.Point;
 
-namespace Blastic.Automation
+namespace Blastic.Wpf.Automation
 {
 	public static partial class AutomationExtensions
 	{

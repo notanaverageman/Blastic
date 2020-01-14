@@ -1,8 +1,9 @@
 ﻿using System.Windows.Controls;
+using Blastic.DynamicControls;
 using Blastic.DynamicControls.Properties;
 using Blastic.Reactive;
 
-namespace Blastic.DynamicControls.Presenters
+namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class Presenter : Control, IPresenter
 	{

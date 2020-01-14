@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Blastic.DynamicControls;
 
-namespace Blastic.DynamicControls.Presenters
+namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	[TemplatePart(Name = "PART_FieldsGrid", Type = typeof(Grid))]
 	public class GroupPresenter : Presenter

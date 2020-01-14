@@ -1,4 +1,4 @@
-﻿namespace Blastic.Sample
+﻿namespace Blastic.Wpf.Sample
 {
 	public partial class App
 	{

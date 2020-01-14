@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Blastic.Automation;
 using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
@@ -12,12 +11,14 @@ using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.Services.Notifications;
-using Blastic.UserInterface.TabbedMain;
+using Blastic.Wpf.Automation;
+using Blastic.Wpf.Commanding;
+using Blastic.Wpf.UserInterface.TabbedMain;
 using InputSimulatorStandard;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Blastic.Sample.UserInterface
+namespace Blastic.Wpf.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IMainTab
 	{

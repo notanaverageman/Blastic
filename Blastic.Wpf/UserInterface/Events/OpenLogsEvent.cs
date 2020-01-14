@@ -1,4 +1,4 @@
-﻿namespace Blastic.UserInterface.Events
+﻿namespace Blastic.Wpf.UserInterface.Events
 {
 	public class OpenLogsEvent
 	{

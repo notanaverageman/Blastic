@@ -1,4 +1,4 @@
-﻿namespace Blastic.UserInterface.TabbedMain
+﻿namespace Blastic.Wpf.UserInterface.TabbedMain
 {
 	public partial class TabbedMainView
 	{

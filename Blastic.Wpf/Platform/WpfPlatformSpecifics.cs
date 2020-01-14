@@ -2,8 +2,9 @@
 using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Blastic.Platform;
 
-namespace Blastic.Platform
+namespace Blastic.Wpf.Platform
 {
 	public class WpfPlatformSpecifics : IPlatformSpecifics
 	{

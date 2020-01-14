@@ -3,7 +3,7 @@ using System.Windows;
 using Blastic.Commanding;
 using Blastic.Execution;
 
-namespace Blastic.DynamicControls
+namespace Blastic.Wpf.DynamicControls
 {
 	public partial class Form
 	{
