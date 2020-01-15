@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Blastic.Wpf.Controls
 {
@@ -21,6 +22,17 @@ namespace Blastic.Wpf.Controls
 			set => SetValue(IsOpenProperty, value);
 		}
 
+		public static readonly DependencyProperty OverlayBrushProperty = DependencyProperty.Register(
+			nameof(OverlayBrush).Replace("Property", ""),
+			typeof(Brush),
+			typeof(ChildWindow),
+			new PropertyMetadata(Brushes.Transparent));
+		public Brush OverlayBrush
+		{
+			get => (Brush)GetValue(OverlayBrushProperty);
+			set => SetValue(OverlayBrushProperty, value);
+		}
+
 		private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			ChildWindow childWindow = (ChildWindow)d;
@@ -29,6 +41,8 @@ namespace Blastic.Wpf.Controls
 			{
 				childWindow.Focus();
 			}
+
+			VisualStateManager.GoToState(childWindow, (bool)e.NewValue == false ? "Hide" : "Show", true);
 		}
 	}
 }
