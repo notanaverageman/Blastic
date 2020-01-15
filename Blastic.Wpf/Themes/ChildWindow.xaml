@@ -5,13 +5,17 @@
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					mc:Ignorable="d">
 
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/Colors.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
 	<!--  Taken from https://github.com/punker76/MahApps.Metro.SimpleChildWindow  -->
 
 	<Style TargetType="{x:Type controls:ChildWindow}">
 		<Setter Property="VerticalContentAlignment" Value="Center" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
-		<Setter Property="OverlayBrush" Value="DarkGray" />
-		<Setter Property="Background" Value="White" />
+		<Setter Property="OverlayBrush" Value="{StaticResource BlasticGrayBrushMedium}" />
+		<Setter Property="Background" Value="{StaticResource BlasticWhiteBrush}" />
 
 		<Setter Property="Template">
 			<Setter.Value>

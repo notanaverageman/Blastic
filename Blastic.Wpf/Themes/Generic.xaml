@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/Colors.xaml" />
 		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/BusyIndicator.xaml" />
 		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/ChildWindow.xaml" />
 		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/DualView.xaml" />

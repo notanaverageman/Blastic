@@ -10,6 +10,10 @@
 		mc:Ignorable="d"
 		d:DataContext="{d:DesignInstance logs:LogsViewModel}">
 
+	<Window.Resources>
+		<ResourceDictionary Source="/Blastic.Wpf;component/Themes/Colors.xaml" />
+	</Window.Resources>
+
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 		<Grid Grid.Row="0">
 
@@ -57,39 +61,39 @@
 
 					<Style.Triggers>
 						<DataTrigger Binding="{Binding Level}"
-									 Value="{x:Static logging:LogLevel.Critical}">
+						             Value="{x:Static logging:LogLevel.Critical}">
 
-							<Setter Property="Foreground" Value="DarkRed" />
+							<Setter Property="Foreground" Value="{StaticResource BlasticRedBrushDark}" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
 									 Value="{x:Static logging:LogLevel.Error}">
 
-							<Setter Property="Foreground" Value="Red" />
+							<Setter Property="Foreground" Value="{StaticResource BlasticRedBrushMedium}" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
 									 Value="{x:Static logging:LogLevel.Warning}">
 
-							<Setter Property="Foreground" Value="DarkOrange" />
+							<Setter Property="Foreground" Value="{StaticResource BlasticOrangeBrushMedium}" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
 									 Value="{x:Static logging:LogLevel.Information}">
 
-							<Setter Property="Foreground" Value="CornflowerBlue" />
+							<Setter Property="Foreground" Value="{StaticResource BlasticBlueBrushMedium}" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
 									 Value="{x:Static logging:LogLevel.Debug}">
 
-							<Setter Property="Foreground" Value="Green" />
+							<Setter Property="Foreground" Value="{StaticResource BlasticGrayBrushDark}" />
 						</DataTrigger>
 
 						<DataTrigger Binding="{Binding Level}"
 									 Value="{x:Static logging:LogLevel.Trace}">
 
-							<Setter Property="Foreground" Value="DarkGray" />
+							<Setter Property="Foreground" Value="{StaticResource BlasticGrayBrushLight}" />
 						</DataTrigger>
 					</Style.Triggers>
 				</Style>

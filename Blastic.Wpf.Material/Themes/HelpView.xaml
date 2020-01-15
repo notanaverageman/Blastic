@@ -29,7 +29,7 @@
 												 Margin="{Binding HelpIconMargin, RelativeSource={RelativeSource AncestorType=controls:HelpView}}"
 												 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 												 materialDesign:RippleAssist.IsDisabled="True"
-												 Foreground="{StaticResource BlueBrush}"
+												 Foreground="{StaticResource BlasticBlueBrushMedium}"
 												 StaysOpen="True">
 
 							<materialDesign:PopupBox.Style>
@@ -57,7 +57,7 @@
 							</materialDesign:PopupBox.Style>
 
 							<materialDesign:PopupBox.ToggleContent>
-								<materialDesign:PackIcon Foreground="{StaticResource BlueBrush}"
+								<materialDesign:PackIcon Foreground="{StaticResource BlasticBlueBrushMedium}"
 														 Kind="QuestionMark" />
 							</materialDesign:PopupBox.ToggleContent>
 
