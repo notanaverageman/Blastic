@@ -5,9 +5,9 @@ namespace Blastic.DynamicControls
 {
 	public interface IElement
 	{
-		IReactiveProperty<object> Icon { get; set; }
-		IReactiveProperty<string> Label { get; set; }
-		IReactiveProperty<string> Help { get; set; }
+		IReadOnlyReactiveProperty<object> Icon { get; set; }
+		IReadOnlyReactiveProperty<string> Label { get; set; }
+		IReadOnlyReactiveProperty<string> Help { get; set; }
 
 		IReactiveProperty<bool> IsEnabled { get; set; }
 
@@ -24,9 +24,9 @@ namespace Blastic.DynamicControls
 
 	public abstract class Element : IElement
 	{
-		public IReactiveProperty<object> Icon { get; set; }
-		public IReactiveProperty<string> Label { get; set; }
-		public IReactiveProperty<string> Help { get; set; }
+		public IReadOnlyReactiveProperty<object> Icon { get; set; }
+		public IReadOnlyReactiveProperty<string> Label { get; set; }
+		public IReadOnlyReactiveProperty<string> Help { get; set; }
 
 		public IReactiveProperty<bool> IsEnabled { get; set; }
 
@@ -59,11 +59,11 @@ namespace Blastic.DynamicControls
 	{
 		public static T WithIcon<T>(this T element, object icon) where T : IElement
 		{
-			element.Icon.Value = icon;
+			element.Icon = new ReactiveProperty<object>(icon);
 			return element;
 		}
 
-		public static T WithIcon<T>(this T element, IReactiveProperty<object> icon) where T : IElement
+		public static T WithIcon<T>(this T element, IReadOnlyReactiveProperty<object> icon) where T : IElement
 		{
 			element.Icon = icon;
 			return element;
@@ -71,11 +71,11 @@ namespace Blastic.DynamicControls
 
 		public static T WithLabel<T>(this T element, string label) where T : IElement
 		{
-			element.Label.Value = label;
+			element.Label = new ReactiveProperty<string>(label);
 			return element;
 		}
 
-		public static T WithLabel<T>(this T element, IReactiveProperty<string> label) where T : IElement
+		public static T WithLabel<T>(this T element, IReadOnlyReactiveProperty<string> label) where T : IElement
 		{
 			element.Label = label;
 			return element;
@@ -83,11 +83,11 @@ namespace Blastic.DynamicControls
 
 		public static T WithHelp<T>(this T element, string help) where T : IElement
 		{
-			element.Help.Value = help;
+			element.Help = new ReactiveProperty<string>(help);
 			return element;
 		}
 
-		public static T WithHelp<T>(this T element, IReactiveProperty<string> help) where T : IElement
+		public static T WithHelp<T>(this T element, IReadOnlyReactiveProperty<string> help) where T : IElement
 		{
 			element.Help = help;
 			return element;

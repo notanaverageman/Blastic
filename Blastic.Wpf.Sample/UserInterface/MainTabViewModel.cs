@@ -8,7 +8,9 @@ using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
+using Blastic.Wpf.Material.DynamicControls;
 using Blastic.Wpf.UserInterface.TabbedMain;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Wpf.Sample.UserInterface
@@ -88,7 +90,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 						.WithLabel("File path")
 						.WithColumnWidth(new GridLength(1, GridUnitType.Star)))
 					.AddAction(command, y => y
-						.WithLabel("Some Button")))
+						.WithIcon(PackIconKind.Folder)))
 				.AddText(name, x => x
 					.WithLabel("Name")
 					.WithHelp("Name of the user."))
