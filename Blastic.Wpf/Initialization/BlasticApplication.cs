@@ -27,6 +27,7 @@ namespace Blastic.Wpf.Initialization
 		private readonly ServiceCollection _serviceCollection;
 
 		private readonly HashSet<Assembly> _viewAssemblies;
+		private readonly ViewLocator _viewLocator;
 
 		private readonly List<Func<DispatcherUnhandledExceptionEventArgs, Task>> _unhandledExceptionHandlers;
 
@@ -36,6 +37,7 @@ namespace Blastic.Wpf.Initialization
 			_serviceCollection = new ServiceCollection();
 
 			_viewAssemblies = new HashSet<Assembly>();
+			_viewLocator = new ViewLocator();
 
 			_unhandledExceptionHandlers = new List<Func<DispatcherUnhandledExceptionEventArgs, Task>>();
 
@@ -60,6 +62,12 @@ namespace Blastic.Wpf.Initialization
 			return this;
 		}
 
+		public BlasticApplication Configure(Action<ViewLocator> action)
+		{
+			action(_viewLocator);
+			return this;
+		}
+
 		public BlasticApplication RegisterViewAssembly<T>()
 		{
 			_viewAssemblies.Add(typeof(T).Assembly);
@@ -70,11 +78,11 @@ namespace Blastic.Wpf.Initialization
 		{
 			Configure(x =>
 			{
-				IViewLocator<FrameworkElement> viewLocator = new ViewLocator()
+				_viewLocator
 					.WithTypeMapper<ISettingsSectionViewModel, FormSettingSectionView>()
 					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"));
 
-				x.AddSingleton(y => viewLocator);
+				x.AddSingleton<IViewLocator<FrameworkElement>>(y => _viewLocator);
 			});
 		}
 

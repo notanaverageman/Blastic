@@ -5,6 +5,7 @@ using Blastic.Wpf.Sample.Properties;
 using Blastic.Wpf.Data;
 using Blastic.Wpf.Initialization;
 using Blastic.Wpf.Initialization.Extensions;
+using Blastic.Wpf.Material.Extensions;
 using Blastic.Wpf.Sample.UserInterface;
 using Blastic.Wpf.UserInterface.TabbedMain;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +35,7 @@ namespace Blastic.Wpf.Sample
 				.AddSettingsService()
 				.AddLocalizationSource(Resources.ResourceManager)
 				.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
+				.AddMaterialDesign()
 				.Run<App, TabbedMainViewModel>();
 		}
 	}
