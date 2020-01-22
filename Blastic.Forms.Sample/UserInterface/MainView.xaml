@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Shell x:Class="Blastic.Forms.Sample.UserInterface.MainView"
+	   xmlns="http://xamarin.com/schemas/2014/forms"
+	   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+	   xmlns:dynamicControls="clr-namespace:Blastic.Forms.DynamicControls;assembly=Blastic.Forms"
+	   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+	   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
+	   mc:Ignorable="d">
+
+	<d:Shell.BindingContext>
+		<userInterface:MainViewModel />
+	</d:Shell.BindingContext>
+
+	<TabBar>
+		<Tab Title="{Binding Homepage.Title.Value}">
+			<ShellContent>
+				<ContentPage>
+					<StackLayout>
+						<Button Command="{Binding TestCommand}"
+						        Text="Test" />
+
+						<dynamicControls:DynamicControl Model="{Binding Form.Value}" />
+					</StackLayout>
+				</ContentPage>
+			</ShellContent>
+
+			<!--<ShellContent viewManagement:View.Model="{Binding Homepage}" />-->
+		</Tab>
+	</TabBar>
+</Shell>

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application x:Class="Blastic.Forms.Sample.App"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:theme="clr-namespace:Blastic.Forms.Themes;assembly=Blastic.Forms"
+			 mc:Ignorable="d">
+
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<theme:Blastic />
+			</ResourceDictionary.MergedDictionaries>
+
+			<Style TargetType="Label">
+				<Setter Property="FontSize" Value="18" />
+			</Style>
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>

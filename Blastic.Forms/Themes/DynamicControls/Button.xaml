@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Forms.Themes.DynamicControls.Button"
+					xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:presenters="clr-namespace:Blastic.Forms.DynamicControls.Presenters;assembly=Blastic.Forms">
+
+	<Style TargetType="{x:Type presenters:ActionPresenter}">
+		<Setter Property="VerticalOptions" Value="Center" />
+		<Setter Property="ControlTemplate">
+			<Setter.Value>
+				<ControlTemplate>
+					<Grid>
+						<Button Command="{TemplateBinding Command}"
+								Text="{TemplateBinding Label.Value}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

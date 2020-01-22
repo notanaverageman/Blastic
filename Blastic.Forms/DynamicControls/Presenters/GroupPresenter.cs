@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
 using Blastic.DynamicControls;
+using Blastic.DynamicControls.Properties;
+using Xamarin.Forms;
+using GridLength = Xamarin.Forms.GridLength;
 
-namespace Blastic.Wpf.DynamicControls.Presenters
+namespace Blastic.Forms.DynamicControls.Presenters
 {
-	[TemplatePart(Name = "PART_FieldsGrid", Type = typeof(Grid))]
 	public class GroupPresenter : Presenter
 	{
 		private readonly IPresenterSource _presenterSource;
-
-		static GroupPresenter()
-		{
-			DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupPresenter), new FrameworkPropertyMetadata(typeof(GroupPresenter)));
-		}
 
 		private Grid _fieldsGrid;
 
@@ -26,9 +21,14 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 		{
 			_presenterSource = presenterSource;
 			Elements = elements;
+
+			// OnApplyTemplate is called in base constructor and since Elements
+			// is null no content is added to the children. We trigger ResetContent
+			// after setting Elements.
+			ResetContent();
 		}
 
-		public override void OnApplyTemplate()
+		protected override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
 
@@ -52,18 +52,23 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 			_fieldsGrid.Children.Clear();
 			_fieldsGrid.ColumnDefinitions.Clear();
 
+			if (Elements == null)
+			{
+				return;
+			}
+
 			int column = 0;
 
 			foreach (IElement element in Elements)
 			{
 				ColumnDefinition columnDefinition = new ColumnDefinition
 				{
-					Width = element.ColumnWidth.ToWpf()
+					Width = element.ColumnWidth.ToXamarin()
 				};
 
-				if (element.HorizontalAlignment == Blastic.DynamicControls.Properties.HorizontalAlignment.Stretch)
+				if (element.HorizontalAlignment == HorizontalAlignment.Stretch)
 				{
-					columnDefinition.Width = new GridLength(1, GridUnitType.Star);
+					columnDefinition.Width = GridLength.Star;
 				}
 
 				_fieldsGrid.ColumnDefinitions.Add(columnDefinition);
