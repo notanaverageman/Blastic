@@ -2,9 +2,10 @@
 <Shell x:Class="Blastic.Forms.Sample.UserInterface.MainView"
 	   xmlns="http://xamarin.com/schemas/2014/forms"
 	   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	   xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
 	   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-	   xmlns:dynamicControls="clr-namespace:Blastic.Forms.DynamicControls;assembly=Blastic.Forms"
 	   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	   xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
 	   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 	   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
 	   mc:Ignorable="d">
@@ -13,20 +14,16 @@
 		<userInterface:MainViewModel />
 	</d:Shell.BindingContext>
 
-	<TabBar>
-		<Tab Title="{Binding Homepage.Title.Value}">
-			<ShellContent>
-				<ContentPage>
-					<StackLayout>
-						<Button Command="{Binding TestCommand}"
-						        Text="Test" />
+	<Shell.Resources>
+		<DataTemplate x:Key="TabTemplate"
+					  x:DataType="tab:IShellTab">
+			<Tab Title="{Binding Title.Value}">
+				<ShellContent viewManagement:View.Model="{Binding}" />
+			</Tab>
+		</DataTemplate>
+	</Shell.Resources>
 
-						<dynamicControls:DynamicControl Model="{Binding Form.Value}" />
-					</StackLayout>
-				</ContentPage>
-			</ShellContent>
-
-			<!--<ShellContent viewManagement:View.Model="{Binding Homepage}" />-->
-		</Tab>
-	</TabBar>
+	<TabBar controlExtensions:TabbarExtensions.ShellTabs="{Binding Items}"
+			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}"
+			CurrentItem="{Binding ActiveItem.Value}" />
 </Shell>

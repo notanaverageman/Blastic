@@ -3,9 +3,9 @@
 namespace Blastic.Forms.Sample.UserInterface
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class HomepageView
+	public partial class TestView
 	{
-		public HomepageView()
+		public TestView()
 		{
 			InitializeComponent();
 		}

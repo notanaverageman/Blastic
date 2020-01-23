@@ -20,6 +20,11 @@ namespace Blastic.Forms.ViewManagement
 			return view;
 		}
 
+		protected override void PostProcessCreatedView(VisualElement view, object model)
+		{
+			view.BindingContext = model;
+		}
+
 		protected override VisualElement CreateNotFoundView(Type type, string message)
 		{
 			return new Label

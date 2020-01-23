@@ -40,7 +40,7 @@ namespace Blastic.ViewManagement
 				viewAware = null;
 			}
 
-			T element = Locate(model.GetType());
+			T element = Locate(model.GetType(), model);
 
 			if (viewAware != null)
 			{
@@ -64,13 +64,13 @@ namespace Blastic.ViewManagement
 			return PostProcessCachedView(view);
 		}
 
-		private T Locate(Type modelType)
+		private T Locate(Type modelType, object model)
 		{
 			Type viewType = GetViewTypeForModelType(modelType);
 
 			return viewType == null
 				? CreateNotFoundView(modelType, $"Cannot find view for {modelType}.")
-				: CreateView(viewType);
+				: CreateView(viewType, model);
 		}
 
 		private Type GetViewTypeForModelType(Type modelType)
@@ -88,18 +88,23 @@ namespace Blastic.ViewManagement
 			return null;
 		}
 
-		private T CreateView(Type viewType)
+		private T CreateView(Type viewType, object model)
 		{
 			if (viewType.IsInterface || viewType.IsAbstract || !typeof(T).IsAssignableFrom(viewType))
 			{
 				return CreateNotFoundView(viewType, $"Cannot create {viewType}");
 			}
 
-			return (T)Activator.CreateInstance(viewType);
+			T view = (T)Activator.CreateInstance(viewType);
+
+			PostProcessCreatedView(view, model);
+
+			return view;
 		}
 
 		protected abstract T CreateNotFoundView(Type type, string message);
 		protected abstract T PostProcessCachedView(T view);
+		protected abstract void PostProcessCreatedView(T view, object model);
 		protected abstract void PostProcessAttachView(T view, IViewAware viewAware);
 	}
 }

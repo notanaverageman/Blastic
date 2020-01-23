@@ -2,13 +2,11 @@
 using Blastic.Ordering;
 using Blastic.Reactive;
 
-namespace Blastic.Wpf.UserInterface.TabbedMain
+namespace Blastic.Forms.UserInterface
 {
-	public interface IMainTab : IHasLifetime
+	public interface IShellTab : IHasLifetime
 	{
 		Order Order { get; }
-		bool IsFixed { get; }
-
 		IReadOnlyReactiveProperty<string> Title { get; }
 	}
 }

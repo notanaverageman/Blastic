@@ -31,6 +31,11 @@ namespace Blastic.Wpf.ViewManagement
 			return null;
 		}
 
+		protected override void PostProcessCreatedView(FrameworkElement view, object model)
+		{
+			view.DataContext = model;
+		}
+
 		protected override FrameworkElement CreateNotFoundView(Type type, string message)
 		{
 			return new TextBlock

@@ -22,7 +22,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="UserInterface\HomepageView.xaml">
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UserInterface\HomeView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UserInterface\MainView.xaml">

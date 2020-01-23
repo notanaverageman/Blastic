@@ -1,5 +1,8 @@
 ﻿using System.Resources;
+using Blastic.DynamicControls;
+using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Properties;
+using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
@@ -22,11 +25,10 @@ namespace Blastic.Forms.Initialization.Extensions
 		//	return application.RegisterType<ISettingsSectionViewModel, T>();
 		//}
 
-		// TODO:
-		//public static BlasticApplication AddMainTab<T>(this BlasticApplication application) where T : class, IMainTab
-		//{
-		//	return application.RegisterType<IMainTab, T>();
-		//}
+		public static BlasticApplication AddShellTab<T>(this BlasticApplication application) where T : class, IShellTab
+		{
+			return application.RegisterType<IShellTab, T>();
+		}
 
 		private static BlasticApplication RegisterType<T, TImplementation>(this BlasticApplication application)
 			where T : class
@@ -72,10 +74,10 @@ namespace Blastic.Forms.Initialization.Extensions
 				x.AddSingleton<ILocalizationService, LocalizationService>();
 				x.AddSingleton<INotificationService, NotificationService>();
 				x.AddSingleton<IEventAggregator, EventAggregator>();
+				x.AddSingleton<IPresenterSource, PresenterSource>(y => PresenterSource.Instance);
 				// TODO:
 				//x.AddSingleton<IDialogService, DialogService>();
 				//x.AddSingleton<IWindowManager, WindowManager>();
-				//x.AddSingleton<IPresenterSource, PresenterSource>(y => PresenterSource.Instance);
 			});
 		}
 	}

@@ -1,14 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.HomepageView"
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.TestView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d">
+
+	<d:ContentPage.BindingContext>
+		<userInterface:TestViewModel />
+	</d:ContentPage.BindingContext>
 
 	<StackLayout>
 		<Label HorizontalOptions="CenterAndExpand"
-			   Text="Welcome to Xamarin.Forms!"
+			   Text="{Binding Title.Value}"
 			   VerticalOptions="CenterAndExpand" />
+
+		<Button Command="{Binding LanguageCommand}"
+				Text="Test" />
 	</StackLayout>
 </ContentPage>

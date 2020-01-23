@@ -30,8 +30,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 		public Order Order { get; }
 		public bool IsFixed => true;
 
+		public IReadOnlyReactiveProperty<string> Title { get; }
+
 		public IReactiveProperty<string> Text { get; }
-		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> ButtonText { get; }
 
 		public AsyncCommand TestCommand { get; }
