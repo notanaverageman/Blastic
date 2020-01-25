@@ -1,6 +1,6 @@
 ﻿using Blastic.DynamicControls;
 using Blastic.Services.Settings;
-using Blastic.Wpf.UserInterface.Settings;
+using Blastic.UserInterface.Settings;
 
 namespace Blastic.Wpf.UserInterface.Logs.Settings
 {

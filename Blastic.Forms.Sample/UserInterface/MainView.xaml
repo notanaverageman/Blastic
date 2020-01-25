@@ -17,7 +17,7 @@
 	<Shell.Resources>
 		<DataTemplate x:Key="TabTemplate"
 					  x:DataType="tab:IShellTab">
-			<Tab Title="{Binding Title.Value}">
+			<Tab Title="{Binding Title.Value, Mode=OneWay}">
 				<ShellContent viewManagement:View.Model="{Binding}" />
 			</Tab>
 		</DataTemplate>
@@ -25,5 +25,5 @@
 
 	<TabBar controlExtensions:TabbarExtensions.ShellTabs="{Binding Items}"
 			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}"
-			CurrentItem="{Binding ActiveItem.Value}" />
+			controlExtensions:TabbarExtensions.SelectedItem="{Binding ActiveItem.Value}" />
 </Shell>

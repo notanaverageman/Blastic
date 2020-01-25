@@ -4,9 +4,9 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:settings="clr-namespace:Blastic.Settings;assembly=Blastic"
-			 xmlns:local="clr-namespace:Blastic.Wpf.UserInterface.Settings"
+			 xmlns:userInterface="clr-namespace:Blastic.UserInterface.Settings;assembly=Blastic"
 			 mc:Ignorable="d"
-			 d:DataContext="{d:DesignInstance local:SettingsSectionViewModel}">
+			 d:DataContext="{d:DesignInstance userInterface:SettingsSectionViewModel}">
 
 	<StackPanel>
 		<ItemsControl Margin="0,4,0,0"

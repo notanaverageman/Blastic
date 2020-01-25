@@ -6,7 +6,7 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:execution="clr-namespace:Blastic.Wpf.Execution"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:settings="clr-namespace:Blastic.Wpf.UserInterface.Settings"
+		xmlns:settings="clr-namespace:Blastic.UserInterface.Settings;assembly=Blastic"
 		xmlns:viewManagement="clr-namespace:Blastic.Wpf.ViewManagement"
 		Title="Settings"
 		mc:Ignorable="d"

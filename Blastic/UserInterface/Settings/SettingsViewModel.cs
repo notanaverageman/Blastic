@@ -7,14 +7,11 @@ using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
-using Blastic.Services.Windowing;
 
-namespace Blastic.Wpf.UserInterface.Settings
+namespace Blastic.UserInterface.Settings
 {
-	public sealed class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>
+	public class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>
 	{
-		private readonly IWindowManager _windowManager;
-
 		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
@@ -26,11 +23,8 @@ namespace Blastic.Wpf.UserInterface.Settings
 		public Command HideDiagnosticMessagesCommand { get; }
 		public Command HideDiagnosticMessagesIgnoreErrorsCommand { get; }
 		
-		public SettingsViewModel(
-			IWindowManager windowManager,
-			IEnumerable<ISettingsSectionViewModel> sections)
+		public SettingsViewModel(IEnumerable<ISettingsSectionViewModel> sections)
 		{
-			_windowManager = windowManager;
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
@@ -104,11 +98,6 @@ namespace Blastic.Wpf.UserInterface.Settings
 			};
 
 			await Lifetime.Close.Execute(context);
-		}
-
-		public async Task Show()
-		{
-			await _windowManager.ShowWindow(this);
 		}
 	}
 }

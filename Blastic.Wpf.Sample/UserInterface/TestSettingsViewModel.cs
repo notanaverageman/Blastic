@@ -1,7 +1,7 @@
 ﻿using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
-using Blastic.Wpf.UserInterface.Settings;
+using Blastic.UserInterface.Settings;
 
 namespace Blastic.Wpf.Sample.UserInterface
 {

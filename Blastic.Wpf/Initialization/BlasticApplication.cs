@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Blastic.Platform;
 using Blastic.Services.Windowing;
+using Blastic.UserInterface.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Blastic.Wpf.Initialization.Extensions;
@@ -80,6 +81,7 @@ namespace Blastic.Wpf.Initialization
 			{
 				_viewLocator
 					.WithTypeMapper<ISettingsSectionViewModel, FormSettingSectionView>()
+					.WithTypeMapper<SettingsViewModel, SettingsView>()
 					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"));
 
 				x.AddSingleton<IViewLocator<FrameworkElement>>(y => _viewLocator);

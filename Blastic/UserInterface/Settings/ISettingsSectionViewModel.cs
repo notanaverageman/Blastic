@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
 
-namespace Blastic.Wpf.UserInterface.Settings
+namespace Blastic.UserInterface.Settings
 {
 	public interface ISettingsSectionViewModel : IHasLifetime
 	{

@@ -11,7 +11,7 @@ using Blastic.Reactive;
 using Blastic.Services.Settings;
 using Blastic.Settings;
 
-namespace Blastic.Wpf.UserInterface.Settings
+namespace Blastic.UserInterface.Settings
 {
 	public abstract class SettingsSectionViewModel : ConductorAllActive<Setting>, ISettingsSectionViewModel
 	{

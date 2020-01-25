@@ -8,14 +8,16 @@ using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
+using Blastic.Services.Windowing;
+using Blastic.UserInterface.Settings;
 using Blastic.Wpf.UserInterface.Events;
 using Blastic.Wpf.UserInterface.Logs;
-using Blastic.Wpf.UserInterface.Settings;
 
 namespace Blastic.Wpf.UserInterface.TabbedMain
 {
 	public sealed class TabbedMainViewModel : ConductorOneActive<IMainTab>
 	{
+		private readonly IWindowManager _windowManager;
 		private readonly List<IInitializationStep> _initializationSteps;
 		private bool _isInitializationStepsRun;
 
@@ -32,6 +34,7 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 
 		public TabbedMainViewModel(
 			IEventAggregator eventAggregator,
+			IWindowManager windowManager,
 			INotificationService notificationService,
 			IEnumerable<IMainTab> mainTabs,
 			IEnumerable<IInitializationStep> initializationSteps,
@@ -39,6 +42,7 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 			LogsViewModel logsViewModel = null,
 			SettingsViewModel settingsViewModel = null)
 		{
+			_windowManager = windowManager;
 			NotificationService = notificationService;
 			ProductInformation = productInformation;
 			LogsViewModel = logsViewModel;
@@ -105,7 +109,7 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 		{
 			if (LogsViewModel != null)
 			{
-				await LogsViewModel.Show();
+				await _windowManager.ShowWindow(LogsViewModel);
 			}
 		}
 
@@ -113,7 +117,7 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 		{
 			if (SettingsViewModel != null)
 			{
-				await SettingsViewModel.Show();
+				await _windowManager.ShowWindow(SettingsViewModel);
 			}
 		}
 

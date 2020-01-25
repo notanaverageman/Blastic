@@ -5,6 +5,8 @@ using System.Threading;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Platform;
 using Blastic.Forms.ViewManagement;
+using Blastic.LifetimeManagement;
+using Blastic.LifetimeManagement.Contexts;
 using Blastic.Platform;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
@@ -102,6 +104,15 @@ namespace Blastic.Forms.Initialization
 				TMainViewModel viewModel = serviceProvider.GetRequiredService<TMainViewModel>();
 
 				application.MainPage = ViewLocator.Locate(viewModel) as Page;
+
+				PlatformSpecifics.Current.OnUIThread(async () =>
+				{
+					if (viewModel is IHasLifetime hasLifetime)
+					{
+						ActivationContext context = new ActivationContext(CancellationToken.None);
+						await hasLifetime.Lifetime.Activate.Execute(context);
+					}
+				});
 
 				_applicationRunner(application);
 			}

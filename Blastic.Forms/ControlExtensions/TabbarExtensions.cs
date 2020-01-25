@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using Blastic.Forms.UserInterface;
 using Blastic.Reactive;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Blastic.Forms.ControlExtensions
 {
@@ -27,6 +30,16 @@ namespace Blastic.Forms.ControlExtensions
 		public static DataTemplate GetTabTemplate(BindableObject obj) => (DataTemplate)obj.GetValue(TabTemplateProperty);
 		public static void SetTabTemplate(BindableObject obj, DataTemplate value) => obj.SetValue(TabTemplateProperty, value);
 
+		public static readonly BindableProperty SelectedItemProperty = BindableProperty.CreateAttached(
+			nameof(SelectedItemProperty).Replace("Property", ""),
+			typeof(IShellTab),
+			typeof(TabbarExtensions),
+			default(IShellTab),
+			BindingMode.TwoWay,
+			propertyChanged: OnSelectedItemChanged);
+		public static IShellTab GetSelectedItem(BindableObject obj) => (IShellTab)obj.GetValue(SelectedItemProperty);
+		public static void SetSelectedItem(BindableObject obj, IShellTab value) => obj.SetValue(SelectedItemProperty, value);
+
 		private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
 		{
 			DataTemplate tabTemplate = GetTabTemplate(bindable);
@@ -39,6 +52,28 @@ namespace Blastic.Forms.ControlExtensions
 			ResetContent(bindable, tabs, (DataTemplate)newValue);
 		}
 
+		private static void OnSelectedItemChanged(BindableObject bindable, object oldValue, object newValue)
+		{
+			TabBar tabBar = (TabBar)bindable;
+
+			if (newValue == null)
+			{
+				tabBar.CurrentItem = null;
+				return;
+			}
+
+			IEnumerable<IShellTab> tabs = GetShellTabs(tabBar);
+
+			int index = tabs.IndexOf(newValue);
+
+			if (index < 0)
+			{
+				return;
+			}
+
+			tabBar.CurrentItem = tabBar.Items[index];
+		}
+
 		private static void ResetContent(
 			BindableObject bindable,
 			IEnumerable<IShellTab> tabs,
@@ -48,10 +83,25 @@ namespace Blastic.Forms.ControlExtensions
 
 			tabBar.Items.Clear();
 
+			tabBar.PropertyChanged -= OnTabBarOnPropertyChanged;
+
 			if (tabs == null || tabTemplate == null)
 			{
 				return;
 			}
+
+			void OnTabBarOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+			{
+				if (args.PropertyName == nameof(ShellSection.CurrentItem))
+				{
+					int index = tabBar.Items.IndexOf(tabBar.CurrentItem);
+					IShellTab tab = tabs.ElementAtOrDefault(index);
+
+					SetSelectedItem(tabBar, tab);
+				}
+			}
+
+			tabBar.PropertyChanged += OnTabBarOnPropertyChanged;
 
 			foreach (IShellTab shellTab in tabs)
 			{

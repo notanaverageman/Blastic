@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using Blastic.Commanding;
 using Blastic.Reactive;
@@ -69,13 +68,8 @@ namespace Blastic.Wpf.UserInterface.Logs
 
 			if (hasErrorLog == true && _logSettingsViewModel.OpenWindowOnErrorSetting.Value)
 			{
-				await Show();
+				await _windowManager.ShowWindow(this);
 			}
-		}
-
-		public async Task Show()
-		{
-			await _windowManager.ShowWindow(this);
 		}
 
 		private void OnMinimumLogLevelChanged(LogLevel level)

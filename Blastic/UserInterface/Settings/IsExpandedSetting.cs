@@ -2,7 +2,7 @@
 using Blastic.Services.Settings;
 using Blastic.Settings;
 
-namespace Blastic.Wpf.UserInterface.Settings
+namespace Blastic.UserInterface.Settings
 {
 	public class IsExpandedSetting : BooleanSetting
 	{

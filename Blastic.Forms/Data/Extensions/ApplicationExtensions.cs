@@ -1,11 +1,11 @@
 ﻿using Blastic.Data;
-using Blastic.Wpf.Data.Initialization.Steps;
-using Blastic.Wpf.Data.ProgramData;
-using Blastic.Wpf.Initialization;
-using Blastic.Wpf.Initialization.Extensions;
+using Blastic.Forms.Data.ProgramData;
+using Blastic.Forms.Data.Steps;
+using Blastic.Forms.Initialization;
+using Blastic.Forms.Initialization.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blastic.Wpf.Data
+namespace Blastic.Forms.Data.Extensions
 {
 	public static class ApplicationExtensions
 	{
@@ -22,6 +22,8 @@ namespace Blastic.Wpf.Data
 					x.AddSingleton(y => databaseConfiguration);
 					x.AddSingleton<ConnectionFactory>();
 					x.AddSingleton<ProgramDatabase>();
+
+					x.AddLogging();
 				})
 				.AddInitializationStep<MigrateProgramDatabaseStep>();
 		}

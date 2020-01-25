@@ -2,12 +2,16 @@
 using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Properties;
+using Blastic.Forms.Services.Settings;
 using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
+using Blastic.Services.Settings;
+using Blastic.UserInterface.Settings;
+using Blastic.UserInterface.Settings.Steps;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Forms.Initialization.Extensions
@@ -19,11 +23,10 @@ namespace Blastic.Forms.Initialization.Extensions
 			return application.RegisterType<IInitializationStep, T>();
 		}
 
-		// TODO:
-		//public static BlasticApplication AddSetting<T>(this BlasticApplication application) where T : class, ISettingsSectionViewModel
-		//{
-		//	return application.RegisterType<ISettingsSectionViewModel, T>();
-		//}
+		public static BlasticApplication AddSetting<T>(this BlasticApplication application) where T : class, ISettingsSectionViewModel
+		{
+			return application.RegisterType<ISettingsSectionViewModel, T>();
+		}
 
 		public static BlasticApplication AddShellTab<T>(this BlasticApplication application) where T : class, IShellTab
 		{
@@ -50,15 +53,15 @@ namespace Blastic.Forms.Initialization.Extensions
 			});
 		}
 
-		// TODO:
-		//public static BlasticApplication AddSettingsWindow(this BlasticApplication application)
-		//{
-		//	return application.Configure(x =>
-		//	{
-		//		x.AddSingleton<SettingsViewModel>();
-		//		x.AddSingleton<IInitializationStep, ReadSettingsStep>();
-		//	});
-		//}
+		public static BlasticApplication AddSettingsService(this BlasticApplication application)
+		{
+			return application.Configure(x =>
+			{
+				x.AddSingleton<SettingsViewModel>();
+				x.AddSingleton<ISettingsService, SettingsService>();
+				x.AddSingleton<IInitializationStep, ReadSettingsStep>();
+			});
+		}
 
 		internal static BlasticApplication AddDefaults(this BlasticApplication application)
 		{

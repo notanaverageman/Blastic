@@ -13,10 +13,9 @@ namespace Blastic.LifetimeManagement
 		private readonly IReactiveProperty<bool> _isActive;
 		private readonly IReactiveProperty<bool> _isActivating;
 
-		public IReadOnlyReactiveProperty<bool> IsInitialized { get; }
-		public IReadOnlyReactiveProperty<bool> IsActive { get; }
-
-		public IReadOnlyReactiveProperty<bool> IsActivating { get; }
+		public IReadOnlyReactiveProperty<bool> IsInitialized => _isInitialized;
+		public IReadOnlyReactiveProperty<bool> IsActive => _isActive;
+		public IReadOnlyReactiveProperty<bool> IsActivating => _isActivating;
 
 		public AsyncCommand<InitializationContext> Initialize { get; }
 
@@ -31,10 +30,6 @@ namespace Blastic.LifetimeManagement
 			_isInitialized = new ReactiveProperty<bool>();
 			_isActive = new ReactiveProperty<bool>();
 			_isActivating = new ReactiveProperty<bool>();
-
-			IsInitialized = _isInitialized.ToReadOnlyReactiveProperty();
-			IsActive = _isActive.ToReadOnlyReactiveProperty();
-			IsActivating = _isActivating.ToReadOnlyReactiveProperty();
 
 			Initialize = IsInitialized
 				.Select(x => !x)

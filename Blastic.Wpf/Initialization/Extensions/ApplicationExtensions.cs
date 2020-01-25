@@ -7,14 +7,16 @@ using Blastic.Services.Dialog;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
+using Blastic.Services.Settings;
 using Blastic.Services.Windowing;
+using Blastic.UserInterface.Settings;
+using Blastic.UserInterface.Settings.Steps;
 using Blastic.Wpf.DynamicControls;
-using Blastic.Wpf.Initialization.Steps;
 using Blastic.Wpf.Services.Dialog;
+using Blastic.Wpf.Services.Settings;
 using Blastic.Wpf.Services.Windowing;
 using Blastic.Wpf.UserInterface.Logs;
 using Blastic.Wpf.UserInterface.Logs.Settings;
-using Blastic.Wpf.UserInterface.Settings;
 using Blastic.Wpf.UserInterface.TabbedMain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -76,11 +78,12 @@ namespace Blastic.Wpf.Initialization.Extensions
 				.AddSetting<LogSettingsViewModel>();
 		}
 
-		public static BlasticApplication AddSettingsWindow(this BlasticApplication application)
+		public static BlasticApplication AddSettingsService(this BlasticApplication application)
 		{
 			return application.Configure(x =>
 			{
 				x.AddSingleton<SettingsViewModel>();
+				x.AddSingleton<ISettingsService, SettingsService>();
 				x.AddSingleton<IInitializationStep, ReadSettingsStep>();
 			});
 		}

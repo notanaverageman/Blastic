@@ -16,7 +16,9 @@
 			   Text="{Binding Title.Value}"
 			   VerticalOptions="CenterAndExpand" />
 
-		<Button Command="{Binding LanguageCommand}"
-				Text="Test" />
+		<Entry Text="{Binding Text.Value}" />
+
+		<Button Command="{Binding WriteSettingCommand}"
+				Text="Save" />
 	</StackLayout>
 </ContentPage>

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
     <ProjectReference Include="..\Blastic.Forms\Blastic.Forms.csproj" />
     <ProjectReference Include="..\Blastic\Blastic.csproj" />
   </ItemGroup>
