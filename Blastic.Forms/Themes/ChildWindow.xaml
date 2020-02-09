@@ -13,7 +13,7 @@
 		<Setter Property="OverlayColor" Value="{StaticResource BlasticGrayColorMedium}" />
 		<Setter Property="BackgroundColor" Value="{StaticResource BlasticWhiteColor}" />
 
-		<Setter Property="Template">
+		<Setter Property="ControlTemplate">
 			<Setter.Value>
 				<ControlTemplate>
 					<Grid x:Name="PART_Overlay"
