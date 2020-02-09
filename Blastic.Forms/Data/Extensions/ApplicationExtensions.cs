@@ -1,5 +1,6 @@
 ﻿using Blastic.Data;
 using Blastic.Forms.Data.ProgramData;
+using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.Data.Steps;
 using Blastic.Forms.Initialization;
 using Blastic.Forms.Initialization.Extensions;
@@ -9,10 +10,11 @@ namespace Blastic.Forms.Data.Extensions
 {
 	public static class ApplicationExtensions
 	{
-		public static BlasticApplication AddProgramDatabase(
+		public static BlasticApplication AddProgramDatabase<T>(
 			this BlasticApplication application,
 			DatabaseProvider databaseProvider,
 			string connectionString)
+			where T : ProgramDatabase
 		{
 			return application
 				.Configure(x =>
@@ -21,7 +23,10 @@ namespace Blastic.Forms.Data.Extensions
 
 					x.AddSingleton(y => databaseConfiguration);
 					x.AddSingleton<ConnectionFactory>();
-					x.AddSingleton<ProgramDatabase>();
+					x.AddSingleton<T>();
+					x.AddSingleton<ProgramDatabase>(y => y.GetService<T>());
+
+                    x.AddSingleton<ProgramDatabaseMigrationBase, CreateSettingsTable>();
 
 					x.AddLogging();
 				})

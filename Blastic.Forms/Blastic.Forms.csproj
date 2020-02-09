@@ -13,10 +13,10 @@
 
   <ItemGroup>
 	<PackageReference Include="System.Text.Json" Version="4.7.0" />
-	<PackageReference Include="Xamarin.Forms" Version="4.3.0.908675" />
+	<PackageReference Include="Xamarin.Forms" Version="4.5.0.187-pre2" />
 	<PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
-	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
 	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
 	<PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
@@ -27,10 +27,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\ChildWindow.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\Form.xaml.cs">
+      <DependentUpon>Form.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\Colors.xaml.cs">
+      <DependentUpon>Colors.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\ChildWindow.xaml.cs">
+      <DependentUpon>ChildWindow.xaml</DependentUpon>
     </Compile>
     <Compile Update="Themes\DynamicControls\PasswordEntry.xaml.cs">
       <DependentUpon>PasswordEntry.xaml</DependentUpon>

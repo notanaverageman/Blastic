@@ -6,7 +6,10 @@
 					xmlns:themes="clr-namespace:Blastic.Forms.Themes;assembly=Blastic.Forms">
 
 	<ResourceDictionary.MergedDictionaries>
+		<themes:ChildWindow />
+		<themes:Colors />
 		<themes:DynamicControl />
 		<dynamicControls:DynamicControls />
+		<themes:Form/>
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

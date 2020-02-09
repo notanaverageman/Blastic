@@ -24,6 +24,8 @@ namespace Blastic.Forms.Sample.Droid
 
 			base.OnCreate(savedInstanceState);
 
+			Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
+
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			Xamarin.Forms.Forms.Init(this, savedInstanceState);
 

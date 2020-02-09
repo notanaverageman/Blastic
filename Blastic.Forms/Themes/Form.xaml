@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Forms.Themes.Form"
+					xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:controls="clr-namespace:Blastic.Forms.Controls;assembly=Blastic.Forms"
+					xmlns:dynamicControls="clr-namespace:Blastic.Forms.DynamicControls;assembly=Blastic.Forms">
+
+	<Style TargetType="{x:Type dynamicControls:Form}">
+		<Setter Property="ControlTemplate">
+			<Setter.Value>
+				<ControlTemplate x:DataType="dynamicControls:Form">
+					<controls:ChildWindow IsOpen="{TemplateBinding ExecutionContext.IsShowingForm.Value}">
+						<dynamicControls:DynamicControl Model="{TemplateBinding ExecutionContext.Form.Value}" WidthRequest="200" />
+					</controls:ChildWindow>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

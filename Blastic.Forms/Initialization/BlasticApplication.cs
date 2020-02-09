@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using Blastic.DynamicControls;
+using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Platform;
 using Blastic.Forms.ViewManagement;
@@ -71,9 +73,11 @@ namespace Blastic.Forms.Initialization
 			Configure(x =>
 			{
 				_viewLocator
-					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"));
+					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"))
+					.WithTypeMapper(new InheritanceTypeMapper(typeof(DynamicModel), typeof(DynamicControl)));
 
 				x.AddSingleton<IViewLocator<VisualElement>>(y => _viewLocator);
+				x.AddSingleton(y => _viewLocator);
 			});
 		}
 

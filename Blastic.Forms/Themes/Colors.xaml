@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Forms.Themes.Colors"
+					xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+	<Color x:Key="BlasticWhiteColor">#FFFFFFFF</Color>
+	<Color x:Key="BlasticBlackColor">#FF252525</Color>
+
+	<Color x:Key="BlasticRedColorLight">#FFFF685C</Color>
+	<Color x:Key="BlasticRedColorMedium">#FFF44336</Color>
+	<Color x:Key="BlasticRedColorDark">#FFC8372D</Color>
+
+	<Color x:Key="BlasticGreenColorLight">#FF77CC7D</Color>
+	<Color x:Key="BlasticGreenColorMedium">#FF4CAF50</Color>
+	<Color x:Key="BlasticGreenColorDark">#FF3F9042</Color>
+
+	<Color x:Key="BlasticBlueColorLight">#FF32A2CD</Color>
+	<Color x:Key="BlasticBlueColorMedium">#FF0C93C7</Color>
+	<Color x:Key="BlasticBlueColorDark">#FF0A79A3</Color>
+
+	<Color x:Key="BlasticOrangeColorLight">#FFFFB039</Color>
+	<Color x:Key="BlasticOrangeColorMedium">#FFFF9800</Color>
+	<Color x:Key="BlasticOrangeColorDark">#FFD17D00</Color>
+
+	<Color x:Key="BlasticYellowColorLight">#FFFFD52E</Color>
+	<Color x:Key="BlasticYellowColorMedium">#FFFFCC00</Color>
+	<Color x:Key="BlasticYellowColorDark">#FFD1A700</Color>
+
+	<Color x:Key="BlasticGrayColorLight">#FF969696</Color>
+	<Color x:Key="BlasticGrayColorMedium">#FF7F7F7F</Color>
+	<Color x:Key="BlasticGrayColorDark">#FF686868</Color>
+</ResourceDictionary>

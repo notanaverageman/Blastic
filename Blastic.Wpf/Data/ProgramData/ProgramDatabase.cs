@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using Blastic.Data;
 using Blastic.Wpf.Data.ProgramData.Migrations;
 using Blastic.Wpf.Data.ProgramData.Tables;
@@ -11,9 +12,10 @@ namespace Blastic.Wpf.Data.ProgramData
 
 		public ProgramDatabase(
 			ConnectionFactory connectionFactory,
-			ILogger<ProgramDatabase> logger)
+			ILogger<ProgramDatabase> logger,
+            IEnumerable<ProgramDatabaseMigrationBase> migrations)
 			:
-			base(connectionFactory, logger)
+			base(connectionFactory, logger, migrations)
 		{
 			SettingsTable = new SettingsTable(connectionFactory);
 		}

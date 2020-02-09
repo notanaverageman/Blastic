@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Reactive.Linq;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.Forms.DynamicControls.Presenters;
+using Blastic.Reactive;
 
 namespace Blastic.Forms.DynamicControls
 {
@@ -100,8 +102,25 @@ namespace Blastic.Forms.DynamicControls
 		{
 			return new TextPresenter
 			{
-				Mask = textField.Mask
+				Mask = textField.Mask,
+                Keyboard = textField.Keyboard.Select(ToXamarinKeyboard).ToReadOnlyReactiveProperty()
 			};
 		}
+
+        private Xamarin.Forms.Keyboard ToXamarinKeyboard(Keyboard keyboard)
+        {
+            return keyboard switch
+            {
+                Keyboard.Text => Xamarin.Forms.Keyboard.Text,
+                Keyboard.Chat => Xamarin.Forms.Keyboard.Chat,
+                Keyboard.Default => Xamarin.Forms.Keyboard.Default,
+                Keyboard.Email => Xamarin.Forms.Keyboard.Email,
+                Keyboard.Numeric => Xamarin.Forms.Keyboard.Numeric,
+                Keyboard.Plain => Xamarin.Forms.Keyboard.Plain,
+                Keyboard.Telephone => Xamarin.Forms.Keyboard.Telephone,
+                Keyboard.Url => Xamarin.Forms.Keyboard.Url,
+                _ => throw new ArgumentOutOfRangeException(nameof(keyboard), keyboard, null)
+            };
+        }
 	}
 }

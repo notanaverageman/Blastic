@@ -2,7 +2,9 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.HomeView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:data="clr-namespace:Blastic.Forms.Sample.Data;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d">
@@ -11,12 +13,41 @@
 		<userInterface:HomeViewModel />
 	</d:ContentPage.BindingContext>
 
-	<StackLayout>
-		<Label HorizontalOptions="CenterAndExpand"
-			   Text="{Binding Title.Value}"
-			   VerticalOptions="CenterAndExpand" />
+	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*"
+	      Margin="8,0">
+		<Button Grid.Row="0"
+				Command="{Binding AddMachineCommand}"
+				Text="Add Machine" />
 
-		<Button Command="{Binding LanguageCommand}"
-				Text="Language" />
-	</StackLayout>
+		<CollectionView Grid.Row="1"
+						ItemsSource="{Binding Machines}">
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="data:Machine">
+					<SwipeView>
+						<SwipeView.LeftItems>
+							<SwipeItems>
+								<SwipeItem Text="Favorite" BackgroundColor="{StaticResource BlasticGreenColorMedium}" />
+								<SwipeItem Text="Delete" BackgroundColor="{StaticResource BlasticRedColorMedium}" />
+							</SwipeItems>
+						</SwipeView.LeftItems>
+						<Grid Padding="10">
+							<StackLayout>
+								<Label FontAttributes="Bold"
+								       FontSize="Medium"
+								       Text="{Binding Name.Value}" />
+								<Label FontSize="Small"
+									   HorizontalOptions="End"
+								       Text="{Binding SecondsPerFrame.Value}" />
+
+								<ProgressBar Progress="0.2"></ProgressBar>
+
+								<BoxView HeightRequest="1"
+								         Color="{StaticResource BlasticGrayColorMedium}" />
+							</StackLayout>
+						</Grid>
+					</SwipeView>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+	</Grid>
 </ContentPage>

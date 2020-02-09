@@ -1,4 +1,6 @@
 ﻿using System;
+using Blastic.DynamicControls;
+using Blastic.Forms.DynamicControls;
 using Blastic.ViewManagement;
 using Xamarin.Forms;
 
@@ -23,6 +25,11 @@ namespace Blastic.Forms.ViewManagement
 		protected override void PostProcessCreatedView(VisualElement view, object model)
 		{
 			view.BindingContext = model;
+
+			if (view is DynamicControl dynamicControl && model is DynamicModel dynamicModel)
+			{
+				dynamicControl.Model = dynamicModel;
+			}
 		}
 
 		protected override VisualElement CreateNotFoundView(Type type, string message)

@@ -2,6 +2,7 @@
 using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Properties;
+using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.Services.Settings;
 using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
@@ -77,6 +78,7 @@ namespace Blastic.Forms.Initialization.Extensions
 				x.AddSingleton<ILocalizationService, LocalizationService>();
 				x.AddSingleton<INotificationService, NotificationService>();
 				x.AddSingleton<IEventAggregator, EventAggregator>();
+				x.AddSingleton<INavigationService, NavigationService>();
 				x.AddSingleton<IPresenterSource, PresenterSource>(y => PresenterSource.Instance);
 				// TODO:
 				//x.AddSingleton<IDialogService, DialogService>();

@@ -12,6 +12,8 @@ namespace Blastic.Forms.Sample.iOS
 	{
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 		{
+			Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
+
 			Xamarin.Forms.Forms.Init();
 
 			new BlasticApplication(LoadApplication)

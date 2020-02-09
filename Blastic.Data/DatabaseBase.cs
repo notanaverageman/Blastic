@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -14,17 +13,25 @@ namespace Blastic.Data
 {
 	public abstract class DatabaseBase<T> where T : MigrationBase
 	{
-		protected ILogger<DatabaseBase<T>> Logger { get; }
+        private readonly List<MigrationBase> _migrations;
+
+        protected ILogger<DatabaseBase<T>> Logger { get; }
 		
 		public DatabaseInformationTable DatabaseInformationTable { get; }
 		public ConnectionFactory ConnectionFactory { get; }
 
-		protected DatabaseBase(ConnectionFactory connectionFactory, ILogger<DatabaseBase<T>> logger)
+		protected DatabaseBase(
+            ConnectionFactory connectionFactory,
+            ILogger<DatabaseBase<T>> logger,
+            IEnumerable<T> migrations)
 		{
-			ConnectionFactory = connectionFactory;
+            ConnectionFactory = connectionFactory;
 			Logger = logger;
 
-			DatabaseInformationTable = new DatabaseInformationTable(connectionFactory);
+            _migrations = migrations.Cast<MigrationBase>().ToList();
+            _migrations.Insert(0, new CreateDatabaseInformationTable());
+
+            DatabaseInformationTable = new DatabaseInformationTable(connectionFactory);
 		}
 
 		public TransactionScope CreateTransactionScope()
@@ -37,10 +44,7 @@ namespace Blastic.Data
 			using Connection connection = ConnectionFactory.CreateConnection();
 
 			Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
-			Version newVersion = GetMigrations()
-				.Select(Activator.CreateInstance)
-				.Cast<MigrationBase>()
-				.Max(x => x.Version);
+			Version newVersion = _migrations.Max(x => x.Version);
 
 			return currentVersion != newVersion;
 		}
@@ -72,12 +76,7 @@ namespace Blastic.Data
 			Version targetVersion,
 			CancellationToken cancellationToken)
 		{
-			IEnumerable<Type> allMigrations = GetMigrations();
-
-			IEnumerable<MigrationBase> migrations = allMigrations
-				.Select(Activator.CreateInstance)
-				.Cast<MigrationBase>()
-				.ToArray();
+			IEnumerable<MigrationBase> migrations = _migrations;
 
 			targetVersion ??= migrations.Max(x => x.Version);
 
@@ -120,19 +119,6 @@ namespace Blastic.Data
 			}
 
 			return result;
-		}
-
-		public IEnumerable<Type> GetMigrations()
-		{
-			Assembly assembly = Assembly.GetAssembly(GetType());
-
-			IEnumerable<Type> migrationTypes = assembly.GetTypes()
-				.Where(x => !x.IsAbstract)
-				.Where(x => typeof(T).IsAssignableFrom(x));
-
-			return Enumerable
-				.Repeat(typeof(CreateDatabaseInformationTable), 1)
-				.Concat(migrationTypes);
 		}
 	}
 }

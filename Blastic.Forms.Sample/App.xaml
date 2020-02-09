@@ -12,10 +12,6 @@
 			<ResourceDictionary.MergedDictionaries>
 				<theme:Blastic />
 			</ResourceDictionary.MergedDictionaries>
-
-			<Style TargetType="Label">
-				<Setter Property="FontSize" Value="18" />
-			</Style>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

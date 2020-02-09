@@ -25,5 +25,6 @@
 
 	<TabBar controlExtensions:TabbarExtensions.ShellTabs="{Binding Items}"
 			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}"
-			controlExtensions:TabbarExtensions.SelectedItem="{Binding ActiveItem.Value}" />
+			controlExtensions:TabbarExtensions.SelectedItem="{Binding ActiveItem.Value}"
+			Title="{Binding ActiveItem.Value.Title.Value, Mode=OneWay}"/>
 </Shell>

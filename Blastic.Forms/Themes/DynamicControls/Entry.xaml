@@ -13,6 +13,7 @@
 						<Entry IsEnabled="{TemplateBinding IsEnabledReactive.Value}"
 							   Placeholder="{TemplateBinding Label.Value}"
 							   Text="{TemplateBinding Property.Value}"
+                               Keyboard="{TemplateBinding Keyboard.Value}"
 							   VerticalOptions="Center" />
 					</Grid>
 				</ControlTemplate>

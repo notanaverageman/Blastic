@@ -92,7 +92,9 @@ namespace Blastic.DynamicControls
 			Action<TextField> configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
+
 			element.Mask.Value = TextBoxMasks.IntegerMask;
+            element.Keyboard.Value = Keyboard.Numeric;
 
 			container.AddElement(element, configure);
 
@@ -105,9 +107,11 @@ namespace Blastic.DynamicControls
 			Action<TextField> configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
-			element.Mask.Value = TextBoxMasks.FloatingPointMask;
 
-			container.AddElement(element, configure);
+			element.Mask.Value = TextBoxMasks.FloatingPointMask;
+            element.Keyboard.Value = Keyboard.Numeric;
+
+            container.AddElement(element, configure);
 
 			return container;
 		}
