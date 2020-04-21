@@ -1,11 +1,11 @@
-﻿using Blastic.DynamicControls.Properties;
+using Blastic.DynamicControls.Properties;
 using Blastic.Reactive;
 
 namespace Blastic.DynamicControls
 {
 	public interface IPresenter
 	{
-		IReactiveProperty Property { get; set; }
+		IReadOnlyReactiveProperty Property { get; set; }
 
 		IReadOnlyReactiveProperty<string> Help { get; set; }
 		IReadOnlyReactiveProperty<string> Label { get; set; }

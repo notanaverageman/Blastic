@@ -1,11 +1,11 @@
-﻿using Xamarin.Forms.Xaml;
+using Xamarin.Forms.Xaml;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TestView
+	public partial class JobView
 	{
-		public TestView()
+		public JobView()
 		{
 			InitializeComponent();
 		}

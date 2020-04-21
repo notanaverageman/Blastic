@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Blastic.Data;
 using Blastic.Forms.Data.Extensions;
@@ -7,6 +7,7 @@ using Blastic.Forms.Initialization;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
+using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.UserInterface;
 using Blastic.UserInterface.Settings.Steps;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,10 +26,10 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 				.AddLocalizationSource(Properties.Resources.ResourceManager)
 				.AddInitializationStep<ReadSettingsStep>()
 				.AddShellTab<HomeViewModel>()
-				.AddShellTab<TestViewModel>()
 				.AddProgramDatabase<ProgramDatabase>(DatabaseProvider.SQLite, $"Data Source={databasePath};")
 				.AddSettingsService()
-                .AddMigrations();
+                .AddMigrations()
+				.Configure(x => x.AddSingleton<Labels>());
 
 			return application;
 		}

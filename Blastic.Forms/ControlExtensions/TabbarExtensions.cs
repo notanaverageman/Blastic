@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -79,16 +79,14 @@ namespace Blastic.Forms.ControlExtensions
 			IEnumerable<IShellTab> tabs,
 			DataTemplate tabTemplate)
 		{
-			TabBar tabBar = (TabBar)bindable;
-
-			tabBar.Items.Clear();
-
-			tabBar.PropertyChanged -= OnTabBarOnPropertyChanged;
-
 			if (tabs == null || tabTemplate == null)
 			{
 				return;
 			}
+
+			TabBar tabBar = (TabBar)bindable;
+
+			tabBar.Items.Clear();
 
 			void OnTabBarOnPropertyChanged(object sender, PropertyChangedEventArgs args)
 			{
@@ -101,6 +99,7 @@ namespace Blastic.Forms.ControlExtensions
 				}
 			}
 
+			tabBar.PropertyChanged -= OnTabBarOnPropertyChanged;
 			tabBar.PropertyChanged += OnTabBarOnPropertyChanged;
 
 			foreach (IShellTab shellTab in tabs)

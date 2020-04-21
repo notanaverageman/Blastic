@@ -1,0 +1,259 @@
+root=true
+
+[*]
+indent_style=tab
+insert_final_newline=false
+
+# Do not allow consecutive blank lines.
+resharper_csharp_keep_blank_lines_in_code=1
+resharper_csharp_keep_blank_lines_in_declarations=1
+
+# This is a hard limit.
+resharper_csharp_max_line_length=120
+
+# + void Method()
+# + {
+# + }
+# 
+# - void Method() {
+# - }
+resharper_brace_style=next_line
+
+# For unit test methods, AaBb_aaBb is more readable.
+# AaBb_aaBb should not be used in type or namespace names.
+# E.g.
+#   WhenSomePropertyChangesFromXToYServiceShouldStop
+#   When_some_property_changes_from_x_to_y_service_should_stop
+resharper_csharp_naming_rule.types_and_namespaces=AaBb, AaBb_aaBb
+
+# SomeObject Method(
+#     int foo,
+#     int bar)
+resharper_csharp_wrap_after_declaration_lpar=true
+
+# someFooObject.Method(
+#     someIntFromBar,
+#     someIntFromBaz)
+resharper_csharp_wrap_after_invocation_lpar=true
+resharper_csharp_wrap_arguments_style=chop_if_long
+
+# public class SomeClass
+#     :
+#     SomeBaseClass,
+#     ISomeInterface,
+#     ISomeInterface2
+resharper_csharp_wrap_before_first_type_parameter_constraint=true
+
+# someFoo
+#     .Method1()
+#     .Method2()
+#     .Method3();
+resharper_csharp_wrap_chained_method_calls=chop_if_long
+resharper_csharp_wrap_parameters_style=chop_if_long
+
+# + enum Foo
+# + {
+# +     E1,
+# +     E2,
+# +     E3
+# + }
+# 
+# - enum Foo
+# - {
+# -     E1, E2, E3
+# - }
+resharper_max_enum_members_on_line=1
+
+# + new Foo
+# + {
+# +     Bar = 1,
+# +     Baz = 2
+# + }
+# 
+# - new Foo
+# - {
+# -     Bar = 1, Baz = 2
+# - }
+resharper_max_initializer_elements_on_line=1
+
+# + bool foo = bar == 1
+# +     ? bar == 1
+# +         ? someBool
+# +         : someBool2
+# +     : someBool3;
+# 
+# - bool foo = bar == 1 ? baz == 2 ? someBool : someBool2 : someBool3;
+resharper_nested_ternary_style=expanded
+
+# + [Attribute]
+# + int Property { get; }
+# 
+# - [Attribute] int Property { get; }
+resharper_place_accessorholder_attribute_on_same_line=false
+
+# + x =>
+# + {
+# +     x.SomeMethod.SomeProperty * x.OtherMethod.OtherProperty;
+# + }
+# 
+# - x => { return x.SomeMethod.SomeProperty * x.OtherMethod.OtherProperty; }
+resharper_place_simple_anonymousmethod_on_single_line=false
+
+# + new Foo
+# + {
+# +     Bar = 1
+# + };
+# 
+# - new Foo { Bar = 1 };
+resharper_place_simple_initializer_on_single_line=false
+
+# + int[] x = new int[] { 0, 1, 2 };
+# - int[] x = new int[] {0, 1, 2};
+resharper_space_within_single_line_array_initializer_braces=true
+
+# Use indentation setting from editorconfig.
+resharper_use_indent_from_vs=false
+
+# + public static async Method()
+# 
+# - static public async Method()
+csharp_preferred_modifier_order=public, private, protected, internal, new, abstract, virtual, sealed, override, static, readonly, extern, unsafe, volatile, async:error
+
+# Do not use var.
+csharp_style_var_elsewhere=false:suggestion
+csharp_style_var_for_built_in_types=false:hint
+csharp_style_var_when_type_is_apparent=false:hint
+resharper_suggest_var_or_type_elsewhere_highlighting=suggestion
+
+# int, string vs Int32, String
+dotnet_style_predefined_type_for_locals_parameters_members=true:warning
+dotnet_style_predefined_type_for_member_access=true:warning
+
+# Do not use `this.`
+dotnet_style_qualification_for_event=false:warning
+dotnet_style_qualification_for_field=false:warning
+dotnet_style_qualification_for_method=false:warning
+dotnet_style_qualification_for_property=false:warning
+
+# + private const string thisFieldIsConst = "constant";
+# 
+# - const string thisFieldIsConst = "constant";
+dotnet_style_require_accessibility_modifiers=for_non_interface_members:warning
+
+# + if(foo)
+# + {
+# +     Bar();
+# + }
+# 
+# - if(foo)
+# -     Bar();
+csharp_prefer_braces=true:warning
+
+# ReSharper inspection severities
+resharper_arrange_attributes_highlighting=warning
+
+resharper_redundant_blank_lines_highlighting=warning
+resharper_unnecessary_whitespace_highlighting=none
+
+resharper_arrange_static_member_qualifier_highlighting=warning
+resharper_arrange_this_qualifier_highlighting=warning
+resharper_redundant_base_qualifier_highlighting=warning
+
+resharper_arrange_modifiers_order_highlighting=warning
+resharper_arrange_type_modifiers_highlighting=warning
+resharper_arrange_type_member_modifiers_highlighting=warning
+
+resharper_built_in_type_reference_style_for_member_access_highlighting=warning
+resharper_built_in_type_reference_style_highlighting=warning
+
+resharper_comment_typo_highlighting=none
+resharper_string_literal_typo_highlighting=none
+resharper_identifier_typo_highlighting=none
+resharper_markup_attribute_typo_highlighting=none
+resharper_markup_text_typo_highlighting=none
+
+resharper_public_constructor_in_abstract_class_highlighting=none
+
+resharper_arrange_redundant_parentheses_highlighting=hint
+resharper_convert_if_statement_to_null_coalescing_expression_highlighting=hint
+resharper_convert_to_local_function_highlighting=hint
+
+resharper_blank_lines_before_single_line_comment=1
+resharper_blank_lines_before_multiline_statements=1
+resharper_blank_lines_after_multiline_statements=1
+resharper_blank_lines_around_multiline_case_section=1
+resharper_csharp_keep_blank_lines_in_code=1
+resharper_csharp_keep_blank_lines_in_declarations=1
+resharper_csharp_wrap_arguments_style=chop_if_long
+resharper_csharp_wrap_parameters_style=chop_if_long
+resharper_place_attribute_on_same_line=false
+resharper_place_simple_initializer_on_single_line=false
+resharper_place_simple_switch_expression_on_single_line=true
+resharper_space_within_single_line_array_initializer_braces=true
+resharper_xmldoc_indent_child_elements=ZeroIndent
+resharper_xmldoc_indent_text=ZeroIndent
+resharper_xmldoc_max_blank_lines_between_tags=1
+resharper_wrap_array_initializer_style=chop_if_long
+resharper_show_autodetect_configure_formatting_tip=false
+resharper_keep_existing_switch_expression_arrangement=false
+resharper_keep_existing_initializer_arrangement=false
+resharper_keep_existing_expr_member_arrangement=false
+resharper_blank_lines_before_block_statements=1
+resharper_blank_lines_before_control_transfer_statements=1
+resharper_blank_lines_after_control_transfer_statements=1
+resharper_csharp_max_line_length=140
+
+resharper_localizable_element_highlighting=hint
+resharper_specify_a_culture_in_string_conversion_explicitly_highlighting=none
+resharper_string_compare_is_culture_specific_1_highlighting=none
+resharper_string_compare_is_culture_specific_2_highlighting=none
+resharper_string_compare_is_culture_specific_3_highlighting=none
+resharper_string_compare_is_culture_specific_4_highlighting=none
+resharper_string_compare_is_culture_specific_5_highlighting=none
+resharper_string_compare_is_culture_specific_6_highlighting=none
+resharper_string_compare_to_is_culture_specific_highlighting=none
+resharper_string_index_of_is_culture_specific_1_highlighting=none
+resharper_string_index_of_is_culture_specific_2_highlighting=none
+resharper_string_index_of_is_culture_specific_3_highlighting=none
+resharper_string_last_index_of_is_culture_specific_1_highlighting=none
+resharper_string_last_index_of_is_culture_specific_2_highlighting=none
+resharper_string_last_index_of_is_culture_specific_3_highlighting=none
+
+resharper_type_parameter_can_be_variant_highlighting=hint
+resharper_unused_member_global_highlighting=none
+
+resharper_cpp_clang_tidy_cppcoreguidelines_special_member_functions_highlighting=hint
+resharper_cpp_clang_tidy_hicpp_special_member_functions_highlighting=hint
+resharper_cpp_clang_tidy_hicpp_use_auto_highlighting=hint
+resharper_cpp_clang_tidy_modernize_use_nodiscard_highlighting=hint
+resharper_cpp_default_case_not_handled_in_switch_statement_highlighting=hint
+resharper_cpp_local_variable_may_be_const_highlighting=none
+resharper_cpp_member_function_may_be_const_highlighting=hint
+resharper_cpp_member_function_may_be_static_highlighting=hint
+resharper_cpp_parameter_may_be_const_highlighting=none
+resharper_cpp_possibly_uninitialized_member_highlighting=hint
+resharper_cpp_smart_pointer_vs_make_function_highlighting=hint
+resharper_cpp_unused_include_directive_highlighting=hint
+
+[*.{cs,csx,vb,vbx,cpp,h,cc,hpp,c}]
+indent_size=4
+insert_final_newline=false
+trim_trailing_whitespace=true
+charset=utf-8
+
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+indent_size=2
+
+[*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size=2
+
+[*.json]
+indent_size=2
+
+[*.ps1]
+indent_size=2
+
+[*.sh]
+indent_style=space
+end_of_line=lf
+indent_size=2

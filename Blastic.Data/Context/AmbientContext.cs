@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Blastic.Data.Context
 {
-	public class AmbientContext<T> where T : class
+	public class AmbientContext<T> : IDisposable where T : class
 	{
 		private static readonly ConditionalWeakTable<string, T> ContextTable;
 
@@ -16,6 +16,8 @@ namespace Blastic.Data.Context
 		{
 			ContextTable = new ConditionalWeakTable<string, T>();
 		}
+
+		private readonly bool _initializedByThis;
 		
 		public AmbientContext()
 		{
@@ -28,6 +30,8 @@ namespace Blastic.Data.Context
 
 			crossReferenceKey = Guid.NewGuid().ToString("N");
 			Storage.Value = crossReferenceKey;
+
+			_initializedByThis = true;
 		}
 		
 		public T Get()
@@ -48,6 +52,17 @@ namespace Blastic.Data.Context
 			}
 
 			ContextTable.Add(crossReferenceKey, value);
+		}
+
+		public void Dispose()
+		{
+			if (!_initializedByThis)
+			{
+				return;
+			}
+
+			ContextTable.Remove(Storage.Value);
+			Storage.Value = null;
 		}
 	}
 }

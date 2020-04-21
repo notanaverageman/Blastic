@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -79,7 +79,7 @@ namespace Blastic.Ordering
 				return _isAbsoluteMaximum ? 0 : -1;
 			}
 
-			int maxCount = _numbers.Count < other._numbers.Count
+			int maxCount = _numbers.Count > other._numbers.Count
 				? _numbers.Count
 				: other._numbers.Count;
 

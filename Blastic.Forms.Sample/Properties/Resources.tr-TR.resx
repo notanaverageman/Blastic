@@ -97,7 +97,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Sample.Homepage" xml:space="preserve">
+  <data name="Sample.Home.Title" xml:space="preserve">
     <value>Anasayfa</value>
+  </data>
+  <data name="Sample.AddMachine.MachineName" xml:space="preserve">
+    <value>Makine ismi</value>
+  </data>
+  <data name="Sample.AddMachine.SecondsPerFrame" xml:space="preserve">
+    <value>Bir frame için gereken zaman (saniye)</value>
+  </data>
+  <data name="Sample.Home.AddMachine" xml:space="preserve">
+    <value>Makine Ekle</value>
+  </data>
+  <data name="Sample.Create" xml:space="preserve">
+    <value>Oluştur</value>
+  </data>
+  <data name="Sample.Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Sample.AddMachine.AlreadyExists" xml:space="preserve">
+    <value>Aynı isimli bir makine var</value>
+  </data>
+  <data name="Sample.Machines.AddJob" xml:space="preserve">
+    <value>İş Ekle</value>
+  </data>
+  <data name="Sample.AddJob.SceneName" xml:space="preserve">
+    <value>Sahne ismi</value>
+  </data>
+  <data name="Sample.AddJob.StartFrame" xml:space="preserve">
+    <value>Başlangıç frame'i</value>
+  </data>
+  <data name="Sample.AddJob.EndFrame" xml:space="preserve">
+    <value>Bitiş frame'i</value>
   </data>
 </root>

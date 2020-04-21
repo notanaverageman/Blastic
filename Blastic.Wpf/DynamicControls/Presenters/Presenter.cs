@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Properties;
 using Blastic.Reactive;
@@ -7,7 +7,7 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class Presenter : Control, IPresenter
 	{
-		public IReactiveProperty Property { get; set; }
+		public IReadOnlyReactiveProperty Property { get; set; }
 
 		public IReadOnlyReactiveProperty<string> Help { get; set; }
 		public IReadOnlyReactiveProperty<string> Label { get; set; }

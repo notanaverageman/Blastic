@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Data;
@@ -132,7 +132,7 @@ namespace Blastic.Forms.Sample.Data.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = @"UPDATE Machines SET Name=@Name SecondsPerFrame=@SecondsPerFrame WHERE Id=@Id";
+			command.CommandText = @"UPDATE Machines SET Name=@Name, SecondsPerFrame=@SecondsPerFrame, WHERE Id=@Id";
 
 			command.AddParameterWithValue("@Name", machine.Name.Value);
 			command.AddParameterWithValue("@SecondsPerFrame", machine.SecondsPerFrame.Value);

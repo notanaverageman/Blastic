@@ -1,4 +1,4 @@
-﻿using Blastic.DynamicControls;
+using Blastic.DynamicControls;
 using Blastic.Reactive;
 using Xamarin.Forms;
 using GridLength = Blastic.DynamicControls.Properties.GridLength;
@@ -21,12 +21,12 @@ namespace Blastic.Forms.DynamicControls.Presenters
 
 		public static readonly BindableProperty PropertyProperty = BindableProperty.Create(
 			nameof(Property),
-			typeof(IReactiveProperty),
+			typeof(IReadOnlyReactiveProperty),
 			typeof(Presenter),
 			default(IReactiveProperty));
-		public IReactiveProperty Property
+		public IReadOnlyReactiveProperty Property
 		{
-			get => (IReactiveProperty)GetValue(PropertyProperty);
+			get => (IReadOnlyReactiveProperty)GetValue(PropertyProperty);
 			set => SetValue(PropertyProperty, value);
 		}
 

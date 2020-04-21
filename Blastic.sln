@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blastic.Forms.Sample.iOS", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blastic.Forms.Sample.Android", "Blastic.Forms.Sample.Android\Blastic.Forms.Sample.Android.csproj", "{1C6E659A-E51F-4423-A13B-5B5DEAA2B8CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blastic.Forms", "Blastic.Forms\Blastic.Forms.csproj", "{A582FF56-894B-483E-B1E0-54225F0FD081}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Forms", "Blastic.Forms\Blastic.Forms.csproj", "{A582FF56-894B-483E-B1E0-54225F0FD081}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

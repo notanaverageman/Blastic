@@ -61,11 +61,101 @@ namespace Blastic.Forms.Sample.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End frame.
+        /// </summary>
+        internal static string Sample_AddJob_EndFrame {
+            get {
+                return ResourceManager.GetString("Sample.AddJob.EndFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scene name.
+        /// </summary>
+        internal static string Sample_AddJob_SceneName {
+            get {
+                return ResourceManager.GetString("Sample.AddJob.SceneName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start frame.
+        /// </summary>
+        internal static string Sample_AddJob_StartFrame {
+            get {
+                return ResourceManager.GetString("Sample.AddJob.StartFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine already exists.
+        /// </summary>
+        internal static string Sample_AddMachine_AlreadyExists {
+            get {
+                return ResourceManager.GetString("Sample.AddMachine.AlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine name.
+        /// </summary>
+        internal static string Sample_AddMachine_MachineName {
+            get {
+                return ResourceManager.GetString("Sample.AddMachine.MachineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seconds per frame.
+        /// </summary>
+        internal static string Sample_AddMachine_SecondsPerFrame {
+            get {
+                return ResourceManager.GetString("Sample.AddMachine.SecondsPerFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Sample_Cancel {
+            get {
+                return ResourceManager.GetString("Sample.Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        internal static string Sample_Create {
+            get {
+                return ResourceManager.GetString("Sample.Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Machine.
+        /// </summary>
+        internal static string Sample_Home_AddMachine {
+            get {
+                return ResourceManager.GetString("Sample.Home.AddMachine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
-        internal static string Sample_Homepage {
+        internal static string Sample_Home_Title {
             get {
-                return ResourceManager.GetString("Sample.Homepage", resourceCulture);
+                return ResourceManager.GetString("Sample.Home.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Job.
+        /// </summary>
+        internal static string Sample_Machines_AddJob {
+            get {
+                return ResourceManager.GetString("Sample.Machines.AddJob", resourceCulture);
             }
         }
     }

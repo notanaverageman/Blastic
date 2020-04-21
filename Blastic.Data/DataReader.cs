@@ -52,6 +52,18 @@ namespace Blastic.Data
 				return default;
 			}
 
+			bool isBool = typeof(T) == typeof(bool) || typeof(T) == typeof(bool?);
+
+			if (isBool && (value is int boolInt))
+			{
+				return (T)(object)Convert.ToBoolean(boolInt);
+			}
+
+			if (isBool && (value is long boolLong))
+			{
+				return (T)(object)Convert.ToBoolean(boolLong);
+			}
+
 			bool isInt = typeof(T) == typeof(int) || typeof(T) == typeof(int?);
 
 			if ((isInt || typeof(T).IsEnum) && value is long l)
@@ -84,7 +96,7 @@ namespace Blastic.Data
 				throw new ArgumentException("Return type should be a list of enums.");
 			}
 
-			string valueAsString = (string) value;
+			string valueAsString = (string)value;
 			string[] tokens = valueAsString.Split(new[] { ListSeparator }, StringSplitOptions.RemoveEmptyEntries);
 
 			List<T> result = new List<T>();

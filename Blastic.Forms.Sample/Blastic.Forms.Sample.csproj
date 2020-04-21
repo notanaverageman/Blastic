@@ -29,8 +29,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\TestView.xaml.cs">
-      <DependentUpon>TestView.xaml</DependentUpon>
+    <Compile Update="UserInterface\JobView.xaml.cs">
+      <DependentUpon>JobView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\MachineView.xaml.cs">
+      <DependentUpon>MachineView.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>

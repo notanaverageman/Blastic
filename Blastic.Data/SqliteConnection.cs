@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Common;
 using System.Runtime.CompilerServices;
 using System.Transactions;
@@ -21,6 +21,8 @@ namespace Blastic.Data
 		private readonly DatabaseConfiguration _databaseConfiguration;
 		private readonly SQLiteConnection _parent;
 
+		private readonly AmbientContext<SQLiteConnection> _ambientContext;
+
 		private Transaction _scopeTransaction;
 		private bool _isInTransactionScope;
 
@@ -34,13 +36,13 @@ namespace Blastic.Data
 		{
 			_databaseConfiguration = databaseConfiguration;
 
-			AmbientContext<SQLiteConnection> ambientContext = new AmbientContext<SQLiteConnection>();
+			_ambientContext = new AmbientContext<SQLiteConnection>();
 
 			ProviderSpecifics = new SqliteProviderSpecifics(this);
 
 			RegisterToTransactionScope();
 
-			SQLiteConnection parent = ambientContext.Get();
+			SQLiteConnection parent = _ambientContext.Get();
 
 			if (parent != null)
 			{
@@ -53,7 +55,7 @@ namespace Blastic.Data
 			{
 				(DbConnection, DbTransaction) = CreateDbConnection();
 
-				ambientContext.Save(this);
+				_ambientContext.Save(this);
 			}
 		}
 
@@ -116,6 +118,8 @@ namespace Blastic.Data
 
 		public override void Dispose()
 		{
+			_ambientContext.Dispose();
+
 			if (_parent != null)
 			{
 				Logger.LogDebug("SQLite connection ignoring dispose since parent will handle it.");
@@ -149,7 +153,7 @@ namespace Blastic.Data
 			Logger.LogDebug("SQLite connection disposing transaction and connection.");
 
 			DbTransaction.Dispose();
-			DbTransaction.Dispose();
+			DbConnection.Dispose();
 		}
 
 		void IEnlistmentNotification.Commit(Enlistment enlistment)

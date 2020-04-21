@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
+using Blastic.Ordering;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
@@ -22,10 +23,13 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			ActiveItem.Value = Items.FirstOrDefault();
 
-			Lifetime.Initialize.Subscribe(async x =>
-			{
-				await ExecuteInitializationSteps(x.Parameter.CancellationToken, initializationSteps);
-			});
+			Lifetime.Initialize.Subscribe(
+				async x =>
+				{
+					await ExecuteInitializationSteps(x.Parameter.CancellationToken, initializationSteps);
+				},
+				// This order ensures that we are running before child initializations.
+				new Order(int.MinValue));
 
 			Lifetime.Activate.Subscribe(async x =>
 			{

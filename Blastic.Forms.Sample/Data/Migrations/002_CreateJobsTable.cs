@@ -20,7 +20,7 @@ namespace Blastic.Forms.Sample.Data.Migrations
 			command.CommandText = $@"CREATE TABLE Jobs (
                                         Id         INTEGER PRIMARY KEY {providerSpecifics.IdentityColumn},
                                         MachineId  INTEGER,
-										Name       {providerSpecifics.NVarCharMaxColumn},
+										SceneName  {providerSpecifics.NVarCharMaxColumn},
 										IsStarted  INTEGER,
 										QueueDate  DATETIME,
 										StartDate  DATETIME,

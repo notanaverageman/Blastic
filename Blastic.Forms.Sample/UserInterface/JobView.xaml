@@ -1,24 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.TestView"
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.JobView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:data="clr-namespace:Blastic.Forms.Sample.Data;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d">
 
 	<d:ContentPage.BindingContext>
-		<userInterface:TestViewModel />
+		<userInterface:JobViewModel />
 	</d:ContentPage.BindingContext>
 
-	<StackLayout>
-		<Label HorizontalOptions="CenterAndExpand"
-			   Text="{Binding Title.Value}"
-			   VerticalOptions="CenterAndExpand" />
+	<StackLayout Margin="8,0"
+		  controlExtensions:GridExtensions.RowDefinitions="Auto,*">
 
-		<Entry Text="{Binding Text.Value}" />
-
-		<Button Command="{Binding WriteSettingCommand}"
-				Text="Save" />
+		<Label Text="{Binding Job.SceneName.Value}" />
 	</StackLayout>
 </ContentPage>

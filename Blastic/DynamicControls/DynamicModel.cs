@@ -1,35 +1,46 @@
-﻿using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Blastic.DynamicControls
 {
 	public class DynamicModel : ElementContainer
 	{
-		private readonly TaskCompletionSource<bool> _taskCompletionSource;
+		private readonly ConcurrentBag<TaskCompletionSource<bool>> _taskCompletionSources;
 
 		public DynamicModel()
 		{
-			_taskCompletionSource = new TaskCompletionSource<bool>();
+			_taskCompletionSources = new ConcurrentBag<TaskCompletionSource<bool>>();
 		}
 
 		public void Ok()
 		{
-			if (!_taskCompletionSource.Task.IsCompleted)
-			{
-				_taskCompletionSource.SetResult(true);
-			}
+			Complete(true);
 		}
 
 		public void Cancel()
 		{
-			if (!_taskCompletionSource.Task.IsCompleted)
-			{
-				_taskCompletionSource.SetResult(false);
-			}
+			Complete(false);
 		}
 
 		public Task<bool> WaitCompletion()
 		{
-			return _taskCompletionSource.Task;
+			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+			_taskCompletionSources.Add(taskCompletionSource);
+
+			return taskCompletionSource.Task;
+		}
+
+		private void Complete(bool result)
+		{
+			while(_taskCompletionSources.TryTake(out TaskCompletionSource<bool> taskCompletionSource))
+			{
+				if (taskCompletionSource.Task.IsCompleted)
+				{
+					return;
+				}
+
+				taskCompletionSource.SetResult(result);
+			}
 		}
 	}
 }

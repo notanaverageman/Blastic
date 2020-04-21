@@ -117,7 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Sample.Homepage" xml:space="preserve">
+  <data name="Sample.Home.Title" xml:space="preserve">
     <value>Home</value>
+  </data>
+  <data name="Sample.AddMachine.MachineName" xml:space="preserve">
+    <value>Machine name</value>
+  </data>
+  <data name="Sample.AddMachine.SecondsPerFrame" xml:space="preserve">
+    <value>Seconds per frame</value>
+  </data>
+  <data name="Sample.Home.AddMachine" xml:space="preserve">
+    <value>Add Machine</value>
+  </data>
+  <data name="Sample.Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Sample.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Sample.AddMachine.AlreadyExists" xml:space="preserve">
+    <value>Machine already exists</value>
+  </data>
+  <data name="Sample.Machines.AddJob" xml:space="preserve">
+    <value>Add Job</value>
+  </data>
+  <data name="Sample.AddJob.SceneName" xml:space="preserve">
+    <value>Scene name</value>
+  </data>
+  <data name="Sample.AddJob.StartFrame" xml:space="preserve">
+    <value>Start frame</value>
+  </data>
+  <data name="Sample.AddJob.EndFrame" xml:space="preserve">
+    <value>End frame</value>
   </data>
 </root>

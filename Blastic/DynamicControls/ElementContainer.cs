@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Blastic.Commanding;
 using Blastic.ControlExtensions;
@@ -66,7 +66,7 @@ namespace Blastic.DynamicControls
 
 		public static T AddLabel<T>(
 			this T container,
-			IReactiveProperty<string> property,
+			IReadOnlyReactiveProperty<string> property,
 			Action<LabelField> configure = null) where T : IElementContainer
 		{
 			LabelField element = new LabelField(property);

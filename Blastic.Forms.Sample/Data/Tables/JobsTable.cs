@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,28 +28,27 @@ namespace Blastic.Forms.Sample.Data.Tables
 
 			while (reader.Read())
 			{
-				Job job = CreateJob(reader);
+				Job job = CreateJob(reader, machine);
 				jobs.Add(job);
 			}
 
 			return jobs;
 		}
 
-		private static Job CreateJob(DataReader reader)
+		private Job CreateJob(DataReader reader, Machine machine)
 		{
 			int id = reader.Get<int>("Id");
-			int machineId = reader.Get<int>("MachineId");
 
-			string name = reader.Get<string>("Name");
+			string sceneName = reader.Get<string>("SceneName");
 			bool isStarted = reader.Get<bool>("IsStarted");
-			DateTime queuedDate = reader.Get<DateTime>("QueuedDate");
-			DateTime startedDate = reader.Get<DateTime>("StartedDate");
+			DateTime queuedDate = reader.Get<DateTime>("QueueDate");
+			DateTime startedDate = reader.Get<DateTime>("StartDate");
 			int startFrame = reader.Get<int>("StartFrame");
 			int endFrame = reader.Get<int>("EndFrame");
 
-			Job job = new Job(id, machineId);
+			Job job = new Job(id, machine);
 
-			job.Name.Value = name;
+			job.SceneName.Value = sceneName;
 			job.IsStarted.Value = isStarted;
 			job.QueueDate.Value = queuedDate;
 			job.StartDate.Value = startedDate;
@@ -99,11 +98,11 @@ namespace Blastic.Forms.Sample.Data.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = @"INSERT INTO Jobs (MachineId, Name, IsStarted, QueueDate, StartDate, StartFrame, EndFrame)
-									VALUES (@MachineId, @Name, @IsStarted, @QueueDate, @StartDate, @StartFrame, @EndFrame)";
+			command.CommandText = @"INSERT INTO Jobs (MachineId, SceneName, IsStarted, QueueDate, StartDate, StartFrame, EndFrame)
+									VALUES (@MachineId, @SceneName, @IsStarted, @QueueDate, @StartDate, @StartFrame, @EndFrame)";
 
-			command.AddParameterWithValue("@MachineId", job.MachineId);
-			command.AddParameterWithValue("@Name", job.Name.Value);
+			command.AddParameterWithValue("@MachineId", job.Machine.Value.Id);
+			command.AddParameterWithValue("@SceneName", job.SceneName.Value);
 			command.AddParameterWithValue("@IsStarted", job.IsStarted.Value);
 			command.AddParameterWithValue("@QueueDate", job.QueueDate.Value);
 			command.AddParameterWithValue("@StartDate", job.StartDate.Value);
@@ -119,18 +118,18 @@ namespace Blastic.Forms.Sample.Data.Tables
 		{
 			using Command command = connection.CreateCommand();
 
-			command.CommandText = @"UPDATE Settings SET
-										MachineId=@MachineId
-										Name=@Name
-										IsStarted=@IsStarted
-										QueueDate=@QueueDate
-										StartDate=@StartDate
-										StartFrame=@StartFrame
+			command.CommandText = @"UPDATE Jobs SET
+										MachineId=@MachineId,
+										SceneName=@SceneName,
+										IsStarted=@IsStarted,
+										QueueDate=@QueueDate,
+										StartDate=@StartDate,
+										StartFrame=@StartFrame,
 										EndFrame=@EndFrame
 									WHERE Id=@Id";
 
-			command.AddParameterWithValue("@MachineId", job.MachineId);
-			command.AddParameterWithValue("@Name", job.Name.Value);
+			command.AddParameterWithValue("@MachineId", job.Machine.Value.Id);
+			command.AddParameterWithValue("@SceneName", job.SceneName.Value);
 			command.AddParameterWithValue("@IsStarted", job.IsStarted.Value);
 			command.AddParameterWithValue("@QueueDate", job.QueueDate.Value);
 			command.AddParameterWithValue("@StartDate", job.StartDate.Value);
