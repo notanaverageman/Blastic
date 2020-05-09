@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,23 +11,29 @@ namespace Blastic.Reactive
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+		private readonly Lazy<IObservable<bool>> _hasErrorObservable;
 		private readonly List<Func<T, string>> _validators;
 		private readonly List<string> _errors;
 
 		protected abstract IObservable<T> Source { get; }
 
 		public bool HasErrors => _errors.Count > 0;
-		public IObservable<bool> HasErrorObservable { get; }
+		public IObservable<bool> HasErrorObservable => _hasErrorObservable.Value;
 
 		public ReactivePropertyBase()
 		{
 			_validators = new List<Func<T, string>>();
 			_errors = new List<string>();
 
-			HasErrorObservable = Observable.FromEventPattern<DataErrorsChangedEventArgs>(
-					x => ErrorsChanged += x,
-					x => ErrorsChanged -= x)
-				.Select(x => HasErrors);
+			IObservable<bool> CreateHasErrorObservable()
+			{
+				return Observable.FromEventPattern<DataErrorsChangedEventArgs>(
+						x => ErrorsChanged += x,
+						x => ErrorsChanged -= x)
+					.Select(x => HasErrors);
+			}
+
+			_hasErrorObservable = new Lazy<IObservable<bool>>(CreateHasErrorObservable);
 		}
 
 		protected void Initialize()

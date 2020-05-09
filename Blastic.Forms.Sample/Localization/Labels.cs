@@ -31,7 +31,7 @@ namespace Blastic.Forms.Sample.Localization
 			AddJob = new AddJobLabels(CreateProperty);
 		}
 
-		private IReactiveProperty<string> CreateProperty(string key)
+		private IReadOnlyReactiveProperty<string> CreateProperty(string key)
 		{
 			return new LocalizableReactiveProperty(_localizationService, key);
 		}

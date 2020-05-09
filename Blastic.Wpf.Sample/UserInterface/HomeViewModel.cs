@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -33,7 +33,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> Title { get; }
 
 		public IReactiveProperty<string> Text { get; }
-		public IReactiveProperty<string> ButtonText { get; }
+		public IReadOnlyReactiveProperty<string> ButtonText { get; }
 
 		public AsyncCommand TestCommand { get; }
 		public AsyncCommand HelpCommand { get; }
@@ -54,7 +54,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 			Text = new ReactiveProperty<string>();
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
-			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test");
+			ButtonText = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Test")
+				.Select((x, y) => string.Format(x, y))
+				.ToReadOnlyReactiveProperty();
 
 			HelpCommand = InitializeHelpCommand();
 

@@ -19,7 +19,7 @@ namespace Blastic.Wpf.UserInterface.Logs
 		private readonly IWindowManager _windowManager;
 		private readonly LogSettingsViewModel _logSettingsViewModel;
 
-		public IReactiveProperty<string> Title { get; }
+		public IReadOnlyReactiveProperty<string> Title { get; }
 
 		public IReactiveProperty<object> View { get; }
 
