@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -80,7 +80,7 @@ namespace Blastic.Reactive
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addedItems));
+				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, addedItems));
 			}
 
 			OnUIThread(AddRange);
@@ -114,7 +114,7 @@ namespace Blastic.Reactive
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems));
+				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, removedItems));
 			}
 
 			OnUIThread(RemoveRange);
