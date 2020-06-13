@@ -8,7 +8,7 @@ namespace Blastic.Wpf.Data.ProgramData.Migrations
 {
 	public class CreateSettingsTable : ProgramDatabaseMigrationBase
 	{
-		public override Version Version { get; } = new Version(0, 0, 0);
+		public override Version Version { get; } = new Version(int.MinValue, 1, 0);
 
 		public override async Task MigrateUp(Connection connection, CancellationToken cancellationToken)
 		{

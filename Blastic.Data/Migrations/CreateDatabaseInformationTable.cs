@@ -7,7 +7,7 @@ namespace Blastic.Data.Migrations
 {
 	public class CreateDatabaseInformationTable : MigrationBase
 	{
-		public static readonly Version StaticVersion = new Version(0, 0, 0);
+		public static readonly Version StaticVersion = new Version(int.MinValue);
 
 		public override Version Version => StaticVersion;
 
