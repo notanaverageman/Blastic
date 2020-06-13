@@ -35,16 +35,21 @@ steps:
 
 - template: azure-pipelines-project-template.yml	
   parameters:	
-    project: Blastic.Data	
-    version: ${{ variables.version }}	
-    buildConfiguration: ${{ variables.buildConfiguration }}	
+    project: Blastic.Data
+    version: ${{ variables.version }}
+    buildConfiguration: ${{ variables.buildConfiguration }}
 
 - template: azure-pipelines-project-template.yml	
   parameters:	
-    project: Blastic.Wpf	
-    version: ${{ variables.version }}	
-    buildConfiguration: ${{ variables.buildConfiguration }}	
+    project: Blastic.Wpf
+    version: ${{ variables.version }}
+    buildConfiguration: ${{ variables.buildConfiguration }}
 
+- template: azure-pipelines-project-template.yml	
+  parameters:	
+    project: Blastic.Wpf.Material
+    version: ${{ variables.version }}
+    buildConfiguration: ${{ variables.buildConfiguration }}
 
 - task: NuGetCommand@2
   inputs:
