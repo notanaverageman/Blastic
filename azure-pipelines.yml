@@ -8,7 +8,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  version: '0.1.0-$(Build.BuildNumber)'
+  version: '1.0.0-beta-$(Build.BuildNumber)'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -35,13 +35,13 @@ steps:
 
 - template: azure-pipelines-project-template.yml	
   parameters:	
-    project: Blastic.Common	
+    project: Blastic.Data	
     version: ${{ variables.version }}	
     buildConfiguration: ${{ variables.buildConfiguration }}	
 
 - template: azure-pipelines-project-template.yml	
   parameters:	
-    project: Blastic.Data	
+    project: Blastic.Wpf	
     version: ${{ variables.version }}	
     buildConfiguration: ${{ variables.buildConfiguration }}	
 
