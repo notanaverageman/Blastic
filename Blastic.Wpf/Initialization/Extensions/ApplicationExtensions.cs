@@ -10,7 +10,6 @@ using Blastic.Services.Notifications;
 using Blastic.Services.Settings;
 using Blastic.Services.Windowing;
 using Blastic.UserInterface.Settings;
-using Blastic.UserInterface.Settings.Steps;
 using Blastic.Wpf.DynamicControls;
 using Blastic.Wpf.Services.Dialog;
 using Blastic.Wpf.Services.Settings;

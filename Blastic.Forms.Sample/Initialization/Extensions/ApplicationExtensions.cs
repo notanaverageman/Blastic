@@ -9,7 +9,7 @@ using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
 using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.UserInterface;
-using Blastic.UserInterface.Settings.Steps;
+using Blastic.Initialization.Steps;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Forms.Sample.Initialization.Extensions
@@ -24,7 +24,6 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 
 			application
 				.AddLocalizationSource(Properties.Resources.ResourceManager)
-				.AddInitializationStep<ReadSettingsStep>()
 				.AddShellTab<HomeViewModel>()
 				.AddProgramDatabase<ProgramDatabase>(DatabaseProvider.SQLite, $"Data Source={databasePath};")
 				.AddSettingsService()

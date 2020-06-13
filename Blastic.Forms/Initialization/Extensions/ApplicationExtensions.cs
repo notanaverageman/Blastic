@@ -1,4 +1,4 @@
-﻿using System.Resources;
+using System.Resources;
 using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Properties;
@@ -12,7 +12,6 @@ using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
 using Blastic.Services.Settings;
 using Blastic.UserInterface.Settings;
-using Blastic.UserInterface.Settings.Steps;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blastic.Forms.Initialization.Extensions
