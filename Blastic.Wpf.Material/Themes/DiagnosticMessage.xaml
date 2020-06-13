@@ -37,17 +37,17 @@
 							<DataTrigger Binding="{Binding Severity}"
 										 Value="Error">
 								<Setter Property="Kind" Value="AlertOctagon" />
-								<Setter Property="Foreground" Value="{StaticResource RedBrush}" />
+								<Setter Property="Foreground" Value="{StaticResource BlasticRedBrushMedium}" />
 							</DataTrigger>
 							<DataTrigger Binding="{Binding Severity}"
 										 Value="Warning">
 								<Setter Property="Kind" Value="Alert" />
-								<Setter Property="Foreground" Value="{StaticResource OrangeBrush}" />
+								<Setter Property="Foreground" Value="{StaticResource BlasticOrangeBrushMedium}" />
 							</DataTrigger>
 							<DataTrigger Binding="{Binding Severity}"
 										 Value="Info">
 								<Setter Property="Kind" Value="AlertCircle" />
-								<Setter Property="Foreground" Value="{StaticResource BlueBrush}" />
+								<Setter Property="Foreground" Value="{StaticResource BlasticBlueBrushMedium}" />
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>
