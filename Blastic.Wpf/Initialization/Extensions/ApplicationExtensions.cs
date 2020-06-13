@@ -1,8 +1,8 @@
-﻿using System.Resources;
+using System.Resources;
 using Blastic.DynamicControls;
 using Blastic.Initialization.Steps;
 using Blastic.Ordering;
-using Blastic.Properties;
+using Blastic.Wpf.Properties;
 using Blastic.Services.Dialog;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
