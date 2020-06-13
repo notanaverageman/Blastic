@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding;
 using Blastic.Diagnostics;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
+using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Settings;
@@ -17,7 +19,7 @@ namespace Blastic.UserInterface.Settings
 	{
 		private readonly IPresenterSource _presenterSource;
 
-		private Dictionary<string, Setting> _settings;
+		public ReactiveCollection<Setting> SettingsToShow { get; }
 
 		public abstract string SectionName { get; }
 		public ISettingsService SettingsService { get; }
@@ -31,43 +33,49 @@ namespace Blastic.UserInterface.Settings
 			_presenterSource = presenterSource;
 			SettingsService = settingsService;
 
-			Lifetime.Initialize.Subscribe(x => OnInitialize(), new Order(int.MinValue));
+			SettingsToShow = new ReactiveCollection<Setting>();
+
+			Lifetime.Initialize.Subscribe(OnInitialize, new Order(int.MinValue));
 		}
 
-		private Task OnInitialize()
+		private async Task OnInitialize(AsyncCommandContext<InitializationContext> asyncCommandContext)
 		{
 			IsExpanded = new IsExpandedSetting(SettingsService, _presenterSource, SectionName);
 
-			_settings = GetType()
+			List<Setting> settings = GetType()
 				.GetProperties()
 				.Where(x => typeof(Setting).IsAssignableFrom(x.PropertyType))
-				.ToDictionary(
-					x => x.Name,
-					x => (Setting)x.GetValue(this));
+				.Select(x => (Setting)x.GetValue(this))
+				.ToList();
 
-			foreach (Setting setting in _settings.Values)
+			Items.AddRange(settings);
+
+			foreach (Setting setting in settings)
 			{
 				setting.ShowOnUI.Subscribe(x =>
 				{
 					if (x)
 					{
-						Items.Add(setting);
+						SettingsToShow.Add(setting);
 					}
 					else
 					{
-						Items.Remove(setting);
+						SettingsToShow.Remove(setting);
 					}
 				});
-			}
 
-			return Task.CompletedTask;
+				if (asyncCommandContext.ContinueExecution)
+				{
+					await setting.Lifetime.Initialize.Execute(asyncCommandContext.Parameter);
+				}
+			}
 		}
 
 		public virtual Task<IEnumerable<DiagnosticMessage>> GetDiagnosticMessages(CancellationToken cancellationToken)
 		{
 			List<DiagnosticMessage> diagnosticMessages = new List<DiagnosticMessage>();
 
-			foreach (Setting setting in _settings.Values)
+			foreach (Setting setting in Items)
 			{
 				setting.PopulateDiagnosticMessages();
 				ReactiveCollection<DiagnosticMessage> messages = setting.DiagnosticMessages;

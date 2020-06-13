@@ -10,7 +10,7 @@
 
 	<StackPanel>
 		<ItemsControl Margin="0,4,0,0"
-					  ItemsSource="{Binding Items}">
+					  ItemsSource="{Binding SettingsToShow}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate DataType="settings:Setting">
 					<Grid>
