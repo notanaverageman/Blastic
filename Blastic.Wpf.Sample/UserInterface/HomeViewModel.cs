@@ -73,7 +73,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 				.Select(x => !x)
 				.CombineLatest(Lifetime.IsActive, (x, y) => x && y)
 				.ToAsyncCommand()
-				.WithSubscribe(_ => Test());
+				.WithSubscribe(Test);
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
@@ -123,9 +123,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 		public async Task Test()
 		{
-			_localizationService.SetCulture(_x
+			_localizationService.Culture = _x
 				? CultureInfo.GetCultureInfo("en-US")
-				: CultureInfo.GetCultureInfo("tr-TR"));
+				: CultureInfo.GetCultureInfo("tr-TR");
 
 			_x = !_x;
 

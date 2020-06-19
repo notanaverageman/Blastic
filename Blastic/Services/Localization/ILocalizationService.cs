@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using System.Globalization;
 
 namespace Blastic.Services.Localization
 {
 	public interface ILocalizationService
 	{
-		IObservable<CultureInfo> Culture { get; }
+		event EventHandler<CultureChangedEventArgs> CultureChanged;
+
+		CultureInfo Culture { get; set; }
 
 		string GetValue(string key);
-		void SetCulture(CultureInfo culture);
 	}
 }
