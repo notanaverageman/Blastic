@@ -8,11 +8,8 @@
 	   xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
 	   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 	   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
-	   mc:Ignorable="d">
-
-	<d:Shell.BindingContext>
-		<userInterface:MainViewModel />
-	</d:Shell.BindingContext>
+	   mc:Ignorable="d"
+	   x:DataType="userInterface:MainViewModel">
 
 	<Shell.Resources>
 		<DataTemplate x:Key="TabTemplate"
