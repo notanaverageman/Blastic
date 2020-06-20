@@ -80,7 +80,7 @@ namespace Blastic.Reactive
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, addedItems));
+				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 			}
 
 			OnUIThread(AddRange);
@@ -114,7 +114,7 @@ namespace Blastic.Reactive
 
 				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, removedItems));
+				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 			}
 
 			OnUIThread(RemoveRange);
