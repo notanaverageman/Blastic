@@ -123,4 +123,10 @@
   <data name="Blastic.Logs.Window.Title" xml:space="preserve">
     <value>Custom Logs</value>
   </data>
+  <data name="Blastic.Sample.InvalidLength" xml:space="preserve">
+    <value>Length "{0}" is not valid. Minimum should be: "{1}"</value>
+  </data>
+  <data name="Blastic.Sample.InvalidInitial" xml:space="preserve">
+    <value>Does not start with A.</value>
+  </data>
 </root>

@@ -6,11 +6,8 @@
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
-			 mc:Ignorable="d">
-
-	<d:ContentPage.BindingContext>
-		<userInterface:MachineViewModel />
-	</d:ContentPage.BindingContext>
+			 mc:Ignorable="d"
+			 x:DataType="userInterface:MachineViewModel">
 
 	<Grid Margin="8,0"
 		  controlExtensions:GridExtensions.RowDefinitions="Auto,*">

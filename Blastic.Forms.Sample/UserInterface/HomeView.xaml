@@ -4,14 +4,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-			 xmlns:data="clr-namespace:Blastic.Forms.Sample.Data;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
-			 mc:Ignorable="d">
-
-	<d:ContentPage.BindingContext>
-		<userInterface:HomeViewModel />
-	</d:ContentPage.BindingContext>
+			 mc:Ignorable="d"
+			 x:DataType="userInterface:HomeViewModel">
 
 	<Grid Margin="8,0"
 		  controlExtensions:GridExtensions.RowDefinitions="Auto,*">

@@ -1,37 +1,36 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 
 namespace Blastic.Reactive
 {
 	public class ReadOnlyReactiveProperty<T> : ReactivePropertyBase<T>, IReadOnlyReactiveProperty<T>
 	{
-		protected override IObservable<T> Source { get; }
+		private readonly IDisposable _sourceSubscription;
 
-		public T Value { get; private set; }
+		public T Value => GetValue();
+
 		object IReadOnlyReactiveProperty.Value => Value;
 
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
 			T initialValue = default,
 			IEqualityComparer<T> equalityComparer = null)
+			:
+			base(initialValue, equalityComparer)
 		{
-			equalityComparer ??= EqualityComparer<T>.Default;
-
-			Source = source.DistinctUntilChanged(equalityComparer);
-			Value = initialValue;
-
-			Initialize();
+			_sourceSubscription = source.Subscribe(OnNext);
 		}
 
-		protected override T GetValue()
+		private void OnNext(T value)
 		{
-			return Value;
+			SetValue(value);
 		}
 
-		protected override void SetValue(T value)
+		public override void Dispose()
 		{
-			Value = value;
+			_sourceSubscription.Dispose();
+
+			base.Dispose();
 		}
 	}
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace Blastic.Reactive
 {
@@ -11,41 +12,25 @@ namespace Blastic.Reactive
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-		private readonly Lazy<IObservable<bool>> _hasErrorObservable;
-		private readonly List<Func<T, string>> _validators;
-		private readonly List<string> _errors;
+		private readonly IEqualityComparer<T> _equalityComparer;
+		private readonly Subject<T> _source;
 
-		protected abstract IObservable<T> Source { get; }
+		private ReactivePropertyErrorHandler<T> _errorHandler;
+		private T _value;
 
-		public bool HasErrors => _errors.Count > 0;
-		public IObservable<bool> HasErrorObservable => _hasErrorObservable.Value;
+		protected IObservable<T> Source => _source;
 
-		public ReactivePropertyBase()
+		public bool HasErrors => _errorHandler?.HasErrors == true;
+		public IObservable<bool> HasErrorObservable => _errorHandler?.HasErrorObservable;
+
+		protected ReactivePropertyBase(
+			T initialValue,
+			IEqualityComparer<T> equalityComparer)
 		{
-			_validators = new List<Func<T, string>>();
-			_errors = new List<string>();
+			_value = initialValue;
+			_equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
-			IObservable<bool> CreateHasErrorObservable()
-			{
-				return Observable.FromEventPattern<DataErrorsChangedEventArgs>(
-						x => ErrorsChanged += x,
-						x => ErrorsChanged -= x)
-					.Select(x => HasErrors);
-			}
-
-			_hasErrorObservable = new Lazy<IObservable<bool>>(CreateHasErrorObservable);
-		}
-
-		protected void Initialize()
-		{
-			Source
-				.Subscribe(x =>
-				{
-					SetValue(x);
-					TriggerValidation();
-
-					PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
-				});
+			_source = new Subject<T>();
 		}
 
 		public IDisposable Subscribe(IObserver<T> observer)
@@ -67,34 +52,48 @@ namespace Blastic.Reactive
 
 		public void AddValidator(Func<T, string> validator)
 		{
-			_validators.Add(validator);
+			_errorHandler ??= new ReactivePropertyErrorHandler<T>(this);
+			_errorHandler.AddValidator(validator);
 		}
 
 		public void TriggerValidation()
 		{
-			_errors.Clear();
-
-			foreach (Func<T, string> validator in _validators)
-			{
-				string error = validator(GetValue());
-
-				if (string.IsNullOrEmpty(error))
-				{
-					continue;
-				}
-
-				_errors.Add(error);
-			}
-
-			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
+			_errorHandler?.TriggerValidation(_value);
 		}
 
 		public IEnumerable GetErrors(string propertyName)
 		{
-			return _errors;
+			return _errorHandler?.Errors;
 		}
 
-		protected abstract T GetValue();
-		protected abstract void SetValue(T value);
+		internal void InvokeErrorsChanged()
+		{
+			ErrorsChanged?.Invoke(this, Singletons.DataErrorsChangedEventArgs);
+		}
+
+		protected T GetValue()
+		{
+			return _value;
+		}
+
+		protected void SetValue(T value)
+		{
+			if (_equalityComparer?.Equals(_value, value) == true)
+			{
+				return;
+			}
+
+			_value = value;
+			TriggerValidation();
+
+			PropertyChanged?.Invoke(this, Singletons.PropertyChangedEventArgs);
+			_source.OnNext(value);
+		}
+
+		public virtual void Dispose()
+		{
+			_source.OnCompleted();
+			_source.Dispose();
+		}
 	}
 }

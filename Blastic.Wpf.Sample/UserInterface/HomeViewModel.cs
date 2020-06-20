@@ -60,19 +60,25 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 			HelpCommand = InitializeHelpCommand();
 
+			Text.AddValidator(x => x?.Length > 4
+				? ""
+				: string.Format(
+					_localizationService.GetValue("Blastic.Sample.InvalidLength"),
+					x?.Length ?? 0,
+					5));
+
+			Text.AddValidator(x => x?.StartsWith("A") == true ? "" : _localizationService.GetValue("Blastic.Sample.InvalidInitial"));
+
 			TestCommand = Text.HasErrorObservable
 				.Select(x => !x)
 				.CombineLatest(Lifetime.IsActive, (x, y) => x && y)
 				.ToAsyncCommand()
-				.WithSubscribe(_ => Test());
+				.WithSubscribe(Test);
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
 			Lifetime.Initialize.Subscribe(_ => OnInitialize());
 			Lifetime.Activate.Subscribe(_ => OnActivate());
-
-			Text.AddValidator(x => x?.Length > 4 ? "" : "Length is not valid.");
-			Text.AddValidator(x => x?.StartsWith("A") == true ? "" : "Does not start with A.");
 		}
 
 		protected Task OnInitialize()
@@ -117,9 +123,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 		public async Task Test()
 		{
-			_localizationService.SetCulture(_x
+			_localizationService.Culture = _x
 				? CultureInfo.GetCultureInfo("en-US")
-				: CultureInfo.GetCultureInfo("tr-TR"));
+				: CultureInfo.GetCultureInfo("tr-TR");
 
 			_x = !_x;
 

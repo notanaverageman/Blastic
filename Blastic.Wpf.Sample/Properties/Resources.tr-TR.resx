@@ -126,4 +126,10 @@
   <data name="Blastic.Logs.Window.Title" xml:space="preserve">
 	  <value>Özel Günlük</value>
   </data>
+  <data name="Blastic.Sample.InvalidLength" xml:space="preserve">
+    <value>Uzunluk "{0}" geçerli değil. En az "{1}" olmalı.</value>
+  </data>
+  <data name="Blastic.Sample.InvalidInitial" xml:space="preserve">
+    <value>A ile başlamıyor.</value>
+  </data>
 </root>
