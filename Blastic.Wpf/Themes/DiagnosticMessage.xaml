@@ -7,7 +7,7 @@
 
 	<DataTemplate DataType="{x:Type diagnostics:DiagnosticMessage}">
 		<Grid HorizontalAlignment="Left"
-			  ToolTip="{Binding Message}">
+			  ToolTip="{Binding Message.Value}">
 
 			<Grid.Resources>
 				<converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
@@ -23,7 +23,7 @@
 			<TextBlock Grid.Column="1"
 			           VerticalAlignment="Center"
 			           FontSize="12"
-			           Text="{Binding Message}"
+			           Text="{Binding Message.Value}"
 			           TextTrimming="WordEllipsis" />
 
 			<Button Grid.Column="2"
@@ -31,10 +31,10 @@
 					Margin="16,0,0,0"
 					VerticalAlignment="Center"
 					Command="{Binding ActionCommand}"
-					Content="{Binding ActionLabel}"
+					Content="{Binding ActionLabel.Value}"
 					FontSize="12"
 					ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}"
-					Visibility="{Binding Action, Converter={StaticResource NullToVisibilityConverter}}" />
+					Visibility="{Binding ActionCommand, Converter={StaticResource NullToVisibilityConverter}}" />
 		</Grid>
 	</DataTemplate>
 </ResourceDictionary>
