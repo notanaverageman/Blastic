@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Blastic.Platform;
@@ -11,6 +11,7 @@ namespace Blastic.Services.Messaging
 
 		public IObservable<T> GetEventBus<T>()
 		{
+			// TODO: This probably returns a new observable with each call.
 			return _subject.OfType<T>().AsObservable();
 		}
 

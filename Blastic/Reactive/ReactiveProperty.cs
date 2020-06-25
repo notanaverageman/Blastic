@@ -10,8 +10,8 @@ namespace Blastic.Reactive
 			set => SetValue(value);
 		}
 
-		object IReadOnlyReactiveProperty.Value => Value;
-		object IReactiveProperty.Value
+		object? IReadOnlyReactiveProperty.Value => Value;
+		object? IReactiveProperty.Value
 		{
 			get => Value;
 			set => Value = (T)value;
@@ -19,7 +19,7 @@ namespace Blastic.Reactive
 
 		public ReactiveProperty(
 			T initialValue = default,
-			IEqualityComparer<T> equalityComparer = null)
+			IEqualityComparer<T>? equalityComparer = null)
 			:
 			base(initialValue, equalityComparer)
 		{

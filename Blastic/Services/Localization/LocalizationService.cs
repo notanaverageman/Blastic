@@ -7,11 +7,11 @@ namespace Blastic.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
+		public event EventHandler<CultureChangedEventArgs>? CultureChanged;
+
 		private readonly ILocalizationSource[] _sources;
 
 		private CultureInfo _culture;
-
-		public event EventHandler<CultureChangedEventArgs> CultureChanged;
 
 		public CultureInfo Culture
 		{
@@ -25,14 +25,16 @@ namespace Blastic.Services.Localization
 
 		public LocalizationService(IEnumerable<ILocalizationSource> sources)
 		{
+			_culture = CultureInfo.InvariantCulture;
+
 			_sources = sources
 				.OrderBy(x => x.Order)
 				.ToArray();
 		}
 
-		public string GetValue(string key)
+		public string? GetValue(string key)
 		{
-			string result = null;
+			string? result = null;
 
 			foreach (ILocalizationSource source in _sources)
 			{

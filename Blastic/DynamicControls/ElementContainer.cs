@@ -13,7 +13,7 @@ namespace Blastic.DynamicControls
 		double MinHeight { get; set; }
 
 		List<IElement> Elements { get; }
-		void AddElement<TElement>(TElement element, Action<TElement> configure) where TElement : IElement;
+		void AddElement<TElement>(TElement element, Action<TElement>? configure) where TElement : IElement;
 	}
 
 	public class ElementContainer : IElementContainer
@@ -28,7 +28,7 @@ namespace Blastic.DynamicControls
 			Elements = new List<IElement>();
 		}
 
-		public void AddElement<TElement>(TElement element, Action<TElement> configure) where TElement : IElement
+		public void AddElement<TElement>(TElement element, Action<TElement>? configure) where TElement : IElement
 		{
 			configure?.Invoke(element);
 			Elements.Add(element);
@@ -56,7 +56,7 @@ namespace Blastic.DynamicControls
 		public static T AddText<T>(
 			this T container,
 			IReactiveProperty<string> property,
-			Action<TextField> configure = null) where T : IElementContainer
+			Action<TextField>? configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
 			container.AddElement(element, configure);
@@ -67,7 +67,7 @@ namespace Blastic.DynamicControls
 		public static T AddLabel<T>(
 			this T container,
 			IReadOnlyReactiveProperty<string> property,
-			Action<LabelField> configure = null) where T : IElementContainer
+			Action<LabelField>? configure = null) where T : IElementContainer
 		{
 			LabelField element = new LabelField(property);
 			container.AddElement(element, configure);
@@ -78,7 +78,7 @@ namespace Blastic.DynamicControls
 		public static T AddPassword<T>(
 			this T container,
 			IReactiveProperty<string> property,
-			Action<PasswordField> configure = null) where T : IElementContainer
+			Action<PasswordField>? configure = null) where T : IElementContainer
 		{
 			PasswordField element = new PasswordField(property);
 			container.AddElement(element, configure);
@@ -89,7 +89,7 @@ namespace Blastic.DynamicControls
 		public static T AddNumber<T>(
 			this T container,
 			IReactiveProperty<int> property,
-			Action<TextField> configure = null) where T : IElementContainer
+			Action<TextField>? configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
 
@@ -104,7 +104,7 @@ namespace Blastic.DynamicControls
 		public static T AddNumber<T>(
 			this T container,
 			IReactiveProperty<double> property,
-			Action<TextField> configure = null) where T : IElementContainer
+			Action<TextField>? configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
 
@@ -119,7 +119,7 @@ namespace Blastic.DynamicControls
 		public static T AddBoolean<T>(
 			this T container,
 			IReactiveProperty<bool> property,
-			Action<BooleanField> configure = null) where T : IElementContainer
+			Action<BooleanField>? configure = null) where T : IElementContainer
 		{
 			BooleanField element = new BooleanField(property);
 			container.AddElement(element, configure);
@@ -131,7 +131,7 @@ namespace Blastic.DynamicControls
 			this T container,
 			IReactiveProperty<TSelection> property,
 			ReactiveCollection<TSelection> values,
-			Action<SelectionField<TSelection>> configure = null) where T : IElementContainer
+			Action<SelectionField<TSelection>>? configure = null) where T : IElementContainer
 		{
 			SelectionField<TSelection> element = new SelectionField<TSelection>(property, values);
 			container.AddElement(element, configure);
@@ -142,7 +142,7 @@ namespace Blastic.DynamicControls
 		public static T AddAction<T>(
 			this T container,
 			Command command,
-			Action<ActionElement> configure = null) where T : IElementContainer
+			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
 			ActionElement element = new ActionElement(command);
 			container.AddElement(element, configure);
@@ -153,7 +153,7 @@ namespace Blastic.DynamicControls
 		public static T AddAction<T>(
 			this T container,
 			AsyncCommand command,
-			Action<ActionElement> configure = null) where T : IElementContainer
+			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
 			ActionElement element = new ActionElement(command);
 			container.AddElement(element, configure);
@@ -163,7 +163,7 @@ namespace Blastic.DynamicControls
 
 		public static T AddGroup<T>(
 			this T container,
-			Action<GroupElement> configure = null) where T : IElementContainer
+			Action<GroupElement>? configure = null) where T : IElementContainer
 		{
 			GroupElement element = new GroupElement();
 			container.AddElement(element, configure);

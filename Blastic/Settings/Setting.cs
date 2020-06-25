@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Diagnostics;
@@ -75,18 +75,18 @@ namespace Blastic.Settings
 		public abstract Task Save(CancellationToken cancellationToken);
 		public abstract void Revert();
 
-		public virtual string CheckError()
+		public virtual string? CheckError()
 		{
 			return null;
 		}
 
 		public virtual void PopulateDiagnosticMessages()
 		{
-			string error = CheckError();
+			string? error = CheckError();
 
 			if (!string.IsNullOrEmpty(error))
 			{
-				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error));
+				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error!));
 			}
 		}
 	}
@@ -97,7 +97,7 @@ namespace Blastic.Settings
 	/// <typeparam name="T">Type of the value.</typeparam>
 	public abstract class Setting<T> : Setting
 	{
-		private IDisposable _isEnabledSubscription;
+		private IDisposable? _isEnabledSubscription;
 
 		/// <summary>
 		/// Default value to be returned when key does not exist in database.

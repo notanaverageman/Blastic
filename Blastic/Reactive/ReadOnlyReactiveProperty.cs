@@ -9,12 +9,12 @@ namespace Blastic.Reactive
 
 		public T Value => GetValue();
 
-		object IReadOnlyReactiveProperty.Value => Value;
+		object? IReadOnlyReactiveProperty.Value => Value;
 
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
 			T initialValue = default,
-			IEqualityComparer<T> equalityComparer = null)
+			IEqualityComparer<T>? equalityComparer = null)
 			:
 			base(initialValue, equalityComparer)
 		{
@@ -39,7 +39,7 @@ namespace Blastic.Reactive
 		public static ReadOnlyReactiveProperty<T> ToReadOnlyReactiveProperty<T>(
 			this IObservable<T> source,
 			T initialValue = default,
-			IEqualityComparer<T> equalityComparer = null)
+			IEqualityComparer<T>? equalityComparer = null)
 		{
 			return new ReadOnlyReactiveProperty<T>(
 				source,

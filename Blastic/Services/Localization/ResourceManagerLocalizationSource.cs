@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Resources;
 using Blastic.Ordering;
 
@@ -12,7 +12,7 @@ namespace Blastic.Services.Localization
 
 		public ResourceManagerLocalizationSource(
 			ResourceManager resourceManager,
-			Order order = null)
+			Order? order = null)
 		{
 			_resourceManager = resourceManager;
 			Order = order ?? new Order();

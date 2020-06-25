@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -40,7 +40,7 @@ namespace Blastic.ViewManagement.TypeMappers
 			}
 		}
 
-		public Type Map(Type type)
+		public Type? Map(Type type)
 		{
 			string typeName = type.FullName;
 

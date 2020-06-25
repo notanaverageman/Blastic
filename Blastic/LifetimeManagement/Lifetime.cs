@@ -1,4 +1,4 @@
-﻿using System.Reactive.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.LifetimeManagement.Contexts;

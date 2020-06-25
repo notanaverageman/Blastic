@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Disposables;
 using Blastic.Commanding;
 using Blastic.Ordering;
@@ -11,7 +11,7 @@ namespace Blastic.LifetimeManagement
 			this ILifetime lifetime,
 			ILifetime childLifetime,
 			LifetimeChainOptions lifetimeChainOptions,
-			Order order = null)
+			Order? order = null)
 		{
 			CompositeDisposable disposable = new CompositeDisposable();
 

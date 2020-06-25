@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace Blastic.Reactive
 {
 	public interface IReadOnlyReactiveProperty : INotifyPropertyChanged, INotifyDataErrorInfo
 	{
-		object Value { get; }
+		object? Value { get; }
 
 		void TriggerValidation();
-		IObservable<bool> HasErrorObservable { get; }
+		IObservable<bool>? HasErrorObservable { get; }
 	}
 
 	public interface IReadOnlyReactiveProperty<out T> : IReadOnlyReactiveProperty, IObservable<T>

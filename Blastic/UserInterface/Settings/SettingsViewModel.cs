@@ -14,7 +14,7 @@ namespace Blastic.UserInterface.Settings
 	{
 		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
-		public TaskCompletionSource<bool> ShowDiagnosticMessagesTaskCompletionSource { get; set; }
+		public TaskCompletionSource<bool>? ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
 
 		public AsyncCommand SaveCommand { get; }
@@ -52,7 +52,7 @@ namespace Blastic.UserInterface.Settings
 
 			await ExecutionContext.Execute(Check, "Validating settings.");
 
-			if (DiagnosticMessages.Any(x => x.Severity >= Severity.Warning))
+			if (DiagnosticMessages.Any(x => x.Severity.Value >= Severity.Warning))
 			{
 				bool shouldContinue = await ShowDiagnosticMessages();
 
@@ -72,7 +72,12 @@ namespace Blastic.UserInterface.Settings
 
 		private Task<bool> ShowDiagnosticMessages()
 		{
-			ShowDiagnosticMessagesTaskCompletionSource = new TaskCompletionSource<bool>();
+			// Initialize if the task is null or already completed.
+			if (ShowDiagnosticMessagesTaskCompletionSource?.Task?.IsCompleted != false)
+			{
+				ShowDiagnosticMessagesTaskCompletionSource = new TaskCompletionSource<bool>();
+			}
+
 			IsDiagnosticMessagesVisible.Value = true;
 
 			return ShowDiagnosticMessagesTaskCompletionSource.Task;
@@ -81,13 +86,13 @@ namespace Blastic.UserInterface.Settings
 		public void HideDiagnosticMessages()
 		{
 			IsDiagnosticMessagesVisible.Value = false;
-			ShowDiagnosticMessagesTaskCompletionSource.SetResult(false);
+			ShowDiagnosticMessagesTaskCompletionSource?.SetResult(false);
 		}
 
 		public void HideDiagnosticMessagesIgnoreErrors()
 		{
 			IsDiagnosticMessagesVisible.Value = false;
-			ShowDiagnosticMessagesTaskCompletionSource.SetResult(true);
+			ShowDiagnosticMessagesTaskCompletionSource?.SetResult(true);
 		}
 
 		public async Task Cancel()

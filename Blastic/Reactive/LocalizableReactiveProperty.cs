@@ -2,14 +2,14 @@ using Blastic.Services.Localization;
 
 namespace Blastic.Reactive
 {
-	public class LocalizableReactiveProperty : ReactivePropertyBase<string>, IReadOnlyReactiveProperty<string>
+	public class LocalizableReactiveProperty : ReactivePropertyBase<string?>, IReadOnlyReactiveProperty<string?>
 	{
 		private readonly ILocalizationService _localizationService;
 		private readonly string _key;
 
-		public string Value => GetValue();
+		public string? Value => GetValue();
 
-		object IReadOnlyReactiveProperty.Value => Value;
+		object? IReadOnlyReactiveProperty.Value => Value;
 
 		public LocalizableReactiveProperty(
 			ILocalizationService localizationService,
@@ -25,7 +25,7 @@ namespace Blastic.Reactive
 
 		private void OnNext(object sender, CultureChangedEventArgs args)
 		{
-			string value = _localizationService.GetValue(_key);
+			string? value = _localizationService.GetValue(_key);
 			SetValue(value);
 		}
 

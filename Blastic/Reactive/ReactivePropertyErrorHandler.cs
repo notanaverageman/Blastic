@@ -8,7 +8,7 @@ namespace Blastic.Reactive
 	internal class ReactivePropertyErrorHandler<T>
 	{
 		private readonly ReactivePropertyBase<T> _source;
-		private readonly List<Func<T, string>> _validators;
+		private readonly List<Func<T, string?>> _validators;
 		private readonly List<string> _errors;
 
 		public IEnumerable<string> Errors => _errors;
@@ -19,7 +19,7 @@ namespace Blastic.Reactive
 		public ReactivePropertyErrorHandler(ReactivePropertyBase<T> source)
 		{
 			_source = source;
-			_validators = new List<Func<T, string>>();
+			_validators = new List<Func<T, string?>>();
 
 			_errors = new List<string>();
 
@@ -30,7 +30,7 @@ namespace Blastic.Reactive
 				.Select(x => HasErrors);
 		}
 
-		public void AddValidator(Func<T, string> validator)
+		public void AddValidator(Func<T, string?> validator)
 		{
 			_validators.Add(validator);
 		}
@@ -39,16 +39,16 @@ namespace Blastic.Reactive
 		{
 			_errors.Clear();
 
-			foreach (Func<T, string> validator in _validators)
+			foreach (Func<T, string?> validator in _validators)
 			{
-				string error = validator(value);
+				string? error = validator(value);
 
 				if (string.IsNullOrEmpty(error))
 				{
 					continue;
 				}
 
-				_errors.Add(error);
+				_errors.Add(error!);
 			}
 
 			_source.InvokeErrorsChanged();

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace Blastic.ViewManagement.TypeMappers
 {
 	public interface ITypeMapper
 	{
-		Type Map(Type type);
+		Type? Map(Type type);
 	}
 }

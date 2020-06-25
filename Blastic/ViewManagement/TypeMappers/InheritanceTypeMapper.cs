@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Blastic.ViewManagement.TypeMappers
 {
@@ -13,7 +13,7 @@ namespace Blastic.ViewManagement.TypeMappers
 			_output = output;
 		}
 
-		public Type Map(Type type)
+		public Type? Map(Type type)
 		{
 			return _baseType.IsAssignableFrom(type) ? _output : null;
 		}

@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Blastic.Ordering;
@@ -10,11 +9,11 @@ using Blastic.Reactive;
 
 namespace Blastic.Commanding
 {
-	public class AsyncCommand : AsyncCommand<object>
+	public class AsyncCommand : AsyncCommand<object?>
 	{
 		public static readonly Order DefaultOrder = new Order();
 
-		public AsyncCommand() : this((IObservable<bool>) null)
+		public AsyncCommand() : this((IObservable<bool>?) null)
 		{
 		}
 
@@ -38,16 +37,16 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 
-		public AsyncCommand(IObservable<bool> canExecute) : base(canExecute)
+		public AsyncCommand(IObservable<bool>? canExecute) : base(canExecute)
 		{
 		}
 
 		public async Task Execute()
 		{
-			await Execute(null);
+			await Execute((object?)null);
 		}
 
-		public IDisposable Subscribe(Func<AsyncCommandContext, Task> action, Order order = null)
+		public IDisposable Subscribe(Func<AsyncCommandContext, Task> action, Order? order = null)
 		{
 			return base.Subscribe(async x => await action(x), order);
 		}
@@ -57,11 +56,11 @@ namespace Blastic.Commanding
 	{
 		private readonly ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order> _actions;
 
-		public event EventHandler CanExecuteChanged;
+		public event EventHandler? CanExecuteChanged;
 
 		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
 
-		public AsyncCommand() : this((IObservable<bool>) null)
+		public AsyncCommand() : this((IObservable<bool>?) null)
 		{
 		}
 
@@ -85,24 +84,23 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 
-		public AsyncCommand(IObservable<bool> canExecute)
+		public AsyncCommand(IObservable<bool>? canExecute)
 		{
 			_actions = new ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order>();
 
-			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty();
-			CanExecuteObservable ??= Observable.Repeat(true, 1).ToReadOnlyReactiveProperty();
+			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
 
 			CanExecuteObservable
 				.ObserveOnUI()
 				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
 
-		public IDisposable Subscribe(Func<Task> action, Order order = null)
+		public IDisposable Subscribe(Func<Task> action, Order? order = null)
 		{
 			return Subscribe(async x => await action(), order);
 		}
 
-		public IDisposable Subscribe(Func<AsyncCommandContext<T>, Task> action, Order order = null)
+		public IDisposable Subscribe(Func<AsyncCommandContext<T>, Task> action, Order? order = null)
 		{
 			order ??= AsyncCommand.DefaultOrder;
 			_actions[action] = order;
@@ -131,7 +129,7 @@ namespace Blastic.Commanding
 				return;
 			}
 
-			if (context?.ContinueExecution == false)
+			if (context.ContinueExecution == false)
 			{
 				return;
 			}
@@ -142,7 +140,7 @@ namespace Blastic.Commanding
 
 			foreach (IGrouping<Order, Func<AsyncCommandContext<T>, Task>> actionGroup in orderedActions)
 			{
-				if (context?.ContinueExecution == false)
+				if (context.ContinueExecution == false)
 				{
 					break;
 				}
@@ -184,7 +182,7 @@ namespace Blastic.Commanding
 		public static AsyncCommand WithSubscribe(
 			this AsyncCommand command,
 			Func<Task> action,
-			Order order = null)
+			Order? order = null)
 		{
 			command.Subscribe(action, order);
 			return command;
@@ -193,7 +191,7 @@ namespace Blastic.Commanding
 		public static AsyncCommand WithSubscribe(
 			this AsyncCommand command,
 			Func<AsyncCommandContext, Task> action,
-			Order order = null)
+			Order? order = null)
 		{
 			command.Subscribe(action, order);
 			return command;
@@ -202,7 +200,7 @@ namespace Blastic.Commanding
 		public static AsyncCommand<T> WithSubscribe<T>(
 			this AsyncCommand<T> command,
 			Func<AsyncCommandContext<T>, Task> action,
-			Order order = null)
+			Order? order = null)
 		{
 			command.Subscribe(action, order);
 			return command;

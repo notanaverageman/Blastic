@@ -2,30 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
 namespace Blastic.Reactive
 {
 	public abstract class ReactivePropertyBase<T> : INotifyPropertyChanged, INotifyDataErrorInfo
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
-		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
+		public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
 		private readonly IEqualityComparer<T> _equalityComparer;
 		private readonly Subject<T> _source;
 
-		private ReactivePropertyErrorHandler<T> _errorHandler;
+		private ReactivePropertyErrorHandler<T>? _errorHandler;
 		private T _value;
 
 		protected IObservable<T> Source => _source;
 
 		public bool HasErrors => _errorHandler?.HasErrors == true;
-		public IObservable<bool> HasErrorObservable => _errorHandler?.HasErrorObservable;
+		public IObservable<bool>? HasErrorObservable => _errorHandler?.HasErrorObservable;
 
 		protected ReactivePropertyBase(
 			T initialValue,
-			IEqualityComparer<T> equalityComparer)
+			IEqualityComparer<T>? equalityComparer)
 		{
 			_value = initialValue;
 			_equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
@@ -50,7 +49,7 @@ namespace Blastic.Reactive
 			return disposable;
 		}
 
-		public void AddValidator(Func<T, string> validator)
+		public void AddValidator(Func<T, string?> validator)
 		{
 			_errorHandler ??= new ReactivePropertyErrorHandler<T>(this);
 			_errorHandler.AddValidator(validator);
@@ -61,7 +60,7 @@ namespace Blastic.Reactive
 			_errorHandler?.TriggerValidation(_value);
 		}
 
-		public IEnumerable GetErrors(string propertyName)
+		public IEnumerable? GetErrors(string propertyName)
 		{
 			return _errorHandler?.Errors;
 		}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Blastic.ViewManagement.TypeMappers;
 
@@ -26,18 +26,18 @@ namespace Blastic.ViewManagement
 
 		public T Locate(object model)
 		{
-			if (model is IViewAware viewAware)
+			IViewAware? viewAware = null;
+
+			if (model is IViewAware)
 			{
-				T view = LocateCached(viewAware);
+				viewAware = (IViewAware)model;
+
+				T? view = LocateCached(viewAware);
 
 				if (view != null)
 				{
 					return view;
 				}
-			}
-			else
-			{
-				viewAware = null;
 			}
 
 			T element = Locate(model.GetType(), model);
@@ -52,11 +52,9 @@ namespace Blastic.ViewManagement
 			return element;
 		}
 
-		private T LocateCached(IViewAware viewAware)
+		private T? LocateCached(IViewAware viewAware)
 		{
-			T view = viewAware.View.Value as T;
-
-			if (view == null)
+			if (!(viewAware.View.Value is T view))
 			{
 				return default;
 			}
@@ -66,18 +64,18 @@ namespace Blastic.ViewManagement
 
 		private T Locate(Type modelType, object model)
 		{
-			Type viewType = GetViewTypeForModelType(modelType);
+			Type? viewType = GetViewTypeForModelType(modelType);
 
 			return viewType == null
 				? CreateNotFoundView(modelType, $"Cannot find view for {modelType}.")
 				: CreateView(viewType, model);
 		}
 
-		private Type GetViewTypeForModelType(Type modelType)
+		private Type? GetViewTypeForModelType(Type modelType)
 		{
 			foreach (ITypeMapper typeMapper in _typeMappers)
 			{
-				Type viewType = typeMapper.Map(modelType);
+				Type? viewType = typeMapper.Map(modelType);
 
 				if (viewType != null)
 				{
