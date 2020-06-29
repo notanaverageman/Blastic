@@ -7,7 +7,7 @@ namespace Blastic.Services.Messaging
 {
 	public class EventAggregator : IEventAggregator
 	{
-		private readonly Subject<object> _subject = new Subject<object>();
+		private readonly Subject<object?> _subject = new Subject<object?>();
 
 		public IObservable<T> GetEventBus<T>()
 		{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -63,7 +63,11 @@ namespace Blastic.Services.Notifications
 					}
 					else
 					{
-						await Lifetime.Deactivate.Execute(new DeactivationContext(CancellationToken.None));
+						CommandContext<DeactivationContext> context = new CommandContext<DeactivationContext>(
+							new DeactivationContext(),
+							CancellationToken.None);
+
+						await Lifetime.Deactivate.Execute(context);
 					}
 				});
 
@@ -84,9 +88,13 @@ namespace Blastic.Services.Notifications
 			_hasFocus.OnNext(true);
 		}
 
-		private async Task DismissInternal(AsyncCommandContext context)
+		private async Task DismissInternal(CommandContext context)
 		{
-			await Lifetime.Close.Execute(new ClosureContext(CancellationToken.None));
+			CommandContext<ClosureContext> commandContext = new CommandContext<ClosureContext>(
+				new ClosureContext(),
+				context.CancellationToken);
+
+			await Lifetime.Close.Execute(commandContext);
 		}
 	}
 }

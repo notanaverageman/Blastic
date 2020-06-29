@@ -128,7 +128,7 @@ namespace Blastic.Commanding
 				return;
 			}
 
-			if (context.ContinueExecution == false)
+			if (context.CancellationToken.IsCancellationRequested)
 			{
 				return;
 			}
@@ -139,7 +139,12 @@ namespace Blastic.Commanding
 
 			foreach (IGrouping<Order, Action<CommandContext<T>>> actionGroup in orderedActions)
 			{
-				if (context.ContinueExecution == false)
+				if (context.CancellationToken.IsCancellationRequested)
+				{
+					break;
+				}
+
+				if (context.Parameter is ICancellable cancellable && cancellable.IsCancelled)
 				{
 					break;
 				}

@@ -38,7 +38,7 @@ namespace Blastic.UserInterface.Settings
 			Lifetime.Initialize.Subscribe(OnInitialize, new Order(int.MinValue));
 		}
 
-		private async Task OnInitialize(AsyncCommandContext<InitializationContext> asyncCommandContext)
+		private async Task OnInitialize(CommandContext<InitializationContext> commandContext)
 		{
 			IsExpanded = new IsExpandedSetting(SettingsService, _presenterSource, SectionName);
 
@@ -64,10 +64,12 @@ namespace Blastic.UserInterface.Settings
 					}
 				});
 
-				if (asyncCommandContext.ContinueExecution)
+				if (commandContext.CancellationToken.IsCancellationRequested)
 				{
-					await setting.Lifetime.Initialize.Execute(asyncCommandContext.Parameter);
+					break;
 				}
+
+				await setting.Lifetime.Initialize.Execute(commandContext.Parameter);
 			}
 		}
 

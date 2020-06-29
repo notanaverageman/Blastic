@@ -17,7 +17,7 @@ namespace Blastic.Commanding
 		{
 		}
 
-		public AsyncCommand(IObservable<bool> canExecute, Func<AsyncCommandContext, Task> action) : this(canExecute)
+		public AsyncCommand(IObservable<bool> canExecute, Func<CommandContext, Task> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
@@ -27,7 +27,7 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 
-		public AsyncCommand(Func<AsyncCommandContext, Task> action) : this()
+		public AsyncCommand(Func<CommandContext, Task> action) : this()
 		{
 			Subscribe(action);
 		}
@@ -46,7 +46,7 @@ namespace Blastic.Commanding
 			await Execute((object?)null);
 		}
 
-		public IDisposable Subscribe(Func<AsyncCommandContext, Task> action, Order? order = null)
+		public IDisposable Subscribe(Func<CommandContext, Task> action, Order? order = null)
 		{
 			return base.Subscribe(async x => await action(x), order);
 		}
@@ -54,7 +54,7 @@ namespace Blastic.Commanding
 
 	public class AsyncCommand<T> : ICommand
 	{
-		private readonly ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order> _actions;
+		private readonly ConcurrentDictionary<Func<CommandContext<T>, Task>, Order> _actions;
 
 		public event EventHandler? CanExecuteChanged;
 
@@ -64,7 +64,7 @@ namespace Blastic.Commanding
 		{
 		}
 
-		public AsyncCommand(IObservable<bool> canExecute, Func<AsyncCommandContext<T>, Task> action) : this(canExecute)
+		public AsyncCommand(IObservable<bool> canExecute, Func<CommandContext<T>, Task> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
@@ -74,7 +74,7 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 
-		public AsyncCommand(Func<AsyncCommandContext<T>, Task> action) : this()
+		public AsyncCommand(Func<CommandContext<T>, Task> action) : this()
 		{
 			Subscribe(action);
 		}
@@ -86,7 +86,7 @@ namespace Blastic.Commanding
 
 		public AsyncCommand(IObservable<bool>? canExecute)
 		{
-			_actions = new ConcurrentDictionary<Func<AsyncCommandContext<T>, Task>, Order>();
+			_actions = new ConcurrentDictionary<Func<CommandContext<T>, Task>, Order>();
 
 			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
 
@@ -100,7 +100,7 @@ namespace Blastic.Commanding
 			return Subscribe(async x => await action(), order);
 		}
 
-		public IDisposable Subscribe(Func<AsyncCommandContext<T>, Task> action, Order? order = null)
+		public IDisposable Subscribe(Func<CommandContext<T>, Task> action, Order? order = null)
 		{
 			order ??= AsyncCommand.DefaultOrder;
 			_actions[action] = order;
@@ -118,29 +118,34 @@ namespace Blastic.Commanding
 
 		public async Task Execute(T parameter)
 		{
-			AsyncCommandContext<T> context = new AsyncCommandContext<T>(parameter);
+			CommandContext<T> context = new CommandContext<T>(parameter);
 			await Execute(context);
 		}
 
-		public async Task Execute(AsyncCommandContext<T> context)
+		public async Task Execute(CommandContext<T> context)
 		{
 			if (!CanExecuteObservable.Value)
 			{
 				return;
 			}
 
-			if (context.ContinueExecution == false)
+			if (context.CancellationToken.IsCancellationRequested)
 			{
 				return;
 			}
 
-			IOrderedEnumerable<IGrouping<Order, Func<AsyncCommandContext<T>, Task>>> orderedActions = _actions.Keys
+			IOrderedEnumerable<IGrouping<Order, Func<CommandContext<T>, Task>>> orderedActions = _actions.Keys
 				.GroupBy(x => _actions[x])
 				.OrderBy(x => x.Key);
 
-			foreach (IGrouping<Order, Func<AsyncCommandContext<T>, Task>> actionGroup in orderedActions)
+			foreach (IGrouping<Order, Func<CommandContext<T>, Task>> actionGroup in orderedActions)
 			{
-				if (context.ContinueExecution == false)
+				if (context.CancellationToken.IsCancellationRequested)
+				{
+					break;
+				}
+
+				if (context.Parameter is ICancellable cancellable && cancellable.IsCancelled)
 				{
 					break;
 				}
@@ -152,9 +157,9 @@ namespace Blastic.Commanding
 		private class Subscription : IDisposable
 		{
 			private readonly AsyncCommand<T> _command;
-			private readonly Func<AsyncCommandContext<T>, Task> _action;
+			private readonly Func<CommandContext<T>, Task> _action;
 
-			public Subscription(AsyncCommand<T> command, Func<AsyncCommandContext<T>, Task> action)
+			public Subscription(AsyncCommand<T> command, Func<CommandContext<T>, Task> action)
 			{
 				_command = command;
 				_action = action;
@@ -190,7 +195,7 @@ namespace Blastic.Commanding
 
 		public static AsyncCommand WithSubscribe(
 			this AsyncCommand command,
-			Func<AsyncCommandContext, Task> action,
+			Func<CommandContext, Task> action,
 			Order? order = null)
 		{
 			command.Subscribe(action, order);
@@ -199,7 +204,7 @@ namespace Blastic.Commanding
 
 		public static AsyncCommand<T> WithSubscribe<T>(
 			this AsyncCommand<T> command,
-			Func<AsyncCommandContext<T>, Task> action,
+			Func<CommandContext<T>, Task> action,
 			Order? order = null)
 		{
 			command.Subscribe(action, order);

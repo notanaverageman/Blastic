@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using Blastic.Commanding;
 using Blastic.LifetimeManagement;
+using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
@@ -52,8 +54,11 @@ namespace Blastic.Wpf.Services.Windowing
 					return Task.CompletedTask;
 				}, Order.AbsoluteMaximum);
 
-				ActivationContext context = new ActivationContext(CancellationToken.None);
-				await hasLifetime.Lifetime.Activate.Execute(context);
+				CommandContext<ActivationContext> commandContext = new CommandContext<ActivationContext>(
+					new ActivationContext(),
+					CancellationToken.None);
+
+				await hasLifetime.Lifetime.Activate.Execute(commandContext);
 			}
 		}
 	}

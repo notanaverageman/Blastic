@@ -54,52 +54,59 @@ namespace Blastic.LifetimeManagement
 				.WithSubscribe(PostDeactivate, Order.AbsoluteMaximum);
 		}
 
-		private Task PostInitialize(AsyncCommandContext<InitializationContext> context)
+		private Task PostInitialize(CommandContext<InitializationContext> context)
 		{
 			_isInitialized.Value = true;
+
 			return Task.CompletedTask;
 		}
 
-		private async Task PreClose(AsyncCommandContext<ClosureContext> context)
+		private async Task PreClose(CommandContext<ClosureContext> context)
 		{
-			ClosureContext closureContext = context.Parameter;
-			await CanClose.Execute(closureContext);
+			await CanClose.Execute(context);
 
-			context.ContinueExecution = closureContext.CanClose;
-
-			if (!context.ContinueExecution)
+			if (context.Parameter.DialogResult == null)
 			{
 				return;
 			}
-			
-			DeactivationContext deactivationContext = new DeactivationContext(closureContext.CancellationToken);
-			await Deactivate.Execute(deactivationContext);
+
+			CommandContext<DeactivationContext> commandContext = new CommandContext<DeactivationContext>(
+				new DeactivationContext(),
+				context.CancellationToken);
+
+			await Deactivate.Execute(commandContext);
 		}
 
-		private Task PostClose(AsyncCommandContext<ClosureContext> context)
+		private Task PostClose(CommandContext<ClosureContext> context)
 		{
 			_isInitialized.Value = false;
+
 			return Task.CompletedTask;
 		}
 
-		private async Task PreActivate(AsyncCommandContext<ActivationContext> context)
+		private async Task PreActivate(CommandContext<ActivationContext> context)
 		{
 			_isActivating.Value = true;
 
-			InitializationContext initializationContext = new InitializationContext(context.Parameter.CancellationToken);
-			await Initialize.Execute(initializationContext);
+			CommandContext<InitializationContext> commandContext = new CommandContext<InitializationContext>(
+				new InitializationContext(),
+				context.CancellationToken);
+
+			await Initialize.Execute(commandContext);
 		}
 
-		private Task PostActivate(AsyncCommandContext<ActivationContext> context)
+		private Task PostActivate(CommandContext<ActivationContext> context)
 		{
 			_isActivating.Value = false;
 			_isActive.Value = true;
+
 			return Task.CompletedTask;
 		}
 
-		private Task PostDeactivate(AsyncCommandContext<DeactivationContext> context)
+		private Task PostDeactivate(CommandContext<DeactivationContext> context)
 		{
 			_isActive.Value = false;
+
 			return Task.CompletedTask;
 		}
 	}

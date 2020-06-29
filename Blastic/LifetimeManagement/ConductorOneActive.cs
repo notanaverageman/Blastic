@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
 using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
@@ -56,12 +57,23 @@ namespace Blastic.LifetimeManagement
 			await ChangeActiveItem(cancellationToken);
 		}
 
-		public async Task Close(T item, CancellationToken cancellationToken = default)
+		public async Task Close(
+			T item,
+			CancellationToken cancellationToken = default,
+			bool dialogResult = false)
 		{
-			ClosureContext context = new ClosureContext(cancellationToken);
+			CommandContext<ClosureContext> context = new CommandContext<ClosureContext>(
+				new ClosureContext(dialogResult),
+				cancellationToken);
+
 			await item.Lifetime.Close.Execute(context);
 
-			if (!context.CanClose)
+			if (context.CancellationToken.IsCancellationRequested)
+			{
+				return;
+			}
+
+			if (context.Parameter.IsCancelled)
 			{
 				return;
 			}
@@ -86,14 +98,20 @@ namespace Blastic.LifetimeManagement
 
 			if (previousActiveItem != null)
 			{
-				DeactivationContext context = new DeactivationContext(cancellationToken);
+				CommandContext<DeactivationContext> context = new CommandContext<DeactivationContext>(
+					new DeactivationContext(),
+					cancellationToken);
+
 				await previousActiveItem.Lifetime.Deactivate.Execute(context);
 			}
 
 			if (activeItem != null)
 			{
-				ActivationContext activationContext = new ActivationContext(cancellationToken);
-				await activeItem.Lifetime.Activate.Execute(activationContext);
+				CommandContext<ActivationContext> context = new CommandContext<ActivationContext>(
+					new ActivationContext(),
+					cancellationToken);
+
+				await activeItem.Lifetime.Activate.Execute(context);
 			}
 		}
 	}

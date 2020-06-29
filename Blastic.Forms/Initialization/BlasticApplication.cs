@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Initialization.Extensions;
@@ -113,8 +114,11 @@ namespace Blastic.Forms.Initialization
 				{
 					if (viewModel is IHasLifetime hasLifetime)
 					{
-						ActivationContext context = new ActivationContext(CancellationToken.None);
-						await hasLifetime.Lifetime.Activate.Execute(context);
+						CommandContext<ActivationContext> commandContext = new CommandContext<ActivationContext>(
+							new ActivationContext(),
+							CancellationToken.None);
+
+						await hasLifetime.Lifetime.Activate.Execute(commandContext);
 					}
 				});
 

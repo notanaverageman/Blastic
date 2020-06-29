@@ -1,5 +1,6 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.Reactive;
@@ -29,7 +30,11 @@ namespace Blastic.Services.Notifications
 				ActiveNotifications.RemoveAt(ActiveNotifications.Count - 1);
 			}
 
-			await notification.Lifetime.Activate.Execute(new ActivationContext(CancellationToken.None));
+			CommandContext<ActivationContext> commandContext = new CommandContext<ActivationContext>(
+				new ActivationContext(),
+				CancellationToken.None);
+
+			await notification.Lifetime.Activate.Execute(commandContext);
 		}
 
 		public Task EnqueueWithoutNotifying(Notification notification)

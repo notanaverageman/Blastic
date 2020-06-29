@@ -56,13 +56,13 @@ namespace Blastic.Settings
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			ShowOnUI = new ReactiveProperty<bool>(true);
 
-			Lifetime.Initialize.Subscribe(x => Read(x.Parameter.CancellationToken));
+			Lifetime.Initialize.Subscribe(x => Read(x.CancellationToken));
 
 			Lifetime.Close.Subscribe(async x =>
 			{
 				if (x.Parameter.DialogResult == true)
 				{
-					await Save(x.Parameter.CancellationToken);
+					await Save(x.CancellationToken);
 				}
 				else
 				{

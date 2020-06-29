@@ -37,7 +37,7 @@ namespace Blastic.UserInterface.Settings
 			HideDiagnosticMessagesIgnoreErrorsCommand = new Command(HideDiagnosticMessagesIgnoreErrors);
 		}
 
-		public async Task Save()
+		public async Task Save(CommandContext context)
 		{
 			async Task Check(CancellationToken cancellationToken)
 			{
@@ -62,12 +62,11 @@ namespace Blastic.UserInterface.Settings
 				}
 			}
 
-			ClosureContext context = new ClosureContext(CancellationToken.None)
-			{
-				DialogResult = true
-			};
+			CommandContext<ClosureContext> commandContext = new CommandContext<ClosureContext>(
+				new ClosureContext(true),
+				context.CancellationToken);
 
-			await Lifetime.Close.Execute(context);
+			await Lifetime.Close.Execute(commandContext);
 		}
 
 		private Task<bool> ShowDiagnosticMessages()
@@ -95,14 +94,13 @@ namespace Blastic.UserInterface.Settings
 			ShowDiagnosticMessagesTaskCompletionSource?.SetResult(true);
 		}
 
-		public async Task Cancel()
+		public async Task Cancel(CommandContext context)
 		{
-			ClosureContext context = new ClosureContext(CancellationToken.None)
-			{
-				DialogResult = false
-			};
+			CommandContext<ClosureContext> commandContext = new CommandContext<ClosureContext>(
+				new ClosureContext(),
+				context.CancellationToken);
 
-			await Lifetime.Close.Execute(context);
+			await Lifetime.Close.Execute(commandContext);
 		}
 	}
 }

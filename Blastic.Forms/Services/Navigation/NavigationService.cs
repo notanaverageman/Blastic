@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding;
 using Blastic.Forms.ViewManagement;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
@@ -56,8 +57,11 @@ namespace Blastic.Forms.Services.Navigation
 
 			if (model is IHasLifetime hasLifetime)
 			{
-				ActivationContext context = new ActivationContext(CancellationToken.None);
-				await hasLifetime.Lifetime.Activate.Execute(context);
+				CommandContext<ActivationContext> commandContext = new CommandContext<ActivationContext>(
+					new ActivationContext(),
+					CancellationToken.None);
+
+				await hasLifetime.Lifetime.Activate.Execute(commandContext);
 			}
 		}
 	}

@@ -1,12 +1,14 @@
-﻿namespace Blastic.Commanding
+using System.Threading;
+
+namespace Blastic.Commanding
 {
 	public class CommandContext
 	{
-		public bool ContinueExecution { get; set; }
+		public CancellationToken CancellationToken { get; }
 
-		public CommandContext()
+		public CommandContext(CancellationToken cancellationToken = default)
 		{
-			ContinueExecution = true;
+			CancellationToken = cancellationToken;
 		}
 	}
 
@@ -14,7 +16,7 @@
 	{
 		public T Parameter { get; }
 
-		public CommandContext(T parameter)
+		public CommandContext(T parameter, CancellationToken cancellationToken = default) : base(cancellationToken)
 		{
 			Parameter = parameter;
 		}

@@ -48,7 +48,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Lifetime.Initialize.Subscribe(async x =>
 			{
-				List<Machine> machines = await database.MachinesTable.GetAll(x.Parameter.CancellationToken);
+				List<Machine> machines = await database.MachinesTable.GetAll(x.CancellationToken);
 				Machines.AddRange(machines.Select(y => new MachineViewModel(navigationService, labels, database, y)));
 			});
 

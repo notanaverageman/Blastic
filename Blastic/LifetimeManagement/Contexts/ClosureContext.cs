@@ -1,17 +1,20 @@
-﻿using System.Threading;
+using Blastic.Commanding;
 
 namespace Blastic.LifetimeManagement.Contexts
 {
-	public class ClosureContext
+	public class ClosureContext : ICancellable
 	{
-		public CancellationToken CancellationToken { get; }
-		public bool CanClose { get; set; }
-		public bool? DialogResult { get; set; }
+		public bool? DialogResult { get; private set; }
+		public bool IsCancelled => DialogResult == null;
 
-		public ClosureContext(CancellationToken cancellationToken)
+		public ClosureContext(bool dialogResult = false)
 		{
-			CancellationToken = cancellationToken;
-			CanClose = true;
+			DialogResult = dialogResult;
+		}
+
+		public void Cancel()
+		{
+			DialogResult = null;
 		}
 	}
 }

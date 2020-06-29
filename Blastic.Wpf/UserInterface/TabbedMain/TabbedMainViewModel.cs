@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,12 +64,12 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 
 			Lifetime.Initialize.Subscribe(async x =>
 			{
-				await ExecuteInitializationSteps(x.Parameter.CancellationToken);
+				await ExecuteInitializationSteps(x.CancellationToken);
 			});
 
 			Lifetime.Activate.Subscribe(async x =>
 			{
-				await Activate(ActiveItem.Value, x.Parameter.CancellationToken);
+				await Activate(ActiveItem.Value, x.CancellationToken);
 			});
 
 			eventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
