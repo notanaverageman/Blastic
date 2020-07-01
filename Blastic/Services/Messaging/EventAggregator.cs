@@ -11,7 +11,6 @@ namespace Blastic.Services.Messaging
 
 		public IObservable<T> GetEventBus<T>()
 		{
-			// TODO: This probably returns a new observable with each call.
 			return _subject.OfType<T>().AsObservable();
 		}
 

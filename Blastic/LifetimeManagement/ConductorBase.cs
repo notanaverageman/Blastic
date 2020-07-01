@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Blastic.Ordering;
 using Blastic.Reactive;
@@ -54,7 +53,12 @@ namespace Blastic.LifetimeManagement
 			{
 				foreach (T item in items)
 				{
-					_lifetimeSubscriptions[item]?.Dispose();
+					if (!_lifetimeSubscriptions.TryGetValue(item, out IDisposable subscription))
+					{
+						continue;
+					}
+
+					subscription.Dispose();
 					_lifetimeSubscriptions.Remove(item);
 				}
 			}
@@ -63,6 +67,12 @@ namespace Blastic.LifetimeManagement
 			{
 				RemoveChildren(items.OldItems);
 				AddChildren(items.NewItems);
+			}
+
+			void ResetChildren()
+			{
+				RemoveChildren(Items);
+				AddChildren(Items);
 			}
 
 			Items
@@ -79,7 +89,7 @@ namespace Blastic.LifetimeManagement
 
 			Items
 				.ObserveReset()
-				.Subscribe(_ => RemoveChildren(_lifetimeSubscriptions.Keys.ToArray()));
+				.Subscribe(_ => ResetChildren());
 		}
 	}
 }
