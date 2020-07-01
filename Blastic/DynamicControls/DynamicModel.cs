@@ -36,7 +36,7 @@ namespace Blastic.DynamicControls
 			{
 				if (taskCompletionSource.Task.IsCompleted)
 				{
-					return;
+					continue;
 				}
 
 				taskCompletionSource.SetResult(result);

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
+using System.Windows.Input;
+using Blastic.ViewManagement;
 
 namespace Blastic.Wpf.ControlExtensions
 {
@@ -52,6 +54,23 @@ namespace Blastic.Wpf.ControlExtensions
 			{
 				control.Focus();
 			}
+		}
+
+		public static void SetFocus(this IViewAware viewAware, string property)
+		{
+			if (!(viewAware.View.Value is DependencyObject view))
+			{
+				return;
+			}
+
+			FrameworkElement control = VisualTreeExtensions.FindChild(view, property);
+
+			if (control == null)
+			{
+				return;
+			}
+
+			Keyboard.Focus(control);
 		}
 	}
 }

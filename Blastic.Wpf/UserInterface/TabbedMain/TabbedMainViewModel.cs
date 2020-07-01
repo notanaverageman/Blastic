@@ -73,6 +73,7 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 			});
 
 			eventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
+			eventAggregator.SubscribeOnUIThread<OpenSettingsEvent>(async _ => await ShowSettings());
 			eventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
 
 			ShowLogsCommand = new AsyncCommand().WithSubscribe(ShowLogs);
