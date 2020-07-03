@@ -48,6 +48,9 @@ namespace Blastic.UserInterface.Settings
 				.Select(x => (Setting)x.GetValue(this))
 				.ToList();
 
+			Items.Clear();
+			SettingsToShow.Clear();
+
 			Items.AddRange(settings);
 
 			foreach (Setting setting in settings)

@@ -65,7 +65,7 @@ namespace Blastic.LifetimeManagement
 		{
 			await CanClose.Execute(context);
 
-			if (context.Parameter.DialogResult == null)
+			if (context.Parameter.IsCancelled)
 			{
 				return;
 			}
