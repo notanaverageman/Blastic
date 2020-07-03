@@ -1,13 +1,21 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using Blastic.ViewManagement;
+using Blastic.ViewManagement.TypeMappers;
 
 namespace Blastic.Wpf.ViewManagement
 {
 	public class ViewLocator : ViewLocatorBase<FrameworkElement>
 	{
+		internal static IViewLocator<FrameworkElement> Current { get; set; }
+
+		public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)
+		{
+		}
+
 		protected override void PostProcessAttachView(FrameworkElement view, IViewAware viewAware)
 		{
 			view.Unloaded += (sender, args) =>

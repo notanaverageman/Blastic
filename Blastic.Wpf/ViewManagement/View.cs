@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Markup;
-using Blastic.Wpf.Initialization;
 
 namespace Blastic.Wpf.ViewManagement
 {
@@ -26,11 +25,11 @@ namespace Blastic.Wpf.ViewManagement
 				return;
 			}
 
-			UIElement view = BlasticApplication.ViewLocator.Locate(e.NewValue);
+			UIElement view = ViewLocator.Current.Locate(e.NewValue);
 
 			if (!SetContentProperty(d, view))
 			{
-				view = BlasticApplication.ViewLocator.Locate(e.NewValue.GetType());
+				view = ViewLocator.Current.Locate(e.NewValue.GetType());
 				SetContentProperty(d, view);
 			}
 		}

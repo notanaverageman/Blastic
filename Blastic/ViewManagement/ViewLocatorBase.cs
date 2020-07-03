@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blastic.ViewManagement.TypeMappers;
 
 namespace Blastic.ViewManagement
@@ -8,9 +9,11 @@ namespace Blastic.ViewManagement
 	{
 		private readonly List<ITypeMapper> _typeMappers;
 
-		public ViewLocatorBase()
+		public ViewLocatorBase(IEnumerable<ITypeMapper> typeMappers)
 		{
-			_typeMappers = new List<ITypeMapper>();
+			_typeMappers = typeMappers
+				.OrderBy(x => x.Order)
+				.ToList();
 		}
 
 		public ViewLocatorBase<T> WithTypeMapper<TViewModel, TView>()

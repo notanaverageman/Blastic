@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Platform;
 using Blastic.Reactive;
 
 namespace Blastic.Wpf.Automation
@@ -20,7 +21,7 @@ namespace Blastic.Wpf.Automation
 
 				for (int i = 0; i < text.Length; i++)
 				{
-					property.Value = text.Substring(0, i + 1);
+					PlatformSpecifics.Current.OnUIThread(() => property.Value = text.Substring(0, i + 1));
 
 					if (waitDurationMilliseconds > 0)
 					{
