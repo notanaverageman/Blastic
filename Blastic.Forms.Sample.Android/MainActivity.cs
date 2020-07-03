@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
@@ -30,7 +30,6 @@ namespace Blastic.Forms.Sample.Droid
 			Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
 			new BlasticApplication(LoadApplication)
-				.RegisterViewAssembly<MainView>()
 				.Initialize()
 				.Run<App, MainViewModel>();
 		}

@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using System.Threading;
 using Blastic.Commanding;
 using Blastic.DynamicControls;
@@ -29,7 +28,6 @@ namespace Blastic.Forms.Initialization
 		private readonly ConfigurationBuilder _configurationBuilder;
 		private readonly ServiceCollection _serviceCollection;
 
-		private readonly HashSet<Assembly> _viewAssemblies;
 		private readonly ViewLocator _viewLocator;
 
 		public BlasticApplication(Action<Application> applicationRunner)
@@ -39,8 +37,7 @@ namespace Blastic.Forms.Initialization
 			_configurationBuilder = new ConfigurationBuilder();
 			_serviceCollection = new ServiceCollection();
 
-			_viewAssemblies = new HashSet<Assembly>();
-			_viewLocator = new ViewLocator();
+			_viewLocator = new ViewLocator(Enumerable.Empty<ITypeMapper>());
 
 			this.AddDefaults();
 		}
@@ -63,18 +60,12 @@ namespace Blastic.Forms.Initialization
 			return this;
 		}
 
-		public BlasticApplication RegisterViewAssembly<T>()
-		{
-			_viewAssemblies.Add(typeof(T).Assembly);
-			return this;
-		}
-
-		private void AddViewLocator(IEnumerable<Assembly> viewAssemblies)
+		private void AddViewLocator()
 		{
 			Configure(x =>
 			{
 				_viewLocator
-					.WithTypeMapper(new SuffixTypeMapper(viewAssemblies, "View", "ViewModel"))
+					.WithTypeMapper(new SuffixTypeMapper("View", "ViewModel"))
 					.WithTypeMapper(new InheritanceTypeMapper(typeof(DynamicModel), typeof(DynamicControl)));
 
 				x.AddSingleton<IViewLocator<VisualElement>>(y => _viewLocator);
@@ -86,8 +77,7 @@ namespace Blastic.Forms.Initialization
 		{
 			IConfiguration configuration = _configurationBuilder.Build();
 
-			RegisterViewAssembly<BlasticApplication>();
-			AddViewLocator(_viewAssemblies);
+			AddViewLocator();
 
 			Configure(x => x.AddSingleton(configuration));
 			Configure(x => x.AddSingleton<TMainViewModel>());

@@ -1,13 +1,19 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
 using Blastic.ViewManagement;
+using Blastic.ViewManagement.TypeMappers;
 using Xamarin.Forms;
 
 namespace Blastic.Forms.ViewManagement
 {
 	public class ViewLocator : ViewLocatorBase<VisualElement>
 	{
+		public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)
+		{
+		}
+
 		protected override void PostProcessAttachView(VisualElement view, IViewAware viewAware)
 		{
 			// TODO: Use parent, navigation? https://forums.xamarin.com/discussion/80435/loaded-unloaded-events-for-views
