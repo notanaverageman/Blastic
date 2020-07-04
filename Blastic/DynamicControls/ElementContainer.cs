@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.ControlExtensions;
 using Blastic.DynamicControls.Elements;
@@ -73,6 +74,14 @@ namespace Blastic.DynamicControls
 			container.AddElement(element, configure);
 
 			return container;
+		}
+
+		public static T AddLabel<T>(
+			this T container,
+			string label,
+			Action<LabelField>? configure = null) where T : IElementContainer
+		{
+			return container.AddLabel(new ReactiveProperty<string>(label), configure);
 		}
 
 		public static T AddPassword<T>(
@@ -159,6 +168,22 @@ namespace Blastic.DynamicControls
 			container.AddElement(element, configure);
 
 			return container;
+		}
+
+		public static T AddAction<T>(
+			this T container,
+			Action action,
+			Action<ActionElement>? configure = null) where T : IElementContainer
+		{
+			return container.AddAction(new Command(action), configure);
+		}
+
+		public static T AddAction<T>(
+			this T container,
+			Func<Task> function,
+			Action<ActionElement>? configure = null) where T : IElementContainer
+		{
+			return container.AddAction(new AsyncCommand(function), configure);
 		}
 
 		public static T AddGroup<T>(
