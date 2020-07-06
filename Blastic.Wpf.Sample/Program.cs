@@ -4,8 +4,10 @@ using Blastic.Initialization;
 using Blastic.Wpf.Sample.Properties;
 using Blastic.Wpf.Initialization.Extensions;
 using Blastic.Wpf.Material.Extensions;
+using Blastic.Wpf.Sample.Data;
 using Blastic.Wpf.Sample.UserInterface;
 using Blastic.Wpf.UserInterface.TabbedMain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +27,11 @@ namespace Blastic.Wpf.Sample
 				.ConfigureServices(x =>
 				{
 					x.AddSingleton(productInformation);
+					x.AddDbContextPool<SampleContext>(
+						y =>
+						{
+							y.UseSqlite("Data Source=Sample.sqlite");
+						});
 				})
 				.ConfigureAppConfiguration(x => x.AddJsonFile("AppSettings.json"))
 				.ConfigureBlasticApplication(
