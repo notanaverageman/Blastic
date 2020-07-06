@@ -16,12 +16,12 @@ namespace Blastic.Commanding
 		{
 		}
 
-		public Command(IObservable<bool> canExecute, Action<CommandContext> action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute, Action<CommandContext> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
 
-		public Command(IObservable<bool> canExecute, Action action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute, Action action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
@@ -63,12 +63,12 @@ namespace Blastic.Commanding
 		{
 		}
 
-		public Command(IObservable<bool> canExecute, Action<CommandContext<T>> action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute, Action<CommandContext<T>> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
 
-		public Command(IObservable<bool> canExecute, Action action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute, Action action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
