@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using Blastic.Commanding;
 using Blastic.Execution;
@@ -21,11 +21,17 @@ namespace Blastic.Wpf.DynamicControls
 			set => SetValue(ExecutionContextProperty, value);
 		}
 
+		public Command Ok { get; }
 		public Command Cancel { get; }
 
 		public Form()
 		{
 			InitializeComponent();
+
+			Ok = new Command().WithSubscribe(x =>
+			{
+				ExecutionContext?.Form.Value?.Ok();
+			});
 
 			Cancel = new Command().WithSubscribe(x =>
 			{

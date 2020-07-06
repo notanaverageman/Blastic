@@ -10,8 +10,10 @@
 		<controls:ChildWindow IsOpen="{Binding ExecutionContext.IsShowingForm.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}">
 
 			<controls:ChildWindow.InputBindings>
+				<KeyBinding Key="Enter"
+				            Command="{Binding Ok, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
 				<KeyBinding Key="Escape"
-							Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
+				            Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />
 			</controls:ChildWindow.InputBindings>
 
 			<dynamicControls:DynamicControl Model="{Binding ExecutionContext.Form.Value, RelativeSource={RelativeSource AncestorType=dynamicControls:Form}}" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Blastic.DynamicControls;
@@ -55,7 +55,6 @@ namespace Blastic.Wpf.DynamicControls
 
 			_rootGrid.Children.Clear();
 			_rootGrid.RowDefinitions.Clear();
-
 
 			if (Model == null)
 			{
