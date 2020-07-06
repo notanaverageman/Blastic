@@ -7,6 +7,7 @@ using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
+using Blastic.Reactive;
 
 namespace Blastic.Services.Notifications
 {
@@ -20,6 +21,24 @@ namespace Blastic.Services.Notifications
 		public ILifetime Lifetime { get; }
 
 		public AsyncCommand Dismiss { get; }
+
+		public Notification(
+			string text,
+			TimeSpan? showDuration = null,
+			bool dismissOnTimeout = true)
+			:
+			this(new DynamicModel().AddLabel(text), showDuration, dismissOnTimeout)
+		{
+		}
+
+		public Notification(
+			IReadOnlyReactiveProperty<string> text,
+			TimeSpan? showDuration = null,
+			bool dismissOnTimeout = true)
+			:
+			this(new DynamicModel().AddLabel(text), showDuration, dismissOnTimeout)
+		{
+		}
 
 		public Notification(
 			DynamicModel model,
@@ -40,7 +59,7 @@ namespace Blastic.Services.Notifications
 				.ToAsyncCommand()
 				.WithSubscribe(DismissInternal);
 
-			if (Model.MinWidth == 0)
+			if (Math.Abs(Model.MinWidth) < 1)
 			{
 				Model.MinWidth = 400;
 			}
