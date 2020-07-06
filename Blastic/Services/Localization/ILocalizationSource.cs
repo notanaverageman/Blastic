@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Blastic.Ordering;
 
 namespace Blastic.Services.Localization
@@ -7,6 +7,6 @@ namespace Blastic.Services.Localization
 	{
 		Order Order { get; }
 
-		string GetValue(string key, CultureInfo culture);
+		string? GetValue(string key, CultureInfo culture);
 	}
 }

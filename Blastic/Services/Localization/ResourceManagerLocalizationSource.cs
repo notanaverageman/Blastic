@@ -18,7 +18,7 @@ namespace Blastic.Services.Localization
 			Order = order ?? new Order();
 		}
 
-		public string GetValue(string key, CultureInfo culture)
+		public string? GetValue(string key, CultureInfo culture)
 		{
 			return _resourceManager.GetString(key, culture);
 		}
