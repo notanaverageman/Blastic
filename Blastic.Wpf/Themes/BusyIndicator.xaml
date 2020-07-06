@@ -22,6 +22,10 @@
 						<Grid Margin="8,16,8,8"
 							  controlExtensions:GridExtensions.RowDefinitions="Auto,*,Auto,Auto">
 
+							<Grid.Resources>
+								<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+							</Grid.Resources>
+
 							<TextBlock Grid.Row="0"
 									   MinWidth="400"
 									   MaxWidth="600"
@@ -46,7 +50,7 @@
 									HorizontalAlignment="Right"
 									Command="{Binding Cancel, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}"
 									Content="Cancel"
-									IsEnabled="{Binding ExecutionContext.IsCancellationSupported.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}}" />
+									Visibility="{Binding ExecutionContext.IsCancellationSupported.Value, RelativeSource={RelativeSource AncestorType=controls:BusyIndicator}, Converter={StaticResource BooleanToVisibilityConverter}}" />
 						</Grid>
 					</controls:ChildWindow>
 				</ControlTemplate>
