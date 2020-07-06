@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using Blastic.Services.Localization;
 
 namespace Blastic.Reactive
 {
+	[DebuggerDisplay("{" + nameof(Value) + "}")]
 	public class LocalizableReactiveProperty : ReactivePropertyBase<string?>, IReadOnlyReactiveProperty<string?>
 	{
 		private readonly ILocalizationService _localizationService;

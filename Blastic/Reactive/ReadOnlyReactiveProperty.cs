@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Blastic.Reactive
 {
+	[DebuggerDisplay("{" + nameof(Value) + "}")]
 	public class ReadOnlyReactiveProperty<T> : ReactivePropertyBase<T>, IReadOnlyReactiveProperty<T>
 	{
 		private readonly IDisposable _sourceSubscription;

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Blastic.Reactive
 {
+	[DebuggerDisplay("{" + nameof(Value) + "}")]
 	public class ReactiveProperty<T> : ReactivePropertyBase<T>, IReactiveProperty<T>
 	{
 		public T Value
