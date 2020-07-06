@@ -45,7 +45,7 @@
 								<Setter Property="Foreground" Value="{StaticResource BlasticOrangeBrushMedium}" />
 							</DataTrigger>
 							<DataTrigger Binding="{Binding Severity.Value}"
-										 Value="Info">
+										 Value="Information">
 								<Setter Property="Kind" Value="AlertCircle" />
 								<Setter Property="Foreground" Value="{StaticResource BlasticBlueBrushMedium}" />
 							</DataTrigger>
@@ -63,6 +63,7 @@
 			<Button Grid.Column="2"
 					Height="20"
 					Margin="16,0,0,0"
+					Padding="0"
 					VerticalAlignment="Center"
 					materialDesign:RippleAssist.IsDisabled="True"
 					Command="{Binding ActionCommand}"
