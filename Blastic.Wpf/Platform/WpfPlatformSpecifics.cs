@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -30,7 +30,15 @@ namespace Blastic.Wpf.Platform
 				return;
 			}
 
-			_dispatcher.Invoke(action);
+			try
+			{
+				_dispatcher.Invoke(action);
+			}
+			catch (OperationCanceledException)
+			{
+				// This exception is thrown when application is shutdown while we
+				// are waiting for the completion of the action. Ignore it.
+			}
 		}
 
 		public async Task OnUIThread(Func<Task> func)
