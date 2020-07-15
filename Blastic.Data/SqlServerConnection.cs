@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Transactions;
@@ -12,7 +12,7 @@ namespace Blastic.Data
 		private readonly DatabaseConfiguration _databaseConfiguration;
 
 		protected override DbConnection DbConnection { get; }
-		protected override DbTransaction DbTransaction { get; }
+		protected override DbTransaction? DbTransaction { get; }
 
 		public override DatabaseProvider Provider => DatabaseProvider.SQLServer;
 		public override ProviderSpecifics ProviderSpecifics { get; }
@@ -25,12 +25,12 @@ namespace Blastic.Data
 			(DbConnection, DbTransaction) = CreateDbConnection();
 		}
 
-		private (DbConnection connection, DbTransaction transaction) CreateDbConnection()
+		private (DbConnection connection, DbTransaction? transaction) CreateDbConnection()
 		{
 			Logger.LogDebug("Creating new Sql Server connection.");
 
 			DbConnection dbConnection = new SqlConnection(_databaseConfiguration.ConnectionString);
-			DbTransaction dbTransaction = null;
+			DbTransaction? dbTransaction = null;
 
 			dbConnection.Open();
 

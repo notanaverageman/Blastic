@@ -12,14 +12,14 @@ namespace Blastic.Data.Tables
 		{
 		}
 
-		public async Task<Version> GetVersion(CancellationToken cancellationToken)
+		public async Task<Version?> GetVersion(CancellationToken cancellationToken)
 		{
 			using Connection connection = ConnectionFactory.CreateConnection();
-			
+
 			return await GetVersion(connection, cancellationToken);
 		}
 
-		public async Task<Version> GetVersion(Connection connection, CancellationToken cancellationToken)
+		public async Task<Version?> GetVersion(Connection connection, CancellationToken cancellationToken)
 		{
 			bool tableExists = await connection.ProviderSpecifics.TableExists(
 				TableName,

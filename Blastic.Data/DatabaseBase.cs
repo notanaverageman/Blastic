@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,25 +13,25 @@ namespace Blastic.Data
 {
 	public abstract class DatabaseBase<T> where T : MigrationBase
 	{
-        private readonly List<MigrationBase> _migrations;
+		private readonly List<MigrationBase> _migrations;
 
-        protected ILogger<DatabaseBase<T>> Logger { get; }
-		
+		protected ILogger<DatabaseBase<T>> Logger { get; }
+
 		public DatabaseInformationTable DatabaseInformationTable { get; }
 		public ConnectionFactory ConnectionFactory { get; }
 
 		protected DatabaseBase(
-            ConnectionFactory connectionFactory,
-            ILogger<DatabaseBase<T>> logger,
-            IEnumerable<T> migrations)
+			ConnectionFactory connectionFactory,
+			ILogger<DatabaseBase<T>> logger,
+			IEnumerable<T> migrations)
 		{
-            ConnectionFactory = connectionFactory;
+			ConnectionFactory = connectionFactory;
 			Logger = logger;
 
-            _migrations = migrations.Cast<MigrationBase>().ToList();
-            _migrations.Insert(0, new CreateDatabaseInformationTable());
+			_migrations = migrations.Cast<MigrationBase>().ToList();
+			_migrations.Insert(0, new CreateDatabaseInformationTable());
 
-            DatabaseInformationTable = new DatabaseInformationTable(connectionFactory);
+			DatabaseInformationTable = new DatabaseInformationTable(connectionFactory);
 		}
 
 		public TransactionScope CreateTransactionScope()
@@ -43,19 +43,19 @@ namespace Blastic.Data
 		{
 			using Connection connection = ConnectionFactory.CreateConnection();
 
-			Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
+			Version? currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
 			Version newVersion = _migrations.Max(x => x.Version);
 
 			return currentVersion != newVersion;
 		}
 
-		public async Task Migrate(CancellationToken cancellationToken, Version targetVersion = null)
+		public async Task Migrate(CancellationToken cancellationToken, Version? targetVersion = null)
 		{
 			using TransactionScope transactionScope = CreateTransactionScope();
 			using Connection connection = ConnectionFactory.CreateConnection();
 			using IDisposable _ = Logger.BeginScope("Applying migrations.");
 
-			Version currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
+			Version? currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
 			Version newVersion = await Migrate(connection, currentVersion, targetVersion, cancellationToken);
 
 			if (currentVersion == newVersion)
@@ -72,8 +72,8 @@ namespace Blastic.Data
 
 		private async Task<Version> Migrate(
 			Connection connection,
-			Version currentVersion,
-			Version targetVersion,
+			Version? currentVersion,
+			Version? targetVersion,
 			CancellationToken cancellationToken)
 		{
 			IEnumerable<MigrationBase> migrations = _migrations;

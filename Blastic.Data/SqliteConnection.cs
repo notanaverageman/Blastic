@@ -19,15 +19,15 @@ namespace Blastic.Data
 		}
 
 		private readonly DatabaseConfiguration _databaseConfiguration;
-		private readonly SQLiteConnection _parent;
+		private readonly SQLiteConnection? _parent;
 
 		private readonly AmbientContext<SQLiteConnection> _ambientContext;
 
-		private Transaction _scopeTransaction;
+		private Transaction? _scopeTransaction;
 		private bool _isInTransactionScope;
 
 		protected override DbConnection DbConnection { get; }
-		protected override DbTransaction DbTransaction { get; }
+		protected override DbTransaction? DbTransaction { get; }
 
 		public override DatabaseProvider Provider => DatabaseProvider.SQLite;
 		public override ProviderSpecifics ProviderSpecifics { get; }
@@ -42,7 +42,7 @@ namespace Blastic.Data
 
 			RegisterToTransactionScope();
 
-			SQLiteConnection parent = _ambientContext.Get();
+			SQLiteConnection? parent = _ambientContext.Get();
 
 			if (parent != null)
 			{
@@ -105,7 +105,7 @@ namespace Blastic.Data
 			return !AmbientConnectionsTable.TryGetValue(Transaction.Current, out _);
 		}
 
-		private void UnregisterConnection(Transaction transaction)
+		private void UnregisterConnection(Transaction? transaction)
 		{
 			if (transaction == null)
 			{
@@ -134,15 +134,22 @@ namespace Blastic.Data
 
 			try
 			{
-				Logger.LogDebug("SQLite connection committing transaction.");
-				DbTransaction.Commit();
+				if (DbTransaction != null)
+				{
+					Logger.LogDebug("SQLite connection committing transaction.");
+					DbTransaction.Commit();
+				}
+				else
+				{
+					Logger.LogDebug("SQLite connection ignoring dispose since it's transaction is null.");
+				}
 			}
 			catch (Exception exception)
 			{
 				try
 				{
 					Logger.LogError(exception, "SQLite connection transaction has failed. Trying to rollback.");
-					DbTransaction.Rollback();
+					DbTransaction!.Rollback();
 				}
 				catch (Exception)
 				{
@@ -152,7 +159,7 @@ namespace Blastic.Data
 
 			Logger.LogDebug("SQLite connection disposing transaction and connection.");
 
-			DbTransaction.Dispose();
+			DbTransaction?.Dispose();
 			DbConnection.Dispose();
 		}
 
@@ -177,8 +184,9 @@ namespace Blastic.Data
 			DbTransaction?.Rollback();
 			DbTransaction?.Dispose();
 
-			DbConnection.Close();
-			DbConnection.Dispose();
+			// Can be null if an exception is thrown in the constructor.
+			DbConnection?.Close();
+			DbConnection?.Dispose();
 
 			UnregisterConnection(_scopeTransaction);
 

@@ -29,12 +29,12 @@ namespace Blastic.Ordering
 			_numbers = new List<int>(0);
 		}
 
-		public bool Equals(Order other)
+		public bool Equals(Order? other)
 		{
 			return CompareTo(other) == 0;
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
@@ -47,18 +47,23 @@ namespace Blastic.Ordering
 			return _numbers.GetHashCode();
 		}
 
-		public static bool operator ==(Order left, Order right)
+		public static bool operator ==(Order? left, Order? right)
 		{
 			return Equals(left, right);
 		}
 
-		public static bool operator !=(Order left, Order right)
+		public static bool operator !=(Order? left, Order? right)
 		{
 			return !Equals(left, right);
 		}
 
-		public int CompareTo(Order other)
+		public int CompareTo(Order? other)
 		{
+			if (other == null)
+			{
+				return 1;
+			}
+
 			if (_isAbsoluteMinimum)
 			{
 				return other._isAbsoluteMinimum ? 0 : -1;
@@ -107,7 +112,7 @@ namespace Blastic.Ordering
 			return 0;
 		}
 
-		public int CompareTo(object obj)
+		public int CompareTo(object? obj)
 		{
 			if (ReferenceEquals(null, obj)) return 1;
 			if (ReferenceEquals(this, obj)) return 0;
@@ -117,24 +122,24 @@ namespace Blastic.Ordering
 				: throw new ArgumentException($"Object must be of type {nameof(Order)}");
 		}
 
-		public static bool operator <(Order left, Order right)
+		public static bool operator <(Order? left, Order? right)
 		{
-			return Comparer<Order>.Default.Compare(left, right) < 0;
+			return Comparer<Order?>.Default.Compare(left, right) < 0;
 		}
 
-		public static bool operator >(Order left, Order right)
+		public static bool operator >(Order? left, Order? right)
 		{
-			return Comparer<Order>.Default.Compare(left, right) > 0;
+			return Comparer<Order?>.Default.Compare(left, right) > 0;
 		}
 
-		public static bool operator <=(Order left, Order right)
+		public static bool operator <=(Order? left, Order? right)
 		{
-			return Comparer<Order>.Default.Compare(left, right) <= 0;
+			return Comparer<Order?>.Default.Compare(left, right) <= 0;
 		}
 
-		public static bool operator >=(Order left, Order right)
+		public static bool operator >=(Order? left, Order? right)
 		{
-			return Comparer<Order>.Default.Compare(left, right) >= 0;
+			return Comparer<Order?>.Default.Compare(left, right) >= 0;
 		}
 
 		public override string ToString()

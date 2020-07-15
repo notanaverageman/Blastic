@@ -1,4 +1,4 @@
-﻿using Blastic.Commanding;
+using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.DynamicControls.Properties;
@@ -8,7 +8,7 @@ using Blastic.Services.Settings;
 
 namespace Blastic.Settings
 {
-	public class FileBrowserSetting : Setting<string>
+	public class FileBrowserSetting : Setting<string?>
 	{
 		private readonly IDialogService _dialogService;
 		private readonly IFileDialogFilter _filter;
@@ -20,14 +20,14 @@ namespace Blastic.Settings
 		public bool IsSaveFilePicker { get; set; }
 
 		public Command BrowseCommand { get; }
-		
+
 		public FileBrowserSetting(
 			ISettingsService settingsService,
 			IPresenterSource presenterSource,
 			IDialogService dialogService,
 			IFileDialogFilter filter,
 			string key,
-			string defaultValue)
+			string? defaultValue)
 			:
 			base(settingsService, presenterSource, key, defaultValue)
 		{
@@ -40,7 +40,7 @@ namespace Blastic.Settings
 			});
 
 			GroupField = new GroupElement();
-			
+
 			// Configure after creating to be able to use internal objects, e.g. Label.
 			GroupField
 				.AddText(ReactiveSettingValue, x => x

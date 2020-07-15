@@ -13,7 +13,7 @@ namespace Blastic.Data
 		public abstract ProviderSpecifics ProviderSpecifics { get; }
 
 		protected abstract DbConnection DbConnection { get; }
-		protected abstract DbTransaction DbTransaction { get; }
+		protected abstract DbTransaction? DbTransaction { get; }
 
 		public Connection(ILogger logger)
 		{

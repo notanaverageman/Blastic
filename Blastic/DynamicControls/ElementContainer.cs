@@ -56,7 +56,7 @@ namespace Blastic.DynamicControls
 
 		public static T AddText<T>(
 			this T container,
-			IReactiveProperty<string> property,
+			IReactiveProperty<string?> property,
 			Action<TextField>? configure = null) where T : IElementContainer
 		{
 			TextField element = new TextField(property);
@@ -67,7 +67,7 @@ namespace Blastic.DynamicControls
 
 		public static T AddLabel<T>(
 			this T container,
-			IReadOnlyReactiveProperty<string> property,
+			IReadOnlyReactiveProperty<string?> property,
 			Action<LabelField>? configure = null) where T : IElementContainer
 		{
 			LabelField element = new LabelField(property);
@@ -78,10 +78,10 @@ namespace Blastic.DynamicControls
 
 		public static T AddLabel<T>(
 			this T container,
-			string label,
+			string? label,
 			Action<LabelField>? configure = null) where T : IElementContainer
 		{
-			return container.AddLabel(new ReactiveProperty<string>(label), configure);
+			return container.AddLabel(new ReactiveProperty<string?>(label), configure);
 		}
 
 		public static T AddPassword<T>(
@@ -103,7 +103,7 @@ namespace Blastic.DynamicControls
 			TextField element = new TextField(property);
 
 			element.Mask.Value = TextBoxMasks.IntegerMask;
-            element.Keyboard.Value = Keyboard.Numeric;
+			element.Keyboard.Value = Keyboard.Numeric;
 
 			container.AddElement(element, configure);
 
@@ -118,9 +118,9 @@ namespace Blastic.DynamicControls
 			TextField element = new TextField(property);
 
 			element.Mask.Value = TextBoxMasks.FloatingPointMask;
-            element.Keyboard.Value = Keyboard.Numeric;
+			element.Keyboard.Value = Keyboard.Numeric;
 
-            container.AddElement(element, configure);
+			container.AddElement(element, configure);
 
 			return container;
 		}

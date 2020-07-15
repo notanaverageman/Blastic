@@ -30,7 +30,7 @@ namespace Blastic.Data
 			return SafeCast<T>(_dataReader[name], _databaseProvider);
 		}
 
-		public List<T> GetEnumList<T>(string name)
+		public List<T>? GetEnumList<T>(string name)
 		{
 			return SafeCastEnumList<T>(_dataReader[name]);
 		}
@@ -84,7 +84,7 @@ namespace Blastic.Data
 			return (T)value;
 		}
 
-		private static List<T> SafeCastEnumList<T>(object value)
+		private static List<T>? SafeCastEnumList<T>(object value)
 		{
 			if (value == DBNull.Value)
 			{

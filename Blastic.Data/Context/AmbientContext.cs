@@ -10,7 +10,7 @@ namespace Blastic.Data.Context
 
 		// ReSharper disable once StaticMemberInGenericType
 		// We really want to create a static for each generic type.
-		private static readonly AsyncLocal<string> Storage = new AsyncLocal<string>();
+		private static readonly AsyncLocal<string?> Storage = new AsyncLocal<string?>();
 
 		static AmbientContext()
 		{
@@ -18,10 +18,10 @@ namespace Blastic.Data.Context
 		}
 
 		private readonly bool _initializedByThis;
-		
+
 		public AmbientContext()
 		{
-			string crossReferenceKey = Storage.Value;
+			string? crossReferenceKey = Storage.Value;
 
 			if (crossReferenceKey != null)
 			{
@@ -33,18 +33,29 @@ namespace Blastic.Data.Context
 
 			_initializedByThis = true;
 		}
-		
-		public T Get()
+
+		public T? Get()
 		{
-			string crossReferenceKey = Storage.Value;
+			string? crossReferenceKey = Storage.Value;
+
+			if (crossReferenceKey == null)
+			{
+				return default;
+			}
+
 			ContextTable.TryGetValue(crossReferenceKey, out T value);
 
 			return value;
 		}
-		
+
 		public void Save(T value)
 		{
-			string crossReferenceKey = Storage.Value;
+			string? crossReferenceKey = Storage.Value;
+
+			if (crossReferenceKey == null)
+			{
+				return;
+			}
 
 			if (ContextTable.TryGetValue(crossReferenceKey, out _))
 			{
@@ -61,7 +72,14 @@ namespace Blastic.Data.Context
 				return;
 			}
 
-			ContextTable.Remove(Storage.Value);
+			string? crossReferenceKey = Storage.Value;
+
+			if (crossReferenceKey == null)
+			{
+				return;
+			}
+
+			ContextTable.Remove(crossReferenceKey);
 			Storage.Value = null;
 		}
 	}

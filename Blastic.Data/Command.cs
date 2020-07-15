@@ -32,11 +32,11 @@ namespace Blastic.Data
 			_command.CommandTimeout = (int)TimeSpan.FromHours(1).TotalSeconds;
 		}
 
-		public void AddParameterWithValue(string name, object value)
+		public void AddParameterWithValue(string name, object? value)
 		{
 			DbParameter parameter = _command.CreateParameter();
 			SetParameter(parameter, value);
-			
+
 			parameter.ParameterName = name;
 			_command.Parameters.Add(parameter);
 		}
@@ -58,12 +58,9 @@ namespace Blastic.Data
 			SetParameter(parameter, value);
 		}
 
-		public void SetParameter(DbParameter parameter, object value)
+		public void SetParameter(DbParameter parameter, object? value)
 		{
-			if (value == null)
-			{
-				value = DBNull.Value;
-			}
+			value ??= DBNull.Value;
 
 			if (_databaseProvider == DatabaseProvider.SQLite && value is DateTime dateTime)
 			{
@@ -72,8 +69,8 @@ namespace Blastic.Data
 
 			if (DataReader.IsListOfEnums(value))
 			{
-				IEnumerable<object> list = ((IList) value).Cast<object>();
-				value = string.Join(DataReader.ListSeparator, list.Select(x => (int) x));
+				IEnumerable<object> list = ((IList)value).Cast<object>();
+				value = string.Join(DataReader.ListSeparator, list.Select(x => (int)x));
 			}
 
 			parameter.Value = value;
