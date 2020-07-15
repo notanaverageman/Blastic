@@ -1,17 +1,77 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using Blastic.DynamicControls;
 using Blastic.Reactive;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Blastic.CodeGeneration.RoslynExtensions;
 
 namespace Blastic.CodeGeneration
 {
-	public class FormGenerator
+	[Generator]
+	public class FormGenerator : ISourceGenerator
 	{
+		public void Initialize(InitializationContext context)
+		{
+
+		}
+
+		public void Execute(SourceGeneratorContext context)
+		{
+			Assembly generatorAssembly = GetType().Assembly;
+			string generatorAssemblyName = generatorAssembly.GetName().Name;
+			string generatorAssemblyVersion =
+				AttributeExtensions.GetCustomAttribute<AssemblyInformationalVersionAttribute>(generatorAssembly)?.InformationalVersion
+				?? "";
+
+			string generatedCodeAttribute = $"[GeneratedCode(\"{generatorAssemblyName}\", \"{generatorAssemblyVersion}\")]";
+
+			context.Compilation.GetTy;
+
+			// Debugger.Launch();
+
+			foreach (SyntaxTree syntaxTree in context.Compilation.SyntaxTrees)
+			{
+				IEnumerable<ClassDeclarationSyntax> classDeclarations = syntaxTree
+					.GetRoot()
+					.DescendantNodes()
+					.OfType<ClassDeclarationSyntax>();
+
+				foreach (ClassDeclarationSyntax classDeclaration in classDeclarations.Where(x => x.Identifier.ValueText.StartsWith("Customer")))
+				{
+					List<MemberDeclarationSyntax> members = new List<MemberDeclarationSyntax>();
+
+					List<PropertyDeclarationSyntax> properties = CreateProperties(classDeclaration);
+					ConstructorDeclarationSyntax constructor = CreateConstructor(classDeclaration);
+					MethodDeclarationSyntax toDynamicModelMethod = CreateToDynamicModelMethod(classDeclaration);
+					MethodDeclarationSyntax toTypeMethod = CreateToTypeMethod(classDeclaration);
+
+					members.AddRange(properties);
+					members.Add(constructor);
+					members.Add(toDynamicModelMethod);
+					members.Add(toTypeMethod);
+
+					context.Compilation.GlobalNamespace.GetTypeMembers()
+
+					string generatedClass = ClassDeclaration(GetFormIdentifier(classDeclaration))
+						.WithMembers(List(members))
+						.WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.PartialKeyword)))
+						.NormalizeWhitespace()
+						.ToFullString();
+
+					context.AddSource("CustomerForm", SourceText.From(generatedClass, Encoding.UTF8));
+
+					File.WriteAllText(Path.Combine("obj", "CustomerForm.cs"), generatedClass);
+				}
+			}
+		}
+
 		public string Generate(ClassDeclarationSyntax classDeclaration)
 		{
 			List<MemberDeclarationSyntax> members = new List<MemberDeclarationSyntax>();
