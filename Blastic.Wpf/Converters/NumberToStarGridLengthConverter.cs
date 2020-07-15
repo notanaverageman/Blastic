@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -10,6 +10,12 @@ namespace Blastic.Wpf.Converters
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			double d = GetValue(value);
+
+			if (double.IsNaN(d))
+			{
+				d = 0;
+			}
+
 			return new GridLength(d, GridUnitType.Star);
 		}
 
