@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -50,6 +51,80 @@ namespace Blastic.Wpf.ViewManagement
 			{
 				Text = message
 			};
+		}
+
+		internal static void HookLoadedUnloadedEvents()
+		{
+			void Register<T>(RoutedEvent routedEvent, Action<object, RoutedEventArgs> action)
+			{
+				EventManager.RegisterClassHandler(
+					typeof(T),
+					routedEvent,
+					new RoutedEventHandler(action),
+					true);
+			}
+
+			Register<FrameworkElement>(FrameworkElement.LoadedEvent, OnFrameworkElementLoaded);
+			Register<FrameworkElement>(FrameworkElement.UnloadedEvent, OnFrameworkElementUnloaded);
+			Register<ContentElement>(FrameworkContentElement.LoadedEvent, OnFrameworkElementLoaded);
+			Register<ContentElement>(FrameworkContentElement.UnloadedEvent, OnFrameworkElementUnloaded);
+		}
+
+		private static void OnFrameworkElementLoaded(object o, RoutedEventArgs e)
+		{
+			if (!(o is FrameworkElement frameworkElement))
+			{
+				return;
+			}
+
+			DependencyPropertyDescriptor
+				.FromProperty(FrameworkElement.DataContextProperty, typeof(FrameworkElement))
+				.AddValueChanged(frameworkElement, OnDataContextChanged);
+
+			SetView(frameworkElement, false);
+		}
+
+		private static void OnFrameworkElementUnloaded(object o, RoutedEventArgs e)
+		{
+			if (!(o is FrameworkElement frameworkElement))
+			{
+				return;
+			}
+
+			DependencyPropertyDescriptor
+				.FromProperty(FrameworkElement.DataContextProperty, typeof(FrameworkElement))
+				.RemoveValueChanged(frameworkElement, OnDataContextChanged);
+
+			SetView(frameworkElement, true);
+		}
+
+		private static void OnDataContextChanged(object x, EventArgs y)
+		{
+			if (!(x is FrameworkElement frameworkElement))
+			{
+				return;
+			}
+
+			SetView(frameworkElement, false);
+		}
+
+		private static void SetView(FrameworkElement frameworkElement, bool shouldSetNull)
+		{
+			if (!(frameworkElement.DataContext is IViewAware viewAware))
+			{
+				return;
+			}
+
+			ValueSource valueSource = DependencyPropertyHelper.GetValueSource(
+				frameworkElement,
+				FrameworkElement.DataContextProperty);
+
+			if (valueSource.BaseValueSource == BaseValueSource.Inherited)
+			{
+				return;
+			}
+
+			viewAware.View.Value = shouldSetNull ? null : frameworkElement;
 		}
 	}
 }

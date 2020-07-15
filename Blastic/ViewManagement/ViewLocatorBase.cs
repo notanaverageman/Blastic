@@ -47,8 +47,6 @@ namespace Blastic.ViewManagement
 
 			if (viewAware != null)
 			{
-				viewAware.View.Value = element;
-
 				PostProcessAttachView(element, viewAware);
 			}
 			

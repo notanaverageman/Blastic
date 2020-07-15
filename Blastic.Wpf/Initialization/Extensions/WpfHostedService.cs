@@ -74,6 +74,8 @@ namespace Blastic.Wpf.Initialization.Extensions
 
 			application.Startup += async (sender, args) =>
 			{
+				ViewLocator.HookLoadedUnloadedEvents();
+
 				await windowManager.ShowWindow(mainViewModel);
 			};
 
