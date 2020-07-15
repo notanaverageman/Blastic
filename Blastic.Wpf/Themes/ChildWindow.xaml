@@ -14,8 +14,12 @@
 	<Style TargetType="{x:Type controls:ChildWindow}">
 		<Setter Property="VerticalContentAlignment" Value="Center" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
-		<Setter Property="OverlayBrush" Value="{StaticResource BlasticGrayBrushMedium}" />
 		<Setter Property="Background" Value="{StaticResource BlasticWhiteBrush}" />
+		<Setter Property="OverlayBrush">
+			<Setter.Value>
+				<SolidColorBrush Opacity="0.2" Color="{StaticResource BlasticGrayColorMedium}" />
+			</Setter.Value>
+		</Setter>
 
 		<Setter Property="Template">
 			<Setter.Value>
