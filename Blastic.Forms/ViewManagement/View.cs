@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Linq;
-using Blastic.Forms.Initialization;
 using Xamarin.Forms;
 
 namespace Blastic.Forms.ViewManagement
@@ -26,11 +25,11 @@ namespace Blastic.Forms.ViewManagement
 				return;
 			}
 
-			VisualElement view = BlasticApplication.ViewLocator.Locate(newValue);
+			VisualElement view = ViewLocator.Current.Locate(newValue);
 
 			if (!SetContentProperty(bindable, view))
 			{
-				view = BlasticApplication.ViewLocator.Locate(newValue.GetType());
+				view = ViewLocator.Current.Locate(newValue.GetType());
 				SetContentProperty(bindable, view);
 			}
 		}

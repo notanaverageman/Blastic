@@ -64,6 +64,11 @@ namespace Blastic.Forms.ControlExtensions
 
 			IEnumerable<IShellTab> tabs = GetShellTabs(tabBar);
 
+			if (tabs == null)
+			{
+				return;
+			}
+
 			int index = tabs.IndexOf(newValue);
 
 			if (index < 0)

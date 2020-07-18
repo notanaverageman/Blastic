@@ -2,10 +2,10 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
-using Blastic.Forms.Initialization;
 using Blastic.Forms.Sample.Initialization.Extensions;
-using Blastic.Forms.Sample.UserInterface;
+using Microsoft.Extensions.Hosting;
 using Xamarin.Forms.Platform.Android;
+using Environment = System.Environment;
 
 namespace Blastic.Forms.Sample.Droid
 {
@@ -17,7 +17,7 @@ namespace Blastic.Forms.Sample.Droid
 		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 	public class MainActivity : FormsAppCompatActivity
 	{
-		protected override void OnCreate(Bundle savedInstanceState)
+		protected override async void OnCreate(Bundle savedInstanceState)
 		{
 			TabLayoutResource = Resource.Layout.Tabbar;
 			ToolbarResource = Resource.Layout.Toolbar;
@@ -29,9 +29,12 @@ namespace Blastic.Forms.Sample.Droid
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-			new BlasticApplication(LoadApplication)
-				.Initialize()
-				.Run<App, MainViewModel>();
+			IHost host = new HostBuilder()
+				.UseContentRoot(Environment.GetFolderPath(Environment.SpecialFolder.Personal))
+				.Initialize(LoadApplication)
+				.Build();
+
+			await host.RunAsync();
 		}
 
 		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)

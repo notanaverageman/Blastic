@@ -20,8 +20,8 @@
 		</DataTemplate>
 	</Shell.Resources>
 
-	<TabBar controlExtensions:TabbarExtensions.ShellTabs="{Binding Items}"
-			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}"
+	<TabBar Title="{Binding ActiveItem.Value.Title.Value, Mode=OneWay}"
 			controlExtensions:TabbarExtensions.SelectedItem="{Binding ActiveItem.Value}"
-			Title="{Binding ActiveItem.Value.Title.Value, Mode=OneWay}"/>
+			controlExtensions:TabbarExtensions.ShellTabs="{Binding Items}"
+			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}" />
 </Shell>

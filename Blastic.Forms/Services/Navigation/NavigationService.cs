@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
-using Blastic.Forms.ViewManagement;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.ViewManagement;
@@ -12,9 +11,9 @@ namespace Blastic.Forms.Services.Navigation
 {
 	public class NavigationService : INavigationService
 	{
-		private readonly ViewLocator _viewLocator;
+		private readonly IViewLocator<VisualElement> _viewLocator;
 
-		public NavigationService(ViewLocator viewLocator)
+		public NavigationService(IViewLocator<VisualElement> viewLocator)
 		{
 			_viewLocator = viewLocator;
 		}

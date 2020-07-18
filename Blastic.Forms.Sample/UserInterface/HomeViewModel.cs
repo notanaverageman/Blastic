@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
@@ -17,8 +14,6 @@ namespace Blastic.Forms.Sample.UserInterface
 	public class HomeViewModel : Screen, IShellTab
 	{
 		private readonly INavigationService _navigationService;
-		private readonly Labels _labels;
-		private readonly ProgramDatabase _database;
 
 		private readonly AddMachineForm _addMachineForm;
 
@@ -33,24 +28,15 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public HomeViewModel(
 			INavigationService navigationService,
-			Labels labels,
-			ProgramDatabase database)
+			Labels labels)
 		{
 			_navigationService = navigationService;
-			_labels = labels;
-			_database = database;
 
 			Order = new Order(0);
 			Title = labels.Home.Title;
 
 			SelectedMachine = new ReactiveProperty<MachineViewModel>();
 			Machines = new ReactiveCollection<MachineViewModel>();
-
-			Lifetime.Initialize.Subscribe(async x =>
-			{
-				List<Machine> machines = await database.MachinesTable.GetAll(x.CancellationToken);
-				Machines.AddRange(machines.Select(y => new MachineViewModel(navigationService, labels, database, y)));
-			});
 
 			AddMachineCommand = new AsyncCommand().WithSubscribe(async () => await AddMachine());
 			AddMachineLabel = labels.Home.AddMachine;
@@ -88,10 +74,6 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			machine.Name.Value = _addMachineForm.MachineName.Value;
 			machine.SecondsPerFrame.Value = _addMachineForm.SecondsPerFrame.Value;
-
-			await _database.MachinesTable.Put(machine, CancellationToken.None);
-
-			Machines.Add(new MachineViewModel(_navigationService, _labels, _database, machine));
 		}
 	}
 }
