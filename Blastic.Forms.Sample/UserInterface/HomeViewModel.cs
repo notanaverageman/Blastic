@@ -1,79 +1,80 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
-using Blastic.Forms.Sample.Data;
+using Blastic.Forms.Sample.Librivox;
 using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
+using DynamicData;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IShellTab
 	{
 		private readonly INavigationService _navigationService;
+		private readonly HttpClient _httpClient;
 
-		private readonly AddMachineForm _addMachineForm;
+		private readonly SourceCache<BookViewModel, int> _booksSource;
+		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
 
 		public Order Order { get; }
 		public IReadOnlyReactiveProperty<string> Title { get; }
 
-		public IReactiveProperty<MachineViewModel> SelectedMachine { get; }
-		public ReactiveCollection<MachineViewModel> Machines { get; }
+		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 
-		public AsyncCommand AddMachineCommand { get; }
-		public IReadOnlyReactiveProperty<string> AddMachineLabel { get; }
+		public AsyncCommand FetchBooksCommand { get; }
 
 		public HomeViewModel(
 			INavigationService navigationService,
+			HttpClient httpClient,
 			Labels labels)
 		{
 			_navigationService = navigationService;
+			_httpClient = httpClient;
 
 			Order = new Order(0);
 			Title = labels.Home.Title;
 
-			SelectedMachine = new ReactiveProperty<MachineViewModel>();
-			Machines = new ReactiveCollection<MachineViewModel>();
+			_booksSource = new SourceCache<BookViewModel, int>(x => x.Id);
+			_booksSource
+				.Connect()
+				.Bind(out _books)
+				.DisposeMany()
+				.Subscribe();
 
-			AddMachineCommand = new AsyncCommand().WithSubscribe(async () => await AddMachine());
-			AddMachineLabel = labels.Home.AddMachine;
-
-			_addMachineForm = new AddMachineForm(
-				labels,
-				Machines,
-				async () => await _navigationService.GoBack(this));
-
-			SelectedMachine.Subscribe(
-				x =>
-				{
-					if (x == null)
-					{
-						return;
-					}
-
-					// We don't want to see items as selected on UI.
-					SelectedMachine.Value = null;
-
-					navigationService.NavigateTo(this, x);
-				});
+			FetchBooksCommand = new AsyncCommand(FetchBooks);
 		}
 
-		private async Task AddMachine()
+		private async Task FetchBooks()
 		{
-			await _navigationService.NavigateTo(this, _addMachineForm.Form);
-
-			if (!await _addMachineForm.Form.WaitCompletion())
+			async Task Fetch(CancellationToken cancellationToken)
 			{
-				return;
+				HttpResponseMessage responseMessage = await _httpClient.GetAsync(
+					"https://librivox.org/api/feed/audiobooks?format=json&extended=true",
+					cancellationToken);
+
+				string result = await responseMessage.Content.ReadAsStringAsync();
+
+				LibrivoxBookList bookList = JsonSerializer.Deserialize<LibrivoxBookList>(result);
+				List<BookViewModel> bookViewModels = bookList.ToViewModels();
+
+				_booksSource.Edit(
+					x =>
+					{
+						x.Clear();
+						x.AddOrUpdate(bookViewModels);
+					});
 			}
 
-			Machine machine = new Machine();
-
-			machine.Name.Value = _addMachineForm.MachineName.Value;
-			machine.SecondsPerFrame.Value = _addMachineForm.SecondsPerFrame.Value;
+			await ExecutionContext.Execute(Fetch);
 		}
 	}
 }

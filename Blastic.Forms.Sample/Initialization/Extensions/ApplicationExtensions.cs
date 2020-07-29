@@ -1,9 +1,8 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using Blastic.Data;
-using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.Initialization.Extensions;
-using Blastic.Forms.Sample.Data.Migrations;
 using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.UserInterface;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,24 +36,8 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 					(x, y) =>
 					{
 						y.AddSingleton<Labels>();
-					})
-				.AddMigrations();
-
-			return hostBuilder;
-		}
-
-		public static IHostBuilder AddMigrations(this IHostBuilder hostBuilder)
-        {
-	        hostBuilder.ConfigureServices((x, y) =>
-            {
-                void AddMigration<T>() where T : ProgramDatabaseMigrationBase
-                {
-                    y.AddSingleton<ProgramDatabaseMigrationBase, T>();
-                }
-
-                AddMigration<CreateMachinesTable>();
-                AddMigration<CreateJobsTable>();
-            });
+						y.AddSingleton<HttpClient>();
+					});
 
 			return hostBuilder;
 		}

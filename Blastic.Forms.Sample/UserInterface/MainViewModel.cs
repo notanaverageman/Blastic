@@ -21,8 +21,6 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Items.AddRange(tabs);
 
-			ActiveItem.Value = Items.FirstOrDefault();
-
 			Lifetime.Initialize.Subscribe(
 				async x =>
 				{
@@ -33,7 +31,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Lifetime.Activate.Subscribe(async x =>
 			{
-				await Activate(ActiveItem.Value, x.CancellationToken);
+				await Activate(Items.FirstOrDefault(), x.CancellationToken);
 			});
 		}
 
