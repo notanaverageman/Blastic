@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
+using Blastic.Forms.Sample.ControlExtensions;
 using Blastic.Forms.Sample.Librivox;
 using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Services.Navigation;
@@ -22,6 +24,8 @@ namespace Blastic.Forms.Sample.UserInterface
 		private readonly INavigationService _navigationService;
 		private readonly HttpClient _httpClient;
 
+		public IReactiveProperty<PanState> PanState { get; }
+
 		private readonly SourceCache<BookViewModel, int> _booksSource;
 		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
 
@@ -29,8 +33,10 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> Title { get; }
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
+		public IReactiveProperty<BookViewModel> SelectedBook { get; }
 
 		public AsyncCommand FetchBooksCommand { get; }
+		public Command<PanState> TogglePanStateCommand { get; }
 
 		public HomeViewModel(
 			INavigationService navigationService,
@@ -50,7 +56,39 @@ namespace Blastic.Forms.Sample.UserInterface
 				.DisposeMany()
 				.Subscribe();
 
+			SelectedBook = new ReactiveProperty<BookViewModel>();
+
 			FetchBooksCommand = new AsyncCommand(FetchBooks);
+
+			PanState = new ReactiveProperty<PanState>();
+
+			TogglePanStateCommand = new Command<PanState>(
+				x =>
+				{
+					PanState.Value = x.Parameter;
+				});
+
+			AuthorViewModel author = new AuthorViewModel(123);
+			author.FirstName.Value = "Jerry";
+			author.LastName.Value = "Bonnell";
+
+			for (int i = 0; i < 1; i++)
+			{
+				BookViewModel book = new BookViewModel(i, new[] { author });
+				book.Title.Value = "Golden mean to 5000 digits";
+				book.ImageUrl.Value = "https://ia800301.us.archive.org/21/items/golden_mean_to_5000_digits_0810_librivox/Golden_mean_5000_digits_1201.jpg?cnt=0";
+
+				_booksSource.AddOrUpdate(book);
+			}
+
+			SelectedBook.Value = _books.FirstOrDefault();
+
+			Lifetime.Initialize.Subscribe(
+				async x =>
+				{
+					await Task.Delay(TimeSpan.FromSeconds(1));
+					PanState.Value = ControlExtensions.PanState.Collapsed;
+				});
 		}
 
 		private async Task FetchBooks()
@@ -72,6 +110,8 @@ namespace Blastic.Forms.Sample.UserInterface
 						x.Clear();
 						x.AddOrUpdate(bookViewModels);
 					});
+
+				SelectedBook.Value = _books.FirstOrDefault();
 			}
 
 			await ExecutionContext.Execute(Fetch);

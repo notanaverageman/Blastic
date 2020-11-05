@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using Blastic.Data;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.UserInterface;
@@ -28,15 +27,13 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.UseApplicationRunner(applicationRunner)
 							.AddLocalizationSource(Properties.Resources.ResourceManager)
 							.AddShellTab<HomeViewModel>()
-							.UseMainViewModel<MainViewModel>()
-							.AddProgramDatabase(DatabaseProvider.SQLite, $"Data Source={databasePath};")
-							.AddSettingsService();
+							.UseMainViewModel<MainViewModel>();
 					})
 				.ConfigureServices(
 					(x, y) =>
 					{
 						y.AddSingleton<Labels>();
-						y.AddSingleton<HttpClient>();
+						y.AddSingleton<HttpClient>(new HttpClient());
 					});
 
 			return hostBuilder;

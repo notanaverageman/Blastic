@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Shell x:Class="Blastic.Forms.Sample.UserInterface.MainView"
-	   xmlns="http://xamarin.com/schemas/2014/forms"
-	   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	   xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
-	   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-	   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	   xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
-	   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
-	   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
-	   mc:Ignorable="d"
-	   x:DataType="userInterface:MainViewModel">
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.MainView"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
+			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
+			 mc:Ignorable="d"
+			 x:DataType="userInterface:MainViewModel">
 
-	<Shell.Resources>
+	<!--<Shell.Resources>
 		<DataTemplate x:Key="TabTemplate"
 					  x:DataType="tab:IShellTab">
 			<Tab Title="{Binding Title.Value, Mode=OneWay}">
@@ -23,5 +23,7 @@
 	<TabBar Title="{Binding ActiveItem.Value.Title.Value, Mode=OneWay}"
 			controlExtensions:TabbarExtensions.SelectedItem="{Binding ActiveItem.Value}"
 			controlExtensions:TabbarExtensions.ShellTabs="{Binding Items}"
-			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}" />
-</Shell>
+			controlExtensions:TabbarExtensions.TabTemplate="{StaticResource TabTemplate}" />-->
+
+	<userInterface:HomeView BindingContext="{Binding ActiveItem.Value}" />
+</ContentPage>

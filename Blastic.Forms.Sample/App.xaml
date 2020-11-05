@@ -12,6 +12,11 @@
 			<ResourceDictionary.MergedDictionaries>
 				<theme:Blastic />
 			</ResourceDictionary.MergedDictionaries>
+
+			<OnPlatform x:Key="MaterialFontFamily" x:TypeArguments="x:String">
+				<On Platform="iOS" Value="Material Design Icons" />
+				<On Platform="Android" Value="materialdesignicons.ttf#Material Design Icons" />
+			</OnPlatform>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

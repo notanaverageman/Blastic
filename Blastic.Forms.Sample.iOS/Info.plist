@@ -10,6 +10,7 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
@@ -21,9 +22,9 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>9.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>Blastic.Forms</string>
+	<string>forms</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
@@ -33,6 +34,14 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleIdentifier</key>
-	<string>blastic.forms.ios</string>
+	<string>blastic.forms</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>materialdesignicons.ttf</string>
+	</array>
 </dict>
 </plist>

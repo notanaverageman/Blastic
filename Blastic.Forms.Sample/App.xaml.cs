@@ -1,5 +1,6 @@
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
+using Xamarin.Forms;
 
 namespace Blastic.Forms.Sample
 {
@@ -8,6 +9,8 @@ namespace Blastic.Forms.Sample
 		public App()
 		{
 			InitializeComponent();
+
+			UserAppTheme = OSAppTheme.Light;
 		}
 
 		protected override async void OnStart()
