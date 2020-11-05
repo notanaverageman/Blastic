@@ -51,6 +51,12 @@ steps:
     version: ${{ variables.version }}
     buildConfiguration: ${{ variables.buildConfiguration }}
 
+- template: azure-pipelines-project-template.yml	
+  parameters:	
+    project: Blastic.Forms
+    version: ${{ variables.version }}
+    buildConfiguration: ${{ variables.buildConfiguration }}
+
 - task: NuGetCommand@2
   inputs:
     command: 'push'
