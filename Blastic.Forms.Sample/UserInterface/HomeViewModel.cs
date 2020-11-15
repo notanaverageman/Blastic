@@ -35,7 +35,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 		public IReactiveProperty<BookViewModel> SelectedBook { get; }
 
-		public AsyncCommand FetchBooksCommand { get; }
+		public Command FetchBooksCommand { get; }
 		public Command<PanState> TogglePanStateCommand { get; }
 
 		public HomeViewModel(
@@ -58,14 +58,14 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			SelectedBook = new ReactiveProperty<BookViewModel>();
 
-			FetchBooksCommand = new AsyncCommand(FetchBooks);
+			FetchBooksCommand = new Command(FetchBooks);
 
 			PanState = new ReactiveProperty<PanState>();
 
 			TogglePanStateCommand = new Command<PanState>(
 				x =>
 				{
-					PanState.Value = x.Parameter;
+					PanState.Value = x;
 				});
 
 			AuthorViewModel author = new AuthorViewModel(123);
@@ -84,7 +84,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			SelectedBook.Value = _books.FirstOrDefault();
 
 			Lifetime.Initialize.Subscribe(
-				async x =>
+				async () =>
 				{
 					await Task.Delay(TimeSpan.FromSeconds(1));
 					PanState.Value = ControlExtensions.PanState.Collapsed;

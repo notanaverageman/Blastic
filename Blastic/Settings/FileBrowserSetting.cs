@@ -34,10 +34,7 @@ namespace Blastic.Settings
 			_dialogService = dialogService;
 			_filter = filter;
 
-			BrowseCommand = new Command().WithSubscribe(x =>
-			{
-				Browse();
-			});
+			BrowseCommand = new Command(Browse);
 
 			GroupField = new GroupElement();
 

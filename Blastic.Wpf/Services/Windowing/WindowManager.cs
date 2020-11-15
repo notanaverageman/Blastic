@@ -1,15 +1,12 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using Blastic.Commanding;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
-using ActivationContext = Blastic.LifetimeManagement.Contexts.ActivationContext;
 
 namespace Blastic.Wpf.Services.Windowing
 {
@@ -46,7 +43,7 @@ namespace Blastic.Wpf.Services.Windowing
 			{
 				IDisposable closeSubscription = null;
 				
-				closeSubscription = hasLifetime.Lifetime.Close.Subscribe(x =>
+				closeSubscription = hasLifetime.Lifetime.Close.Subscribe(() =>
 				{
 					window.Close();
 					closeSubscription?.Dispose();
@@ -54,11 +51,9 @@ namespace Blastic.Wpf.Services.Windowing
 					return Task.CompletedTask;
 				}, Order.AbsoluteMaximum);
 
-				CommandContext<ActivationContext> commandContext = new CommandContext<ActivationContext>(
-					new ActivationContext(),
-					CancellationToken.None);
+				ActivationContext context = new ActivationContext();
 
-				await hasLifetime.Lifetime.Activate.Execute(commandContext);
+				await hasLifetime.Lifetime.Activate.Execute(context);
 			}
 		}
 	}

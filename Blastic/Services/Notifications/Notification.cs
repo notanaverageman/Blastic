@@ -1,7 +1,6 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.DynamicControls;
@@ -20,7 +19,7 @@ namespace Blastic.Services.Notifications
 
 		public ILifetime Lifetime { get; }
 
-		public AsyncCommand Dismiss { get; }
+		public Command Dismiss { get; }
 
 		public Notification(
 			string text,
@@ -56,7 +55,7 @@ namespace Blastic.Services.Notifications
 			}
 
 			Dismiss = Lifetime.Close.CanExecuteObservable
-				.ToAsyncCommand()
+				.ToCommand()
 				.WithSubscribe(DismissInternal);
 
 			if (Math.Abs(Model.MinWidth) < 1)
@@ -82,15 +81,12 @@ namespace Blastic.Services.Notifications
 					}
 					else
 					{
-						CommandContext<DeactivationContext> context = new CommandContext<DeactivationContext>(
-							new DeactivationContext(),
-							CancellationToken.None);
-
+						DeactivationContext context = new DeactivationContext();
 						await Lifetime.Deactivate.Execute(context);
 					}
 				});
 
-			Lifetime.Activate.Subscribe(x =>
+			Lifetime.Activate.Subscribe(() =>
 			{
 				StartTimeout();
 				return Task.CompletedTask;
@@ -107,13 +103,10 @@ namespace Blastic.Services.Notifications
 			_hasFocus.OnNext(true);
 		}
 
-		private async Task DismissInternal(CommandContext context)
+		private async Task DismissInternal()
 		{
-			CommandContext<ClosureContext> commandContext = new CommandContext<ClosureContext>(
-				new ClosureContext(),
-				context.CancellationToken);
-
-			await Lifetime.Close.Execute(commandContext);
+			ClosureContext context = new ClosureContext();
+			await Lifetime.Close.Execute(context);
 		}
 	}
 }

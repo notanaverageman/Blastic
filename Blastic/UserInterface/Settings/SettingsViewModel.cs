@@ -17,8 +17,8 @@ namespace Blastic.UserInterface.Settings
 		public TaskCompletionSource<bool>? ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
 
-		public AsyncCommand SaveCommand { get; }
-		public AsyncCommand CancelCommand { get; }
+		public Command SaveCommand { get; }
+		public Command CancelCommand { get; }
 
 		public Command HideDiagnosticMessagesCommand { get; }
 		public Command HideDiagnosticMessagesIgnoreErrorsCommand { get; }
@@ -30,27 +30,30 @@ namespace Blastic.UserInterface.Settings
 
 			Items.AddRange(sections);
 
-			SaveCommand = new AsyncCommand(Save);
-			CancelCommand = new AsyncCommand(Cancel);
+			SaveCommand = new Command(Save);
+			CancelCommand = new Command(Cancel);
 
 			HideDiagnosticMessagesCommand = new Command(HideDiagnosticMessages);
 			HideDiagnosticMessagesIgnoreErrorsCommand = new Command(HideDiagnosticMessagesIgnoreErrors);
 		}
 
-		public async Task Save(CommandContext context)
+		public async Task Save(CancellationToken cancellationToken)
 		{
-			async Task Check(CancellationToken cancellationToken)
+			async Task Check(CancellationToken c)
 			{
 				DiagnosticMessages.Clear();
 
 				foreach (ISettingsSectionViewModel item in Items)
 				{
-					IEnumerable<DiagnosticMessage> diagnosticMessages = await item.GetDiagnosticMessages(cancellationToken);
+					IEnumerable<DiagnosticMessage> diagnosticMessages = await item.GetDiagnosticMessages(c);
 					DiagnosticMessages.AddRange(diagnosticMessages);
 				}
 			}
 
-			await ExecutionContext.Execute(Check, "Validating settings.");
+			await ExecutionContext.Execute(
+				Check,
+				"Validating settings.",
+				customCancellationToken: cancellationToken);
 
 			if (DiagnosticMessages.Any(x => x.Severity.Value >= Severity.Warning))
 			{
@@ -62,11 +65,9 @@ namespace Blastic.UserInterface.Settings
 				}
 			}
 
-			CommandContext<ClosureContext> commandContext = new CommandContext<ClosureContext>(
-				new ClosureContext(true),
-				context.CancellationToken);
+			ClosureContext context = new ClosureContext(true);
 
-			await Lifetime.Close.Execute(commandContext);
+			await Lifetime.Close.Execute(context, cancellationToken);
 		}
 
 		private Task<bool> ShowDiagnosticMessages()
@@ -94,13 +95,11 @@ namespace Blastic.UserInterface.Settings
 			ShowDiagnosticMessagesTaskCompletionSource?.SetResult(true);
 		}
 
-		public async Task Cancel(CommandContext context)
+		public async Task Cancel(CancellationToken cancellationToken)
 		{
-			CommandContext<ClosureContext> commandContext = new CommandContext<ClosureContext>(
-				new ClosureContext(),
-				context.CancellationToken);
+			ClosureContext context = new ClosureContext();
 
-			await Lifetime.Close.Execute(commandContext);
+			await Lifetime.Close.Execute(context, cancellationToken);
 		}
 	}
 }

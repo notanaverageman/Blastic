@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Commanding;
 using Blastic.Diagnostics;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
@@ -38,7 +37,9 @@ namespace Blastic.UserInterface.Settings
 			Lifetime.Initialize.Subscribe(OnInitialize, new Order(int.MinValue));
 		}
 
-		private async Task OnInitialize(CommandContext<InitializationContext> commandContext)
+		private async Task OnInitialize(
+			InitializationContext context,
+			CancellationToken cancellationToken)
 		{
 			IsExpanded = new IsExpandedSetting(SettingsService, _presenterSource, SectionName);
 
@@ -67,12 +68,12 @@ namespace Blastic.UserInterface.Settings
 					}
 				});
 
-				if (commandContext.CancellationToken.IsCancellationRequested)
+				if (cancellationToken.IsCancellationRequested)
 				{
 					break;
 				}
 
-				await setting.Lifetime.Initialize.Execute(commandContext.Parameter);
+				await setting.Lifetime.Initialize.Execute(context, cancellationToken);
 			}
 		}
 

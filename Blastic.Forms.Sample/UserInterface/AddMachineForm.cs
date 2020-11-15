@@ -39,7 +39,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Form = new DynamicModel();
 
-			AsyncCommand okCommand = new AsyncCommand(
+			Command okCommand = new Command(
 				MachineName.HasErrorObservable.Select(x => !x),
 				async () =>
 				{
@@ -47,7 +47,7 @@ namespace Blastic.Forms.Sample.UserInterface
 					Form.Ok();
 				});
 
-			AsyncCommand cancelCommand = new AsyncCommand(async () =>
+			Command cancelCommand = new Command(async () =>
 			{
 				await goBackFunction();
 				Form.Cancel();

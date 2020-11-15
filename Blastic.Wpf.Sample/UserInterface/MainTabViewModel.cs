@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Blastic.Commanding;
@@ -25,7 +25,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> Text { get; }
 
-		public AsyncCommand TestCommand { get; }
+		public Command TestCommand { get; }
 
 		public MainTabViewModel(
 			TestSettingsViewModel testSettings,
@@ -38,12 +38,12 @@ namespace Blastic.Wpf.Sample.UserInterface
 			Text = new ReactiveProperty<string>();
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Sample.Homepage");
 
-			TestCommand = new AsyncCommand().WithSubscribe(_ => Test());
+			TestCommand = new Command().WithSubscribe(_ => Test());
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
-			Lifetime.Initialize.Subscribe(_ => OnInitialize());
-			Lifetime.Activate.Subscribe(_ => OnActivate());
+			Lifetime.Initialize.Subscribe(OnInitialize);
+			Lifetime.Activate.Subscribe(OnActivate);
 		}
 
 		protected Task OnInitialize()

@@ -8,7 +8,7 @@ namespace Blastic.Diagnostics
 		public IReadOnlyReactiveProperty<Severity> Severity { get; }
 		public IReadOnlyReactiveProperty<string> Message { get; }
 
-		public AsyncCommand? ActionCommand { get; }
+		public Command? ActionCommand { get; }
 		public IReadOnlyReactiveProperty<string>? ActionLabel { get; }
 
 		public DiagnosticMessage(
@@ -22,7 +22,7 @@ namespace Blastic.Diagnostics
 		public DiagnosticMessage(
 			IReadOnlyReactiveProperty<Severity> severity,
 			IReadOnlyReactiveProperty<string> message,
-			AsyncCommand? actionCommand,
+			Command? actionCommand,
 			IReadOnlyReactiveProperty<string>? actionLabel)
 		{
 			Severity = severity;
@@ -42,7 +42,7 @@ namespace Blastic.Diagnostics
 		public DiagnosticMessage(
 			Severity severity,
 			string message,
-			AsyncCommand? actionCommand,
+			Command? actionCommand,
 			string? actionLabel)
 			:
 			this(

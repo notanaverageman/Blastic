@@ -23,7 +23,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<JobViewModel> SelectedJob { get; }
 		public ReactiveCollection<JobViewModel> Jobs { get; }
 
-		public AsyncCommand AddJobCommand { get; }
+		public Command AddJobCommand { get; }
 		public IReadOnlyReactiveProperty<string> AddJobLabel { get; }
 
 		public MachineViewModel(
@@ -41,7 +41,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Jobs.AddRange(machine.Jobs.Select(x => new JobViewModel(x)));
 
-			AddJobCommand = new AsyncCommand().WithSubscribe(async () => await AddJob(database));
+			AddJobCommand = new Command().WithSubscribe(async () => await AddJob(database));
 			AddJobLabel = labels.Machines.AddJob;
 
 			_addJobForm = new AddJobForm(
@@ -66,7 +66,7 @@ namespace Blastic.Forms.Sample.UserInterface
 						.AddLabel(x.Job.SceneName)
 						.AddLabel(x.Job.InfoFrames)
 						.AddAction(
-							new AsyncCommand(
+							new Command(
 								async () =>
 								{
 									x.Job.StartDate.Value = DateTime.Now;

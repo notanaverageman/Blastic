@@ -15,7 +15,7 @@ namespace Blastic.LifetimeManagement
 		{
 			CompositeDisposable disposable = new CompositeDisposable();
 
-			void Subscribe<T>(AsyncCommand<T> parent, AsyncCommand<T> child)
+			void Subscribe<T>(Command<T> parent, Command<T> child)
 			{
 				IDisposable subscription = parent
 					.Subscribe(async x =>

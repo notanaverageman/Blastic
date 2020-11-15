@@ -29,8 +29,8 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 
 		public int FixedHeaderCount { get; }
 
-		public AsyncCommand ShowLogsCommand { get; }
-		public AsyncCommand ShowSettingsCommand { get; }
+		public Command ShowLogsCommand { get; }
+		public Command ShowSettingsCommand { get; }
 
 		public TabbedMainViewModel(
 			IEventAggregator eventAggregator,
@@ -64,20 +64,20 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 
 			Lifetime.Initialize.Subscribe(async x =>
 			{
-				await ExecuteInitializationSteps(x.CancellationToken);
+				await ExecuteInitializationSteps(x);
 			});
 
 			Lifetime.Activate.Subscribe(async x =>
 			{
-				await Activate(ActiveItem.Value, x.CancellationToken);
+				await Activate(ActiveItem.Value, x);
 			});
 
 			eventAggregator.SubscribeOnUIThread<OpenLogsEvent>(async _ => await ShowLogs());
 			eventAggregator.SubscribeOnUIThread<OpenSettingsEvent>(async _ => await ShowSettings());
 			eventAggregator.SubscribeOnUIThread<OpenTabEvent>(async x => await OpenTab(x));
 
-			ShowLogsCommand = new AsyncCommand().WithSubscribe(ShowLogs);
-			ShowSettingsCommand = new AsyncCommand().WithSubscribe(ShowSettings);
+			ShowLogsCommand = new Command().WithSubscribe(ShowLogs);
+			ShowSettingsCommand = new Command().WithSubscribe(ShowSettings);
 		}
 
 		private async Task ExecuteInitializationSteps(CancellationToken cancellationToken)

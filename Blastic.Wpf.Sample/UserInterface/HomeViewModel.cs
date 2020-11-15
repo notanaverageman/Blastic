@@ -35,8 +35,8 @@ namespace Blastic.Wpf.Sample.UserInterface
 		public IReactiveProperty<string> Text { get; }
 		public IReadOnlyReactiveProperty<string> ButtonText { get; }
 
-		public AsyncCommand TestCommand { get; }
-		public AsyncCommand HelpCommand { get; }
+		public Command TestCommand { get; }
+		public Command HelpCommand { get; }
 
 		public HomeViewModel(
 			TestSettingsViewModel testSettings,
@@ -72,13 +72,13 @@ namespace Blastic.Wpf.Sample.UserInterface
 			TestCommand = Text.HasErrorObservable
 				.Select(x => !x)
 				.CombineLatest(Lifetime.IsActive, (x, y) => x && y)
-				.ToAsyncCommand()
+				.ToCommand()
 				.WithSubscribe(Test);
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
-			Lifetime.Initialize.Subscribe(_ => OnInitialize());
-			Lifetime.Activate.Subscribe(_ => OnActivate());
+			Lifetime.Initialize.Subscribe(OnInitialize);
+			Lifetime.Activate.Subscribe(OnActivate);
 		}
 
 		protected Task OnInitialize()
@@ -110,9 +110,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 			return Task.CompletedTask;
 		}
 
-		private AsyncCommand InitializeHelpCommand()
+		private Command InitializeHelpCommand()
 		{
-			return Lifetime.IsActive.ToAsyncCommand().WithSubscribe(async () =>
+			return Lifetime.IsActive.ToCommand().WithSubscribe(async () =>
 			{
 				await Text.SetText("Some text", TimeSpan.FromSeconds(1.0));
 				await this.SetSelection(Text, 0, 6);

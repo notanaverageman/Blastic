@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Blastic.Ordering;
 using Blastic.Platform;
@@ -12,11 +14,30 @@ namespace Blastic.Commanding
 	{
 		public static readonly Order DefaultOrder = new Order();
 
-		public Command() : this((IObservable<bool>?)null)
+		public Command() : this((IObservable<bool>?) null)
 		{
 		}
 
-		public Command(IObservable<bool>? canExecute, Action<CommandContext> action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute) : base(canExecute)
+		{
+		}
+
+		public Command(Action action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Action<CancellationToken> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Func<Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Func<CancellationToken, Task> action) : this()
 		{
 			Subscribe(action);
 		}
@@ -26,34 +47,30 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 
-		public Command(Action<CommandContext> action) : this()
+		public Command(IObservable<bool>? canExecute, Action<CancellationToken> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
 
-		public Command(Action action) : this()
+		public Command(IObservable<bool>? canExecute, Func<Task> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
 
-		public Command(IObservable<bool>? canExecute) : base(canExecute)
+		public Command(IObservable<bool>? canExecute, Func<CancellationToken, Task> action) : this(canExecute)
 		{
+			Subscribe(action);
 		}
 
-		public void Execute()
+		public async Task Execute()
 		{
-			Execute((object?)null);
-		}
-
-		public IDisposable Subscribe(Action<CommandContext> action, Order? order = null)
-		{
-			return base.Subscribe(action, order);
+			await Execute(null);
 		}
 	}
 
 	public class Command<T> : ICommand
 	{
-		private readonly ConcurrentDictionary<Action<CommandContext<T>>, Order> _actions;
+		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _actions;
 
 		public event EventHandler? CanExecuteChanged;
 
@@ -63,7 +80,53 @@ namespace Blastic.Commanding
 		{
 		}
 
-		public Command(IObservable<bool>? canExecute, Action<CommandContext<T>> action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute)
+		{
+			_actions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
+
+			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
+
+			CanExecuteObservable
+				.ObserveOnUI()
+				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+		}
+
+		public Command(Action action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Action<T> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Action<CancellationToken> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Action<T, CancellationToken> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Func<Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Func<T, Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Func<CancellationToken, Task> action) : this()
+		{
+			Subscribe(action);
+		}
+
+		public Command(Func<T, CancellationToken, Task> action) : this()
 		{
 			Subscribe(action);
 		}
@@ -73,95 +136,154 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 
-		public Command(Action<CommandContext<T>> action) : this()
+		public Command(IObservable<bool>? canExecute, Action<T> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
 
-		public Command(Action action) : this()
+		public Command(IObservable<bool>? canExecute, Action<CancellationToken> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
 
-		public Command(IObservable<bool>? canExecute)
+		public Command(IObservable<bool>? canExecute, Action<T, CancellationToken> action) : this(canExecute)
 		{
-			_actions = new ConcurrentDictionary<Action<CommandContext<T>>, Order>();
+			Subscribe(action);
+		}
 
-			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
+		public Command(IObservable<bool>? canExecute, Func<Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
 
-			CanExecuteObservable
-				.ObserveOnUI()
-				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+		public Command(IObservable<bool>? canExecute, Func<T, Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
+
+		public Command(IObservable<bool>? canExecute, Func<CancellationToken, Task> action) : this(canExecute)
+		{
+			Subscribe(action);
+		}
+
+		public Command(IObservable<bool>? canExecute, Func<T, CancellationToken, Task> action) : this(canExecute)
+		{
+			Subscribe(action);
 		}
 
 		public IDisposable Subscribe(Action action, Order? order = null)
 		{
-			return Subscribe(x => action(), order);
+			return Subscribe(
+				(x, y) =>
+				{
+					action();
+					return Task.CompletedTask;
+				},
+				order);
 		}
 
-		public IDisposable Subscribe(Action<CommandContext<T>> action, Order? order = null)
+		public IDisposable Subscribe(Action<T> action, Order? order = null)
 		{
-			order ??= AsyncCommand.DefaultOrder;
+			return Subscribe(
+				(x, y) =>
+				{
+					action(x);
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		public IDisposable Subscribe(Action<CancellationToken> action, Order? order = null)
+		{
+			return Subscribe(
+				(x, y) =>
+				{
+					action(y);
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		public IDisposable Subscribe(Action<T, CancellationToken> action, Order? order = null)
+		{
+			return Subscribe(
+				(x, y) =>
+				{
+					action(x, y);
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		public IDisposable Subscribe(Func<Task> action, Order? order = null)
+		{
+			return Subscribe(async (x, y) => await action(), order);
+		}
+
+		public IDisposable Subscribe(Func<T, Task> action, Order? order = null)
+		{
+			return Subscribe(async (x, y) => await action(x), order);
+		}
+
+		public IDisposable Subscribe(Func<CancellationToken, Task> action, Order? order = null)
+		{
+			return Subscribe(async (x, y) => await action(y), order);
+		}
+
+		public IDisposable Subscribe(Func<T, CancellationToken, Task> action, Order? order = null)
+		{
+			order ??= Command.DefaultOrder;
 			_actions[action] = order;
 
 			return new Subscription(this, action);
 		}
 
 		bool ICommand.CanExecute(object parameter) => CanExecute();
-		void ICommand.Execute(object parameter) => Execute((T)parameter);
+		async void ICommand.Execute(object parameter) => await Execute((T)parameter);
 
 		public bool CanExecute()
 		{
 			return CanExecuteObservable.Value;
 		}
 
-		public void Execute(T parameter)
-		{
-			CommandContext<T> context = new CommandContext<T>(parameter);
-			Execute(context);
-		}
-
-		public void Execute(CommandContext<T> context)
+		public async Task Execute(T value, CancellationToken cancellationToken = default)
 		{
 			if (!CanExecuteObservable.Value)
 			{
 				return;
 			}
 
-			if (context.CancellationToken.IsCancellationRequested)
+			if (cancellationToken.IsCancellationRequested)
 			{
 				return;
 			}
 
-			IOrderedEnumerable<IGrouping<Order, Action<CommandContext<T>>>> orderedActions = _actions.Keys
+			IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _actions.Keys
 				.GroupBy(x => _actions[x])
 				.OrderBy(x => x.Key);
 
-			foreach (IGrouping<Order, Action<CommandContext<T>>> actionGroup in orderedActions)
+			foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
 			{
-				if (context.CancellationToken.IsCancellationRequested)
+				if (cancellationToken.IsCancellationRequested)
 				{
 					break;
 				}
 
-				if (context.Parameter is ICancellable cancellable && cancellable.IsCancelled)
+				if (value is ICancellable cancellable && cancellable.IsCancelled)
 				{
 					break;
 				}
 
-				foreach (Action<CommandContext<T>> action in actionGroup)
-				{
-					action(context);
-				}
+				await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
 			}
 		}
 
 		private class Subscription : IDisposable
 		{
 			private readonly Command<T> _command;
-			private readonly Action<CommandContext<T>> _action;
+			private readonly Func<T, CancellationToken, Task> _action;
 
-			public Subscription(Command<T> command, Action<CommandContext<T>> action)
+			public Subscription(Command<T> command, Func<T, CancellationToken, Task> action)
 			{
 				_command = command;
 				_action = action;
@@ -197,7 +319,25 @@ namespace Blastic.Commanding
 
 		public static Command WithSubscribe(
 			this Command command,
-			Action<CommandContext> action,
+			Action<CancellationToken> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command WithSubscribe(
+			this Command command,
+			Func<Task> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command WithSubscribe(
+			this Command command,
+			Func<CancellationToken, Task> action,
 			Order? order = null)
 		{
 			command.Subscribe(action, order);
@@ -206,7 +346,70 @@ namespace Blastic.Commanding
 
 		public static Command<T> WithSubscribe<T>(
 			this Command<T> command,
-			Action<CommandContext<T>> action,
+			Action action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Action<T> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Action<CancellationToken> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Action<T, CancellationToken> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Func<Task> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Func<T, Task> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Func<CancellationToken, Task> action,
+			Order? order = null)
+		{
+			command.Subscribe(action, order);
+			return command;
+		}
+
+		public static Command<T> WithSubscribe<T>(
+			this Command<T> command,
+			Func<T, CancellationToken, Task> action,
 			Order? order = null)
 		{
 			command.Subscribe(action, order);

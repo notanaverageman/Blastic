@@ -100,10 +100,17 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<int> property,
 			Action<TextField>? configure = null) where T : IElementContainer
 		{
-			TextField element = new TextField(property);
-
-			element.Mask.Value = TextBoxMasks.IntegerMask;
-			element.Keyboard.Value = Keyboard.Numeric;
+			TextField element = new TextField(property)
+			{
+				Mask =
+				{
+					Value = TextBoxMasks.IntegerMask
+				},
+				Keyboard =
+				{
+					Value = Keyboard.Numeric
+				}
+			};
 
 			container.AddElement(element, configure);
 
@@ -115,10 +122,17 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<double> property,
 			Action<TextField>? configure = null) where T : IElementContainer
 		{
-			TextField element = new TextField(property);
-
-			element.Mask.Value = TextBoxMasks.FloatingPointMask;
-			element.Keyboard.Value = Keyboard.Numeric;
+			TextField element = new TextField(property)
+			{
+				Mask =
+				{
+					Value = TextBoxMasks.FloatingPointMask
+				},
+				Keyboard =
+				{
+					Value = Keyboard.Numeric
+				}
+			};
 
 			container.AddElement(element, configure);
 
@@ -161,17 +175,6 @@ namespace Blastic.DynamicControls
 
 		public static T AddAction<T>(
 			this T container,
-			AsyncCommand command,
-			Action<ActionElement>? configure = null) where T : IElementContainer
-		{
-			ActionElement element = new ActionElement(command);
-			container.AddElement(element, configure);
-
-			return container;
-		}
-
-		public static T AddAction<T>(
-			this T container,
 			Action action,
 			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
@@ -180,10 +183,10 @@ namespace Blastic.DynamicControls
 
 		public static T AddAction<T>(
 			this T container,
-			Func<Task> function,
+			Func<Task> action,
 			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
-			return container.AddAction(new AsyncCommand(function), configure);
+			return container.AddAction(new Command(action), configure);
 		}
 
 		public static T AddGroup<T>(

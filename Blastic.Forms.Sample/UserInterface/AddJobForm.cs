@@ -28,13 +28,13 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Form = new DynamicModel();
 
-			AsyncCommand okCommand = new AsyncCommand(async () =>
+			Command okCommand = new Command(async () =>
 			{
 				await goBackFunction();
 				Form.Ok();
 			});
 
-			AsyncCommand cancelCommand = new AsyncCommand(async () =>
+			Command cancelCommand = new Command(async () =>
 			{
 				await goBackFunction();
 				Form.Cancel();

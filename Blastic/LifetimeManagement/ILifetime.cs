@@ -1,4 +1,4 @@
-﻿using Blastic.Commanding;
+using Blastic.Commanding;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
 
@@ -11,12 +11,12 @@ namespace Blastic.LifetimeManagement
 
 		IReadOnlyReactiveProperty<bool> IsActivating { get; }
 
-		AsyncCommand<InitializationContext> Initialize { get; }
+		Command<InitializationContext> Initialize { get; }
 		
-		AsyncCommand<ClosureContext> Close { get; }
-		AsyncCommand<ClosureContext> CanClose { get; }
+		Command<ClosureContext> Close { get; }
+		Command<ClosureContext> CanClose { get; }
 
-		AsyncCommand<ActivationContext> Activate { get; }
-		AsyncCommand<DeactivationContext> Deactivate { get; }
+		Command<ActivationContext> Activate { get; }
+		Command<DeactivationContext> Deactivate { get; }
 	}
 }

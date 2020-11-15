@@ -24,14 +24,14 @@ namespace Blastic.Forms.Sample.UserInterface
 			Lifetime.Initialize.Subscribe(
 				async x =>
 				{
-					await ExecuteInitializationSteps(x.CancellationToken, initializationSteps);
+					await ExecuteInitializationSteps(x, initializationSteps);
 				},
 				// This order ensures that we are running before child initializations.
 				new Order(int.MinValue));
 
 			Lifetime.Activate.Subscribe(async x =>
 			{
-				await Activate(Items.FirstOrDefault(), x.CancellationToken);
+				await Activate(Items.FirstOrDefault(), x);
 			});
 		}
 

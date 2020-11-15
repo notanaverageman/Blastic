@@ -1,4 +1,5 @@
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.LifetimeManagement.Contexts;
@@ -17,13 +18,13 @@ namespace Blastic.LifetimeManagement
 		public IReadOnlyReactiveProperty<bool> IsActive => _isActive;
 		public IReadOnlyReactiveProperty<bool> IsActivating => _isActivating;
 
-		public AsyncCommand<InitializationContext> Initialize { get; }
+		public Command<InitializationContext> Initialize { get; }
 
-		public AsyncCommand<ClosureContext> Close { get; }
-		public AsyncCommand<ClosureContext> CanClose { get; }
+		public Command<ClosureContext> Close { get; }
+		public Command<ClosureContext> CanClose { get; }
 
-		public AsyncCommand<ActivationContext> Activate { get; }
-		public AsyncCommand<DeactivationContext> Deactivate { get; }
+		public Command<ActivationContext> Activate { get; }
+		public Command<DeactivationContext> Deactivate { get; }
 
 		public Lifetime()
 		{
@@ -33,69 +34,65 @@ namespace Blastic.LifetimeManagement
 
 			Initialize = IsInitialized
 				.Select(x => !x)
-				.ToAsyncCommand<InitializationContext>()
+				.ToCommand<InitializationContext>()
 				.WithSubscribe(PostInitialize, Order.AbsoluteMaximum);
 
-			CanClose = new AsyncCommand<ClosureContext>();
+			CanClose = new Command<ClosureContext>();
 
 			Close = IsInitialized
-				.ToAsyncCommand<ClosureContext>()
+				.ToCommand<ClosureContext>()
 				.WithSubscribe(PreClose, Order.AbsoluteMinimum)
 				.WithSubscribe(PostClose, Order.AbsoluteMaximum);
 
 			Activate = IsActive
 				.Select(x => !x)
-				.ToAsyncCommand<ActivationContext>()
+				.ToCommand<ActivationContext>()
 				.WithSubscribe(PreActivate, Order.AbsoluteMinimum)
 				.WithSubscribe(PostActivate, Order.AbsoluteMaximum);
 
 			Deactivate = IsActive
-				.ToAsyncCommand<DeactivationContext>()
+				.ToCommand<DeactivationContext>()
 				.WithSubscribe(PostDeactivate, Order.AbsoluteMaximum);
 		}
 
-		private Task PostInitialize(CommandContext<InitializationContext> context)
+		private Task PostInitialize()
 		{
 			_isInitialized.Value = true;
 
 			return Task.CompletedTask;
 		}
 
-		private async Task PreClose(CommandContext<ClosureContext> context)
+		private async Task PreClose(ClosureContext context, CancellationToken cancellationToken)
 		{
-			await CanClose.Execute(context);
+			await CanClose.Execute(context, cancellationToken);
 
-			if (context.Parameter.IsCancelled)
+			if (context.IsCancelled)
 			{
 				return;
 			}
 
-			CommandContext<DeactivationContext> commandContext = new CommandContext<DeactivationContext>(
-				new DeactivationContext(),
-				context.CancellationToken);
+			DeactivationContext deactivationContext = new DeactivationContext();
 
-			await Deactivate.Execute(commandContext);
+			await Deactivate.Execute(deactivationContext, cancellationToken);
 		}
 
-		private Task PostClose(CommandContext<ClosureContext> context)
+		private Task PostClose()
 		{
 			_isInitialized.Value = false;
 
 			return Task.CompletedTask;
 		}
 
-		private async Task PreActivate(CommandContext<ActivationContext> context)
+		private async Task PreActivate(CancellationToken cancellationToken)
 		{
 			_isActivating.Value = true;
 
-			CommandContext<InitializationContext> commandContext = new CommandContext<InitializationContext>(
-				new InitializationContext(),
-				context.CancellationToken);
+			InitializationContext initializationContext = new InitializationContext();
 
-			await Initialize.Execute(commandContext);
+			await Initialize.Execute(initializationContext, cancellationToken);
 		}
 
-		private Task PostActivate(CommandContext<ActivationContext> context)
+		private Task PostActivate()
 		{
 			_isActivating.Value = false;
 			_isActive.Value = true;
@@ -103,7 +100,7 @@ namespace Blastic.LifetimeManagement
 			return Task.CompletedTask;
 		}
 
-		private Task PostDeactivate(CommandContext<DeactivationContext> context)
+		private Task PostDeactivate()
 		{
 			_isActive.Value = false;
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Blastic.Ordering;
 using Blastic.Reactive;
 
@@ -29,10 +28,9 @@ namespace Blastic.LifetimeManagement
 		{
 			if (ConductorOptions.ClearItemsOnDeinitialize)
 			{
-				Lifetime.Close.Subscribe(_ =>
+				Lifetime.Close.Subscribe(() =>
 				{
 					Items.Clear();
-					return Task.CompletedTask;
 				}, Order.AbsoluteMaximum);
 			}
 
