@@ -55,6 +55,12 @@ namespace Blastic.Reactive
 			_errorHandler.AddValidator(validator);
 		}
 
+		public void AddValidator(Func<T, bool> validator, IReadOnlyReactiveProperty<string> errorMessage)
+		{
+			_errorHandler ??= new ReactivePropertyErrorHandler<T>(this);
+			_errorHandler.AddValidator(validator, errorMessage);
+		}
+
 		public void TriggerValidation()
 		{
 			_errorHandler?.TriggerValidation(_value);
