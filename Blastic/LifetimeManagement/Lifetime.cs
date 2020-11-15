@@ -18,13 +18,13 @@ namespace Blastic.LifetimeManagement
 		public IReadOnlyReactiveProperty<bool> IsActive => _isActive;
 		public IReadOnlyReactiveProperty<bool> IsActivating => _isActivating;
 
-		public Command<InitializationContext> Initialize { get; }
+		public Command<InitializationContext> Initialization { get; }
 
-		public Command<ClosureContext> Close { get; }
+		public Command<ClosureContext> Closure { get; }
 		public Command<ClosureContext> CanClose { get; }
 
-		public Command<ActivationContext> Activate { get; }
-		public Command<DeactivationContext> Deactivate { get; }
+		public Command<ActivationContext> Activation { get; }
+		public Command<DeactivationContext> Deactivation { get; }
 
 		public Lifetime()
 		{
@@ -32,37 +32,69 @@ namespace Blastic.LifetimeManagement
 			_isActive = new ReactiveProperty<bool>();
 			_isActivating = new ReactiveProperty<bool>();
 
-			Initialize = IsInitialized
+			Initialization = IsInitialized
 				.Select(x => !x)
 				.ToCommand<InitializationContext>()
-				.WithSubscribe(PostInitialize, Order.AbsoluteMaximum);
+				.WithSubscribe(AfterInitialization, Order.AbsoluteMaximum);
 
 			CanClose = new Command<ClosureContext>();
 
-			Close = IsInitialized
+			Closure = IsInitialized
 				.ToCommand<ClosureContext>()
-				.WithSubscribe(PreClose, Order.AbsoluteMinimum)
-				.WithSubscribe(PostClose, Order.AbsoluteMaximum);
+				.WithSubscribe(BeforeClosure, Order.AbsoluteMinimum)
+				.WithSubscribe(AfterClosure, Order.AbsoluteMaximum);
 
-			Activate = IsActive
+			Activation = IsActive
 				.Select(x => !x)
 				.ToCommand<ActivationContext>()
-				.WithSubscribe(PreActivate, Order.AbsoluteMinimum)
-				.WithSubscribe(PostActivate, Order.AbsoluteMaximum);
+				.WithSubscribe(BeforeActivation, Order.AbsoluteMinimum)
+				.WithSubscribe(AfterActivation, Order.AbsoluteMaximum);
 
-			Deactivate = IsActive
+			Deactivation = IsActive
 				.ToCommand<DeactivationContext>()
-				.WithSubscribe(PostDeactivate, Order.AbsoluteMaximum);
+				.WithSubscribe(AfterDeactivation, Order.AbsoluteMaximum);
 		}
 
-		private Task PostInitialize()
+		public async Task Initialize(
+			CancellationToken cancellationToken,
+			InitializationContext? context)
+		{
+			context ??= new InitializationContext();
+			await Initialization.Execute(context, cancellationToken);
+		}
+
+		public async Task Activate(
+			CancellationToken cancellationToken,
+			ActivationContext? context)
+		{
+			context ??= new ActivationContext();
+			await Activation.Execute(context, cancellationToken);
+		}
+
+		public async Task Deactivate(
+			CancellationToken cancellationToken,
+			DeactivationContext? context)
+		{
+			context ??= new DeactivationContext();
+			await Deactivation.Execute(context, cancellationToken);
+		}
+
+		public async Task Close(
+			CancellationToken cancellationToken,
+			ClosureContext? context)
+		{
+			context ??= new ClosureContext();
+			await Closure.Execute(context, cancellationToken);
+		}
+
+		private Task AfterInitialization()
 		{
 			_isInitialized.Value = true;
 
 			return Task.CompletedTask;
 		}
 
-		private async Task PreClose(ClosureContext context, CancellationToken cancellationToken)
+		private async Task BeforeClosure(ClosureContext context, CancellationToken cancellationToken)
 		{
 			await CanClose.Execute(context, cancellationToken);
 
@@ -73,26 +105,26 @@ namespace Blastic.LifetimeManagement
 
 			DeactivationContext deactivationContext = new DeactivationContext();
 
-			await Deactivate.Execute(deactivationContext, cancellationToken);
+			await Deactivation.Execute(deactivationContext, cancellationToken);
 		}
 
-		private Task PostClose()
+		private Task AfterClosure()
 		{
 			_isInitialized.Value = false;
 
 			return Task.CompletedTask;
 		}
 
-		private async Task PreActivate(CancellationToken cancellationToken)
+		private async Task BeforeActivation(CancellationToken cancellationToken)
 		{
 			_isActivating.Value = true;
 
 			InitializationContext initializationContext = new InitializationContext();
 
-			await Initialize.Execute(initializationContext, cancellationToken);
+			await Initialization.Execute(initializationContext, cancellationToken);
 		}
 
-		private Task PostActivate()
+		private Task AfterActivation()
 		{
 			_isActivating.Value = false;
 			_isActive.Value = true;
@@ -100,7 +132,7 @@ namespace Blastic.LifetimeManagement
 			return Task.CompletedTask;
 		}
 
-		private Task PostDeactivate()
+		private Task AfterDeactivation()
 		{
 			_isActive.Value = false;
 

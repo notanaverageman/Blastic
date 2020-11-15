@@ -28,23 +28,23 @@ namespace Blastic.LifetimeManagement
 
 			if (lifetimeChainOptions.InitializeChildrenOnSelfInitialization)
 			{
-				Subscribe(lifetime.Initialize, childLifetime.Initialize);
+				Subscribe(lifetime.Initialization, childLifetime.Initialization);
 			}
 
 			if (lifetimeChainOptions.CloseChildrenOnSelfClose)
 			{
 				Subscribe(lifetime.CanClose, childLifetime.CanClose);
-				Subscribe(lifetime.Close, childLifetime.Close);
+				Subscribe(lifetime.Closure, childLifetime.Closure);
 			}
 
 			if (lifetimeChainOptions.ActivateChildrenOnSelfActivation)
 			{
-				Subscribe(lifetime.Activate, childLifetime.Activate);
+				Subscribe(lifetime.Activation, childLifetime.Activation);
 			}
 
 			if (lifetimeChainOptions.DeactivateChildrenOnSelfDeactivation)
 			{
-				Subscribe(lifetime.Deactivate, childLifetime.Deactivate);
+				Subscribe(lifetime.Deactivation, childLifetime.Deactivation);
 			}
 
 			return disposable;

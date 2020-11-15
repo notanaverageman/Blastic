@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.Reactive;
 
@@ -28,21 +27,19 @@ namespace Blastic.Services.Notifications
 				ActiveNotifications.RemoveAt(ActiveNotifications.Count - 1);
 			}
 
-			ActivationContext context = new ActivationContext();
-
-			await notification.Lifetime.Activate.Execute(context);
+			await notification.Lifetime.Activate();
 		}
 
 		public Task EnqueueWithoutNotifying(Notification notification)
 		{
 			Notifications.Add(notification);
 
-			notification.Lifetime.Deactivate.Subscribe(() =>
+			notification.Lifetime.Deactivation.Subscribe(() =>
 			{
 				ActiveNotifications.Remove(notification);
 			}, Order.AbsoluteMaximum);
 
-			notification.Lifetime.Close.Subscribe(() =>
+			notification.Lifetime.Closure.Subscribe(() =>
 			{
 				Notifications.Remove(notification);
 				return Task.CompletedTask;

@@ -28,7 +28,7 @@ namespace Blastic.LifetimeManagement
 		{
 			if (ConductorOptions.ClearItemsOnDeinitialize)
 			{
-				Lifetime.Close.Subscribe(() =>
+				Lifetime.Closure.Subscribe(() =>
 				{
 					Items.Clear();
 				}, Order.AbsoluteMaximum);

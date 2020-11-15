@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
-using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
 
 namespace Blastic.Services.Notifications
@@ -54,7 +53,7 @@ namespace Blastic.Services.Notifications
 				throw new ArgumentOutOfRangeException(nameof(showDuration));
 			}
 
-			Dismiss = Lifetime.Close.CanExecuteObservable
+			Dismiss = Lifetime.Closure.CanExecuteObservable
 				.ToCommand()
 				.WithSubscribe(DismissInternal);
 
@@ -81,12 +80,11 @@ namespace Blastic.Services.Notifications
 					}
 					else
 					{
-						DeactivationContext context = new DeactivationContext();
-						await Lifetime.Deactivate.Execute(context);
+						await Lifetime.Deactivate();
 					}
 				});
 
-			Lifetime.Activate.Subscribe(() =>
+			Lifetime.Activation.Subscribe(() =>
 			{
 				StartTimeout();
 				return Task.CompletedTask;
@@ -105,8 +103,7 @@ namespace Blastic.Services.Notifications
 
 		private async Task DismissInternal()
 		{
-			ClosureContext context = new ClosureContext();
-			await Lifetime.Close.Execute(context);
+			await Lifetime.Close();
 		}
 	}
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Blastic.LifetimeManagement;
-using Blastic.LifetimeManagement.Contexts;
 using Blastic.ViewManagement;
 using Xamarin.Forms;
 
@@ -54,9 +53,7 @@ namespace Blastic.Forms.Services.Navigation
 
 			if (model is IHasLifetime hasLifetime)
 			{
-				ActivationContext context = new ActivationContext();
-
-				await hasLifetime.Lifetime.Activate.Execute(context);
+				await hasLifetime.Lifetime.Activate();
 			}
 		}
 	}

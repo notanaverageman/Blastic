@@ -34,7 +34,7 @@ namespace Blastic.UserInterface.Settings
 
 			SettingsToShow = new ReactiveCollection<Setting>();
 
-			Lifetime.Initialize.Subscribe(OnInitialize, new Order(int.MinValue));
+			Lifetime.Initialization.Subscribe(OnInitialize, new Order(int.MinValue));
 		}
 
 		private async Task OnInitialize(
@@ -73,7 +73,7 @@ namespace Blastic.UserInterface.Settings
 					break;
 				}
 
-				await setting.Lifetime.Initialize.Execute(context, cancellationToken);
+				await setting.Lifetime.Initialize(cancellationToken, context);
 			}
 		}
 

@@ -42,8 +42,8 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
-			Lifetime.Initialize.Subscribe(OnInitialize);
-			Lifetime.Activate.Subscribe(OnActivate);
+			Lifetime.Initialization.Subscribe(OnInitialize);
+			Lifetime.Activation.Subscribe(OnActivate);
 		}
 
 		protected Task OnInitialize()

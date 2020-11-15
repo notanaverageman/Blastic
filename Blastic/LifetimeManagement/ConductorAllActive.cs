@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.LifetimeManagement.Contexts;
 
 namespace Blastic.LifetimeManagement
 {
@@ -23,9 +22,7 @@ namespace Blastic.LifetimeManagement
 				Items.Add(item);
 			}
 
-			ActivationContext context = new ActivationContext();
-
-			await item.Lifetime.Activate.Execute(context, cancellationToken);
+			await item.Lifetime.Activate(cancellationToken);
 		}
 
 		public async Task Deactivate(T item, CancellationToken cancellationToken = default)
@@ -35,9 +32,7 @@ namespace Blastic.LifetimeManagement
 				Items.Add(item);
 			}
 
-			DeactivationContext context = new DeactivationContext();
-
-			await item.Lifetime.Deactivate.Execute(context, cancellationToken);
+			await item.Lifetime.Deactivate(cancellationToken);
 		}
 	}
 }

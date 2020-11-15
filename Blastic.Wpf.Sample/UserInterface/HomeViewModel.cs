@@ -58,8 +58,6 @@ namespace Blastic.Wpf.Sample.UserInterface
 				.Select((x, y) => string.Format(x, y))
 				.ToReadOnlyReactiveProperty();
 
-			HelpCommand = InitializeHelpCommand();
-
 			Text.AddValidator(x => x?.Length > 4
 				? ""
 				: string.Format(
@@ -67,18 +65,28 @@ namespace Blastic.Wpf.Sample.UserInterface
 					x?.Length ?? 0,
 					5));
 
-			Text.AddValidator(x => x?.StartsWith("A") == true ? "" : _localizationService.GetValue("Blastic.Sample.InvalidInitial"));
+			Text.AddValidator(x => x?.StartsWith("A") == true
+				? ""
+				: _localizationService.GetValue("Blastic.Sample.InvalidInitial"));
 
-			TestCommand = Text.HasErrorObservable
+			HelpCommand = Text.HasErrorObservable!
 				.Select(x => !x)
 				.CombineLatest(Lifetime.IsActive, (x, y) => x && y)
+				.ToCommand()
+				.WithSubscribe(async () =>
+				{
+					await Text.SetText("Some text", TimeSpan.FromSeconds(1.0));
+					await this.SetSelection(Text, 0, 6);
+				});
+
+			TestCommand = Lifetime.IsActive
 				.ToCommand()
 				.WithSubscribe(Test);
 
 			testSettings.FolderSetting.ReactiveValue.Subscribe(x => Text.Value = x);
 
-			Lifetime.Initialize.Subscribe(OnInitialize);
-			Lifetime.Activate.Subscribe(OnActivate);
+			Lifetime.Initialization.Subscribe(OnInitialize);
+			Lifetime.Activation.Subscribe(OnActivate);
 		}
 
 		protected Task OnInitialize()
@@ -108,15 +116,6 @@ namespace Blastic.Wpf.Sample.UserInterface
 			_logger.LogCritical("Activated");
 
 			return Task.CompletedTask;
-		}
-
-		private Command InitializeHelpCommand()
-		{
-			return Lifetime.IsActive.ToCommand().WithSubscribe(async () =>
-			{
-				await Text.SetText("Some text", TimeSpan.FromSeconds(1.0));
-				await this.SetSelection(Text, 0, 6);
-			});
 		}
 
 		private bool _x;

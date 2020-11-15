@@ -56,9 +56,9 @@ namespace Blastic.Settings
 			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			ShowOnUI = new ReactiveProperty<bool>(true);
 
-			Lifetime.Initialize.Subscribe(Read);
+			Lifetime.Initialization.Subscribe(Read);
 
-			Lifetime.Close.Subscribe(async (x, y) =>
+			Lifetime.Closure.Subscribe(async (x, y) =>
 			{
 				if (x.DialogResult == true)
 				{

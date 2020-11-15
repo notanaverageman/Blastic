@@ -62,12 +62,12 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 
 			ActiveItem.Value = Items.FirstOrDefault();
 
-			Lifetime.Initialize.Subscribe(async x =>
+			Lifetime.Initialization.Subscribe(async x =>
 			{
 				await ExecuteInitializationSteps(x);
 			});
 
-			Lifetime.Activate.Subscribe(async x =>
+			Lifetime.Activation.Subscribe(async x =>
 			{
 				await Activate(ActiveItem.Value, x);
 			});

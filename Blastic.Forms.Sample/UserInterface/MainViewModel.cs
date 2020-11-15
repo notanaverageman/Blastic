@@ -21,7 +21,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Items.AddRange(tabs);
 
-			Lifetime.Initialize.Subscribe(
+			Lifetime.Initialization.Subscribe(
 				async x =>
 				{
 					await ExecuteInitializationSteps(x, initializationSteps);
@@ -29,7 +29,7 @@ namespace Blastic.Forms.Sample.UserInterface
 				// This order ensures that we are running before child initializations.
 				new Order(int.MinValue));
 
-			Lifetime.Activate.Subscribe(async x =>
+			Lifetime.Activation.Subscribe(async x =>
 			{
 				await Activate(Items.FirstOrDefault(), x);
 			});

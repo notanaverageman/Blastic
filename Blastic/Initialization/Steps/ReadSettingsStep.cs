@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.UserInterface.Settings;
 
@@ -37,9 +36,7 @@ namespace Blastic.Initialization.Steps
 
 		public async Task Execute(CancellationToken cancellationToken)
 		{
-			InitializationContext context = new InitializationContext();
-
-			await _settingsViewModel.Lifetime.Initialize.Execute(context, cancellationToken);
+			await _settingsViewModel.Lifetime.Initialize(cancellationToken);
 		}
 	}
 }

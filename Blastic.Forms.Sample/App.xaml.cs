@@ -1,5 +1,4 @@
 using Blastic.LifetimeManagement;
-using Blastic.LifetimeManagement.Contexts;
 using Xamarin.Forms;
 
 namespace Blastic.Forms.Sample
@@ -20,7 +19,7 @@ namespace Blastic.Forms.Sample
 				return;
 			}
 
-			await hasLifetime.Lifetime.Activate.Execute(new ActivationContext());
+			await hasLifetime.Lifetime.Activate();
 		}
 	}
 }

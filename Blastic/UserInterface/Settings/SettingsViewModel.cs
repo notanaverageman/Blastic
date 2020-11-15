@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
-using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
 
 namespace Blastic.UserInterface.Settings
@@ -65,9 +64,7 @@ namespace Blastic.UserInterface.Settings
 				}
 			}
 
-			ClosureContext context = new ClosureContext(true);
-
-			await Lifetime.Close.Execute(context, cancellationToken);
+			await Lifetime.Close(cancellationToken);
 		}
 
 		private Task<bool> ShowDiagnosticMessages()
@@ -97,9 +94,7 @@ namespace Blastic.UserInterface.Settings
 
 		public async Task Cancel(CancellationToken cancellationToken)
 		{
-			ClosureContext context = new ClosureContext();
-
-			await Lifetime.Close.Execute(context, cancellationToken);
+			await Lifetime.Close(cancellationToken);
 		}
 	}
 }

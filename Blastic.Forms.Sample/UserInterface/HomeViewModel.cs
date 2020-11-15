@@ -83,7 +83,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			SelectedBook.Value = _books.FirstOrDefault();
 
-			Lifetime.Initialize.Subscribe(
+			Lifetime.Initialization.Subscribe(
 				async () =>
 				{
 					await Task.Delay(TimeSpan.FromSeconds(1));

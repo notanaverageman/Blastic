@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using Blastic.LifetimeManagement;
-using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
@@ -43,7 +42,7 @@ namespace Blastic.Wpf.Services.Windowing
 			{
 				IDisposable closeSubscription = null;
 				
-				closeSubscription = hasLifetime.Lifetime.Close.Subscribe(() =>
+				closeSubscription = hasLifetime.Lifetime.Closure.Subscribe(() =>
 				{
 					window.Close();
 					closeSubscription?.Dispose();
@@ -51,9 +50,7 @@ namespace Blastic.Wpf.Services.Windowing
 					return Task.CompletedTask;
 				}, Order.AbsoluteMaximum);
 
-				ActivationContext context = new ActivationContext();
-
-				await hasLifetime.Lifetime.Activate.Execute(context);
+				await hasLifetime.Lifetime.Activate();
 			}
 		}
 	}

@@ -62,7 +62,7 @@ namespace Blastic.LifetimeManagement
 		{
 			ClosureContext context = new ClosureContext(dialogResult);
 
-			await item.Lifetime.Close.Execute(context, cancellationToken);
+			await item.Lifetime.Close(cancellationToken, context);
 
 			if (cancellationToken.IsCancellationRequested)
 			{
@@ -73,7 +73,7 @@ namespace Blastic.LifetimeManagement
 			{
 				return;
 			}
-			
+
 			if (Equals(item, ActiveItem.Value))
 			{
 				ActiveItem.Value = _previousActiveItem.Value;
@@ -94,16 +94,12 @@ namespace Blastic.LifetimeManagement
 
 			if (previousActiveItem != null)
 			{
-				DeactivationContext context = new DeactivationContext();
-
-				await previousActiveItem.Lifetime.Deactivate.Execute(context, cancellationToken);
+				await previousActiveItem.Lifetime.Deactivate(cancellationToken);
 			}
 
 			if (activeItem != null)
 			{
-				ActivationContext context = new ActivationContext();
-
-				await activeItem.Lifetime.Activate.Execute(context, cancellationToken);
+				await activeItem.Lifetime.Activate(cancellationToken);
 			}
 		}
 	}
