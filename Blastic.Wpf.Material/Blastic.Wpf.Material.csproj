@@ -6,7 +6,7 @@
 	<LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-	<PackageReference Include="Dragablz" Version="0.0.3.203" />
+	<PackageReference Include="Dragablz" Version="0.0.3.223" />
 	<PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
 	<PackageReference Include="NuGet.Build.Tasks.Pack" Version="5.3.1">
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
