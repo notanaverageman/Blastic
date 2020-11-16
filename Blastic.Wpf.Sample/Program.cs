@@ -5,6 +5,7 @@ using Blastic.Wpf.Sample.Properties;
 using Blastic.Wpf.Initialization.Extensions;
 using Blastic.Wpf.Material.Extensions;
 using Blastic.Wpf.Sample.UserInterface;
+using Blastic.Wpf.Services.Settings;
 using Blastic.Wpf.UserInterface.TabbedMain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,7 @@ namespace Blastic.Wpf.Sample
 						.AddMainTab<HomeViewModel>()
 						.AddMainTab<MainTabViewModel>()
 						.AddLogsWindow()
-						.AddSettingsService()
+						.AddSettingsService<DatabaseSettingsService>()
 						.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
 						.AddLocalizationSource(Resources.ResourceManager))
 				.Build();

@@ -23,7 +23,6 @@ using Blastic.Wpf.Data.ProgramData.Migrations;
 using Blastic.Wpf.DynamicControls;
 using Blastic.Wpf.Properties;
 using Blastic.Wpf.Services.Dialog;
-using Blastic.Wpf.Services.Settings;
 using Blastic.Wpf.Services.Windowing;
 using Blastic.Wpf.UserInterface.Logs;
 using Blastic.Wpf.UserInterface.Logs.Settings;
@@ -108,10 +107,10 @@ namespace Blastic.Wpf.Initialization
 			return this;
 		}
 
-		public BlasticApplicationBuilder AddSettingsService()
+		public BlasticApplicationBuilder AddSettingsService<T>() where T : class, ISettingsService
 		{
 			_serviceCollection.AddSingleton<SettingsViewModel>();
-			_serviceCollection.AddSingleton<ISettingsService, SettingsService>();
+			_serviceCollection.AddSingleton<ISettingsService, T>();
 			_serviceCollection.AddSingleton<IInitializationStep, ReadSettingsStep>();
 
 			return this;

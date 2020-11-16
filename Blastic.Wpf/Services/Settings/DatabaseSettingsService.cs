@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Services.Settings;
@@ -6,11 +6,11 @@ using Blastic.Wpf.Data.ProgramData;
 
 namespace Blastic.Wpf.Services.Settings
 {
-	public class SettingsService : ISettingsService
+	public class DatabaseSettingsService : ISettingsService
 	{
 		private readonly ProgramDatabase _database;
 
-		public SettingsService(ProgramDatabase database)
+		public DatabaseSettingsService(ProgramDatabase database)
 		{
 			_database = database;
 		}
