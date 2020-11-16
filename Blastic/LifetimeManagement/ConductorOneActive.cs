@@ -7,20 +7,20 @@ using Blastic.Reactive;
 
 namespace Blastic.LifetimeManagement
 {
-	public class ConductorOneActive<T> : ConductorBase<T> where T : IHasLifetime
+	public class ConductorOneActive<T> : ConductorBase<T> where T : class, IHasLifetime
 	{
-		private readonly IReadOnlyReactiveProperty<T> _previousActiveItem;
+		private readonly IReadOnlyReactiveProperty<T?> _previousActiveItem;
 
-		public ReactiveProperty<T> ActiveItem { get; }
+		public ReactiveProperty<T?> ActiveItem { get; }
 
 		public ConductorOneActive()
 		{
 			LifetimeChainOptions.ActivateChildrenOnSelfActivation = false;
 
-			ActiveItem = new ReactiveProperty<T>();
+			ActiveItem = new ReactiveProperty<T?>();
 
 			_previousActiveItem = ActiveItem
-				.Scan<T, (T Previous, T Current)>(
+				.Scan<T?, (T? Previous, T? Current)>(
 					(default, default),
 					(accumulator, current) => (accumulator.Current, current))
 				.Select(x => x.Previous)
@@ -34,7 +34,7 @@ namespace Blastic.LifetimeManagement
 			InitializeChildLifetimeSubscriptions();
 		}
 
-		public async Task Activate(T item, CancellationToken cancellationToken = default)
+		public async Task Activate(T? item, CancellationToken cancellationToken = default)
 		{
 			if (item != null && !Items.Contains(item))
 			{
@@ -84,8 +84,8 @@ namespace Blastic.LifetimeManagement
 
 		private async Task ChangeActiveItem(CancellationToken cancellationToken)
 		{
-			IHasLifetime previousActiveItem = _previousActiveItem.Value;
-			IHasLifetime activeItem = ActiveItem.Value;
+			IHasLifetime? previousActiveItem = _previousActiveItem.Value;
+			IHasLifetime? activeItem = ActiveItem.Value;
 
 			if (Equals(previousActiveItem, activeItem))
 			{

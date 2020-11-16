@@ -11,7 +11,7 @@ namespace Blastic.Reactive
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
-		private readonly IEqualityComparer<T> _equalityComparer;
+		private readonly IEqualityComparer<T>? _equalityComparer;
 		private readonly Subject<T> _source;
 
 		private ReactivePropertyErrorHandler<T>? _errorHandler;
