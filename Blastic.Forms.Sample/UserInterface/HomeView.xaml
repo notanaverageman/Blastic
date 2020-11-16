@@ -13,15 +13,10 @@
 			 x:DataType="userInterface:HomeViewModel">
 
 	<ContentView.Resources>
-		<!--<Color x:Key="Background">#121212</Color>
+		<Color x:Key="Background">#121212</Color>
 		<Color x:Key="MainBarBackground">#282828</Color>
 		<Color x:Key="MainBarDisabledBackground">#888888</Color>
-		<Color x:Key="PlayerBackground">#181818</Color>-->
-
-		<Color x:Key="Background">#EDEDED</Color>
-		<Color x:Key="MainBarBackground">#D7D7D7</Color>
-		<Color x:Key="MainBarDisabledBackground">#777777</Color>
-		<Color x:Key="PlayerBackground">#E7E7E7</Color>
+		<Color x:Key="PlayerBackground">#181818</Color>
 
 		<Style x:Key="ToolBarLabelStyle"
 			   TargetType="Label">
