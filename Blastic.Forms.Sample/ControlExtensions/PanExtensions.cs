@@ -138,6 +138,23 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			view.SetValue(BarViewProperty, value);
 		}
 
+		public static readonly BindableProperty ContentViewProperty = BindableProperty.CreateAttached(
+			nameof(ContentViewProperty).Replace("Property", ""),
+			typeof(View),
+			typeof(PanExtensions),
+			null,
+			propertyChanged: ViewsChanged);
+
+		public static View GetContentView(BindableObject view)
+		{
+			return (View)view.GetValue(ContentViewProperty);
+		}
+
+		public static void SetContentView(BindableObject view, View value)
+		{
+			view.SetValue(ContentViewProperty, value);
+		}
+
 		public static readonly BindableProperty EasingProperty = BindableProperty.CreateAttached(
 			nameof(Easing),
 			typeof(Easing),
@@ -491,10 +508,20 @@ namespace Blastic.Forms.Sample.ControlExtensions
 				? PanState.Collapsed
 				: PanState.Expanded;
 
-			await CommitExpandCollapseAnimation(view, expandedView, collapsedView, barView, panState, targetState);
+			await CommitExpandCollapseAnimation(
+				view,
+				expandedView,
+				collapsedView,
+				barView,
+				panState,
+				targetState);
 		}
 
-		private static async Task ChangeState(View view, PanStateInternal panState, PanState targetState, bool forceRun = false)
+		private static async Task ChangeState(
+			View view,
+			PanStateInternal panState,
+			PanState targetState,
+			bool forceRun = false)
 		{
 			if (panState.InternalState == targetState && !forceRun)
 			{
@@ -504,41 +531,81 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			View expandedView = GetExpandedView(view);
 			View collapsedView = GetCollapsedView(view);
 			View barView = GetBarView(view);
+			View contentView = GetContentView(view);
 
 			if (targetState == PanState.Expanded)
 			{
 				if (panState.InternalState == PanState.Invisible)
 				{
-					await CommitVisibilityAnimation(view, expandedView, collapsedView, barView, panState, PanState.Collapsed);
+					await CommitVisibilityAnimation(
+						view,
+						expandedView,
+						collapsedView,
+						contentView,
+						barView,
+						panState,
+						PanState.Collapsed);
 				}
 
 				panState.Direction = Direction.Up;
 				panState.PreviousTotalY = 0;
 
-				await CommitExpandCollapseAnimation(view, expandedView, collapsedView, barView, panState, PanState.Expanded);
+				await CommitExpandCollapseAnimation(
+					view,
+					expandedView,
+					collapsedView,
+					barView,
+					panState,
+					PanState.Expanded);
 			}
 			else if (targetState == PanState.Collapsed)
 			{
 				if (panState.InternalState == PanState.Invisible)
 				{
-					await CommitVisibilityAnimation(view, expandedView, collapsedView, barView, panState, PanState.Collapsed);
+					await CommitVisibilityAnimation(
+						view,
+						expandedView,
+						collapsedView,
+						contentView,
+						barView,
+						panState,
+						PanState.Collapsed);
 				}
 				else
 				{
 					panState.Direction = Direction.Down;
 					panState.PreviousTotalY = 0;
 
-					await CommitExpandCollapseAnimation(view, expandedView, collapsedView, barView, panState, PanState.Collapsed);
+					await CommitExpandCollapseAnimation(
+						view,
+						expandedView,
+						collapsedView,
+						barView,
+						panState,
+						PanState.Collapsed);
 				}
 			}
 			else
 			{
 				if (panState.InternalState == PanState.Expanded)
 				{
-					await CommitExpandCollapseAnimation(view, expandedView, collapsedView, barView, panState, PanState.Collapsed);
+					await CommitExpandCollapseAnimation(
+						view,
+						expandedView,
+						collapsedView,
+						barView,
+						panState,
+						PanState.Collapsed);
 				}
 
-				await CommitVisibilityAnimation(view, expandedView, collapsedView, barView, panState, PanState.Invisible);
+				await CommitVisibilityAnimation(
+					view,
+					expandedView,
+					collapsedView,
+					contentView,
+					barView,
+					panState,
+					PanState.Invisible);
 			}
 		}
 
@@ -546,11 +613,28 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			View view,
 			View expandedView,
 			View collapsedView,
+			View contentView,
 			View barView,
 			PanStateInternal panState,
 			PanState targetState)
 		{
-			Animation animation = GetVisibilityAnimation(view, expandedView, collapsedView, barView, targetState);
+			Animation consistencyAnimation = GetVisibilityAnimation(
+				view,
+				expandedView,
+				collapsedView,
+				contentView,
+				barView,
+				panState.InternalState);
+
+			consistencyAnimation.GetCallback()(1);
+
+			Animation animation = GetVisibilityAnimation(
+				view,
+				expandedView,
+				collapsedView,
+				contentView,
+				barView,
+				targetState);
 
 			string animationName = targetState == PanState.Invisible
 				? "invisible"
@@ -584,6 +668,16 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			PanStateInternal panState,
 			PanState targetState)
 		{
+			Animation consistencyAnimation = GetExpandCollapseAnimation(
+				view,
+				expandedView,
+				collapsedView,
+				barView,
+				panState,
+				panState.InternalState);
+
+			consistencyAnimation.GetCallback()(1);
+
 			Animation animation = GetExpandCollapseAnimation(
 				view,
 				expandedView,
@@ -625,6 +719,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			View view,
 			View expandedView,
 			View collapsedView,
+			View contentView,
 			View barView,
 			PanState targetState)
 		{
@@ -643,6 +738,14 @@ namespace Blastic.Forms.Sample.ControlExtensions
 					double opacityBoundaryDifference = height - heightWithoutCollapsedView;
 
 					double collapsedOpacity = opacityOffset / opacityBoundaryDifference;
+
+					if (contentView != null)
+					{
+						Thickness margin = contentView.Margin;
+						margin.Bottom = collapsedOpacity * collapsedView.Height;
+
+						contentView.Margin = margin;
+					}
 
 					view.TranslationY = x;
 					collapsedView.Opacity = collapsedOpacity;
