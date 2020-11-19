@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Xamarin.Forms;
 
 namespace Blastic.Forms.ViewManagement
@@ -46,25 +47,25 @@ namespace Blastic.Forms.ViewManagement
 
 		private static bool SetContentPropertyCore(object targetLocation, object view)
 		{
-			try
-			{
-				Type type = targetLocation.GetType();
+			Type type = targetLocation.GetType();
 
-				ContentPropertyAttribute contentProperty = type
-					.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
-					.OfType<ContentPropertyAttribute>()
-					.FirstOrDefault();
+			ContentPropertyAttribute contentProperty = type
+				.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+				.OfType<ContentPropertyAttribute>()
+				.FirstOrDefault();
 
-				contentProperty ??= DefaultContentProperty;
+			contentProperty ??= DefaultContentProperty;
 
-				type.GetProperty(contentProperty.Name)?.SetValue(targetLocation, view, null);
+			PropertyInfo propertyInfo = type.GetProperty(contentProperty.Name);
 
-				return true;
-			}
-			catch
+			if (propertyInfo == null)
 			{
 				return false;
 			}
+
+			propertyInfo.SetValue(targetLocation, view, null);
+
+			return true;
 		}
 	}
 }
