@@ -15,9 +15,10 @@
   <ItemGroup>
     <PackageReference Include="DynamicData" Version="6.16.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1269" />  
+    <PackageReference Include="Sharpnado.Tabs" Version="2.0.1" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />  
-    <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.1.0.714" />
+    <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.759" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,11 +33,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\JobView.xaml.cs">
-      <DependentUpon>JobView.xaml</DependentUpon>
+    <Compile Update="UserInterface\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\MachineView.xaml.cs">
-      <DependentUpon>MachineView.xaml</DependentUpon>
+    <Compile Update="UserInterface\LibraryView.xaml.cs">
+      <DependentUpon>LibraryView.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>

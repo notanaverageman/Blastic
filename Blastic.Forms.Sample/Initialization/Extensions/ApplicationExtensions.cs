@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net.Http;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Localization;
@@ -14,10 +13,6 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 	{
 		public static IHostBuilder Initialize(this IHostBuilder hostBuilder, Action<Application> applicationRunner)
 		{
-			string databasePath = Path.Combine(
-				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-				"Settings.sqlite");
-
 			hostBuilder
 				.ConfigureBlasticApplication(
 					applicationBuilder =>
@@ -27,13 +22,15 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.UseApplicationRunner(applicationRunner)
 							.AddLocalizationSource(Properties.Resources.ResourceManager)
 							.AddShellTab<HomeViewModel>()
+							.AddShellTab<SearchViewModel>()
+							.AddShellTab<LibraryViewModel>()
 							.UseMainViewModel<MainViewModel>();
 					})
 				.ConfigureServices(
 					(x, y) =>
 					{
 						y.AddSingleton<Labels>();
-						y.AddSingleton<HttpClient>(new HttpClient());
+						y.AddSingleton(new HttpClient());
 					});
 
 			return hostBuilder;

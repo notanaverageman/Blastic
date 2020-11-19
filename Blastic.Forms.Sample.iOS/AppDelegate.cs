@@ -15,6 +15,8 @@ namespace Blastic.Forms.Sample.iOS
 			Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
 			Xamarin.Forms.Forms.Init();
 
+			Sharpnado.Tabs.iOS.Preserver.Preserve();
+
 			IHost host = new HostBuilder()
 				.UseContentRoot(Environment.GetFolderPath(Environment.SpecialFolder.Personal))
 				.Initialize(LoadApplication)

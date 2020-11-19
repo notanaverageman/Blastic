@@ -133,7 +133,6 @@ namespace Blastic.Wpf.Initialization
 		{
 			_serviceCollection.AddSingleton(UILogger.Instance);
 			_serviceCollection.AddSingleton<LogsViewModel>();
-			_serviceCollection.AddSingleton<LogSettingsViewModel>();
 
 			_serviceCollection.AddLogging(y =>
 			{

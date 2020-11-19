@@ -1,4 +1,4 @@
-﻿using Blastic.LifetimeManagement;
+using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
 
@@ -8,5 +8,6 @@ namespace Blastic.Forms.UserInterface
 	{
 		Order Order { get; }
 		IReadOnlyReactiveProperty<string> Title { get; }
+		IReadOnlyReactiveProperty<string> IconGlyph { get; }
 	}
 }

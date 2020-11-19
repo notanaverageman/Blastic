@@ -11,6 +11,8 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class MainViewModel : ConductorOneActive<IShellTab>
 	{
+		public HomeViewModel HomeViewModel { get; }
+
 		public MainViewModel(
 			IEnumerable<IShellTab> tabs,
 			IEnumerable<IInitializationStep> initializationSteps)
@@ -18,6 +20,8 @@ namespace Blastic.Forms.Sample.UserInterface
 			tabs = tabs
 				.OrderBy(x => x.Order)
 				.ToList();
+
+			HomeViewModel = tabs.OfType<HomeViewModel>().First();
 
 			Items.AddRange(tabs);
 

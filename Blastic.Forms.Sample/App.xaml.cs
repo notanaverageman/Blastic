@@ -10,6 +10,9 @@ namespace Blastic.Forms.Sample
 			InitializeComponent();
 
 			UserAppTheme = OSAppTheme.Light;
+
+			Sharpnado.Tabs.Initializer.Initialize(false, false);
+			Sharpnado.Shades.Initializer.Initialize(false);
 		}
 
 		protected override async void OnStart()

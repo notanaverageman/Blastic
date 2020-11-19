@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView x:Class="Blastic.Forms.Sample.UserInterface.HomeView"
-			 xmlns="http://xamarin.com/schemas/2014/forms"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
-			 xmlns:controlExtensions1="clr-namespace:Blastic.Forms.Sample.ControlExtensions;assembly=Blastic.Forms.Sample"
-			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
-			 mc:Ignorable="d"
-			 x:DataType="userInterface:HomeViewModel">
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
+             xmlns:controlExtensions1="clr-namespace:Blastic.Forms.Sample.ControlExtensions;assembly=Blastic.Forms.Sample"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+             mc:Ignorable="d"
+             x:DataType="userInterface:HomeViewModel" Background="#88FF8888">
 
 	<ContentView.Resources>
 		<Color x:Key="Background">#121212</Color>
@@ -26,11 +26,11 @@
 		</Style>
 	</ContentView.Resources>
 
-	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*"
+	<Grid controlExtensions:GridExtensions.RowDefinitions="*,Auto"
 		  BackgroundColor="{StaticResource Background}"
 		  RowSpacing="0">
 
-		<RefreshView Grid.Row="1"
+		<RefreshView Grid.Row="0"
 					 Command="{Binding FetchBooksCommand}"
 					 IsRefreshing="{Binding ExecutionContext.IsBusy.Value}">
 
@@ -105,211 +105,11 @@
 			</CollectionView>
 		</RefreshView>
 
-		<Grid Grid.Row="0"
-			  Grid.RowSpan="2"
-			  controlExtensions1:PanExtensions.AnimationDuration="250"
-			  controlExtensions1:PanExtensions.BarView="{x:Reference MainBar}"
-			  controlExtensions1:PanExtensions.CollapsedView="{x:Reference Collapsed}"
-			  controlExtensions1:PanExtensions.EnableMediaPlayerPan="True"
-			  controlExtensions1:PanExtensions.ExpandedView="{x:Reference Expanded}"
-			  controlExtensions1:PanExtensions.State="{Binding PanState.Value, Mode=TwoWay}">
-
-			<Grid x:Name="Collapsed"
-				  BackgroundColor="{StaticResource MainBarBackground}"
-				  HeightRequest="57"
-				  RowDefinitions="Auto,Auto,Auto"
-				  RowSpacing="0"
-				  VerticalOptions="Start">
-
-				<Grid.GestureRecognizers>
-					<TapGestureRecognizer Command="{Binding TogglePanStateCommand}"
-										  CommandParameter="{x:Static controlExtensions1:PanState.Expanded}" />
-				</Grid.GestureRecognizers>
-
-				<ProgressBar Grid.Row="0"
-							 HeightRequest="0.5"
-							 Progress="0.5"
-							 ProgressColor="{StaticResource BlasticWhiteColor}" />
-
-				<Grid Grid.Row="1"
-					  ColumnDefinitions="Auto,*,Auto">
-
-					<Image Grid.Column="0"
-						   Margin="0,0.5,0,0"
-						   Source="{Binding SelectedBook.Value.ImageUrl.Value}"
-						   VerticalOptions="End" />
-
-					<StackLayout Grid.Column="1"
-								 Margin="16,0"
-								 VerticalOptions="Center">
-
-						<Label FontSize="Micro"
-							   LineBreakMode="TailTruncation"
-							   Text="{Binding SelectedBook.Value.Title.Value}" />
-
-						<Label FontSize="Micro"
-							   Text="{Binding SelectedBook.Value.AuthorNames.Value}"
-							   TextColor="{StaticResource MainBarDisabledBackground}" />
-					</StackLayout>
-
-					<ImageButton Grid.Column="2"
-								 Margin="0,0,16,0"
-								 VerticalOptions="Center">
-						<ImageButton.Source>
-							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{x:Static icons:IconFont.PlayCircleOutline}" />
-						</ImageButton.Source>
-					</ImageButton>
-				</Grid>
-
-				<BoxView Grid.Row="2"
-						 BackgroundColor="{StaticResource Background}"
-						 HeightRequest="1"
-						 HorizontalOptions="FillAndExpand" />
-			</Grid>
-
-			<pancakeView:PancakeView x:Name="Expanded"
-									 BackgroundColor="{StaticResource PlayerBackground}"
-									 CornerRadius="18,18,0,0">
-				<Grid Margin="16,16,16,0"
-					  RowDefinitions="Auto,*,Auto,Auto"
-					  RowSpacing="0">
-
-					<Grid Grid.Row="0"
-						  ColumnDefinitions="Auto,*,Auto">
-
-						<ImageButton Grid.Column="0"
-									 Padding="10"
-									 Command="{Binding TogglePanStateCommand}"
-									 CommandParameter="{x:Static controlExtensions1:PanState.Collapsed}"
-									 HorizontalOptions="Start"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.ChevronDown}"
-												 Size="32" />
-							</ImageButton.Source>
-						</ImageButton>
-
-						<Label Grid.Column="1"
-							   FontSize="Small"
-							   HorizontalOptions="Center"
-							   Text="{Binding SelectedBook.Value.Title.Value}"
-							   VerticalOptions="Center" />
-
-						<ImageButton Grid.Column="2"
-									 Padding="10"
-									 HorizontalOptions="End"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.DotsHorizontal}"
-												 Size="32" />
-							</ImageButton.Source>
-						</ImageButton>
-					</Grid>
-
-					<StackLayout Grid.Row="1"
-								 Margin="16,16,16,0">
-
-						<Image Aspect="AspectFill"
-							   HorizontalOptions="FillAndExpand"
-							   Source="{Binding SelectedBook.Value.ImageUrl.Value}"
-							   VerticalOptions="FillAndExpand" />
-
-						<Label Margin="0,16,0,0"
-							   FontSize="Large"
-							   Text="{Binding SelectedBook.Value.Title.Value}" />
-
-						<Label FontSize="Small"
-							   Text="{Binding SelectedBook.Value.AuthorNames.Value}"
-							   TextColor="{StaticResource MainBarDisabledBackground}" />
-					</StackLayout>
-
-					<StackLayout Grid.Row="2"
-								 Margin="16,16,16,0"
-								 Spacing="0">
-						<Grid>
-							<Label FontSize="Micro"
-								   HorizontalOptions="Start"
-								   Text="00:00" />
-
-							<Label FontSize="Micro"
-								   HorizontalOptions="End"
-								   Text="03:42" />
-						</Grid>
-
-						<Slider MinimumTrackColor="{StaticResource BlasticWhiteColor}"
-								Value="0.5">
-							<Slider.ThumbImageSource>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.CircleMedium}"
-												 Size="48" />
-							</Slider.ThumbImageSource>
-						</Slider>
-					</StackLayout>
-
-					<Grid Grid.Row="3"
-						  Margin="16,0,16,64"
-						  ColumnDefinitions="Auto,*,Auto">
-
-						<ImageButton Grid.Column="0"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.Shuffle}"
-												 Size="18" />
-							</ImageButton.Source>
-						</ImageButton>
-
-						<StackLayout Grid.Column="1"
-									 HorizontalOptions="Center"
-									 Orientation="Horizontal">
-
-							<ImageButton VerticalOptions="Center">
-								<ImageButton.Source>
-									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.SkipPrevious}"
-													 Size="48" />
-								</ImageButton.Source>
-							</ImageButton>
-
-							<ImageButton Margin="20"
-										 VerticalOptions="Center">
-								<ImageButton.Source>
-									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.PlayCircle}"
-													 Size="72" />
-								</ImageButton.Source>
-							</ImageButton>
-
-							<ImageButton VerticalOptions="Center">
-								<ImageButton.Source>
-									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.SkipNext}"
-													 Size="48" />
-								</ImageButton.Source>
-							</ImageButton>
-						</StackLayout>
-
-						<ImageButton Grid.Column="2"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.Repeat}"
-												 Size="18" />
-							</ImageButton.Source>
-						</ImageButton>
-					</Grid>
-				</Grid>
-			</pancakeView:PancakeView>
-		</Grid>
-
 		<Grid x:Name="MainBar"
-			  Grid.Row="1"
-			  BackgroundColor="{StaticResource MainBarBackground}"
-			  ColumnDefinitions="*,*,*"
-			  VerticalOptions="End">
+		      Grid.Row="1"
+		      BackgroundColor="{StaticResource MainBarBackground}"
+		      ColumnDefinitions="*,*,*"
+		      VerticalOptions="End">
 
 			<StackLayout Grid.Column="0"
 						 Spacing="0">

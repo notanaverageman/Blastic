@@ -20,7 +20,7 @@ using DynamicData;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public class HomeViewModel : Screen, IShellTab
+	public class SearchViewModel : Screen, IShellTab
 	{
 		private readonly INavigationService _navigationService;
 		private readonly HttpClient _httpClient;
@@ -40,7 +40,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public Command FetchBooksCommand { get; }
 		public Command<PanState> TogglePanStateCommand { get; }
 
-		public HomeViewModel(
+		public SearchViewModel(
 			INavigationService navigationService,
 			HttpClient httpClient,
 			Labels labels)
@@ -48,9 +48,9 @@ namespace Blastic.Forms.Sample.UserInterface
 			_navigationService = navigationService;
 			_httpClient = httpClient;
 
-			Order = new Order(0);
-			Title = labels.Home.Title;
-			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
+			Order = new Order(1);
+			Title = labels.Search.Title;
+			IconGlyph = new ReactiveProperty<string>(IconFont.Magnify);
 
 			_booksSource = new SourceCache<BookViewModel, int>(x => x.Id);
 			_booksSource
