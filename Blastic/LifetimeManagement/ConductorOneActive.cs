@@ -12,12 +12,14 @@ namespace Blastic.LifetimeManagement
 		private readonly IReadOnlyReactiveProperty<T?> _previousActiveItem;
 
 		public ReactiveProperty<T?> ActiveItem { get; }
+		public ReactiveProperty<int> ActiveItemIndex { get; }
 
 		public ConductorOneActive()
 		{
 			LifetimeChainOptions.ActivateChildrenOnSelfActivation = false;
 
 			ActiveItem = new ReactiveProperty<T?>();
+			ActiveItemIndex = new ReactiveProperty<int>(-1);
 
 			_previousActiveItem = ActiveItem
 				.Scan<T?, (T? Previous, T? Current)>(
@@ -28,7 +30,19 @@ namespace Blastic.LifetimeManagement
 
 			ActiveItem.Subscribe(async x =>
 			{
-				await Activate(ActiveItem.Value);
+				await Activate(x);
+			});
+
+			ActiveItemIndex.Subscribe(async x =>
+			{
+				if (x < 0 || x >= Items.Count)
+				{
+					await Activate(null);
+				}
+				else
+				{
+					await Activate(Items[x]);
+				}
 			});
 
 			InitializeChildLifetimeSubscriptions();
@@ -36,9 +50,12 @@ namespace Blastic.LifetimeManagement
 
 		public async Task Activate(T? item, CancellationToken cancellationToken = default)
 		{
-			if (item != null && !Items.Contains(item))
+			int index = item != null ? Items.IndexOf(item) : -1;
+
+			if (item != null && index < 0)
 			{
 				Items.Add(item);
+				index = Items.Count - 1;
 			}
 
 			bool isActivating = Lifetime.IsActivating.Value;
@@ -52,6 +69,8 @@ namespace Blastic.LifetimeManagement
 			// This does not cause a stack overflow since equality comparer in ActiveItem.Value
 			// returns early if we set the same item.
 			ActiveItem.Value = item;
+			ActiveItemIndex.Value = index;
+
 			await ChangeActiveItem(cancellationToken);
 		}
 
