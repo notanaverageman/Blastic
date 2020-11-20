@@ -138,21 +138,21 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			view.SetValue(BarViewProperty, value);
 		}
 
-		public static readonly BindableProperty ContentViewProperty = BindableProperty.CreateAttached(
-			nameof(ContentViewProperty).Replace("Property", ""),
+		public static readonly BindableProperty PlaceholderViewProperty = BindableProperty.CreateAttached(
+			nameof(PlaceholderViewProperty).Replace("Property", ""),
 			typeof(View),
 			typeof(PanExtensions),
 			null,
 			propertyChanged: ViewsChanged);
 
-		public static View GetContentView(BindableObject view)
+		public static View GetPlaceholderView(BindableObject view)
 		{
-			return (View)view.GetValue(ContentViewProperty);
+			return (View)view.GetValue(PlaceholderViewProperty);
 		}
 
-		public static void SetContentView(BindableObject view, View value)
+		public static void SetPlaceholderView(BindableObject view, View value)
 		{
-			view.SetValue(ContentViewProperty, value);
+			view.SetValue(PlaceholderViewProperty, value);
 		}
 
 		public static readonly BindableProperty EasingProperty = BindableProperty.CreateAttached(
@@ -531,7 +531,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			View expandedView = GetExpandedView(view);
 			View collapsedView = GetCollapsedView(view);
 			View barView = GetBarView(view);
-			View contentView = GetContentView(view);
+			View placeholderView = GetPlaceholderView(view);
 
 			if (targetState == PanState.Expanded)
 			{
@@ -541,7 +541,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 						view,
 						expandedView,
 						collapsedView,
-						contentView,
+						placeholderView,
 						barView,
 						panState,
 						PanState.Collapsed);
@@ -566,7 +566,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 						view,
 						expandedView,
 						collapsedView,
-						contentView,
+						placeholderView,
 						barView,
 						panState,
 						PanState.Collapsed);
@@ -602,7 +602,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 					view,
 					expandedView,
 					collapsedView,
-					contentView,
+					placeholderView,
 					barView,
 					panState,
 					PanState.Invisible);
@@ -613,7 +613,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			View view,
 			View expandedView,
 			View collapsedView,
-			View contentView,
+			View placeholderView,
 			View barView,
 			PanStateInternal panState,
 			PanState targetState)
@@ -622,7 +622,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 				view,
 				expandedView,
 				collapsedView,
-				contentView,
+				placeholderView,
 				barView,
 				panState.InternalState);
 
@@ -632,7 +632,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 				view,
 				expandedView,
 				collapsedView,
-				contentView,
+				placeholderView,
 				barView,
 				targetState);
 
@@ -719,7 +719,7 @@ namespace Blastic.Forms.Sample.ControlExtensions
 			View view,
 			View expandedView,
 			View collapsedView,
-			View contentView,
+			View placeholderView,
 			View barView,
 			PanState targetState)
 		{
@@ -739,12 +739,9 @@ namespace Blastic.Forms.Sample.ControlExtensions
 
 					double collapsedOpacity = opacityOffset / opacityBoundaryDifference;
 
-					if (contentView != null)
+					if (placeholderView != null)
 					{
-						Thickness margin = contentView.Margin;
-						margin.Bottom = collapsedOpacity * collapsedView.Height;
-
-						contentView.Margin = margin;
+						placeholderView.HeightRequest = collapsedOpacity * collapsedView.Height;
 					}
 
 					view.TranslationY = x;

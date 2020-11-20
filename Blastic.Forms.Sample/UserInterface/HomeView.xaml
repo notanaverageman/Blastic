@@ -1,33 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView x:Class="Blastic.Forms.Sample.UserInterface.HomeView"
-             xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
-             xmlns:controlExtensions1="clr-namespace:Blastic.Forms.Sample.ControlExtensions;assembly=Blastic.Forms.Sample"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-             xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
-             mc:Ignorable="d"
-             x:DataType="userInterface:HomeViewModel" Background="#88FF8888">
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
+			 xmlns:controlExtensions1="clr-namespace:Blastic.Forms.Sample.ControlExtensions;assembly=Blastic.Forms.Sample"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 mc:Ignorable="d"
+			 x:DataType="userInterface:HomeViewModel">
 
 	<ContentView.Resources>
 		<Color x:Key="Background">#121212</Color>
-		<Color x:Key="MainBarBackground">#282828</Color>
-		<Color x:Key="MainBarDisabledBackground">#888888</Color>
-		<Color x:Key="PlayerBackground">#181818</Color>
-
-		<Style x:Key="ToolBarLabelStyle"
-			   TargetType="Label">
-			<Setter Property="HorizontalOptions" Value="Center" />
-			<Setter Property="VerticalOptions" Value="End" />
-			<Setter Property="FontSize" Value="Micro" />
-		</Style>
 	</ContentView.Resources>
 
 	<Grid controlExtensions:GridExtensions.RowDefinitions="*,Auto"
-		  BackgroundColor="{StaticResource Background}"
 		  RowSpacing="0">
 
 		<RefreshView Grid.Row="0"
@@ -105,63 +93,24 @@
 			</CollectionView>
 		</RefreshView>
 
-		<Grid x:Name="MainBar"
-		      Grid.Row="1"
-		      BackgroundColor="{StaticResource MainBarBackground}"
-		      ColumnDefinitions="*,*,*"
-		      VerticalOptions="End">
+		<Grid Grid.Row="1"
+			  ColumnDefinitions="*,*,*"
+			  VerticalOptions="End">
 
-			<StackLayout Grid.Column="0"
-						 Spacing="0">
-				<ImageButton HorizontalOptions="Center"
-							 VerticalOptions="Start"
-							 Command="{Binding TogglePanStateCommand}"
-							 CommandParameter="{x:Static controlExtensions1:PanState.Expanded}">
-					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.Home}"
-										 Color="{StaticResource MainBarDisabledBackground}" />
-					</ImageButton.Source>
-				</ImageButton>
+			<Button Grid.Column="0"
+					Command="{Binding TogglePanStateCommand}"
+					CommandParameter="{x:Static controlExtensions1:PanState.Expanded}"
+					Text="Expanded" />
 
-				<Label Style="{StaticResource ToolBarLabelStyle}"
-					   Text="Home"
-					   TextColor="{StaticResource MainBarDisabledBackground}" />
-			</StackLayout>
+			<Button Grid.Column="1"
+					Command="{Binding TogglePanStateCommand}"
+					CommandParameter="{x:Static controlExtensions1:PanState.Collapsed}"
+					Text="Collapsed" />
 
-			<StackLayout Grid.Column="1"
-						 Spacing="0">
-				<ImageButton HorizontalOptions="Center"
-							 VerticalOptions="Start"
-							 Command="{Binding TogglePanStateCommand}"
-							 CommandParameter="{x:Static controlExtensions1:PanState.Collapsed}">
-					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.Magnify}"
-										 Color="{StaticResource MainBarDisabledBackground}" />
-					</ImageButton.Source>
-				</ImageButton>
-
-				<Label Style="{StaticResource ToolBarLabelStyle}"
-					   Text="Search"
-					   TextColor="{StaticResource MainBarDisabledBackground}" />
-			</StackLayout>
-
-			<StackLayout Grid.Column="2"
-						 Spacing="0">
-				<ImageButton HorizontalOptions="Center"
-							 VerticalOptions="Start"
-							 Command="{Binding TogglePanStateCommand}"
-							 CommandParameter="{x:Static controlExtensions1:PanState.Invisible}">
-					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.Bookshelf}" />
-					</ImageButton.Source>
-				</ImageButton>
-
-				<Label Style="{StaticResource ToolBarLabelStyle}"
-					   Text="Library" />
-			</StackLayout>
+			<Button Grid.Column="2"
+					Command="{Binding TogglePanStateCommand}"
+					CommandParameter="{x:Static controlExtensions1:PanState.Invisible}"
+					Text="Invisible" />
 		</Grid>
 	</Grid>
 </ContentView>

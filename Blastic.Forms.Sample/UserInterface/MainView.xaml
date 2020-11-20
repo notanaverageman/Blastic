@@ -25,10 +25,17 @@
 	</ContentPage.Resources>
 
 	<Grid RowDefinitions="*,Auto">
-		<ContentPresenter x:Name="ContentView"
-						  Grid.Row="0"
-						  viewManagement:View.Model="{Binding ActiveItem.Value}"
-						  IsClippedToBounds="True" />
+		<Grid Grid.Row="0"
+			  IsClippedToBounds="True"
+			  RowDefinitions="*,Auto">
+
+			<ContentPresenter x:Name="ContentPresenter"
+							  Grid.Row="0"
+							  viewManagement:View.Model="{Binding ActiveItem.Value}" />
+
+			<BoxView x:Name="Placeholder"
+					 Grid.Row="1" />
+		</Grid>
 
 		<Grid x:Name="MediaPlayer"
 			  Grid.Row="0"
@@ -36,9 +43,9 @@
 			  controlExtensions:PanExtensions.AnimationDuration="250"
 			  controlExtensions:PanExtensions.BarView="{Binding Source={x:Reference TabHost}}"
 			  controlExtensions:PanExtensions.CollapsedView="{x:Reference Collapsed}"
-			  controlExtensions:PanExtensions.ContentView="{Binding Source={x:Reference ContentView}}"
 			  controlExtensions:PanExtensions.EnableMediaPlayerPan="True"
 			  controlExtensions:PanExtensions.ExpandedView="{x:Reference Expanded}"
+			  controlExtensions:PanExtensions.PlaceholderView="{Binding Source={x:Reference Placeholder}}"
 			  controlExtensions:PanExtensions.State="{Binding HomeViewModel.PanState.Value, Mode=TwoWay}">
 
 			<Grid x:Name="Collapsed"
@@ -248,7 +255,7 @@
 										UnselectedLabelColor="{DynamicResource MainBarDisabledBackground}">
 						<tabs:BottomTabItem.IconImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-							                 Glyph="{Binding IconGlyph.Value}" />
+											 Glyph="{Binding IconGlyph.Value}" />
 						</tabs:BottomTabItem.IconImageSource>
 					</tabs:BottomTabItem>
 				</DataTemplate>
