@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.ControlExtensions;
+using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Librivox;
 using Blastic.Forms.Sample.Localization;
-using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
@@ -22,12 +22,12 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IShellTab
 	{
-		private readonly INavigationService _navigationService;
 		private readonly HttpClient _httpClient;
+		private readonly ProgramDatabase _database;
 
 		public IReactiveProperty<PanState> PanState { get; }
 
-		private readonly SourceCache<BookViewModel, int> _booksSource;
+		private readonly SourceCache<BookViewModel, string> _booksSource;
 		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
 
 		public Order Order { get; }
@@ -35,31 +35,28 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> IconGlyph { get; }
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
-		public IReactiveProperty<BookViewModel> SelectedBook { get; }
 
 		public Command FetchBooksCommand { get; }
 		public Command<PanState> TogglePanStateCommand { get; }
 
 		public HomeViewModel(
-			INavigationService navigationService,
 			HttpClient httpClient,
+			ProgramDatabase database,
 			Labels labels)
 		{
-			_navigationService = navigationService;
 			_httpClient = httpClient;
+			_database = database;
 
 			Order = new Order(0);
 			Title = labels.Home.Title;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
 
-			_booksSource = new SourceCache<BookViewModel, int>(x => x.Id);
+			_booksSource = new SourceCache<BookViewModel, string>(x => x.Id);
 			_booksSource
 				.Connect()
 				.Bind(out _books)
 				.DisposeMany()
 				.Subscribe();
-
-			SelectedBook = new ReactiveProperty<BookViewModel>();
 
 			FetchBooksCommand = new Command(FetchBooks);
 
@@ -71,40 +68,48 @@ namespace Blastic.Forms.Sample.UserInterface
 					PanState.Value = x;
 				});
 
-			AuthorViewModel author = new AuthorViewModel(123);
-			author.FirstName.Value = "Jerry";
-			author.LastName.Value = "Bonnell";
-
-			for (int i = 0; i < 1; i++)
-			{
-				BookViewModel book = new BookViewModel(i, new[] { author });
-				book.Title.Value = "Golden mean to 5000 digits";
-				book.ImageUrl.Value = "https://ia800301.us.archive.org/21/items/golden_mean_to_5000_digits_0810_librivox/Golden_mean_5000_digits_1201.jpg?cnt=0";
-
-				_booksSource.AddOrUpdate(book);
-			}
-
-			SelectedBook.Value = _books.FirstOrDefault();
-
 			Lifetime.Initialization.Subscribe(
-				async () =>
+				() =>
 				{
-					await Task.Delay(TimeSpan.FromSeconds(1));
 					PanState.Value = ControlExtensions.PanState.Collapsed;
 				});
+
+			Lifetime.Initialization.Subscribe(FetchBooks);
+
+			_booksSource.AddOrUpdate(new BookViewModel("adventures_lightfoot_the_deer_js_1804_librivox")
+			{
+				Creator = { Value = "Thornton W. Burgess" },
+				Title = { Value = "The Adventures of Lightfoot the Deer (Version 2)" },
+				ImageUrl = { Value = "https://archive.org/services/img/adventures_lightfoot_the_deer_js_1804_librivox" }
+			});
 		}
 
 		private async Task FetchBooks()
 		{
 			async Task Fetch(CancellationToken cancellationToken)
 			{
-				HttpResponseMessage responseMessage = await _httpClient.GetAsync(
-					"https://librivox.org/api/feed/audiobooks?format=json&extended=true",
-					cancellationToken);
+				string url = "https://archive.org/advancedsearch.php?q=collection:librivoxaudio";
+
+				url += @"&fl[]=identifier";
+				url += @"&fl[]=title";
+				url += @"&fl[]=creator";
+				url += @"&fl[]=date";
+				url += @"&fl[]=downloads";
+				url += @"&rows=50";
+				url += @"&page=1";
+				url += @"&output=json";
+
+				HttpResponseMessage responseMessage = await _httpClient.GetAsync(url, cancellationToken);
 
 				string result = await responseMessage.Content.ReadAsStringAsync();
 
-				LibrivoxBookList bookList = JsonSerializer.Deserialize<LibrivoxBookList>(result);
+				ArchiveOrgQueryResult bookList = JsonSerializer.Deserialize<ArchiveOrgQueryResult>(
+					result,
+					new JsonSerializerOptions
+					{
+						PropertyNameCaseInsensitive = true
+					});
+
 				List<BookViewModel> bookViewModels = bookList.ToViewModels();
 
 				_booksSource.Edit(
@@ -114,10 +119,28 @@ namespace Blastic.Forms.Sample.UserInterface
 						x.AddOrUpdate(bookViewModels);
 					});
 
-				SelectedBook.Value = _books.FirstOrDefault();
+				Stopwatch stopwatch = Stopwatch.StartNew();
+
+				List<Book> books = new List<Book>();
+				foreach (BookViewModel bookViewModel in bookViewModels)
+				{
+					Book book = new Book
+					{
+						ArchiveOrgId = bookViewModel.Id,
+						Title = bookViewModel.Title.Value,
+						Description = bookViewModel.Description.Value
+					};
+
+					books.Add(book);
+				}
+
+				await _database.BooksTable.PutAll(books, cancellationToken);
+
+				stopwatch.Stop();
+				Debug.WriteLine(stopwatch.Elapsed);
 			}
 
-			await ExecutionContext.Execute(Fetch);
+			await ExecutionContext.Execute(Fetch, rethrowUnhandledException: true);
 		}
 	}
 }

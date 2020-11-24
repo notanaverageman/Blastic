@@ -103,13 +103,17 @@ namespace Blastic.Forms.Initialization
 			return this;
 		}
 
-		public BlasticApplicationBuilder AddProgramDatabase(DatabaseProvider databaseProvider, string connectionString)
+		public BlasticApplicationBuilder AddProgramDatabase<T>(
+			DatabaseProvider databaseProvider,
+			string connectionString)
+			where T : ProgramDatabase
 		{
 			DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(databaseProvider, connectionString);
 
 			_serviceCollection.AddSingleton(y => databaseConfiguration);
 			_serviceCollection.AddSingleton<ConnectionFactory>();
-			_serviceCollection.AddSingleton<ProgramDatabase>();
+			_serviceCollection.AddSingleton<T>();
+			_serviceCollection.AddSingleton<ProgramDatabase>(x => x.GetRequiredService<T>());
 			_serviceCollection.AddSingleton<ProgramDatabaseMigrationBase, CreateSettingsTable>();
 			_serviceCollection.AddSingleton<IInitializationStep, MigrateProgramDatabaseStep>();
 

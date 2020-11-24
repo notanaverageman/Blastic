@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blastic.Forms.Sample.Data
 {
 	public class Section
 	{
-		[DatabaseGenerated(DatabaseGeneratedOption.None)]
 		public int Id { get; set; }
 
 		public int SectionNumber { get; set; }

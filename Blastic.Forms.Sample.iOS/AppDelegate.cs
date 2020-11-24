@@ -12,9 +12,9 @@ namespace Blastic.Forms.Sample.iOS
 	{
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 		{
-			Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
 			Xamarin.Forms.Forms.Init();
 
+			SQLitePCL.Batteries_V2.Init();
 			Sharpnado.Tabs.iOS.Preserver.Preserve();
 
 			IHost host = new HostBuilder()
