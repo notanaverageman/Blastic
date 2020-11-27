@@ -75,6 +75,9 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Renderers\InputPassthroughPageContainer.cs" />
+    <Compile Include="Renderers\ExtendedTabbedPageRenderer.cs" />
+    <Compile Include="Renderers\InputPassthroughPageRenderer.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />
@@ -166,9 +169,10 @@
       <Name>Blastic</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarBlasticFormsSampleiOSHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadWrongLinkerErrorInfoBarBlasticFormsSampleiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

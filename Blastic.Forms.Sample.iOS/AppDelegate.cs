@@ -15,7 +15,6 @@ namespace Blastic.Forms.Sample.iOS
 			Xamarin.Forms.Forms.Init();
 
 			SQLitePCL.Batteries_V2.Init();
-			Sharpnado.Tabs.iOS.Preserver.Preserve();
 
 			IHost host = new HostBuilder()
 				.UseContentRoot(Environment.GetFolderPath(Environment.SpecialFolder.Personal))

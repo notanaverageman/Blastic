@@ -1,265 +1,236 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.MainView"
-			 xmlns="http://xamarin.com/schemas/2014/forms"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.Sample.ControlExtensions;assembly=Blastic.Forms.Sample"
-			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-			 xmlns:iOsSpecific="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
-			 xmlns:tabs="http://sharpnado.com"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
-			 xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
-			 mc:Ignorable="d"
-			 iOsSpecific:Page.UseSafeArea="True"
-			 x:DataType="userInterface:MainViewModel"
-			 BackgroundColor="{DynamicResource BlasticBlackColor}">
+<MultiPage x:Class="Blastic.Forms.Sample.UserInterface.MainView"
+		   xmlns="http://xamarin.com/schemas/2014/forms"
+		   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		   xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
+		   xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms"
+		   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+		   xmlns:iOsSpecific="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+		   xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
+		   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		   xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
+		   xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+		   xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
+		   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+		   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
+		   mc:Ignorable="d"
+		   iOsSpecific:Page.UseSafeArea="True"
+		   x:DataType="userInterface:MainViewModel"
+		   x:TypeArguments="Page"
+		   BackgroundColor="{DynamicResource Background}">
 
-	<ContentPage.Resources>
-		<Color x:Key="Background">#121212</Color>
-		<Color x:Key="MainBarBackground">#282828</Color>
-		<Color x:Key="MainBarDisabledBackground">#888888</Color>
-		<Color x:Key="PlayerBackground">#181818</Color>
-	</ContentPage.Resources>
+	<controls:ExtendedTabbedPage x:Name="TabbedPage"
+								 ItemsSource="{Binding Items}">
+		<controls:ExtendedTabbedPage.ItemTemplate>
+			<DataTemplate x:DataType="tab:IShellTab">
+				<ContentPage Title="{Binding Title.Value}"
+							 BackgroundColor="{DynamicResource Background}"
+							 IconImageSource="{Binding IconGlyph.Value, Converter={converters:ToolBarIconValueConverter}}">
 
-	<Grid RowDefinitions="*,Auto">
-		<Grid Grid.Row="0"
-			  IsClippedToBounds="True"
-			  RowDefinitions="*,Auto">
+					<ContentView viewManagement:View.Model="{Binding}" />
+				</ContentPage>
+			</DataTemplate>
+		</controls:ExtendedTabbedPage.ItemTemplate>
+	</controls:ExtendedTabbedPage>
 
-			<ContentPresenter x:Name="ContentPresenter"
-							  Grid.Row="0"
-							  viewManagement:View.Model="{Binding ActiveItem.Value}" />
-
-			<BoxView x:Name="Placeholder"
-					 Grid.Row="1" />
-		</Grid>
-
-		<Grid x:Name="MediaPlayer"
-			  Grid.Row="0"
-			  Grid.RowSpan="2"
-			  controlExtensions:PanExtensions.AnimationDuration="250"
-			  controlExtensions:PanExtensions.BarView="{Binding Source={x:Reference TabHost}}"
-			  controlExtensions:PanExtensions.CollapsedView="{x:Reference Collapsed}"
-			  controlExtensions:PanExtensions.EnableMediaPlayerPan="True"
-			  controlExtensions:PanExtensions.ExpandedView="{x:Reference Expanded}"
-			  controlExtensions:PanExtensions.PlaceholderView="{Binding Source={x:Reference Placeholder}}"
-			  controlExtensions:PanExtensions.State="{Binding HomeViewModel.PanState.Value, Mode=TwoWay}">
-
-			<Grid x:Name="Collapsed"
-				  BackgroundColor="{StaticResource MainBarBackground}"
-				  HeightRequest="57"
-				  RowDefinitions="Auto,Auto,Auto"
-				  RowSpacing="0"
-				  VerticalOptions="Start">
-
-				<Grid.GestureRecognizers>
-					<TapGestureRecognizer Command="{Binding HomeViewModel.TogglePanStateCommand}"
-										  CommandParameter="{x:Static controlExtensions:PanState.Expanded}" />
-				</Grid.GestureRecognizers>
-
-				<ProgressBar Grid.Row="0"
-							 HeightRequest="0.5"
-							 Progress="0.5"
-							 ProgressColor="{StaticResource BlasticWhiteColor}" />
-
-				<Grid Grid.Row="1"
-					  ColumnDefinitions="Auto,*,Auto">
-
-					<Image Grid.Column="0"
-						   Margin="0,0.5,0,0"
-						   Source="{Binding HomeViewModel.SelectedBook.Value.ImageUrl.Value}"
-						   VerticalOptions="End" />
-
-					<StackLayout Grid.Column="1"
-								 Margin="16,0"
-								 VerticalOptions="Center">
-
-						<Label FontSize="Micro"
-							   LineBreakMode="TailTruncation"
-							   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
-
-						<Label FontSize="Micro"
-							   Text="{Binding HomeViewModel.SelectedBook.Value.AuthorNames.Value}"
-							   TextColor="{StaticResource MainBarDisabledBackground}" />
-					</StackLayout>
-
-					<ImageButton Grid.Column="2"
-								 Margin="0,0,16,0"
-								 VerticalOptions="Center">
-						<ImageButton.Source>
-							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{x:Static icons:IconFont.PlayCircleOutline}" />
-						</ImageButton.Source>
-					</ImageButton>
-				</Grid>
-
-				<BoxView Grid.Row="2"
-						 BackgroundColor="{StaticResource Background}"
-						 HeightRequest="1"
-						 HorizontalOptions="FillAndExpand" />
-			</Grid>
-
-			<pancakeView:PancakeView x:Name="Expanded"
-									 BackgroundColor="{StaticResource PlayerBackground}"
-									 CornerRadius="18,18,0,0">
-				<Grid Margin="16,16,16,0"
-					  RowDefinitions="Auto,*,Auto,Auto"
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<overlay:OverlayView State="{Binding HomeViewModel.OverlayState.Value}"
+							 TabBar="{Binding Source={x:Reference TabbedPage}}">
+			<overlay:OverlayView.Collapsed>
+				<Grid BackgroundColor="{StaticResource MainBarBackground}"
+					  HeightRequest="57"
+					  RowDefinitions="Auto,Auto,Auto"
 					  RowSpacing="0">
 
-					<Grid Grid.Row="0"
+					<Grid.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding HomeViewModel.ToggleOverlayStateCommand}"
+											  CommandParameter="{x:Static overlay:OverlayState.Expanded}" />
+					</Grid.GestureRecognizers>
+
+					<ProgressBar Grid.Row="0"
+								 HeightRequest="0.5"
+								 Progress="0.5"
+								 ProgressColor="{StaticResource BlasticWhiteColor}" />
+
+					<Grid Grid.Row="1"
 						  ColumnDefinitions="Auto,*,Auto">
 
-						<ImageButton Grid.Column="0"
-									 Padding="10"
-									 Command="{Binding HomeViewModel.TogglePanStateCommand}"
-									 CommandParameter="{x:Static controlExtensions:PanState.Collapsed}"
-									 HorizontalOptions="Start"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.ChevronDown}"
-												 Size="32" />
-							</ImageButton.Source>
-						</ImageButton>
-
-						<Label Grid.Column="1"
-							   FontSize="Small"
-							   HorizontalOptions="Center"
-							   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}"
-							   VerticalOptions="Center" />
-
-						<ImageButton Grid.Column="2"
-									 Padding="10"
-									 HorizontalOptions="End"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.DotsHorizontal}"
-												 Size="32" />
-							</ImageButton.Source>
-						</ImageButton>
-					</Grid>
-
-					<StackLayout Grid.Row="1"
-								 Margin="16,16,16,0">
-
-						<Image Aspect="AspectFill"
-							   HorizontalOptions="FillAndExpand"
+						<Image Grid.Column="0"
+							   Margin="0,0.5,0,0"
 							   Source="{Binding HomeViewModel.SelectedBook.Value.ImageUrl.Value}"
-							   VerticalOptions="FillAndExpand" />
-
-						<Label Margin="0,16,0,0"
-							   FontSize="Large"
-							   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
-
-						<Label FontSize="Small"
-							   Text="{Binding HomeViewModel.SelectedBook.Value.AuthorNames.Value}"
-							   TextColor="{StaticResource MainBarDisabledBackground}" />
-					</StackLayout>
-
-					<StackLayout Grid.Row="2"
-								 Margin="16,16,16,0"
-								 Spacing="0">
-						<Grid>
-							<Label FontSize="Micro"
-								   HorizontalOptions="Start"
-								   Text="00:00" />
-
-							<Label FontSize="Micro"
-								   HorizontalOptions="End"
-								   Text="03:42" />
-						</Grid>
-
-						<Slider MinimumTrackColor="{StaticResource BlasticWhiteColor}"
-								Value="0.5">
-							<Slider.ThumbImageSource>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.CircleMedium}"
-												 Size="48" />
-							</Slider.ThumbImageSource>
-						</Slider>
-					</StackLayout>
-
-					<Grid Grid.Row="3"
-						  Margin="16,0,16,64"
-						  ColumnDefinitions="Auto,*,Auto">
-
-						<ImageButton Grid.Column="0"
-									 VerticalOptions="Center">
-							<ImageButton.Source>
-								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.Shuffle}"
-												 Size="18" />
-							</ImageButton.Source>
-						</ImageButton>
+							   VerticalOptions="End" />
 
 						<StackLayout Grid.Column="1"
-									 HorizontalOptions="Center"
-									 Orientation="Horizontal">
+									 Margin="16,0"
+									 VerticalOptions="Center">
 
-							<ImageButton VerticalOptions="Center">
-								<ImageButton.Source>
-									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.SkipPrevious}"
-													 Size="48" />
-								</ImageButton.Source>
-							</ImageButton>
+							<Label FontSize="Micro"
+								   LineBreakMode="TailTruncation"
+								   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
 
-							<ImageButton Margin="20"
-										 VerticalOptions="Center">
-								<ImageButton.Source>
-									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.PlayCircle}"
-													 Size="72" />
-								</ImageButton.Source>
-							</ImageButton>
-
-							<ImageButton VerticalOptions="Center">
-								<ImageButton.Source>
-									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.SkipNext}"
-													 Size="48" />
-								</ImageButton.Source>
-							</ImageButton>
+							<Label FontSize="Micro"
+								   Text="{Binding HomeViewModel.SelectedBook.Value.Creator.Value}"
+								   TextColor="{StaticResource MainBarDisabledTextColor}" />
 						</StackLayout>
 
 						<ImageButton Grid.Column="2"
+									 Margin="0,0,16,0"
 									 VerticalOptions="Center">
 							<ImageButton.Source>
 								<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.Repeat}"
-												 Size="18" />
+												 Glyph="{x:Static icons:IconFont.PlayCircleOutline}" />
 							</ImageButton.Source>
 						</ImageButton>
 					</Grid>
-				</Grid>
-			</pancakeView:PancakeView>
-		</Grid>
 
-		<tabs:TabHostView x:Name="TabHost"
-						  Grid.Row="1"
-						  BackgroundColor="{DynamicResource BlasticBlackColor}"
-						  ItemsSource="{Binding Items}"
-						  SelectedIndex="{Binding ActiveItemIndex.Value, Mode=TwoWay}"
-						  TabType="Fixed"
-						  VerticalOptions="End">
-			<tabs:TabHostView.ItemTemplate>
-				<DataTemplate x:DataType="tab:IShellTab">
-					<tabs:BottomTabItem Margin="0,6"
-										Label="{Binding Title.Value}"
-										SelectedTabColor="{DynamicResource BlasticWhiteColor}"
-										UnselectedIconColor="{DynamicResource MainBarDisabledBackground}"
-										UnselectedLabelColor="{DynamicResource MainBarDisabledBackground}">
-						<tabs:BottomTabItem.IconImageSource>
-							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{Binding IconGlyph.Value}" />
-						</tabs:BottomTabItem.IconImageSource>
-					</tabs:BottomTabItem>
-				</DataTemplate>
-			</tabs:TabHostView.ItemTemplate>
-		</tabs:TabHostView>
-	</Grid>
-</ContentPage>
+					<BoxView Grid.Row="2"
+							 HeightRequest="1"
+							 HorizontalOptions="FillAndExpand" />
+				</Grid>
+			</overlay:OverlayView.Collapsed>
+			<overlay:OverlayView.Expanded>
+				<pancakeView:PancakeView CornerRadius="18,18,0,0">
+
+					<pancakeView:PancakeView.Background>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+							<GradientStop Offset="0" Color="{DynamicResource MainBarBackground}" />
+							<GradientStop Offset="1" Color="{DynamicResource Background}" />
+						</LinearGradientBrush>
+					</pancakeView:PancakeView.Background>
+
+					<Grid Margin="16,16,16,0"
+						  RowDefinitions="Auto,*,Auto,Auto"
+						  RowSpacing="0">
+
+						<Grid Grid.Row="0"
+							  ColumnDefinitions="Auto,*,Auto">
+
+							<ImageButton Grid.Column="0"
+										 Padding="10"
+										 Command="{Binding HomeViewModel.ToggleOverlayStateCommand}"
+										 CommandParameter="{x:Static overlay:OverlayState.Collapsed}"
+										 HorizontalOptions="Start"
+										 VerticalOptions="Center">
+								<ImageButton.Source>
+									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+													 Glyph="{x:Static icons:IconFont.ChevronDown}"
+													 Size="32" />
+								</ImageButton.Source>
+							</ImageButton>
+
+							<Label Grid.Column="1"
+								   FontSize="Small"
+								   HorizontalOptions="Center"
+								   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}"
+								   VerticalOptions="Center" />
+
+							<ImageButton Grid.Column="2"
+										 Padding="10"
+										 HorizontalOptions="End"
+										 VerticalOptions="Center">
+								<ImageButton.Source>
+									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+													 Glyph="{x:Static icons:IconFont.DotsHorizontal}"
+													 Size="32" />
+								</ImageButton.Source>
+							</ImageButton>
+						</Grid>
+
+						<StackLayout Grid.Row="1"
+									 Margin="16,16,16,0">
+
+							<Image Aspect="AspectFill"
+								   HorizontalOptions="FillAndExpand"
+								   Source="{Binding HomeViewModel.SelectedBook.Value.ImageUrl.Value}"
+								   VerticalOptions="FillAndExpand" />
+
+							<Label Margin="0,16,0,0"
+								   FontSize="Large"
+								   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
+
+							<Label FontSize="Small"
+								   Text="{Binding HomeViewModel.SelectedBook.Value.Creator.Value}"
+								   TextColor="{StaticResource MainBarDisabledTextColor}" />
+						</StackLayout>
+
+						<StackLayout Grid.Row="2"
+									 Margin="16,16,16,0"
+									 Spacing="0">
+							<Grid>
+								<Label FontSize="Micro"
+									   HorizontalOptions="Start"
+									   Text="00:00" />
+
+								<Label FontSize="Micro"
+									   HorizontalOptions="End"
+									   Text="03:42" />
+							</Grid>
+
+							<Slider MinimumTrackColor="{StaticResource BlasticWhiteColor}"
+									Value="0.5">
+								<Slider.ThumbImageSource>
+									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+													 Glyph="{x:Static icons:IconFont.CircleMedium}"
+													 Size="48" />
+								</Slider.ThumbImageSource>
+							</Slider>
+						</StackLayout>
+
+						<Grid Grid.Row="3"
+							  Margin="16,0,16,64"
+							  ColumnDefinitions="Auto,*,Auto">
+
+							<ImageButton Grid.Column="0"
+										 VerticalOptions="Center">
+								<ImageButton.Source>
+									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+													 Glyph="{x:Static icons:IconFont.Shuffle}"
+													 Size="18" />
+								</ImageButton.Source>
+							</ImageButton>
+
+							<StackLayout Grid.Column="1"
+										 HorizontalOptions="Center"
+										 Orientation="Horizontal">
+
+								<ImageButton VerticalOptions="Center">
+									<ImageButton.Source>
+										<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+														 Glyph="{x:Static icons:IconFont.SkipPrevious}"
+														 Size="48" />
+									</ImageButton.Source>
+								</ImageButton>
+
+								<ImageButton Margin="20"
+											 VerticalOptions="Center">
+									<ImageButton.Source>
+										<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+														 Glyph="{x:Static icons:IconFont.PlayCircle}"
+														 Size="72" />
+									</ImageButton.Source>
+								</ImageButton>
+
+								<ImageButton VerticalOptions="Center">
+									<ImageButton.Source>
+										<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+														 Glyph="{x:Static icons:IconFont.SkipNext}"
+														 Size="48" />
+									</ImageButton.Source>
+								</ImageButton>
+							</StackLayout>
+
+							<ImageButton Grid.Column="2"
+										 VerticalOptions="Center">
+								<ImageButton.Source>
+									<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+													 Glyph="{x:Static icons:IconFont.Repeat}"
+													 Size="18" />
+								</ImageButton.Source>
+							</ImageButton>
+						</Grid>
+					</Grid>
+				</pancakeView:PancakeView>
+			</overlay:OverlayView.Expanded>
+		</overlay:OverlayView>
+	</controls:InputPassthroughPage>
+</MultiPage>

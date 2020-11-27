@@ -9,11 +9,6 @@
              mc:Ignorable="d"
              x:DataType="userInterface:SearchViewModel">
 
-	<ContentView.Resources>
-		<Color x:Key="Background">Blue</Color>
-	</ContentView.Resources>
-
 	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*"
-		  BackgroundColor="{StaticResource Background}"
-		  RowSpacing="0" />
+	      RowSpacing="0" />
 </ContentView>

@@ -17,6 +17,11 @@
 				<On Platform="iOS" Value="Material Design Icons" />
 				<On Platform="Android" Value="materialdesignicons.ttf#Material Design Icons" />
 			</OnPlatform>
+
+			<Color x:Key="Background">#121212</Color>
+			<Color x:Key="MainBarBackground">#282828</Color>
+			<Color x:Key="MainBarTextColor">#FFFFFF</Color>
+			<Color x:Key="MainBarDisabledTextColor">#B3B3B3</Color>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

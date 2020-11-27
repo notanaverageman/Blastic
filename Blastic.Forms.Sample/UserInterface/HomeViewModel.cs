@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
-using Blastic.Forms.Sample.ControlExtensions;
+using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Librivox;
@@ -15,6 +14,7 @@ using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
+using Blastic.Platform;
 using Blastic.Reactive;
 using DynamicData;
 
@@ -25,7 +25,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		private readonly HttpClient _httpClient;
 		private readonly ProgramDatabase _database;
 
-		public IReactiveProperty<PanState> PanState { get; }
+		public IReactiveProperty<OverlayState> OverlayState { get; }
 
 		private readonly SourceCache<BookViewModel, string> _booksSource;
 		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
@@ -36,8 +36,10 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 
+		public IReactiveProperty<BookViewModel> SelectedBook { get; }
+
 		public Command FetchBooksCommand { get; }
-		public Command<PanState> TogglePanStateCommand { get; }
+		public Command<OverlayState> ToggleOverlayStateCommand { get; }
 
 		public HomeViewModel(
 			HttpClient httpClient,
@@ -52,26 +54,29 @@ namespace Blastic.Forms.Sample.UserInterface
 			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
 
 			_booksSource = new SourceCache<BookViewModel, string>(x => x.Id);
+
 			_booksSource
 				.Connect()
+				.ObserveOnUI()
 				.Bind(out _books)
 				.DisposeMany()
 				.Subscribe();
 
+			OverlayState = new ReactiveProperty<OverlayState>();
+			SelectedBook = new ReactiveProperty<BookViewModel>();
+
 			FetchBooksCommand = new Command(FetchBooks);
 
-			PanState = new ReactiveProperty<PanState>();
-
-			TogglePanStateCommand = new Command<PanState>(
+			ToggleOverlayStateCommand = new Command<OverlayState>(
 				x =>
 				{
-					PanState.Value = x;
+					OverlayState.Value = x;
 				});
 
 			Lifetime.Initialization.Subscribe(
 				() =>
 				{
-					PanState.Value = ControlExtensions.PanState.Collapsed;
+					OverlayState.Value = Controls.Overlay.OverlayState.Collapsed;
 				});
 
 			Lifetime.Initialization.Subscribe(FetchBooks);
@@ -119,8 +124,6 @@ namespace Blastic.Forms.Sample.UserInterface
 						x.AddOrUpdate(bookViewModels);
 					});
 
-				Stopwatch stopwatch = Stopwatch.StartNew();
-
 				List<Book> books = new List<Book>();
 				foreach (BookViewModel bookViewModel in bookViewModels)
 				{
@@ -135,12 +138,11 @@ namespace Blastic.Forms.Sample.UserInterface
 				}
 
 				await _database.BooksTable.PutAll(books, cancellationToken);
-
-				stopwatch.Stop();
-				Debug.WriteLine(stopwatch.Elapsed);
 			}
 
-			await ExecutionContext.Execute(Fetch, rethrowUnhandledException: true);
+			await ExecutionContext.Execute(
+				cancellationToken => Task.Run(() => Fetch(cancellationToken), cancellationToken),
+				rethrowUnhandledException: true);
 		}
 	}
 }
