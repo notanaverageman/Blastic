@@ -29,11 +29,11 @@ namespace Blastic.Forms.Initialization
 			SynchronizationContext synchronizationContext = SynchronizationContext.Current;
 			SynchronizationContext.SetSynchronizationContext(synchronizationContext);
 
-			object mainViewModel = _serviceProvider.GetRequiredService(_builder.MainViewModelType);
-			Application application = _serviceProvider.GetRequiredService<Application>();
-
 			PlatformSpecifics.Current = new FormsPlatformSpecifics(synchronizationContext);
 			ViewLocator.Current = _serviceProvider.GetRequiredService<IViewLocator<VisualElement>>();
+
+			object mainViewModel = _serviceProvider.GetRequiredService(_builder.MainViewModelType);
+			Application application = _serviceProvider.GetRequiredService<Application>();
 
 			application.MainPage = ViewLocator.Current.Locate(mainViewModel) as Page;
 
