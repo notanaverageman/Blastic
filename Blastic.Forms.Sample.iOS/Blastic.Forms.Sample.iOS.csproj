@@ -75,6 +75,7 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Renderers\AlphaHitTestFixRenderer.cs" />
     <Compile Include="Renderers\InputPassthroughPageContainer.cs" />
     <Compile Include="Renderers\ExtendedTabbedPageRenderer.cs" />
     <Compile Include="Renderers\InputPassthroughPageRenderer.cs" />
@@ -172,7 +173,7 @@
   <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadWrongLinkerErrorInfoBarBlasticFormsSampleiOSHideInfoBar="True" />
+      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarBlasticFormsSampleiOSHideInfoBar="True" TriggeredFromHotReload="False" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

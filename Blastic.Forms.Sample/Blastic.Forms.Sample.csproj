@@ -32,6 +32,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="UserInterface\MediaPlayer\CollapsedView.xaml.cs">
+      <DependentUpon>CollapsedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\MediaPlayer\ExtendedView.xaml.cs">
+      <DependentUpon>ExtendedView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UserInterface\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>

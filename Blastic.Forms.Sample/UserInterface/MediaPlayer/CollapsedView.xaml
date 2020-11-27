@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="Blastic.Forms.Sample.UserInterface.MediaPlayer.CollapsedView"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
+			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 mc:Ignorable="d"
+			 x:DataType="userInterface:MainViewModel">
+
+	<Grid BackgroundColor="{StaticResource MainBarBackground}"
+		  HeightRequest="57"
+		  RowDefinitions="Auto,Auto,Auto"
+		  RowSpacing="0">
+
+		<Grid.GestureRecognizers>
+			<TapGestureRecognizer Command="{Binding HomeViewModel.ToggleOverlayStateCommand}"
+								  CommandParameter="{x:Static overlay:OverlayState.Expanded}" />
+		</Grid.GestureRecognizers>
+
+		<ProgressBar Grid.Row="0"
+					 HeightRequest="0.5"
+					 Progress="0.5"
+					 ProgressColor="{StaticResource BlasticWhiteColor}" />
+
+		<Grid Grid.Row="1"
+			  ColumnDefinitions="Auto,*,Auto">
+
+			<Image Grid.Column="0"
+				   Margin="0,0.5,0,0"
+				   Source="{Binding HomeViewModel.SelectedBook.Value.ImageUrl.Value}"
+				   VerticalOptions="End" />
+
+			<StackLayout Grid.Column="1"
+						 Margin="16,0"
+						 VerticalOptions="Center">
+
+				<Label FontSize="Micro"
+					   LineBreakMode="TailTruncation"
+					   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
+
+				<Label FontSize="Micro"
+					   Text="{Binding HomeViewModel.SelectedBook.Value.Creator.Value}"
+					   TextColor="{StaticResource MainBarDisabledTextColor}" />
+			</StackLayout>
+
+			<ImageButton Grid.Column="2"
+						 Margin="0,0,16,0"
+						 VerticalOptions="Center">
+				<ImageButton.Source>
+					<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+									 Glyph="{x:Static icons:IconFont.PlayCircleOutline}" />
+				</ImageButton.Source>
+			</ImageButton>
+		</Grid>
+
+		<BoxView Grid.Row="2"
+				 HeightRequest="1"
+				 HorizontalOptions="FillAndExpand" />
+	</Grid>
+</ContentView>

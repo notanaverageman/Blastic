@@ -12,8 +12,7 @@
 
 	<ContentView.ControlTemplate>
 		<ControlTemplate>
-			<Grid x:Name="Root"
-				  CascadeInputTransparent="False"
+			<Grid CascadeInputTransparent="False"
 				  InputTransparent="True"
 				  IsClippedToBounds="True">
 
