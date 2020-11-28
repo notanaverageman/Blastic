@@ -6,11 +6,12 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
-using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Librivox;
 using Blastic.Forms.Sample.Localization;
+using Blastic.Forms.Sample.UserInterface.MediaPlayer;
+using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
@@ -22,10 +23,9 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IShellTab
 	{
+		private readonly INavigationService _navigationService;
 		private readonly HttpClient _httpClient;
 		private readonly ProgramDatabase _database;
-
-		public IReactiveProperty<OverlayState> OverlayState { get; }
 
 		private readonly SourceCache<BookViewModel, string> _booksSource;
 		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
@@ -34,20 +34,27 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> Title { get; }
 		public IReadOnlyReactiveProperty<string> IconGlyph { get; }
 
+		public MediaPlayerViewModel MediaPlayer { get; }
+
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 
 		public IReactiveProperty<BookViewModel> SelectedBook { get; }
 
 		public Command FetchBooksCommand { get; }
-		public Command<OverlayState> ToggleOverlayStateCommand { get; }
+		public Command<BookViewModel> ChangeSelectedBook { get; }
 
 		public HomeViewModel(
+			MediaPlayerViewModel mediaPlayer,
+			INavigationService navigationService,
 			HttpClient httpClient,
 			ProgramDatabase database,
 			Labels labels)
 		{
+			_navigationService = navigationService;
 			_httpClient = httpClient;
 			_database = database;
+
+			MediaPlayer = mediaPlayer;
 
 			Order = new Order(0);
 			Title = labels.Home.Title;
@@ -62,22 +69,10 @@ namespace Blastic.Forms.Sample.UserInterface
 				.DisposeMany()
 				.Subscribe();
 
-			OverlayState = new ReactiveProperty<OverlayState>();
 			SelectedBook = new ReactiveProperty<BookViewModel>();
 
 			FetchBooksCommand = new Command(FetchBooks);
-
-			ToggleOverlayStateCommand = new Command<OverlayState>(
-				x =>
-				{
-					OverlayState.Value = x;
-				});
-
-			Lifetime.Initialization.Subscribe(
-				() =>
-				{
-					OverlayState.Value = Controls.Overlay.OverlayState.Collapsed;
-				});
+			ChangeSelectedBook = new Command<BookViewModel>(SelectBook);
 
 			Lifetime.Initialization.Subscribe(FetchBooks);
 
@@ -87,6 +82,11 @@ namespace Blastic.Forms.Sample.UserInterface
 				Title = { Value = "The Adventures of Lightfoot the Deer (Version 2)" },
 				ImageUrl = { Value = "https://archive.org/services/img/adventures_lightfoot_the_deer_js_1804_librivox" }
 			});
+		}
+
+		private async Task SelectBook(BookViewModel book)
+		{
+			await _navigationService.NavigateTo(this, book);
 		}
 
 		private async Task FetchBooks()

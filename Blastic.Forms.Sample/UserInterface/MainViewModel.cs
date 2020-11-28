@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Forms.Sample.Controls.Overlay;
+using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
@@ -11,17 +13,18 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class MainViewModel : ConductorOneActive<IShellTab>
 	{
-		public HomeViewModel HomeViewModel { get; }
+		public MediaPlayerViewModel MediaPlayer { get; }
 
 		public MainViewModel(
+			MediaPlayerViewModel mediaPlayer,
 			IEnumerable<IShellTab> tabs,
 			IEnumerable<IInitializationStep> initializationSteps)
 		{
+			MediaPlayer = mediaPlayer;
+
 			tabs = tabs
 				.OrderBy(x => x.Order)
 				.ToList();
-
-			HomeViewModel = tabs.OfType<HomeViewModel>().First();
 
 			Items.AddRange(tabs);
 
@@ -36,6 +39,8 @@ namespace Blastic.Forms.Sample.UserInterface
 			Lifetime.Activation.Subscribe(async x =>
 			{
 				await Activate(Items.FirstOrDefault(), x);
+
+				MediaPlayer.OverlayState.Value = OverlayState.Collapsed;
 			});
 		}
 

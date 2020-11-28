@@ -8,6 +8,7 @@ using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
 using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xamarin.Forms;
@@ -42,6 +43,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 					{
 						y.AddSingleton<Labels>();
 						y.AddSingleton(new HttpClient());
+						y.AddSingleton<MediaPlayerViewModel>();
 					});
 
 			return hostBuilder;

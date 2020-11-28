@@ -32,6 +32,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="UserInterface\BookView.xaml.cs">
+      <DependentUpon>BookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\HomeViewContent.xaml.cs">
+      <DependentUpon>HomeViewContent.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UserInterface\MediaPlayer\CollapsedView.xaml.cs">
       <DependentUpon>CollapsedView.xaml</DependentUpon>
     </Compile>

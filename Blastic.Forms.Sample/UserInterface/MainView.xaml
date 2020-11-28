@@ -6,11 +6,9 @@
 		   xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms"
 		   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 		   xmlns:iOsSpecific="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-		   xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 		   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		   xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 		   xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
-		   xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
 		   xmlns:tab="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
 		   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 		   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
@@ -21,27 +19,17 @@
 		   BackgroundColor="{DynamicResource Background}">
 
 	<controls:ExtendedTabbedPage x:Name="TabbedPage"
-								 ItemsSource="{Binding Items}">
-		<controls:ExtendedTabbedPage.ItemTemplate>
-			<DataTemplate x:DataType="tab:IShellTab">
-				<ContentPage Title="{Binding Title.Value}"
-							 BackgroundColor="{DynamicResource Background}"
-							 IconImageSource="{Binding IconGlyph.Value, Converter={converters:ToolBarIconValueConverter}}">
-
-					<ContentView viewManagement:View.Model="{Binding}" />
-				</ContentPage>
-			</DataTemplate>
-		</controls:ExtendedTabbedPage.ItemTemplate>
-	</controls:ExtendedTabbedPage>
+								 viewManagement:View.ItemTemplate="{Binding}"
+								 ItemsSource="{Binding Items}" />
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">
-		<overlay:OverlayView State="{Binding HomeViewModel.OverlayState.Value}"
+		<overlay:OverlayView State="{Binding MediaPlayer.OverlayState.Value}"
 							 TabBar="{Binding Source={x:Reference TabbedPage}}">
 			<overlay:OverlayView.Collapsed>
-				<mediaPlayer:CollapsedView />
+				<mediaPlayer:CollapsedView BindingContext="{Binding MediaPlayer}" />
 			</overlay:OverlayView.Collapsed>
 			<overlay:OverlayView.Expanded>
-				<mediaPlayer:ExtendedView />
+				<mediaPlayer:ExtendedView BindingContext="{Binding MediaPlayer}" />
 			</overlay:OverlayView.Expanded>
 		</overlay:OverlayView>
 	</controls:InputPassthroughPage>

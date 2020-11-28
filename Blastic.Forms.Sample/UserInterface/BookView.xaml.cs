@@ -1,8 +1,8 @@
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public partial class HomeView
+	public partial class BookView
 	{
-		public HomeView() : base(new HomeViewContent())
+		public BookView()
 		{
 			InitializeComponent();
 		}

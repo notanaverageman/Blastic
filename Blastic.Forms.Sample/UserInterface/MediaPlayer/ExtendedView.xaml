@@ -7,9 +7,9 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d"
-			 x:DataType="userInterface:MainViewModel">
+			 x:DataType="mediaPlayer:MediaPlayerViewModel">
 
 	<pancakeView:PancakeView CornerRadius="18,18,0,0">
 		<pancakeView:PancakeView.Background>
@@ -28,7 +28,7 @@
 
 				<ImageButton Grid.Column="0"
 							 Padding="10"
-							 Command="{Binding HomeViewModel.ToggleOverlayStateCommand}"
+							 Command="{Binding ChangeOverlayStateCommand}"
 							 CommandParameter="{x:Static overlay:OverlayState.Collapsed}"
 							 HorizontalOptions="Start"
 							 VerticalOptions="Center">
@@ -42,7 +42,7 @@
 				<Label Grid.Column="1"
 					   FontSize="Small"
 					   HorizontalOptions="Center"
-					   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}"
+					   Text="{Binding CurrentBook.Value.Title.Value}"
 					   VerticalOptions="Center" />
 
 				<ImageButton Grid.Column="2"
@@ -62,15 +62,15 @@
 
 				<Image Aspect="AspectFill"
 					   HorizontalOptions="FillAndExpand"
-					   Source="{Binding HomeViewModel.SelectedBook.Value.ImageUrl.Value}"
+					   Source="{Binding CurrentBook.Value.ImageUrl.Value}"
 					   VerticalOptions="FillAndExpand" />
 
 				<Label Margin="0,16,0,0"
 					   FontSize="Large"
-					   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
+					   Text="{Binding CurrentBook.Value.Title.Value}" />
 
 				<Label FontSize="Small"
-					   Text="{Binding HomeViewModel.SelectedBook.Value.Creator.Value}"
+					   Text="{Binding CurrentBook.Value.Creator.Value}"
 					   TextColor="{StaticResource MainBarDisabledTextColor}" />
 			</StackLayout>
 

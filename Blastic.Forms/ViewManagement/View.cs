@@ -18,6 +18,15 @@ namespace Blastic.Forms.ViewManagement
 		public static object GetModel(BindableObject obj) => obj.GetValue(ModelProperty);
 		public static void SetModel(BindableObject obj, object value) => obj.SetValue(ModelProperty, value);
 
+		public static readonly BindableProperty ItemTemplateProperty = BindableProperty.CreateAttached(
+			nameof(ItemTemplateProperty).Replace("Property", ""),
+			typeof(object),
+			typeof(View),
+			default,
+			propertyChanged: OnItemTemplateChanged);
+		public static object GetItemTemplate(BindableObject obj) => obj.GetValue(ItemTemplateProperty);
+		public static void SetItemTemplate(BindableObject obj, object value) => obj.SetValue(ItemTemplateProperty, value);
+
 		private static void OnModelChanged(BindableObject bindable, object oldValue, object newValue)
 		{
 			if (newValue == null)
@@ -33,6 +42,20 @@ namespace Blastic.Forms.ViewManagement
 				view = ViewLocator.Current.Locate(newValue.GetType());
 				SetContentProperty(bindable, view);
 			}
+		}
+
+		private static void OnItemTemplateChanged(BindableObject bindable, object oldValue, object newValue)
+		{
+			Type type = bindable.GetType();
+
+			DataTemplateSelector template = null;
+
+			if (newValue != null)
+			{
+				template = new ViewDataTemplateSelector();
+			}
+
+			bindable.SetValue(MultiPage<Page>.ItemTemplateProperty, template);
 		}
 
 		private static bool SetContentProperty(object targetLocation, object view)
@@ -66,6 +89,14 @@ namespace Blastic.Forms.ViewManagement
 			propertyInfo.SetValue(targetLocation, view, null);
 
 			return true;
+		}
+
+		private class ViewDataTemplateSelector : DataTemplateSelector
+		{
+			protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+			{
+				return new DataTemplate(() => ViewLocator.Current.Locate(item));
+			}
 		}
 	}
 }

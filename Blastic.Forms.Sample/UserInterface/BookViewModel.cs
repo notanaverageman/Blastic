@@ -1,9 +1,11 @@
 using System;
+using System.Threading.Tasks;
+using Blastic.LifetimeManagement;
 using Blastic.Reactive;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public class BookViewModel
+	public class BookViewModel : Screen
 	{
 		public string Id { get; }
 
@@ -26,6 +28,13 @@ namespace Blastic.Forms.Sample.UserInterface
 			TotalDuration = new ReactiveProperty<TimeSpan>();
 
 			Creator = new ReactiveProperty<string>();
+
+			Lifetime.Initialization.Subscribe(FetchDetails);
+		}
+
+		private async Task FetchDetails()
+		{
+			
 		}
 	}
 }

@@ -2,9 +2,11 @@
 <Application x:Class="Blastic.Forms.Sample.App"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:theme="clr-namespace:Blastic.Forms.Themes;assembly=Blastic.Forms"
+			 xmlns:userInterface="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
 			 mc:Ignorable="d">
 
 	<Application.Resources>
@@ -13,15 +15,26 @@
 				<theme:Blastic />
 			</ResourceDictionary.MergedDictionaries>
 
-			<OnPlatform x:Key="MaterialFontFamily" x:TypeArguments="x:String">
-				<On Platform="iOS" Value="Material Design Icons" />
-				<On Platform="Android" Value="materialdesignicons.ttf#Material Design Icons" />
+			<OnPlatform x:Key="MaterialFontFamily"
+						x:TypeArguments="x:String">
+				<On Platform="iOS"
+					Value="Material Design Icons" />
+				<On Platform="Android"
+					Value="materialdesignicons.ttf#Material Design Icons" />
 			</OnPlatform>
 
 			<Color x:Key="Background">#121212</Color>
 			<Color x:Key="MainBarBackground">#282828</Color>
 			<Color x:Key="MainBarTextColor">#FFFFFF</Color>
 			<Color x:Key="MainBarDisabledTextColor">#B3B3B3</Color>
+
+			<Style x:Key="PageStyle"
+				   x:DataType="userInterface:IShellTab"
+				   TargetType="{x:Type Page}">
+				<Setter Property="Title" Value="{Binding Title.Value}" />
+				<Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
+				<Setter Property="IconImageSource" Value="{Binding IconGlyph.Value, Converter={converters:ToolBarIconValueConverter}}" />
+			</Style>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

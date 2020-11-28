@@ -6,9 +6,9 @@
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d"
-			 x:DataType="userInterface:MainViewModel">
+			 x:DataType="mediaPlayer:MediaPlayerViewModel">
 
 	<Grid BackgroundColor="{StaticResource MainBarBackground}"
 		  HeightRequest="57"
@@ -16,7 +16,7 @@
 		  RowSpacing="0">
 
 		<Grid.GestureRecognizers>
-			<TapGestureRecognizer Command="{Binding HomeViewModel.ToggleOverlayStateCommand}"
+			<TapGestureRecognizer Command="{Binding ChangeOverlayStateCommand}"
 								  CommandParameter="{x:Static overlay:OverlayState.Expanded}" />
 		</Grid.GestureRecognizers>
 
@@ -30,7 +30,7 @@
 
 			<Image Grid.Column="0"
 				   Margin="0,0.5,0,0"
-				   Source="{Binding HomeViewModel.SelectedBook.Value.ImageUrl.Value}"
+				   Source="{Binding CurrentBook.Value.ImageUrl.Value}"
 				   VerticalOptions="End" />
 
 			<StackLayout Grid.Column="1"
@@ -39,10 +39,10 @@
 
 				<Label FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding HomeViewModel.SelectedBook.Value.Title.Value}" />
+					   Text="{Binding CurrentBook.Value.Title.Value}" />
 
 				<Label FontSize="Micro"
-					   Text="{Binding HomeViewModel.SelectedBook.Value.Creator.Value}"
+					   Text="{Binding CurrentBook.Value.Creator.Value}"
 					   TextColor="{StaticResource MainBarDisabledTextColor}" />
 			</StackLayout>
 
