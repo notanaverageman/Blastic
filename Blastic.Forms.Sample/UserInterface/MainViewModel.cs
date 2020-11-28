@@ -31,6 +31,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			Lifetime.Initialization.Subscribe(
 				async x =>
 				{
+					MediaPlayer.OverlayState.Value = OverlayState.Collapsed;
 					await ExecuteInitializationSteps(x, initializationSteps);
 				},
 				// This order ensures that we are running before child initializations.
@@ -39,8 +40,6 @@ namespace Blastic.Forms.Sample.UserInterface
 			Lifetime.Activation.Subscribe(async x =>
 			{
 				await Activate(Items.FirstOrDefault(), x);
-
-				MediaPlayer.OverlayState.Value = OverlayState.Collapsed;
 			});
 		}
 

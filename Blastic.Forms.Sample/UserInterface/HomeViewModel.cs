@@ -75,13 +75,6 @@ namespace Blastic.Forms.Sample.UserInterface
 			ChangeSelectedBook = new Command<BookViewModel>(SelectBook);
 
 			Lifetime.Initialization.Subscribe(FetchBooks);
-
-			_booksSource.AddOrUpdate(new BookViewModel("adventures_lightfoot_the_deer_js_1804_librivox")
-			{
-				Creator = { Value = "Thornton W. Burgess" },
-				Title = { Value = "The Adventures of Lightfoot the Deer (Version 2)" },
-				ImageUrl = { Value = "https://archive.org/services/img/adventures_lightfoot_the_deer_js_1804_librivox" }
-			});
 		}
 
 		private async Task SelectBook(BookViewModel book)
