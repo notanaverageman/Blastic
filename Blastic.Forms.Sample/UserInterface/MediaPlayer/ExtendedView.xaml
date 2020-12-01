@@ -60,17 +60,17 @@
 			<StackLayout Grid.Row="1"
 						 Margin="16,16,16,0">
 
-				<Image Aspect="AspectFill"
+				<Image Aspect="Fill"
 					   HorizontalOptions="FillAndExpand"
 					   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}"
 					   VerticalOptions="FillAndExpand" />
 
 				<Label Margin="0,16,0,0"
 					   FontSize="Large"
-					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
+					   Text="{Binding CurrentChapter.Value.Title.Value}" />
 
 				<Label FontSize="Small"
-					   Text="{Binding CurrentChapter.Value.Book.Author.Value}"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
 					   TextColor="{StaticResource LightTextColor}" />
 			</StackLayout>
 
@@ -89,19 +89,12 @@
 
 				<Slider DragCompletedCommand="{Binding CurrentChapter.Value.SeekCompletedCommand}"
 						DragStartedCommand="{Binding CurrentChapter.Value.SeekStartedCommand}"
-						MinimumTrackColor="{StaticResource BlasticWhiteColor}"
 						Value="{Binding CurrentChapter.Value.ProgressPercent.Value, Mode=TwoWay}">
-
-					<Slider.ThumbImageSource>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.CircleMedium}"
-										 Size="48" />
-					</Slider.ThumbImageSource>
 				</Slider>
 			</StackLayout>
 
 			<Grid Grid.Row="3"
-				  Margin="16,0,16,64"
+				  Margin="16,0,16,0"
 				  ColumnDefinitions="Auto,*,Auto">
 
 				<ImageButton Grid.Column="0"

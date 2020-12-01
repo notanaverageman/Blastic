@@ -22,16 +22,17 @@
 
 		<ProgressBar Grid.Row="0"
 					 HeightRequest="0.5"
-					 Progress="{Binding CurrentChapter.Value.ProgressPercent.Value}"
-					 ProgressColor="{StaticResource BlasticWhiteColor}" />
+					 Progress="{Binding CurrentChapter.Value.ProgressPercent.Value}" />
 
 		<Grid Grid.Row="1"
 			  ColumnDefinitions="Auto,*,Auto">
 
 			<Image Grid.Column="0"
 				   Margin="0,0.5,0,0"
+				   Aspect="Fill"
 				   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}"
-				   VerticalOptions="End" />
+				   VerticalOptions="End"
+				   WidthRequest="57" />
 
 			<StackLayout Grid.Column="1"
 						 Margin="16,0"
@@ -39,10 +40,10 @@
 
 				<Label FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
+					   Text="{Binding CurrentChapter.Value.Title.Value}" />
 
 				<Label FontSize="Micro"
-					   Text="{Binding CurrentChapter.Value.Book.Author.Value}"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
 					   TextColor="{StaticResource LightTextColor}" />
 			</StackLayout>
 
