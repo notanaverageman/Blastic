@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
@@ -10,6 +8,7 @@ using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Librivox;
 using Blastic.Forms.Sample.Localization;
+using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.UserInterface;
@@ -23,8 +22,8 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IShellTab
 	{
+		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly INavigationService _navigationService;
-		private readonly HttpClient _httpClient;
 		private readonly ProgramDatabase _database;
 
 		private readonly SourceCache<BookViewModel, string> _booksSource;
@@ -45,13 +44,13 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public HomeViewModel(
 			MediaPlayerViewModel mediaPlayer,
+			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
-			HttpClient httpClient,
 			ProgramDatabase database,
 			Labels labels)
 		{
+			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
-			_httpClient = httpClient;
 			_database = database;
 
 			MediaPlayer = mediaPlayer;
@@ -60,7 +59,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			Title = labels.Home.Title;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
 
-			_booksSource = new SourceCache<BookViewModel, string>(x => x.Id);
+			_booksSource = new SourceCache<BookViewModel, string>(x => x.Book.ArchiveOrgId);
 
 			_booksSource
 				.Connect()
@@ -86,49 +85,27 @@ namespace Blastic.Forms.Sample.UserInterface
 		{
 			async Task Fetch(CancellationToken cancellationToken)
 			{
-				string url = "https://archive.org/advancedsearch.php?q=collection:librivoxaudio";
+				ArchiveOrgQueryResult? bookList = await _archiveOrgService.GetAudioBookList(cancellationToken: cancellationToken);
 
-				url += @"&fl[]=identifier";
-				url += @"&fl[]=title";
-				url += @"&fl[]=creator";
-				url += @"&fl[]=date";
-				url += @"&fl[]=downloads";
-				url += @"&rows=50";
-				url += @"&page=1";
-				url += @"&output=json";
+				List<Book> books = bookList.ToBooks();
+				List<BookViewModel> viewModels = new List<BookViewModel>();
 
-				HttpResponseMessage responseMessage = await _httpClient.GetAsync(url, cancellationToken);
-
-				string result = await responseMessage.Content.ReadAsStringAsync();
-
-				ArchiveOrgQueryResult bookList = JsonSerializer.Deserialize<ArchiveOrgQueryResult>(
-					result,
-					new JsonSerializerOptions
-					{
-						PropertyNameCaseInsensitive = true
-					});
-
-				List<BookViewModel> bookViewModels = bookList.ToViewModels();
+				foreach (Book book in books)
+				{
+					BookViewModel viewModel = new BookViewModel(
+						book,
+						MediaPlayer,
+						_archiveOrgService,
+						_database);
+					viewModels.Add(viewModel);
+				}
 
 				_booksSource.Edit(
 					x =>
 					{
 						x.Clear();
-						x.AddOrUpdate(bookViewModels);
+						x.AddOrUpdate(viewModels);
 					});
-
-				List<Book> books = new List<Book>();
-				foreach (BookViewModel bookViewModel in bookViewModels)
-				{
-					Book book = new Book
-					{
-						ArchiveOrgId = bookViewModel.Id,
-						Title = bookViewModel.Title.Value,
-						Description = bookViewModel.Description.Value
-					};
-
-					books.Add(book);
-				}
 
 				await _database.BooksTable.PutAll(books, cancellationToken);
 			}

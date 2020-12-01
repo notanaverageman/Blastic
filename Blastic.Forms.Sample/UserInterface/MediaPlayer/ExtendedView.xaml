@@ -14,7 +14,7 @@
 	<pancakeView:PancakeView CornerRadius="18,18,0,0">
 		<pancakeView:PancakeView.Background>
 			<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-				<GradientStop Offset="0" Color="{DynamicResource MainBarBackground}" />
+				<GradientStop Offset="0" Color="{DynamicResource MediaPlayerExpandedBackground}" />
 				<GradientStop Offset="1" Color="{DynamicResource Background}" />
 			</LinearGradientBrush>
 		</pancakeView:PancakeView.Background>
@@ -42,7 +42,7 @@
 				<Label Grid.Column="1"
 					   FontSize="Small"
 					   HorizontalOptions="Center"
-					   Text="{Binding CurrentBook.Value.Title.Value}"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
 					   VerticalOptions="Center" />
 
 				<ImageButton Grid.Column="2"
@@ -62,16 +62,16 @@
 
 				<Image Aspect="AspectFill"
 					   HorizontalOptions="FillAndExpand"
-					   Source="{Binding CurrentBook.Value.ImageUrl.Value}"
+					   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}"
 					   VerticalOptions="FillAndExpand" />
 
 				<Label Margin="0,16,0,0"
 					   FontSize="Large"
-					   Text="{Binding CurrentBook.Value.Title.Value}" />
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
 
 				<Label FontSize="Small"
-					   Text="{Binding CurrentBook.Value.Creator.Value}"
-					   TextColor="{StaticResource MainBarDisabledTextColor}" />
+					   Text="{Binding CurrentChapter.Value.Book.Author.Value}"
+					   TextColor="{StaticResource LightTextColor}" />
 			</StackLayout>
 
 			<StackLayout Grid.Row="2"
@@ -80,15 +80,15 @@
 				<Grid>
 					<Label FontSize="Micro"
 						   HorizontalOptions="Start"
-						   Text="00:00" />
+						   Text="{Binding Position.Value, StringFormat='{}{0:mm\\:ss}'}" />
 
 					<Label FontSize="Micro"
 						   HorizontalOptions="End"
-						   Text="03:42" />
+						   Text="{Binding CurrentChapter.Value.Duration.Value, StringFormat='{}{0:mm\\:ss}'}" />
 				</Grid>
 
 				<Slider MinimumTrackColor="{StaticResource BlasticWhiteColor}"
-						Value="0.5">
+						Value="{Binding PositionPercent.Value}">
 					<Slider.ThumbImageSource>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.CircleMedium}"

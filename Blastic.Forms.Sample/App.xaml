@@ -23,10 +23,19 @@
 					Value="materialdesignicons.ttf#Material Design Icons" />
 			</OnPlatform>
 
-			<Color x:Key="Background">#121212</Color>
-			<Color x:Key="MainBarBackground">#282828</Color>
-			<Color x:Key="MainBarTextColor">#FFFFFF</Color>
-			<Color x:Key="MainBarDisabledTextColor">#B3B3B3</Color>
+			<Color x:Key="DarkBackground">#121212</Color>
+			<Color x:Key="DarkMediaPlayerBackground">#282828</Color>
+			<Color x:Key="DarkLightTextColor">#B3B3B3</Color>
+
+			<Color x:Key="Background">#FFFFFF</Color>
+			<Color x:Key="MediaPlayerCollapsedBackground">#F0DDDDDD</Color>
+			<Color x:Key="MediaPlayerExpandedBackground">#FFDDDDDD</Color>
+			<Color x:Key="DisabledTextColor">#999999</Color>
+			<Color x:Key="LightTextColor">#ACACAC</Color>
+			<Color x:Key="MediumTextColor">#777777</Color>
+
+			<x:Double x:Key="BookImageHeight">120</x:Double>
+			<x:Double x:Key="BookImageWidth">90</x:Double>
 
 			<Style x:Key="PageStyle"
 				   x:DataType="userInterface:IShellTab"

@@ -12,16 +12,13 @@
 			 Style="{StaticResource PageStyle}">
 
 	<ContentPage.Resources>
-		<x:Double x:Key="ImageHeight">120</x:Double>
-		<x:Double x:Key="ImageWidth">120</x:Double>
-
 		<DataTemplate x:Key="BookTemplate"
 					  x:DataType="userInterface:BookViewModel">
 
 			<Grid RowDefinitions="Auto,Auto,Auto"
 				  RowSpacing="0"
 				  VerticalOptions="Start"
-				  WidthRequest="{StaticResource ImageWidth}">
+				  WidthRequest="{StaticResource BookImageWidth}">
 
 				<Grid.GestureRecognizers>
 					<TapGestureRecognizer Command="{Binding BindingContext.ChangeSelectedBook, Source={RelativeSource FindAncestor, AncestorType={x:Type userInterface:HomeViewContent}}}"
@@ -30,12 +27,18 @@
 
 				<pancakeView:PancakeView Grid.Row="0"
 										 CornerRadius="4">
+
+					<pancakeView:PancakeView.Shadow>
+						<pancakeView:DropShadow BlurRadius="2"
+												Offset="2,2" />
+					</pancakeView:PancakeView.Shadow>
+
 					<Image x:Name="Image"
 						   Aspect="Fill"
-						   HeightRequest="{StaticResource ImageHeight}"
+						   HeightRequest="{StaticResource BookImageHeight}"
 						   HorizontalOptions="Start"
 						   Source="{Binding ImageUrl.Value, Mode=OneTime}"
-						   WidthRequest="{StaticResource ImageWidth}" />
+						   WidthRequest="{StaticResource BookImageWidth}" />
 				</pancakeView:PancakeView>
 
 				<Label Grid.Row="1"
@@ -47,8 +50,8 @@
 				<Label Grid.Row="2"
 					   FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding Creator.Value, Mode=OneTime}"
-					   TextColor="{DynamicResource MainBarDisabledTextColor}" />
+					   Text="{Binding Author.Value, Mode=OneTime}"
+					   TextColor="{DynamicResource LightTextColor}" />
 			</Grid>
 		</DataTemplate>
 	</ContentPage.Resources>

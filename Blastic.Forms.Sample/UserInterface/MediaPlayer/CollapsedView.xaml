@@ -10,7 +10,7 @@
 			 mc:Ignorable="d"
 			 x:DataType="mediaPlayer:MediaPlayerViewModel">
 
-	<Grid BackgroundColor="{StaticResource MainBarBackground}"
+	<Grid BackgroundColor="{StaticResource MediaPlayerCollapsedBackground}"
 		  HeightRequest="57"
 		  RowDefinitions="Auto,Auto,Auto"
 		  RowSpacing="0">
@@ -22,7 +22,7 @@
 
 		<ProgressBar Grid.Row="0"
 					 HeightRequest="0.5"
-					 Progress="0.5"
+					 Progress="{Binding PositionPercent.Value}"
 					 ProgressColor="{StaticResource BlasticWhiteColor}" />
 
 		<Grid Grid.Row="1"
@@ -30,7 +30,7 @@
 
 			<Image Grid.Column="0"
 				   Margin="0,0.5,0,0"
-				   Source="{Binding CurrentBook.Value.ImageUrl.Value}"
+				   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}"
 				   VerticalOptions="End" />
 
 			<StackLayout Grid.Column="1"
@@ -39,11 +39,11 @@
 
 				<Label FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding CurrentBook.Value.Title.Value}" />
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
 
 				<Label FontSize="Micro"
-					   Text="{Binding CurrentBook.Value.Creator.Value}"
-					   TextColor="{StaticResource MainBarDisabledTextColor}" />
+					   Text="{Binding CurrentChapter.Value.Book.Author.Value}"
+					   TextColor="{StaticResource LightTextColor}" />
 			</StackLayout>
 
 			<ImageButton Grid.Column="2"

@@ -75,6 +75,7 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Media\AudioPlayer.cs" />
     <Compile Include="Renderers\AlphaHitTestFixRenderer.cs" />
     <Compile Include="Renderers\InputPassthroughPageContainer.cs" />
     <Compile Include="Renderers\ExtendedTabbedPageRenderer.cs" />
@@ -173,7 +174,7 @@
   <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarBlasticFormsSampleiOSHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadWrongLinkerErrorInfoBarBlasticFormsSampleiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
