@@ -71,6 +71,8 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 			chapter.IsPlaying.Value = true;
 
 			_seekSubscription = chapter.Seek.Subscribe(x => _audioPlayer.Seek(x));
+
+			OverlayState.Value = Controls.Overlay.OverlayState.Collapsed;
 		}
 
 		public void Pause()
@@ -101,14 +103,7 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 
 		private void UpdateProgress(TimeSpan progress)
 		{
-			ChapterViewModel? currentChapter = CurrentChapter.Value;
-
-			if (currentChapter == null)
-			{
-				return;
-			}
-
-			currentChapter.UpdateProgress(progress);
+			CurrentChapter.Value?.UpdateProgress(progress);
 		}
 	}
 }

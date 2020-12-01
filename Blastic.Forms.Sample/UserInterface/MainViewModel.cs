@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
@@ -31,7 +30,6 @@ namespace Blastic.Forms.Sample.UserInterface
 			Lifetime.Initialization.Subscribe(
 				async x =>
 				{
-					MediaPlayer.OverlayState.Value = OverlayState.Collapsed;
 					await ExecuteInitializationSteps(x, initializationSteps);
 				},
 				// This order ensures that we are running before child initializations.
