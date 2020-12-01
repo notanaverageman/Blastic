@@ -1,31 +1,25 @@
 using System.Collections.Generic;
-using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.Data;
 
 namespace Blastic.Forms.Sample.Librivox
 {
 	public class ArchiveOrgQueryResult
 	{
-		private const string ArchiveOrgImageUrlPrefix = "https://archive.org/services/img/";
-
 		public ArchiveOrgResponse Response { get; set; }
 
-		public List<BookViewModel> ToViewModels()
+		public List<Book> ToBooks()
 		{
-			List<BookViewModel> result = new List<BookViewModel>();
+			List<Book> result = new List<Book>();
 
 			foreach (ArchiveOrgDocument document in Response.Docs)
 			{
-				BookViewModel book = new BookViewModel(document.Identifier)
+				Book book = new Book
 				{
-					Title = { Value = document.Title },
-					Creator = { Value = document.Creator }
+					ArchiveOrgId = document.Identifier,
+					Title = document.Title,
+					Author = document.Creator,
+					Description = document.Description
 				};
-
-				string imageUrl = ArchiveOrgImageUrlPrefix + document.Identifier;
-
-				book.Title.Value = document.Title;
-				book.Description.Value = document.Description;
-				book.ImageUrl.Value = imageUrl;
 
 				result.Add(book);
 			}
