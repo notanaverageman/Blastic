@@ -5,8 +5,8 @@
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
+			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d"
 			 x:DataType="mediaPlayer:MediaPlayerViewModel">
 
@@ -22,7 +22,7 @@
 
 		<ProgressBar Grid.Row="0"
 					 HeightRequest="0.5"
-					 Progress="{Binding PositionPercent.Value}"
+					 Progress="{Binding CurrentChapter.Value.ProgressPercent.Value}"
 					 ProgressColor="{StaticResource BlasticWhiteColor}" />
 
 		<Grid Grid.Row="1"
@@ -48,10 +48,11 @@
 
 			<ImageButton Grid.Column="2"
 						 Margin="0,0,16,0"
+						 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
 						 VerticalOptions="Center">
 				<ImageButton.Source>
 					<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-									 Glyph="{x:Static icons:IconFont.PlayCircleOutline}" />
+									 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}" />
 				</ImageButton.Source>
 			</ImageButton>
 		</Grid>

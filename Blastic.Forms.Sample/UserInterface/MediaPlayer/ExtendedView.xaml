@@ -5,9 +5,9 @@
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d"
 			 x:DataType="mediaPlayer:MediaPlayerViewModel">
 
@@ -80,15 +80,18 @@
 				<Grid>
 					<Label FontSize="Micro"
 						   HorizontalOptions="Start"
-						   Text="{Binding Position.Value, StringFormat='{}{0:mm\\:ss}'}" />
+						   Text="{Binding CurrentChapter.Value.ProgressLabel.Value}" />
 
 					<Label FontSize="Micro"
 						   HorizontalOptions="End"
-						   Text="{Binding CurrentChapter.Value.Duration.Value, StringFormat='{}{0:mm\\:ss}'}" />
+						   Text="{Binding CurrentChapter.Value.RemainingLabel.Value}" />
 				</Grid>
 
-				<Slider MinimumTrackColor="{StaticResource BlasticWhiteColor}"
-						Value="{Binding PositionPercent.Value}">
+				<Slider DragCompletedCommand="{Binding CurrentChapter.Value.SeekCompletedCommand}"
+						DragStartedCommand="{Binding CurrentChapter.Value.SeekStartedCommand}"
+						MinimumTrackColor="{StaticResource BlasticWhiteColor}"
+						Value="{Binding CurrentChapter.Value.ProgressPercent.Value, Mode=TwoWay}">
+
 					<Slider.ThumbImageSource>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.CircleMedium}"
@@ -123,10 +126,11 @@
 					</ImageButton>
 
 					<ImageButton Margin="20"
+								 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
 								 VerticalOptions="Center">
 						<ImageButton.Source>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{x:Static icons:IconFont.PlayCircle}"
+											 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
 											 Size="72" />
 						</ImageButton.Source>
 					</ImageButton>

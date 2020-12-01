@@ -51,7 +51,7 @@
 					   FontSize="Micro"
 					   LineBreakMode="TailTruncation"
 					   Text="{Binding Author.Value, Mode=OneTime}"
-					   TextColor="{DynamicResource LightTextColor}" />
+					   TextColor="{DynamicResource LightTextColorToolbar}" />
 			</Grid>
 		</DataTemplate>
 	</ContentPage.Resources>

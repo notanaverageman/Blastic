@@ -15,6 +15,7 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class BookViewModel : Screen
 	{
+		private readonly MediaPlayerViewModel _mediaPlayer;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly ProgramDatabase _database;
 
@@ -37,6 +38,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			ArchiveOrgService archiveOrgService,
 			ProgramDatabase database)
 		{
+			_mediaPlayer = mediaPlayer;
 			_archiveOrgService = archiveOrgService;
 			_database = database;
 
@@ -86,7 +88,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			foreach (Chapter chapter in book.Chapters)
 			{
-				Chapters.Add(new ChapterViewModel(this, chapter));
+				Chapters.Add(new ChapterViewModel(_mediaPlayer, this, chapter));
 			}
 		}
 
@@ -114,7 +116,7 @@ namespace Blastic.Forms.Sample.UserInterface
 				};
 
 				Book.Chapters.Add(chapter);
-				Chapters.Add(new ChapterViewModel(this, chapter));
+				Chapters.Add(new ChapterViewModel(_mediaPlayer, this, chapter));
 			}
 
 			await _database.BooksTable.Put(Book, cancellationToken);

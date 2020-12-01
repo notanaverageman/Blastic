@@ -1,6 +1,11 @@
+using System;
 using System.Diagnostics;
 using AVFoundation;
+using Blastic.Commanding;
 using Blastic.Forms.Sample.Media;
+using Blastic.Forms.Sample.UserInterface;
+using Blastic.Reactive;
+using CoreFoundation;
 using CoreMedia;
 using Foundation;
 using MediaPlayer;
@@ -9,9 +14,36 @@ namespace Blastic.Forms.Sample.iOS.Media
 {
 	public class AudioPlayer : IAudioPlayer
 	{
-		private AVPlayer _player;
+		private readonly AVPlayer _player;
+		private bool _notifyProgress;
 
-		public void Load(string url)
+		public IReactiveProperty<TimeSpan> Progress { get; }
+
+		public Command RemotePlayCommand { get; }
+		public Command RemotePauseCommand { get; }
+		public Command RemoteStopCommand { get; }
+
+		public AudioPlayer()
+		{
+			Progress = new ReactiveProperty<TimeSpan>();
+
+			RemotePlayCommand = new Command();
+			RemotePauseCommand = new Command();
+			RemoteStopCommand = new Command();
+
+			_notifyProgress = true;
+
+			_player = new AVPlayer();
+
+			_player.AddPeriodicTimeObserver(
+				CMTime.FromSeconds(1, 1),
+				DispatchQueue.CurrentQueue,
+				UpdateProgress);
+
+			InitializeCommandCenter();
+		}
+
+		public void Load(ChapterViewModel chapter)
 		{
 			AVAudioSession audioSession = AVAudioSession.SharedInstance();
 
@@ -31,57 +63,46 @@ namespace Blastic.Forms.Sample.iOS.Media
 				return;
 			}
 
-			NSUrl nsUrl = NSUrl.FromString(url);
-			AVPlayerItem playerItem = AVPlayerItem.FromUrl(nsUrl);
+			NSUrl url = NSUrl.FromString(chapter.Url.Value);
+			AVPlayerItem playerItem = AVPlayerItem.FromUrl(url);
 
-			if (_player == null)
-			{
-				_player = AVPlayer.FromPlayerItem(playerItem);
+			Stop();
+			_player.ReplaceCurrentItemWithPlayerItem(playerItem);
 
-				InitializeCommandCenter();
-			}
-			else
-			{
-				Pause();
-				_player.ReplaceCurrentItemWithPlayerItem(playerItem);
-			}
-
-			MPNowPlayingInfo nowPlayingInfo = new MPNowPlayingInfo
-			{
-				Title = "Test",
-				AlbumTitle = "Test Album",
-			};
-
-			MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = nowPlayingInfo;
+			InitializeNowPlayingInfo(chapter);
 		}
 
 		private void InitializeCommandCenter()
 		{
 			MPRemoteCommandCenter commandCenter = MPRemoteCommandCenter.Shared;
 
-			commandCenter.PlayCommand.AddTarget(
-				x =>
-				{
-					Debug.WriteLine("Play command");
-					Play();
-					return MPRemoteCommandHandlerStatus.Success;
-				});
+			void AddTarget(MPRemoteCommand remoteCommand, Command command)
+			{
+				remoteCommand.AddTarget(
+					x =>
+					{
+						command.Execute();
+						return MPRemoteCommandHandlerStatus.Success;
+					});
+			}
 
-			commandCenter.PauseCommand.AddTarget(
-				x =>
-				{
-					Debug.WriteLine("Pause command");
-					Pause();
-					return MPRemoteCommandHandlerStatus.Success;
-				});
+			AddTarget(commandCenter.PlayCommand, RemotePlayCommand);
+			AddTarget(commandCenter.PauseCommand, RemotePauseCommand);
+			AddTarget(commandCenter.StopCommand, RemoteStopCommand);
+		}
 
-			commandCenter.StopCommand.AddTarget(
-				x =>
-				{
-					Debug.WriteLine("Stop command");
-					Stop();
-					return MPRemoteCommandHandlerStatus.Success;
-				});
+		private void InitializeNowPlayingInfo(ChapterViewModel chapter)
+		{
+			MPNowPlayingInfo nowPlayingInfo = new MPNowPlayingInfo
+			{
+				Title = chapter.Title.Value,
+				AlbumTitle = chapter.Book.Title.Value,
+				Artist = chapter.Book.Author.Value,
+				PlaybackDuration = chapter.Duration.Value.TotalSeconds,
+				PlaybackRate = _player.Rate
+			};
+
+			MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = nowPlayingInfo;
 		}
 
 		public void Play()
@@ -100,6 +121,24 @@ namespace Blastic.Forms.Sample.iOS.Media
 			_player.Seek(CMTime.Zero);
 
 			_player.ReplaceCurrentItemWithPlayerItem(null);
+		}
+
+		public void Seek(TimeSpan time)
+		{
+			_notifyProgress = false;
+			_player.Seek(
+				CMTime.FromSeconds(time.TotalSeconds, 1),
+				x => _notifyProgress = true);
+		}
+
+		private void UpdateProgress(CMTime time)
+		{
+			if (!_notifyProgress)
+			{
+				return;
+			}
+
+			Progress.Value = TimeSpan.FromSeconds(time.Seconds);
 		}
 	}
 }

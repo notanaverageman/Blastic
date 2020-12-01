@@ -1,8 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Media;
@@ -12,32 +8,20 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 {
 	public class MediaPlayerViewModel
 	{
-		private readonly HttpClient _httpClient;
 		private readonly IAudioPlayer _audioPlayer;
-
+		private IDisposable? _seekSubscription;
+		
 		public IReactiveProperty<OverlayState> OverlayState { get; }
-		public IReactiveProperty<ChapterViewModel> CurrentChapter { get; }
-
-		public IReactiveProperty<TimeSpan> Position { get; }
-		public IReadOnlyReactiveProperty<double> PositionPercent { get; }
+		public IReactiveProperty<ChapterViewModel?> CurrentChapter { get; }
 
 		public Command<OverlayState> ChangeOverlayStateCommand { get; }
 
-		public MediaPlayerViewModel(
-			HttpClient httpClient,
-			IAudioPlayer audioPlayer)
+		public MediaPlayerViewModel(IAudioPlayer audioPlayer)
 		{
-			_httpClient = httpClient;
 			_audioPlayer = audioPlayer;
 
 			OverlayState = new ReactiveProperty<OverlayState>();
-			CurrentChapter = new ReactiveProperty<ChapterViewModel>();
-
-			Position = new ReactiveProperty<TimeSpan>();
-
-			PositionPercent = Position
-				.Select(ToPercent)
-				.ToReadOnlyReactiveProperty();
+			CurrentChapter = new ReactiveProperty<ChapterViewModel?>();
 
 			ChangeOverlayStateCommand = new Command<OverlayState>(
 				x =>
@@ -45,45 +29,86 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 					OverlayState.Value = x;
 				});
 
-			Observable
-				.Interval(TimeSpan.FromSeconds(1))
-				.Subscribe(
-					x =>
-					{
-						//Position.Value = TimeSpan.FromSeconds(_audioPlayer.CurrentPosition);
-					});
+			_audioPlayer.RemotePlayCommand.Subscribe(() => PlayChapter(CurrentChapter.Value));
+			_audioPlayer.RemotePauseCommand.Subscribe(Pause);
+			_audioPlayer.RemoteStopCommand.Subscribe(Stop);
+
+			_audioPlayer.Progress.Subscribe(UpdateProgress);
 		}
 
-		public async Task PlayChapter(ChapterViewModel chapter)
+		public void PlayChapter(ChapterViewModel? chapter)
 		{
-			CurrentChapter.Value = chapter;
+			ChapterViewModel? currentChapter = CurrentChapter.Value;
 
-			string url = chapter.Url.Value;
-
-			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Head, url);
-			HttpResponseMessage response = await _httpClient.SendAsync(request);
-
-			if (!response.IsSuccessStatusCode)
+			// Current chapter resumes from pause state.
+			if (currentChapter != null && currentChapter == chapter)
 			{
-				// TODO: Error handling.
-				Debug.WriteLine("Chapter URL " + url + " error: " + response.StatusCode);
+				_audioPlayer.Play();
+				chapter.IsPlaying.Value = true;
+
 				return;
 			}
 
-			_audioPlayer.Load(url);
-			_audioPlayer.Play();
-		}
-
-		private double ToPercent(TimeSpan x)
-		{
-			TimeSpan? duration = CurrentChapter.Value?.Duration.Value;
-
-			if (duration == null)
+			// Play request from another chapter. Stop the previous chapter.
+			if (currentChapter != null)
 			{
-				return 0;
+				_audioPlayer.Stop();
+				_seekSubscription?.Dispose();
+
+				currentChapter.IsPlaying.Value = false;
 			}
 
-			return x.TotalSeconds / duration.Value.TotalSeconds;
+			CurrentChapter.Value = chapter;
+
+			if (chapter == null)
+			{
+				return;
+			}
+
+			_audioPlayer.Load(chapter);
+			_audioPlayer.Play();
+
+			chapter.IsPlaying.Value = true;
+
+			_seekSubscription = chapter.Seek.Subscribe(x => _audioPlayer.Seek(x));
+		}
+
+		public void Pause()
+		{
+			ChapterViewModel? currentChapter = CurrentChapter.Value;
+
+			if (currentChapter == null)
+			{
+				return;
+			}
+
+			_audioPlayer.Pause();
+			currentChapter.IsPlaying.Value = false;
+		}
+
+		public void Stop()
+		{
+			ChapterViewModel? currentChapter = CurrentChapter.Value;
+
+			if (currentChapter == null)
+			{
+				return;
+			}
+
+			_audioPlayer.Stop();
+			currentChapter.IsPlaying.Value = false;
+		}
+
+		private void UpdateProgress(TimeSpan progress)
+		{
+			ChapterViewModel? currentChapter = CurrentChapter.Value;
+
+			if (currentChapter == null)
+			{
+				return;
+			}
+
+			currentChapter.UpdateProgress(progress);
 		}
 	}
 }
