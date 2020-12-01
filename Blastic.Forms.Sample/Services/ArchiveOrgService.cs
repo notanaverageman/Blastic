@@ -149,35 +149,7 @@ namespace Blastic.Forms.Sample.Services
 
 				string? length = file.GetProperty("length").GetString();
 
-				if (length == null)
-				{
-					Debug.WriteLine("Length is null");
-				}
-				else
-				{
-					if (!length.Contains(":"))
-					{
-						if (!double.TryParse(length, out double seconds))
-						{
-							Debug.WriteLine("Length is not in expected form: " + length);
-						}
-						else
-						{
-							chapterMetadata.Duration = TimeSpan.FromSeconds(seconds);
-						}
-					}
-					else
-					{
-						if (!TimeSpan.TryParse(length, out TimeSpan duration))
-						{
-							Debug.WriteLine("Length is not in expected form: " + length);
-						}
-						else
-						{
-							chapterMetadata.Duration = duration;
-						}
-					}
-				}
+				chapterMetadata.Duration = ParseLength(length);
 
 				string? size = file.GetProperty("size").GetString();
 
@@ -235,6 +207,53 @@ namespace Blastic.Forms.Sample.Services
 
 				metadata.Chapters.Add(chapterMetadata);
 			}
+		}
+
+		private static TimeSpan ParseLength(string? length)
+		{
+			void Error()
+			{
+				Debug.WriteLine("Length is not in expected form: " + length);
+			}
+
+			if (length == null)
+			{
+				Debug.WriteLine("Length is null");
+				return TimeSpan.Zero;
+			}
+
+			if (!length.Contains(":"))
+			{
+				if (double.TryParse(length, out double totalSeconds))
+				{
+					return TimeSpan.FromSeconds(totalSeconds);
+				}
+
+				Error();
+				return TimeSpan.Zero;
+			}
+
+			string[] tokens = length.Split(':');
+
+			if (tokens.Length != 2)
+			{
+				Error();
+				return TimeSpan.Zero;
+			}
+
+			if (!int.TryParse(tokens[0], out int minutes))
+			{
+				Error();
+				return TimeSpan.Zero;
+			}
+
+			if (!int.TryParse(tokens[1], out int seconds))
+			{
+				Error();
+				return TimeSpan.Zero;
+			}
+
+			return TimeSpan.FromSeconds(minutes * 60 + seconds);
 		}
 	}
 }
