@@ -10,21 +10,15 @@ namespace Blastic.Forms.Sample.Data
 
 		public string Title { get; set; }
 		public string Description { get; set; }
-		public string Language { get; set; }
-
-		public List<Author> Author { get; set; }
-		public List<Section> Sections { get; set; }
-		public List<Genre> Genres { get; set; }
-		public List<Translator> Translators { get; set; }
+		public string Author { get; set; }
 
 		public TimeSpan TotalDuration { get; set; }
 
+		public List<Chapter> Chapters { get; }
+
 		public Book()
 		{
-			Author = new List<Author>();
-			Sections = new List<Section>();
-			Genres = new List<Genre>();
-			Translators = new List<Translator>();
+			Chapters = new List<Chapter>();
 		}
 	}
 }

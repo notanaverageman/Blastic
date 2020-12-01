@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Blastic.Data;
 using Blastic.Data.ProviderSpecific;
 using Blastic.Data.Tables;
-using Blastic.Exceptions;
 
 namespace Blastic.Forms.Sample.Data.Tables
 {
@@ -34,7 +33,7 @@ namespace Blastic.Forms.Sample.Data.Tables
 			return books;
 		}
 
-		public async Task<Book> Get(int archiveOrgId, CancellationToken cancellationToken)
+		public async Task<Book?> Get(string archiveOrgId, CancellationToken cancellationToken)
 		{
 			using Connection connection = ConnectionFactory.CreateConnection();
 			using Command command = connection.CreateCommand();
@@ -46,7 +45,7 @@ namespace Blastic.Forms.Sample.Data.Tables
 
 			if (!reader.Read())
 			{
-				throw new NotFoundException($"Book with id {archiveOrgId} not found.");
+				return null;
 			}
 
 			return CreateBook(reader);
