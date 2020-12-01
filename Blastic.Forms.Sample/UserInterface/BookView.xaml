@@ -2,7 +2,6 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.BookView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:generic="clr-namespace:System.Collections.Generic;assembly=netstandard"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
@@ -170,15 +169,19 @@
 					   Text="Description" />
 
 				<Label FontSize="Small"
-					   LineBreakMode="TailTruncation"
-					   MaxLines="3"
+					   LineBreakMode="WordWrap"
+					   MaxLines="{Binding DescriptionMaxLines.Value}"
 					   Text="{Binding Description.Value}"
 					   TextColor="{DynamicResource MediumTextColor}" />
 
 				<Label FontSize="Small"
 					   HorizontalOptions="End"
-					   Text="More"
-					   TextColor="{x:Static Color.Accent}" />
+					   Text="{Binding ToggleDescriptionLabel.Value}"
+					   TextColor="{x:Static Color.Accent}">
+					<Label.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding ToggleDescriptionLengthCommand}" />
+					</Label.GestureRecognizers>
+				</Label>
 			</StackLayout>
 
 			<StackLayout Grid.Row="3">
@@ -217,7 +220,7 @@
 										VerticalOptions="Center">
 									<Button.ImageSource>
 										<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										                 Glyph="{Binding PlayPauseIconGlyph.Value}" />
+														 Glyph="{Binding PlayPauseIconGlyph.Value}" />
 									</Button.ImageSource>
 								</Button>
 							</Grid>

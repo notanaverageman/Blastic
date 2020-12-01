@@ -28,8 +28,12 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<string> ImageUrl { get; }
 		public IReactiveProperty<TimeSpan> TotalDuration { get; }
 
+		public IReactiveProperty<int> DescriptionMaxLines { get; }
+		public IReactiveProperty<string> ToggleDescriptionLabel { get; }
+
 		public ObservableCollection<ChapterViewModel> Chapters { get; }
 
+		public Command ToggleDescriptionLengthCommand { get; }
 		public Command<ChapterViewModel> StartChapter { get; }
 
 		public BookViewModel(
@@ -55,9 +59,27 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Chapters = new ObservableCollection<ChapterViewModel>();
 
+			DescriptionMaxLines = new ReactiveProperty<int>(3);
+			ToggleDescriptionLabel = new ReactiveProperty<string>("More");
+
+			ToggleDescriptionLengthCommand = new Command(ToggleDescriptionLength);
 			StartChapter = new Command<ChapterViewModel>(mediaPlayer.PlayChapter);
 
 			Lifetime.Initialization.Subscribe(FetchDetails);
+		}
+
+		private void ToggleDescriptionLength()
+		{
+			if (ToggleDescriptionLabel.Value == "More")
+			{
+				ToggleDescriptionLabel.Value = "Less";
+				DescriptionMaxLines.Value = -1;
+			}
+			else
+			{
+				ToggleDescriptionLabel.Value = "More";
+				DescriptionMaxLines.Value = 3;
+			}
 		}
 
 		private async Task FetchDetails(CancellationToken cancellationToken)
