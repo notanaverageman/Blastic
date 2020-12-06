@@ -6,7 +6,6 @@ using Blastic.Forms.Data.ProgramData;
 using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.Data.Steps;
 using Blastic.Forms.DynamicControls;
-using Blastic.Forms.Properties;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.Services.Settings;
 using Blastic.Forms.UserInterface;
@@ -133,8 +132,6 @@ namespace Blastic.Forms.Initialization
 
 			AddTypeMapper(new SuffixTypeMapper("View", "ViewModel", Order.AbsoluteMaximum));
 			AddTypeMapper(new InheritanceTypeMapper(typeof(DynamicModel), typeof(DynamicControl)));
-
-			AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
 		}
 
 		private void RegisterType<T>(Type settingType) where T : class

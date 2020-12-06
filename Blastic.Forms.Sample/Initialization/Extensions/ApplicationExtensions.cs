@@ -10,6 +10,8 @@ using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
+using Blastic.Ordering;
+using Blastic.Services.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xamarin.Forms;
@@ -46,6 +48,8 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton(new HttpClient());
 						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ArchiveOrgService>();
+						y.AddSingleton<ILocalizationSource>(new Properties.LocalizationSource(Order.AbsoluteMaximum));
+						y.AddSingleton<Properties.LocalizableProperties>();
 					});
 
 			return hostBuilder;

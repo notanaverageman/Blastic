@@ -25,7 +25,15 @@
     <ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
     <ProjectReference Include="..\Blastic.Forms\Blastic.Forms.csproj" />
     <ProjectReference Include="..\Blastic\Blastic.csproj" />
+    <ProjectReference Include="..\Blastic.CodeGeneration\Blastic.CodeGeneration.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="Properties\Resources.resx" />
+		<AdditionalFiles Include="Properties\Resources.tr-tr.resx" />
+	</ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

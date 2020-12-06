@@ -127,9 +127,9 @@
     <value>Cancel</value>
   </data>
   <data name="Sample.Search.Title" xml:space="preserve">
-	  <value>Search</value>
+    <value>Search</value>
   </data>
   <data name="Sample.Library.Title" xml:space="preserve">
-	  <value>Library</value>
+    <value>Library</value>
   </data>
 </root>
