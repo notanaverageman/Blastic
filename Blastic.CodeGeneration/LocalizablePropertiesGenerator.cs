@@ -8,12 +8,24 @@ namespace Blastic.CodeGeneration
 	[Generator]
 	public class LocalizablePropertiesGenerator : ISourceGenerator
 	{
+		private const string AttributeName = "CreateLocalizablePropertiesAttribute";
+
 		public void Initialize(GeneratorInitializationContext context)
 		{
 		}
 
 		public void Execute(GeneratorExecutionContext context)
 		{
+			IAssemblySymbol assembly = context.AddAssemblyAttribute(AttributeName, "LocalizableProperties");
+			(string? @namespace, string? className) = assembly.GetNamespaceAndClassName(AttributeName);
+
+			context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor("ASD1", "Debug", $"{@namespace}, {className}", "Debug", DiagnosticSeverity.Warning, true), null));
+
+			if (string.IsNullOrEmpty(@namespace) || string.IsNullOrEmpty(className))
+			{
+				return;
+			}
+
 			const string localizationService = "Blastic.Services.Localization.ILocalizationService";
 			const string readOnlyReactiveProperty = "Blastic.Reactive.IReadOnlyReactiveProperty<string>";
 			const string localizableReactiveProperty = "Blastic.Reactive.LocalizableReactiveProperty";
@@ -21,12 +33,12 @@ namespace Blastic.CodeGeneration
 			List<LocalizedText> localizedTexts = context.GetLocalizedTexts();
 
 			StringBuilder classBuilder = new StringBuilder();
-			classBuilder.AppendLine("public partial class LocalizableProperties : System.IDisposable");
+			classBuilder.AppendLine($"public partial class {className} : System.IDisposable");
 			classBuilder.AppendLine("{");
 
 			classBuilder.Indent(1).AppendLine($"private readonly {localizationService} _localizationService;");
 			classBuilder.Indent(1).AppendLine();
-			classBuilder.Indent(1).AppendLine($"public LocalizableProperties({localizationService} localizationService)");
+			classBuilder.Indent(1).AppendLine($"public {className}({localizationService} localizationService)");
 			classBuilder.Indent(1).AppendLine("{");
 			classBuilder.Indent(2).AppendLine("_localizationService = localizationService;");
 			classBuilder.Indent(1).AppendLine("}");
@@ -66,10 +78,10 @@ namespace Blastic.CodeGeneration
 
 			classBuilder.Append("}");
 
-			context.WrapWithNamespace(localizedTexts, classBuilder);
+			classBuilder.WrapWithNamespace(@namespace!);
 			string source = classBuilder.ToString();
 
-			context.AddSource("LocalizableProperties", source);
+			context.AddSource(className!, source);
 		}
 	}
 }

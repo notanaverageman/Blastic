@@ -33,7 +33,6 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						applicationBuilder
 							.UseApplication<App>()
 							.UseApplicationRunner(applicationRunner)
-							.AddLocalizationSource(Properties.Resources.ResourceManager)
 							.AddShellTab<HomeViewModel>()
 							.AddShellTab<SearchViewModel>()
 							.AddShellTab<LibraryViewModel>()
@@ -49,8 +48,8 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ArchiveOrgService>();
 						y.AddSingleton<DownloadService>();
-						y.AddSingleton<ILocalizationSource>(new Properties.LocalizationSource(Order.AbsoluteMaximum));
-						y.AddSingleton<Properties.LocalizableProperties>();
+						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
+						y.AddSingleton<Resources.LocalizableProperties>();
 					});
 
 			return hostBuilder;

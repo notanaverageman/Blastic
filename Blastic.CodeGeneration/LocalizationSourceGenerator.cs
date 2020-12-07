@@ -8,21 +8,31 @@ namespace Blastic.CodeGeneration
 	[Generator]
 	public class LocalizationSourceGenerator : ISourceGenerator
 	{
+		private const string AttributeName = "CreateLocalizationSourceAttribute";
+
 		public void Initialize(GeneratorInitializationContext context)
 		{
 		}
 
 		public void Execute(GeneratorExecutionContext context)
 		{
+			IAssemblySymbol assembly = context.AddAssemblyAttribute(AttributeName, "LocalizationSource");
+			(string? @namespace, string? className) = assembly.GetNamespaceAndClassName(AttributeName);
+
+			if (string.IsNullOrEmpty(@namespace) || string.IsNullOrEmpty(className))
+			{
+				return;
+			}
+
 			List<LocalizedText> localizedTexts = context.GetLocalizedTexts();
 
 			StringBuilder classBuilder = new StringBuilder();
-			classBuilder.AppendLine("public partial class LocalizationSource : Blastic.Services.Localization.ILocalizationSource");
+			classBuilder.AppendLine($"public partial class {className} : Blastic.Services.Localization.ILocalizationSource");
 			classBuilder.AppendLine("{");
 
 			classBuilder.Indent(1).AppendLine("public Blastic.Ordering.Order Order { get; }");
 			classBuilder.Indent(1).AppendLine();
-			classBuilder.Indent(1).AppendLine("public LocalizationSource(Blastic.Ordering.Order order = null)");
+			classBuilder.Indent(1).AppendLine($"public {className}(Blastic.Ordering.Order order = null)");
 			classBuilder.Indent(1).AppendLine("{");
 			classBuilder.Indent(2).AppendLine("Order = order ?? new Blastic.Ordering.Order();");
 			classBuilder.Indent(1).AppendLine("}");
@@ -70,10 +80,10 @@ namespace Blastic.CodeGeneration
 			classBuilder.Append(methodBuilder);
 			classBuilder.Append("}");
 
-			context.WrapWithNamespace(localizedTexts, classBuilder);
+			classBuilder.WrapWithNamespace(@namespace!);
 			string source = classBuilder.ToString();
 
-			context.AddSource("LocalizedResources", source);
+			context.AddSource(className!, source);
 		}
 	}
 }

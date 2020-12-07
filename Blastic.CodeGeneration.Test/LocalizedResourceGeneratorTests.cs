@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
@@ -23,8 +22,7 @@ namespace Blastic.CodeGeneration.Test
 			}
 		}
 
-		private static string GenerateSource(
-			params string[] resxPaths)
+		private static string GenerateSource(params string[] resxPaths)
 		{
 			List<MetadataReference> references = new List<MetadataReference>();
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -44,20 +42,10 @@ namespace Blastic.CodeGeneration.Test
 			{
 				AdditionalText additionalText = new ResxAdditionalText(resxPath);
 				additionalTexts.Add(additionalText);
-
-				string directory = Path.GetDirectoryName(resxPath);
-				string fileName = Path.GetFileNameWithoutExtension(resxPath);
-				string designerFile = Path.Combine(directory, fileName + ".Designer.cs");
-
-				if (File.Exists(designerFile))
-				{
-					SyntaxTree syntaxTree = CSharpSyntaxTree
-						.ParseText(File.ReadAllText(designerFile))
-						.WithFilePath(designerFile);
-
-					syntaxTrees.Add(syntaxTree);
-				}
 			}
+			
+			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizationSource(\"Blastic.Wpf.Resources\", className: \"Asd\")]"));
+			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizableProperties(\"Blastic.Wpf.Resources\")]"));
 
 			CSharpCompilation compilation = CSharpCompilation.Create(
 				"original",
@@ -70,7 +58,7 @@ namespace Blastic.CodeGeneration.Test
 				new LocalizablePropertiesGenerator());
 
 			driver = driver.AddAdditionalTexts(ImmutableArray.CreateRange(additionalTexts));
-
+			
 			driver.RunGeneratorsAndUpdateCompilation(
 				compilation,
 				out Compilation outputCompilation,
