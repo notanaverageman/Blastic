@@ -31,7 +31,7 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 			typeof(View),
 			typeof(OverlayView),
 			propertyChanged: ViewChanged);
-		public View Expanded
+		public View? Expanded
 		{
 			get => (View)GetValue(ExpandedProperty);
 			set => SetValue(ExpandedProperty, value);
@@ -42,7 +42,7 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 			typeof(View),
 			typeof(OverlayView),
 			propertyChanged: ViewChanged);
-		public View Collapsed
+		public View? Collapsed
 		{
 			get => (View)GetValue(CollapsedProperty);
 			set => SetValue(CollapsedProperty, value);
@@ -53,7 +53,7 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 			typeof(ExtendedTabbedPage),
 			typeof(OverlayView),
 			propertyChanged: TabBarChanged);
-		public ExtendedTabbedPage TabBar
+		public ExtendedTabbedPage? TabBar
 		{
 			get => (ExtendedTabbedPage)GetValue(TabBarProperty);
 			set => SetValue(TabBarProperty, value);
@@ -172,6 +172,7 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 			BindableObject newView = (BindableObject)newValue;
 
 			SetInheritedBindingContext(newView, overlayView.BindingContext);
+			overlayView.ChangeState(overlayView.State, forceRun: true);
 		}
 
 		private static void TabBarChanged(BindableObject bindable, object oldValue, object newValue)
@@ -200,14 +201,6 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 
 		private async void PanUpdated(PanUpdatedEventArgs e)
 		{
-			View expanded = Expanded;
-			View collapsed = Collapsed;
-
-			if (expanded == null || collapsed == null)
-			{
-				return;
-			}
-
 			if (e.StatusType == GestureStatus.Running)
 			{
 				_isUserPanning = true;
@@ -245,7 +238,7 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 		private void SetTranslation(double normalizedTotalY)
 		{
 			double heightWithoutCollapsedView = GetHeightWithoutCollapsedView();
-			ExtendedTabbedPage tabBar = TabBar;
+			ExtendedTabbedPage? tabBar = TabBar;
 
 			if (normalizedTotalY <= 0)
 			{
@@ -275,7 +268,8 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 
 			if (tabBar != null)
 			{
-				double ratio = (heightWithoutCollapsedView - normalizedTotalY) / Collapsed.Height;
+				double offset = heightWithoutCollapsedView - normalizedTotalY;
+				double ratio = offset / heightWithoutCollapsedView;
 
 				if (ratio >= 0 && ratio <= 1)
 				{
@@ -318,8 +312,19 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 				collapsedOpacity = 1;
 			}
 
-			Expanded.Opacity = expandedOpacity;
-			Collapsed.Opacity = collapsedOpacity;
+			View? expanded = Expanded;
+
+			if (expanded != null)
+			{
+				expanded.Opacity = expandedOpacity;
+			}
+
+			View? collapsed = Collapsed;
+
+			if (collapsed != null)
+			{
+				collapsed.Opacity = collapsedOpacity;
+			}
 		}
 
 		private async Task CompletePan()
@@ -358,11 +363,6 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 
 		private async void ChangeState(OverlayState targetState, bool forceRun = false)
 		{
-			if (Expanded == null || Collapsed == null)
-			{
-				return;
-			}
-
 			if (_overlayState == targetState && !forceRun)
 			{
 				return;
@@ -488,22 +488,33 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 
 					double collapsedOpacity = opacityOffset / opacityBoundaryDifference;
 
+					View? collapsed = Collapsed;
+					View? expanded = Expanded;
+
 					if (TabBar != null)
 					{
-						float margin = (float)(collapsedOpacity * Collapsed.Height);
+						float margin = (float)(collapsedOpacity * (collapsed?.Height ?? expanded?.Height ?? 0));
 						TabBar.ContainerMargin = margin;
 					}
 
 					TranslationY = x;
-					Collapsed.Opacity = collapsedOpacity;
 
-					Collapsed.Clip = new RectangleGeometry(new Rect(
-						0,
-						0,
-						Collapsed.Width,
-						collapsedOpacity * Collapsed.Height));
+					if (collapsed != null)
+					{
+						collapsed.Opacity = collapsedOpacity;
 
-					Expanded.Opacity = 0;
+						collapsed.Clip = new RectangleGeometry(new Rect(
+							0,
+							0,
+							collapsed.Width,
+							collapsedOpacity * collapsed.Height));
+
+					}
+
+					if (expanded != null)
+					{
+						expanded.Opacity = 0;
+					}
 				},
 				currentTranslation,
 				animationEnd);
@@ -560,7 +571,7 @@ namespace Blastic.Forms.Sample.Controls.Overlay
 
 		private double GetHeightWithoutCollapsedView()
 		{
-			return GetHeight() - Collapsed.Height;
+			return GetHeight() - (Collapsed?.Height ?? 0);
 		}
 
 		private double GetHeight()

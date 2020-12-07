@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -71,10 +72,13 @@ namespace Blastic.Commanding
 	public class Command<T> : ICommand
 	{
 		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _actions;
+		private readonly IReactiveProperty<bool> _isExecuting;
+		private IDisposable? _canExecuteSubscription;
 
 		public event EventHandler? CanExecuteChanged;
 
-		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
+		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; private set; }
+		public IReadOnlyReactiveProperty<bool> IsExecuting => _isExecuting;
 
 		public Command() : this((IObservable<bool>?) null)
 		{
@@ -83,10 +87,18 @@ namespace Blastic.Commanding
 		public Command(IObservable<bool>? canExecute)
 		{
 			_actions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
+			_isExecuting = new ReactiveProperty<bool>();
 
 			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
 
-			CanExecuteObservable
+			SubscribeToCanExecute();
+		}
+
+		private void SubscribeToCanExecute()
+		{
+			_canExecuteSubscription?.Dispose();
+
+			_canExecuteSubscription = CanExecuteObservable
 				.ObserveOnUI()
 				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
@@ -258,24 +270,44 @@ namespace Blastic.Commanding
 				return;
 			}
 
-			IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _actions.Keys
-				.GroupBy(x => _actions[x])
-				.OrderBy(x => x.Key);
-
-			foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
+			try
 			{
-				if (cancellationToken.IsCancellationRequested)
-				{
-					break;
-				}
+				_isExecuting.Value = true;
 
-				if (value is ICancellable cancellable && cancellable.IsCancelled)
-				{
-					break;
-				}
+				IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _actions.Keys
+					.GroupBy(x => _actions[x])
+					.OrderBy(x => x.Key);
 
-				await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
+				foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
+				{
+					if (cancellationToken.IsCancellationRequested)
+					{
+						break;
+					}
+
+					if (value is ICancellable cancellable && cancellable.IsCancelled)
+					{
+						break;
+					}
+
+					await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
+				}
 			}
+			finally
+			{
+				_isExecuting.Value = false;
+			}
+		}
+
+		public void DisableReentrance()
+		{
+			CanExecuteObservable = CanExecuteObservable
+				.CombineLatest(
+					IsExecuting,
+					(canExecute, isExecuting) => canExecute && !isExecuting)
+				.ToReadOnlyReactiveProperty();
+
+			SubscribeToCanExecute();
 		}
 
 		private class Subscription : IDisposable

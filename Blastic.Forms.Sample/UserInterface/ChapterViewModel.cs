@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
@@ -11,7 +13,9 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class ChapterViewModel
 	{
+		private readonly DownloadService _downloadService;
 		private readonly MediaPlayerViewModel _mediaPlayer;
+		private readonly Chapter _chapter;
 
 		private bool _isSeeking;
 
@@ -31,17 +35,25 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<bool> IsPlaying { get; }
 		public IReadOnlyReactiveProperty<string> PlayPauseIconGlyph { get; }
 
+		public IReactiveProperty<double> DownloadProgress { get; }
+		public Command DownloadCommand { get; }
+
 		public Command SeekStartedCommand { get; }
 		public Command SeekCompletedCommand { get; }
 
 		public Command TogglePlayCommand { get; }
+		public Command SkipBackwardCommand { get; }
+		public Command SkipForwardCommand { get; }
 
 		public ChapterViewModel(
+			DownloadService downloadService,
 			MediaPlayerViewModel mediaPlayer,
 			BookViewModel book,
 			Chapter chapter)
 		{
+			_downloadService = downloadService;
 			_mediaPlayer = mediaPlayer;
+			_chapter = chapter;
 			Book = book;
 
 			Title = new ReactiveProperty<string>(chapter.Title);
@@ -52,12 +64,16 @@ namespace Blastic.Forms.Sample.UserInterface
 			ProgressPercent = new ReactiveProperty<double>();
 			Seek = new ReactiveProperty<TimeSpan>();
 
+			DownloadProgress = new ReactiveProperty<double>();
+			DownloadCommand = new Command(Download);
+			DownloadCommand.DisableReentrance();
+
 			ProgressLabel = ProgressPercent
-				.Select(ToTimeString)
+				.Select(x => ToTimeString(ToTime(x)))
 				.ToReadOnlyReactiveProperty();
 
 			RemainingLabel = ProgressPercent
-				.Select(x => ToTimeString(1 - x))
+				.Select(x => ToTimeString(ToTime(1 - x)))
 				.ToReadOnlyReactiveProperty();
 
 			SeekStartedCommand = new Command(SeekStarted);
@@ -70,6 +86,24 @@ namespace Blastic.Forms.Sample.UserInterface
 				.ToReadOnlyReactiveProperty();
 
 			TogglePlayCommand = new Command(TogglePlay);
+			SkipBackwardCommand = new Command(SkipBackward);
+			SkipForwardCommand = new Command(SkipForward);
+		}
+
+		private async Task Download()
+		{
+			string filePath = Path.Combine(
+				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+				"Chapters",
+				Book.Book.ArchiveOrgId,
+				_chapter.FileName);
+
+			Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+			Progress<double> progress = new Progress<double>(x => DownloadProgress.Value = x);
+			using FileStream stream = File.Create(filePath);
+
+			await _downloadService.Download(Url.Value, stream, progress);
 		}
 
 		private void SeekStarted()
@@ -79,9 +113,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		private void SeekCompleted()
 		{
-			TimeSpan progress = TimeSpan.FromSeconds(Duration.Value.TotalSeconds * ProgressPercent.Value);
-			Seek.Value = progress;
-
+			Seek.Value = ToTime(ProgressPercent.Value);
 			_isSeeking = false;
 		}
 
@@ -107,6 +139,40 @@ namespace Blastic.Forms.Sample.UserInterface
 			ProgressPercent.Value = ToPercent(progress);
 		}
 
+		private void SkipBackward()
+		{
+			TimeSpan seek = ToTime(ProgressPercent.Value) - TimeSpan.FromSeconds(30);
+
+			if (seek < TimeSpan.Zero)
+			{
+				seek = TimeSpan.Zero;
+			}
+
+			Seek.Value = seek;
+
+			if (!IsPlaying.Value)
+			{
+				UpdateProgress(Seek.Value);
+			}
+		}
+
+		private void SkipForward()
+		{
+			TimeSpan seek = ToTime(ProgressPercent.Value) + TimeSpan.FromSeconds(30);
+
+			if (seek > Duration.Value)
+			{
+				seek = Duration.Value;
+			}
+
+			Seek.Value = seek;
+
+			if (!IsPlaying.Value)
+			{
+				UpdateProgress(Seek.Value);
+			}
+		}
+
 		private string ToUrl(string fileName)
 		{
 			return ArchiveOrgService.AudioBookChapterUrl + "/" + Book.Book.ArchiveOrgId + "/" + fileName;
@@ -130,15 +196,18 @@ namespace Blastic.Forms.Sample.UserInterface
 			return size / mb + " MB";
 		}
 
-		private double ToPercent(TimeSpan x)
+		private double ToPercent(TimeSpan time)
 		{
-			return x.TotalSeconds / Duration.Value.TotalSeconds;
+			return time.TotalSeconds / Duration.Value.TotalSeconds;
 		}
 
-		private string ToTimeString(double x)
+		private TimeSpan ToTime(double percent)
 		{
-			TimeSpan time = TimeSpan.FromSeconds(x * Duration.Value.TotalSeconds);
+			return TimeSpan.FromSeconds(percent * Duration.Value.TotalSeconds);
+		}
 
+		private string ToTimeString(TimeSpan time)
+		{
 			if (time.Hours > 0)
 			{
 				return time.ToString("hh\\:mm\\:ss");

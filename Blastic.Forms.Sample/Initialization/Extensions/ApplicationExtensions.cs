@@ -46,6 +46,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton(new HttpClient());
 						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ArchiveOrgService>();
+						y.AddSingleton<DownloadService>();
 					});
 
 			return hostBuilder;

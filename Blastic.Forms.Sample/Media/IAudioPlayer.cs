@@ -13,6 +13,9 @@ namespace Blastic.Forms.Sample.Media
 		Command RemotePauseCommand { get; }
 		Command RemoteStopCommand { get; }
 
+		Command SkipBackwardCommand { get; }
+		Command SkipForwardCommand { get; }
+
 		void Load(ChapterViewModel chapter);
 		void Play();
 		void Pause();

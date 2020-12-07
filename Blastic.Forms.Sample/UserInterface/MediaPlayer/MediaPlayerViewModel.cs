@@ -33,6 +33,9 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 			_audioPlayer.RemotePauseCommand.Subscribe(Pause);
 			_audioPlayer.RemoteStopCommand.Subscribe(Stop);
 
+			_audioPlayer.SkipBackwardCommand.Subscribe(SkipBackward);
+			_audioPlayer.SkipForwardCommand.Subscribe(SkipForward);
+
 			_audioPlayer.Progress.Subscribe(UpdateProgress);
 		}
 
@@ -99,6 +102,16 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 
 			_audioPlayer.Stop();
 			currentChapter.IsPlaying.Value = false;
+		}
+
+		private void SkipBackward()
+		{
+			CurrentChapter.Value?.SkipBackwardCommand.Execute();
+		}
+
+		private void SkipForward()
+		{
+			CurrentChapter.Value?.SkipForwardCommand.Execute();
 		}
 
 		private void UpdateProgress(TimeSpan progress)

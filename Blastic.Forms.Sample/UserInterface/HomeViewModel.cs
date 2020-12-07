@@ -22,6 +22,7 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : Screen, IShellTab
 	{
+		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly INavigationService _navigationService;
 		private readonly ProgramDatabase _database;
@@ -44,11 +45,13 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public HomeViewModel(
 			MediaPlayerViewModel mediaPlayer,
+			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
 			ProgramDatabase database,
 			Labels labels)
 		{
+			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
 			_database = database;
@@ -95,6 +98,7 @@ namespace Blastic.Forms.Sample.UserInterface
 					BookViewModel viewModel = new BookViewModel(
 						book,
 						MediaPlayer,
+						_downloadService,
 						_archiveOrgService,
 						_database);
 					viewModels.Add(viewModel);

@@ -34,6 +34,11 @@
 			<Color x:Key="LightTextColor">#ACACAC</Color>
 			<Color x:Key="MediumTextColor">#777777</Color>
 
+			<LinearGradientBrush x:Key="OverlayBackground">
+				<GradientStop Offset="0" Color="{DynamicResource MediaPlayerExpandedBackground}" />
+				<GradientStop Offset="1" Color="{DynamicResource Background}" />
+			</LinearGradientBrush>
+
 			<x:Double x:Key="BookImageHeight">120</x:Double>
 			<x:Double x:Key="BookImageWidth">90</x:Double>
 

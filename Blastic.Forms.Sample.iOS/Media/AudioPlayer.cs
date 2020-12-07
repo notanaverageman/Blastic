@@ -23,6 +23,9 @@ namespace Blastic.Forms.Sample.iOS.Media
 		public Command RemotePauseCommand { get; }
 		public Command RemoteStopCommand { get; }
 
+		public Command SkipBackwardCommand { get; }
+		public Command SkipForwardCommand { get; }
+
 		public AudioPlayer()
 		{
 			Progress = new ReactiveProperty<TimeSpan>();
@@ -30,6 +33,9 @@ namespace Blastic.Forms.Sample.iOS.Media
 			RemotePlayCommand = new Command();
 			RemotePauseCommand = new Command();
 			RemoteStopCommand = new Command();
+
+			SkipBackwardCommand = new Command();
+			SkipForwardCommand = new Command();
 
 			_notifyProgress = true;
 
@@ -89,6 +95,11 @@ namespace Blastic.Forms.Sample.iOS.Media
 			AddTarget(commandCenter.PlayCommand, RemotePlayCommand);
 			AddTarget(commandCenter.PauseCommand, RemotePauseCommand);
 			AddTarget(commandCenter.StopCommand, RemoteStopCommand);
+			AddTarget(commandCenter.SkipBackwardCommand, SkipBackwardCommand);
+			AddTarget(commandCenter.SkipForwardCommand, SkipForwardCommand);
+
+			commandCenter.SkipBackwardCommand.PreferredIntervals = new []{ 30d };
+			commandCenter.SkipForwardCommand.PreferredIntervals = new []{ 30d };
 		}
 
 		private void InitializeNowPlayingInfo(ChapterViewModel chapter)

@@ -89,60 +89,58 @@
 
 				<Slider DragCompletedCommand="{Binding CurrentChapter.Value.SeekCompletedCommand}"
 						DragStartedCommand="{Binding CurrentChapter.Value.SeekStartedCommand}"
-						Value="{Binding CurrentChapter.Value.ProgressPercent.Value, Mode=TwoWay}">
-				</Slider>
+						Value="{Binding CurrentChapter.Value.ProgressPercent.Value, Mode=TwoWay}" />
 			</StackLayout>
 
 			<Grid Grid.Row="3"
-				  Margin="16,0,16,0"
-				  ColumnDefinitions="Auto,*,Auto">
+				  Margin="16,20"
+				  ColumnDefinitions="Auto,*,2*,*,Auto">
 
 				<ImageButton Grid.Column="0"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.Shuffle}"
-										 Size="18" />
+										 Glyph="{x:Static icons:IconFont.SkipPrevious}"
+										 Size="36" />
 					</ImageButton.Source>
 				</ImageButton>
 
-				<StackLayout Grid.Column="1"
-							 HorizontalOptions="Center"
-							 Orientation="Horizontal">
-
-					<ImageButton VerticalOptions="Center">
-						<ImageButton.Source>
-							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{x:Static icons:IconFont.SkipPrevious}"
-											 Size="48" />
-						</ImageButton.Source>
-					</ImageButton>
-
-					<ImageButton Margin="20"
-								 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
-								 VerticalOptions="Center">
-						<ImageButton.Source>
-							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
-											 Size="72" />
-						</ImageButton.Source>
-					</ImageButton>
-
-					<ImageButton VerticalOptions="Center">
-						<ImageButton.Source>
-							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-											 Glyph="{x:Static icons:IconFont.SkipNext}"
-											 Size="48" />
-						</ImageButton.Source>
-					</ImageButton>
-				</StackLayout>
-
-				<ImageButton Grid.Column="2"
+				<ImageButton Grid.Column="1"
+							 Command="{Binding CurrentChapter.Value.SkipBackwardCommand}"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.Repeat}"
-										 Size="18" />
+										 Glyph="{x:Static icons:IconFont.SkipBackward}"
+										 Size="36" />
+					</ImageButton.Source>
+				</ImageButton>
+
+				<ImageButton Grid.Column="2"
+							 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
+							 VerticalOptions="Center">
+					<ImageButton.Source>
+						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+										 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
+										 Size="72" />
+					</ImageButton.Source>
+				</ImageButton>
+
+				<ImageButton Grid.Column="3"
+							 Command="{Binding CurrentChapter.Value.SkipForwardCommand}"
+							 VerticalOptions="Center">
+					<ImageButton.Source>
+						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+										 Glyph="{x:Static icons:IconFont.SkipForward}"
+										 Size="36" />
+					</ImageButton.Source>
+				</ImageButton>
+
+				<ImageButton Grid.Column="4"
+							 VerticalOptions="Center">
+					<ImageButton.Source>
+						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+										 Glyph="{x:Static icons:IconFont.SkipNext}"
+										 Size="36" />
 					</ImageButton.Source>
 				</ImageButton>
 			</Grid>

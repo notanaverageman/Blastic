@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
+using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Librivox;
 using Blastic.Forms.Sample.Services;
@@ -16,6 +17,7 @@ namespace Blastic.Forms.Sample.UserInterface
 	public class BookViewModel : Screen
 	{
 		private readonly MediaPlayerViewModel _mediaPlayer;
+		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly ProgramDatabase _database;
 
@@ -33,16 +35,24 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public ObservableCollection<ChapterViewModel> Chapters { get; }
 
+		public IReactiveProperty<OverlayState> ChapterDetailsOverlayState { get; }
+		public IReactiveProperty<ChapterViewModel> ChapterForDetails { get; }
+
 		public Command ToggleDescriptionLengthCommand { get; }
-		public Command<ChapterViewModel> StartChapter { get; }
+		public Command<ChapterViewModel> PlayChapterCommand { get; }
+
+		public Command<ChapterViewModel> ShowDetailsCommand { get; }
+		public Command<ChapterViewModel> HideDetailsCommand { get; }
 
 		public BookViewModel(
 			Book book,
 			MediaPlayerViewModel mediaPlayer,
+			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			ProgramDatabase database)
 		{
 			_mediaPlayer = mediaPlayer;
+			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
 			_database = database;
 
@@ -62,8 +72,14 @@ namespace Blastic.Forms.Sample.UserInterface
 			DescriptionMaxLines = new ReactiveProperty<int>(3);
 			ToggleDescriptionLabel = new ReactiveProperty<string>("More");
 
+			ChapterDetailsOverlayState = new ReactiveProperty<OverlayState>();
+			ChapterForDetails = new ReactiveProperty<ChapterViewModel>();
+
 			ToggleDescriptionLengthCommand = new Command(ToggleDescriptionLength);
-			StartChapter = new Command<ChapterViewModel>(mediaPlayer.PlayChapter);
+			PlayChapterCommand = new Command<ChapterViewModel>(mediaPlayer.PlayChapter);
+
+			ShowDetailsCommand = new Command<ChapterViewModel>(ShowDetails);
+			HideDetailsCommand = new Command<ChapterViewModel>(HideDetails);
 
 			Lifetime.Initialization.Subscribe(FetchDetails);
 		}
@@ -80,6 +96,17 @@ namespace Blastic.Forms.Sample.UserInterface
 				ToggleDescriptionLabel.Value = "More";
 				DescriptionMaxLines.Value = 3;
 			}
+		}
+
+		private void ShowDetails(ChapterViewModel chapter)
+		{
+			ChapterForDetails.Value = chapter;
+			ChapterDetailsOverlayState.Value = OverlayState.Expanded;
+		}
+
+		private void HideDetails()
+		{
+			ChapterDetailsOverlayState.Value = OverlayState.Invisible;
 		}
 
 		private async Task FetchDetails(CancellationToken cancellationToken)
@@ -110,7 +137,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			foreach (Chapter chapter in book.Chapters)
 			{
-				Chapters.Add(new ChapterViewModel(_mediaPlayer, this, chapter));
+				Chapters.Add(new ChapterViewModel(_downloadService, _mediaPlayer, this, chapter));
 			}
 		}
 
@@ -138,7 +165,7 @@ namespace Blastic.Forms.Sample.UserInterface
 				};
 
 				Book.Chapters.Add(chapter);
-				Chapters.Add(new ChapterViewModel(_mediaPlayer, this, chapter));
+				Chapters.Add(new ChapterViewModel(_downloadService, _mediaPlayer, this, chapter));
 			}
 
 			await _database.BooksTable.Put(Book, cancellationToken);
