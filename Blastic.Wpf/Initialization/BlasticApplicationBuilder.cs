@@ -161,11 +161,16 @@ namespace Blastic.Wpf.Initialization
 			_serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
 			_serviceCollection.AddSingleton<IPresenterSource, PresenterSource>(y => PresenterSource.Instance);
 
+			// TODO: Uncomment these and remove the line below when following issue is resolved:
+			// https://github.com/dotnet/wpf/issues/3404
+			//_serviceCollection.AddSingleton<LocalizableProperties>();
+			//_serviceCollection.AddSingleton<ILocalizationSource>(new LocalizationSource(Order.AbsoluteMaximum));
+
+			AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
+
 			AddTypeMapper<ISettingsSectionViewModel, FormSettingSectionView>(new Order(int.MaxValue));
 			AddTypeMapper<SettingsViewModel, SettingsView>(new Order(int.MaxValue));
 			AddTypeMapper(new SuffixTypeMapper("View", "ViewModel", Order.AbsoluteMaximum));
-
-			AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
 		}
 
 		private void RegisterType<T>(Type settingType) where T : class

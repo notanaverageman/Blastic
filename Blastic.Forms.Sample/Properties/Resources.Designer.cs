@@ -88,7 +88,7 @@ namespace Blastic.Forms.Sample.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Library.
         /// </summary>
         internal static string Sample_Library_Title {
             get {
