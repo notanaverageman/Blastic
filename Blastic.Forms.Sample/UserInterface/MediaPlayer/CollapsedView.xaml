@@ -21,15 +21,16 @@
 		</Grid.GestureRecognizers>
 
 		<ProgressBar Grid.Row="0"
-					 HeightRequest="0.5"
 					 Progress="{Binding CurrentChapter.Value.ProgressPercent.Value}" />
 
 		<Grid Grid.Row="1"
-			  ColumnDefinitions="Auto,*,Auto">
+			  ColumnDefinitions="Auto,*,Auto"
+			  RowSpacing="0">
 
 			<Image Grid.Column="0"
-				   Margin="0,0.5,0,0"
+				   Margin="0,0,0,0"
 				   Aspect="Fill"
+				   HeightRequest="57"
 				   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}"
 				   VerticalOptions="End"
 				   WidthRequest="57" />
@@ -43,6 +44,7 @@
 					   Text="{Binding CurrentChapter.Value.Title.Value}" />
 
 				<Label FontSize="Micro"
+					   LineBreakMode="TailTruncation"
 					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
 					   TextColor="{StaticResource LightTextColor}" />
 			</StackLayout>
