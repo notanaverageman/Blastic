@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blastic.Forms.Sample.Services
@@ -17,11 +18,13 @@ namespace Blastic.Forms.Sample.Services
 		public async Task Download(
 			string url,
 			Stream destination,
-			IProgress<double>? progress = null)
+			IProgress<double>? progress = null,
+			CancellationToken cancellationToken = default)
 		{
-			using HttpResponseMessage response = _httpClient.GetAsync(
+			using HttpResponseMessage response = await _httpClient.GetAsync(
 				url,
-				HttpCompletionOption.ResponseHeadersRead).Result;
+				HttpCompletionOption.ResponseHeadersRead,
+				cancellationToken);
 
 			response.EnsureSuccessStatusCode();
 
@@ -33,18 +36,23 @@ namespace Blastic.Forms.Sample.Services
 
 			do
 			{
-				int read = await contentStream.ReadAsync(buffer, 0, buffer.Length);
+				int read = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
 
 				if (read == 0)
 				{
 					break;
 				}
 
-				await destination.WriteAsync(buffer, 0, read);
+				await destination.WriteAsync(buffer, 0, read, cancellationToken);
 
 				totalRead += read;
 
 				progress?.Report(totalRead / contentLength);
+
+				if (cancellationToken.IsCancellationRequested)
+				{
+					break;
+				}
 			}
 			while (true);
 		}
