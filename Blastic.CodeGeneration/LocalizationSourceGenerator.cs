@@ -56,13 +56,19 @@ namespace Blastic.CodeGeneration
 				classBuilder.Append(id);
 				classBuilder.AppendLine("\";");
 
-				foreach (LocalizedText localizedText in grouping)
+				foreach (LocalizedText localizedText in grouping.OrderByDescending(x => x.Culture.Length))
 				{
 					methodBuilder.Indent(3).Append("case ");
 					methodBuilder.Append(id.ToPropertyName());
-					methodBuilder.Append(" when cultureId == \"");
-					methodBuilder.Append(localizedText.Culture);
-					methodBuilder.AppendLine("\":");
+
+					if (localizedText.Culture != "")
+					{
+						methodBuilder.Append(" when cultureId == \"");
+						methodBuilder.Append(localizedText.Culture);
+						methodBuilder.Append("\"");
+					}
+
+					methodBuilder.AppendLine(":");
 
 					methodBuilder.Indent(4).Append("return @\"");
 					methodBuilder.Append(localizedText.Text);
