@@ -68,7 +68,7 @@
 				<Label Grid.Row="0"
 					   FontAttributes="Bold"
 					   FontSize="Header"
-					   Text="Latest" />
+					   Text="{Binding LocalizableProperties.HomeLatest.Value}" />
 
 				<CollectionView Grid.Row="1"
 								HeightRequest="160"
@@ -88,7 +88,7 @@
 				<Label Grid.Row="0"
 					   FontAttributes="Bold"
 					   FontSize="Header"
-					   Text="Popular" />
+					   Text="{Binding LocalizableProperties.HomePopular.Value}" />
 
 				<CollectionView Grid.Row="1"
 								HeightRequest="160"

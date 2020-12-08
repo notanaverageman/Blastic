@@ -35,6 +35,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> IconGlyph { get; }
 
 		public MediaPlayerViewModel MediaPlayer { get; }
+		public LocalizableProperties LocalizableProperties { get; }
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 
@@ -57,9 +58,10 @@ namespace Blastic.Forms.Sample.UserInterface
 			_database = database;
 
 			MediaPlayer = mediaPlayer;
+			LocalizableProperties = localizableProperties;
 
 			Order = new Order(0);
-			Title = localizableProperties.SampleHomeTitle;
+			Title = localizableProperties.HomeTitle;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
 
 			_booksSource = new SourceCache<BookViewModel, string>(x => x.Book.ArchiveOrgId);
@@ -98,6 +100,7 @@ namespace Blastic.Forms.Sample.UserInterface
 					BookViewModel viewModel = new BookViewModel(
 						book,
 						MediaPlayer,
+						LocalizableProperties,
 						_downloadService,
 						_archiveOrgService,
 						_database);

@@ -16,7 +16,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public SearchViewModel(LocalizableProperties localizableProperties)
 		{
 			Order = new Order(1);
-			Title = localizableProperties.SampleSearchTitle;
+			Title = localizableProperties.SearchTitle;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Magnify);
 		}
 	}

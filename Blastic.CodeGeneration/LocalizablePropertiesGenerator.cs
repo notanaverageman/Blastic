@@ -18,9 +18,7 @@ namespace Blastic.CodeGeneration
 		{
 			IAssemblySymbol assembly = context.AddAssemblyAttribute(AttributeName, "LocalizableProperties");
 			(string? @namespace, string? className) = assembly.GetNamespaceAndClassName(AttributeName);
-
-			context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor("ASD1", "Debug", $"{@namespace}, {className}", "Debug", DiagnosticSeverity.Warning, true), null));
-
+			
 			if (string.IsNullOrEmpty(@namespace) || string.IsNullOrEmpty(className))
 			{
 				return;

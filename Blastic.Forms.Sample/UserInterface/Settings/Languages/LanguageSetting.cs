@@ -28,7 +28,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 					Language.Turkish
 				})
 		{
-			Element.WithLabel(localizableProperties.SampleSettingsLanguage);
+			Element.WithLabel(localizableProperties.SettingsLanguage);
 
 			ReactiveSettingValue.Subscribe(
 				x =>

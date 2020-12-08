@@ -21,8 +21,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 			:
 			base(settingsService)
 		{
-			Title = localizableProperties.SampleSettingsLanguage;
-			Help = localizableProperties.SampleSettingsLanguageHelp;
+			Title = localizableProperties.SettingsLanguage;
+			Help = localizableProperties.SettingsLanguageHelp;
 
 			Language = new LanguageSetting(
 				settingsService,

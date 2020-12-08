@@ -115,7 +115,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="Listen"
+							Text="{Binding LocalizableProperties.CommonListen.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -127,7 +127,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="Download"
+							Text="{Binding LocalizableProperties.CommonDownload.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -139,7 +139,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="Like"
+							Text="{Binding LocalizableProperties.CommonLike.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -151,7 +151,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="Save"
+							Text="{Binding LocalizableProperties.CommonSave.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -167,18 +167,28 @@
 							 Color="{DynamicResource LightTextColor}" />
 
 					<Label FontAttributes="Bold"
-						   Text="Description" />
+						   Text="{Binding LocalizableProperties.HomeBookDescription.Value}" />
 
 					<Label FontSize="Small"
 						   LineBreakMode="WordWrap"
-						   MaxLines="{Binding DescriptionMaxLines.Value}"
+						   MaxLines="3"
 						   Text="{Binding Description.Value}"
-						   TextColor="{DynamicResource MediumTextColor}" />
+						   TextColor="{DynamicResource MediumTextColor}">
+
+						<Label.Triggers>
+							<DataTrigger Binding="{Binding DescriptionExpanded.Value}"
+										 TargetType="{x:Type Label}"
+										 Value="True">
+								<Setter Property="MaxLines" Value="-1" />
+							</DataTrigger>
+						</Label.Triggers>
+					</Label>
 
 					<Label FontSize="Small"
 						   HorizontalOptions="End"
-						   Text="{Binding ToggleDescriptionLabel.Value}"
+						   Text="{Binding DescriptionToggleLabel.Value.Value}"
 						   TextColor="{x:Static Color.Accent}">
+
 						<Label.GestureRecognizers>
 							<TapGestureRecognizer Command="{Binding ToggleDescriptionLengthCommand}" />
 						</Label.GestureRecognizers>
@@ -193,7 +203,7 @@
 
 					<Label Margin="0,0,0,10"
 						   FontAttributes="Bold"
-						   Text="Chapters" />
+						   Text="{Binding LocalizableProperties.HomeBookChapters.Value}" />
 
 					<StackLayout BindableLayout.ItemsSource="{Binding Chapters, Mode=OneTime}">
 						<BindableLayout.ItemTemplate>

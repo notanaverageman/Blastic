@@ -19,8 +19,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 			:
 			base(settingsService)
 		{
-			Title = localizableProperties.SampleSettingsTheme;
-			Help = localizableProperties.SampleSettingsThemeHelp;
+			Title = localizableProperties.SettingsTheme;
+			Help = localizableProperties.SettingsThemeHelp;
 
 			Theme = new ThemeSetting(
 				settingsService,

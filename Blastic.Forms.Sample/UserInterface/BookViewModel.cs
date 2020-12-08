@@ -7,6 +7,7 @@ using Blastic.Commanding;
 using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Librivox;
+using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.LifetimeManagement;
@@ -22,6 +23,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		private readonly ProgramDatabase _database;
 
 		public Book Book { get; }
+		public LocalizableProperties LocalizableProperties { get; }
 
 		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> Author { get; }
@@ -30,8 +32,8 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<string> ImageUrl { get; }
 		public IReactiveProperty<TimeSpan> TotalDuration { get; }
 
-		public IReactiveProperty<int> DescriptionMaxLines { get; }
-		public IReactiveProperty<string> ToggleDescriptionLabel { get; }
+		public IReactiveProperty<bool> DescriptionExpanded { get; }
+		public IReactiveProperty<IReadOnlyReactiveProperty<string>> DescriptionToggleLabel { get; }
 
 		public ObservableCollection<ChapterViewModel> Chapters { get; }
 
@@ -47,6 +49,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public BookViewModel(
 			Book book,
 			MediaPlayerViewModel mediaPlayer,
+			LocalizableProperties localizableProperties,
 			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			ProgramDatabase database)
@@ -57,6 +60,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			_database = database;
 
 			Book = book;
+			LocalizableProperties = localizableProperties;
 
 			Title = new ReactiveProperty<string>(Book.Title);
 			Description = new ReactiveProperty<string>(Book.Description);
@@ -69,8 +73,8 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Chapters = new ObservableCollection<ChapterViewModel>();
 
-			DescriptionMaxLines = new ReactiveProperty<int>(3);
-			ToggleDescriptionLabel = new ReactiveProperty<string>("More");
+			DescriptionExpanded = new ReactiveProperty<bool>();
+			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.HomeBookDescriptionMore);
 
 			ChapterDetailsOverlayState = new ReactiveProperty<OverlayState>();
 			ChapterForDetails = new ReactiveProperty<ChapterViewModel>();
@@ -86,16 +90,11 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		private void ToggleDescriptionLength()
 		{
-			if (ToggleDescriptionLabel.Value == "More")
-			{
-				ToggleDescriptionLabel.Value = "Less";
-				DescriptionMaxLines.Value = -1;
-			}
-			else
-			{
-				ToggleDescriptionLabel.Value = "More";
-				DescriptionMaxLines.Value = 3;
-			}
+			DescriptionExpanded.Value = !DescriptionExpanded.Value;
+
+			DescriptionToggleLabel.Value = DescriptionExpanded.Value
+				? LocalizableProperties.HomeBookDescriptionLess
+				: LocalizableProperties.HomeBookDescriptionMore;
 		}
 
 		private void ShowDetails(ChapterViewModel chapter)

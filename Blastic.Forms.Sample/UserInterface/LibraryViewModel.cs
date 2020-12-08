@@ -16,7 +16,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public LibraryViewModel(LocalizableProperties localizableProperties)
 		{
 			Order = new Order(2);
-			Title = localizableProperties.SampleLibraryTitle;
+			Title = localizableProperties.LibraryTitle;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Bookshelf);
 		}
 	}

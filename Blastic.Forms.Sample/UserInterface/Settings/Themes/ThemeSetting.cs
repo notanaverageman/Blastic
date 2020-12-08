@@ -26,7 +26,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 					Theme.Dark
 				})
 		{
-			Element.WithLabel(localizableProperties.SampleSettingsTheme);
+			Element.WithLabel(localizableProperties.SettingsTheme);
 
 			Lifetime.Initialization.Subscribe(Initialize);
 		}

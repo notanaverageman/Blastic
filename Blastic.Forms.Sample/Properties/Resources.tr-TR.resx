@@ -117,34 +117,76 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Sample.Home.Title" xml:space="preserve">
+  <data name="Home.Title" xml:space="preserve">
     <value>Anasayfa</value>
   </data>
-  <data name="Sample.Create" xml:space="preserve">
+  <data name="Common.Create" xml:space="preserve">
     <value>Oluştur</value>
   </data>
-  <data name="Sample.Cancel" xml:space="preserve">
+  <data name="Common.Cancel" xml:space="preserve">
     <value>İptal</value>
   </data>
-  <data name="Sample.Search.Title" xml:space="preserve">
+  <data name="Search.Title" xml:space="preserve">
     <value>Ara</value>
   </data>
-  <data name="Sample.Library.Title" xml:space="preserve">
+  <data name="Library.Title" xml:space="preserve">
     <value>Kütüphane</value>
   </data>
-  <data name="Sample.Settings.Title" xml:space="preserve">
-	  <value>Ayarlar</value>
+  <data name="Settings.Title" xml:space="preserve">
+    <value>Ayarlar</value>
   </data>
-  <data name="Sample.Settings.Language" xml:space="preserve">
-	  <value>Dil</value>
+  <data name="Settings.Language" xml:space="preserve">
+    <value>Dil</value>
   </data>
-  <data name="Sample.Settings.Language.Help" xml:space="preserve">
-	  <value>Uygulama dili. (Bu ayar kitapların içeriğini etkilemez.)</value>
+  <data name="Settings.Language.Help" xml:space="preserve">
+    <value>Uygulama dili. (Bu ayar kitapların içeriğini etkilemez.)</value>
   </data>
-  <data name="Sample.Settings.Theme" xml:space="preserve">
-	  <value>Görünüm</value>
+  <data name="Settings.Theme" xml:space="preserve">
+    <value>Görünüm</value>
   </data>
-  <data name="Sample.Settings.Theme.Help" xml:space="preserve">
-	  <value>Açık veya karanlık mod gibi tema ayarları.</value>
+  <data name="Settings.Theme.Help" xml:space="preserve">
+    <value>Açık veya karanlık mod gibi tema ayarları.</value>
+  </data>
+  <data name="Home.Latest" xml:space="preserve">
+    <value>Son Eklenenler</value>
+  </data>
+  <data name="Home.Popular" xml:space="preserve">
+    <value>Popüler</value>
+  </data>
+  <data name="Home.Book.Description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Home.Book.Description.More" xml:space="preserve">
+    <value>Daha fazla</value>
+  </data>
+  <data name="Home.Book.Chapters" xml:space="preserve">
+    <value>Bölümler</value>
+  </data>
+  <data name="Common.Listen" xml:space="preserve">
+    <value>Dinle</value>
+  </data>
+  <data name="Common.Download" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="Common.Like" xml:space="preserve">
+    <value>Beğen</value>
+  </data>
+  <data name="Common.Play" xml:space="preserve">
+    <value>Oynat</value>
+  </data>
+  <data name="Common.Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Common.Close" xml:space="preserve">
+	  <value>Kapat</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+	  <value>Kaydet</value>
+  </data>
+  <data name="Common.Downloaded" xml:space="preserve">
+	  <value>İndirildi</value>
+  </data>
+  <data name="Home.Book.Description.Less" xml:space="preserve">
+	  <value>Daha az</value>
   </data>
 </root>
