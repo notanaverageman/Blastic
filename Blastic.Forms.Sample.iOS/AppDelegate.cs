@@ -1,4 +1,5 @@
 using System;
+using AiForms.Renderers.iOS;
 using Blastic.Forms.Sample.Initialization.Extensions;
 using Blastic.Forms.Sample.iOS.Media;
 using Blastic.Forms.Sample.Media;
@@ -17,6 +18,7 @@ namespace Blastic.Forms.Sample.iOS
 		{
 			Xamarin.Forms.Forms.Init();
 			SQLitePCL.Batteries_V2.Init();
+			SettingsViewInit.Init();
 
 			IHost host = new HostBuilder()
 				.UseContentRoot(Environment.GetFolderPath(Environment.SpecialFolder.Personal))

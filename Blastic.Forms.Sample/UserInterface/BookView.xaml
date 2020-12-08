@@ -6,7 +6,6 @@
 			 xmlns:generic="clr-namespace:System.Collections.Generic;assembly=netstandard"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
 			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 			 x:Name="Root"
@@ -201,6 +200,19 @@
 							<DataTemplate x:DataType="userInterface:ChapterViewModel">
 								<Grid RowDefinitions="Auto,Auto"
 									  RowSpacing="0">
+
+									<Grid.Triggers>
+										<DataTrigger Binding="{Binding IsPlaying.Value}"
+													 TargetType="{x:Type Grid}"
+													 Value="True">
+											<Setter Property="BackgroundColor" Value="{DynamicResource BlasticGrayColorLight}" />
+										</DataTrigger>
+									</Grid.Triggers>
+
+									<Grid.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding TogglePlayCommand}" />
+									</Grid.GestureRecognizers>
+
 									<Grid Grid.Row="0"
 										  ColumnDefinitions="*,Auto,Auto">
 
@@ -240,75 +252,6 @@
 			</Grid>
 		</ScrollView>
 
-		<overlay:OverlayView State="{Binding ChapterDetailsOverlayState.Value}">
-			<overlay:OverlayView.Expanded>
-				<ContentView Background="{DynamicResource OverlayBackground}">
-					<Grid RowDefinitions="*,Auto">
-						<ScrollView Grid.Row="0">
-							<StackLayout Margin="20"
-										 Spacing="0">
-
-								<Image Aspect="Fill"
-									   HeightRequest="{StaticResource BookImageHeight}"
-									   HorizontalOptions="Center"
-									   Source="{Binding ImageUrl.Value}"
-									   WidthRequest="{StaticResource BookImageWidth}" />
-
-								<Label Margin="0,20,0,0"
-									   HorizontalOptions="Center"
-									   LineBreakMode="TailTruncation"
-									   Text="{Binding ChapterForDetails.Value.Title.Value}" />
-
-								<Label Margin="0,10,0,0"
-									   FontSize="Small"
-									   HorizontalOptions="Center"
-									   LineBreakMode="TailTruncation"
-									   Text="{Binding ChapterForDetails.Value.Book.Title.Value}"
-									   TextColor="{DynamicResource MediumTextColor}" />
-
-								<Grid Margin="0,80,0,0"
-									  ColumnDefinitions="Auto,Auto,*">
-
-									<Button Grid.Column="0"
-											Command="{Binding ChapterForDetails.Value.DownloadCommand}"
-											HorizontalOptions="Start"
-											Text="Download"
-											VerticalOptions="Center">
-										<Button.ImageSource>
-											<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-															 Glyph="{x:Static icons:IconFont.DownloadOutline}" />
-										</Button.ImageSource>
-									</Button>
-
-									<Label Grid.Column="1"
-										   FontAttributes="Bold"
-										   Text="✓"
-										   TextColor="{DynamicResource BlasticGreenColorMedium}"
-										   VerticalOptions="Center" />
-
-									<ProgressBar Grid.Column="2"
-												 IsVisible="{Binding ChapterForDetails.Value.DownloadCommand.IsExecuting.Value}"
-												 Progress="{Binding ChapterForDetails.Value.DownloadProgress.Value}"
-												 VerticalOptions="Center" />
-								</Grid>
-
-								<Button HorizontalOptions="Start"
-										Text="Like">
-									<Button.ImageSource>
-										<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-														 Glyph="{x:Static icons:IconFont.Heart}" />
-									</Button.ImageSource>
-								</Button>
-							</StackLayout>
-						</ScrollView>
-
-						<Button Grid.Row="1"
-								Command="{Binding HideDetailsCommand}"
-								HorizontalOptions="CenterAndExpand"
-								Text="Close" />
-					</Grid>
-				</ContentView>
-			</overlay:OverlayView.Expanded>
-		</overlay:OverlayView>
+		<userInterface:ChapterDetailsOverlayView />
 	</Grid>
 </ContentPage>

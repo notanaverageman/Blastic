@@ -7,7 +7,7 @@ using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Librivox;
-using Blastic.Forms.Sample.Localization;
+using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.Services.Navigation;
@@ -49,7 +49,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
 			ProgramDatabase database,
-			Labels labels)
+			LocalizableProperties localizableProperties)
 		{
 			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
@@ -59,7 +59,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			MediaPlayer = mediaPlayer;
 
 			Order = new Order(0);
-			Title = labels.Home.Title;
+			Title = localizableProperties.SampleHomeTitle;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
 
 			_booksSource = new SourceCache<BookViewModel, string>(x => x.Book.ArchiveOrgId);

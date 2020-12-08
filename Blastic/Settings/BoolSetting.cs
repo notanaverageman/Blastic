@@ -1,15 +1,15 @@
-﻿using Blastic.DynamicControls;
+using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.Services.Settings;
 
 namespace Blastic.Settings
 {
-	public class BooleanSetting : Setting<bool>
+	public class BoolSetting : Setting<bool>
 	{
 		public BooleanField BooleanField { get; }
 		public override IElement Element => BooleanField;
 
-		public BooleanSetting(
+		public BoolSetting(
 			ISettingsService settingsService,
 			IPresenterSource presenterSource,
 			string key,

@@ -4,7 +4,7 @@ using Blastic.Settings;
 
 namespace Blastic.UserInterface.Settings
 {
-	public class IsExpandedSetting : BooleanSetting
+	public class IsExpandedSetting : BoolSetting
 	{
 		public IsExpandedSetting(
 			ISettingsService settingsService,

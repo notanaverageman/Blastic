@@ -4,7 +4,7 @@ using Blastic.Settings;
 
 namespace Blastic.Wpf.UserInterface.Logs.Settings
 {
-	public sealed class OpenWindowOnErrorSetting : BooleanSetting
+	public sealed class OpenWindowOnErrorSetting : BoolSetting
 	{
 		public OpenWindowOnErrorSetting(
 			ISettingsService settingsService,

@@ -132,4 +132,19 @@
   <data name="Sample.Library.Title" xml:space="preserve">
     <value>Library</value>
   </data>
+  <data name="Sample.Settings.Title" xml:space="preserve">
+	  <value>Settings</value>
+  </data>
+  <data name="Sample.Settings.Language" xml:space="preserve">
+	  <value>Language</value>
+  </data>
+  <data name="Sample.Settings.Language.Help" xml:space="preserve">
+	  <value>Application language. (This does not affect any book content.)</value>
+  </data>
+  <data name="Sample.Settings.Theme" xml:space="preserve">
+	  <value>Appearance</value>
+  </data>
+  <data name="Sample.Settings.Theme.Help" xml:space="preserve">
+	  <value>Theme settings such as light or dark mode.</value>
+  </data>
 </root>

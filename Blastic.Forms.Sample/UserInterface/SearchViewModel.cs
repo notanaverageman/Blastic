@@ -1,5 +1,5 @@
 using Blastic.Forms.Sample.Icons;
-using Blastic.Forms.Sample.Localization;
+using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
@@ -13,10 +13,10 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReadOnlyReactiveProperty<string> Title { get; }
 		public IReadOnlyReactiveProperty<string> IconGlyph { get; }
 
-		public SearchViewModel(Labels labels)
+		public SearchViewModel(LocalizableProperties localizableProperties)
 		{
 			Order = new Order(1);
-			Title = labels.Search.Title;
+			Title = localizableProperties.SampleSearchTitle;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Magnify);
 		}
 	}

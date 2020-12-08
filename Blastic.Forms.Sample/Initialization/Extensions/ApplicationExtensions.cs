@@ -6,10 +6,12 @@ using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
-using Blastic.Forms.Sample.Localization;
 using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
+using Blastic.Forms.Sample.UserInterface.Settings;
+using Blastic.Forms.Sample.UserInterface.Settings.Languages;
+using Blastic.Forms.Sample.UserInterface.Settings.Themes;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,20 +38,24 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.AddShellTab<HomeViewModel>()
 							.AddShellTab<SearchViewModel>()
 							.AddShellTab<LibraryViewModel>()
+							.AddShellTab<SettingsViewModel>()
 							.UseMainViewModel<MainViewModel>()
+							.AddSettingsService()
 							.AddProgramDatabase<ProgramDatabase>(DatabaseProvider.SQLite, $"Data Source={databasePath};");
 					})
 				.AddMigrations()
 				.ConfigureServices(
 					(x, y) =>
 					{
-						y.AddSingleton<Labels>();
 						y.AddSingleton(new HttpClient());
 						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ArchiveOrgService>();
 						y.AddSingleton<DownloadService>();
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
+						
+						y.AddSingleton<ThemeSettingsSection>();
+						y.AddSingleton<LanguageSettingsSection>();
 					});
 
 			return hostBuilder;

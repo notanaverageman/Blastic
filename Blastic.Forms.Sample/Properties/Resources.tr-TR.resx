@@ -132,4 +132,19 @@
   <data name="Sample.Library.Title" xml:space="preserve">
     <value>Kütüphane</value>
   </data>
+  <data name="Sample.Settings.Title" xml:space="preserve">
+	  <value>Ayarlar</value>
+  </data>
+  <data name="Sample.Settings.Language" xml:space="preserve">
+	  <value>Dil</value>
+  </data>
+  <data name="Sample.Settings.Language.Help" xml:space="preserve">
+	  <value>Uygulama dili. (Bu ayar kitapların içeriğini etkilemez.)</value>
+  </data>
+  <data name="Sample.Settings.Theme" xml:space="preserve">
+	  <value>Görünüm</value>
+  </data>
+  <data name="Sample.Settings.Theme.Help" xml:space="preserve">
+	  <value>Açık veya karanlık mod gibi tema ayarları.</value>
+  </data>
 </root>

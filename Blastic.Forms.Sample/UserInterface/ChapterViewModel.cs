@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
@@ -35,8 +36,10 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<bool> IsPlaying { get; }
 		public IReadOnlyReactiveProperty<string> PlayPauseIconGlyph { get; }
 
+		public IReactiveProperty<bool> IsDownloaded { get; }
 		public IReactiveProperty<double> DownloadProgress { get; }
 		public Command DownloadCommand { get; }
+		public Command DeleteDownloadedFileCommand { get; }
 
 		public Command SeekStartedCommand { get; }
 		public Command SeekCompletedCommand { get; }
@@ -64,9 +67,14 @@ namespace Blastic.Forms.Sample.UserInterface
 			ProgressPercent = new ReactiveProperty<double>();
 			Seek = new ReactiveProperty<TimeSpan>();
 
+			IsDownloaded = new ReactiveProperty<bool>(File.Exists(GetDownloadedFilePath()));
 			DownloadProgress = new ReactiveProperty<double>();
-			DownloadCommand = new Command(Download);
+
+			DownloadCommand = new Command(IsDownloaded.Select(x => !x), Download);
 			DownloadCommand.DisableReentrance();
+
+			DeleteDownloadedFileCommand = new Command(IsDownloaded, DeleteDownloadedFile);
+			DeleteDownloadedFileCommand.DisableReentrance();
 
 			ProgressLabel = ProgressPercent
 				.Select(x => ToTimeString(ToTime(x)))
@@ -90,20 +98,42 @@ namespace Blastic.Forms.Sample.UserInterface
 			SkipForwardCommand = new Command(SkipForward);
 		}
 
-		private async Task Download()
+		private async Task Download(CancellationToken cancellationToken)
 		{
-			string filePath = Path.Combine(
+			string filePath = GetDownloadedFilePath();
+
+			Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+			DownloadProgress.Value = 0;
+			Progress<double> progress = new Progress<double>(x => DownloadProgress.Value = x);
+			using FileStream stream = File.Create(filePath);
+
+			await _downloadService.Download(Url.Value, stream, progress, cancellationToken);
+
+			IsDownloaded.Value = true;
+		}
+
+		private void DeleteDownloadedFile()
+		{
+			string filePath = GetDownloadedFilePath();
+
+			if (!File.Exists(filePath))
+			{
+				return;
+			}
+
+			File.Delete(filePath);
+
+			IsDownloaded.Value = false;
+		}
+
+		private string GetDownloadedFilePath()
+		{
+			return Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
 				"Chapters",
 				Book.Book.ArchiveOrgId,
 				_chapter.FileName);
-
-			Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-			Progress<double> progress = new Progress<double>(x => DownloadProgress.Value = x);
-			using FileStream stream = File.Create(filePath);
-
-			await _downloadService.Download(Url.Value, stream, progress);
 		}
 
 		private void SeekStarted()
