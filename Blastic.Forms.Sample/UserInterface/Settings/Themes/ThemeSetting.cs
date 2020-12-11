@@ -43,6 +43,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 						_ => OSAppTheme.Dark
 					};
 				});
+
+			this.SaveOnChange();
 		}
 	}
 }

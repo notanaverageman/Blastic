@@ -12,6 +12,7 @@ using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.Sample.UserInterface.Settings;
 using Blastic.Forms.Sample.UserInterface.Settings.Languages;
 using Blastic.Forms.Sample.UserInterface.Settings.Themes;
+using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,6 +54,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton<DownloadService>();
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
+						y.AddSingleton<IInitializationStep, ReadSettingsStep>();
 						
 						y.AddSingleton<ThemeSettingsSection>();
 						y.AddSingleton<LanguageSettingsSection>();

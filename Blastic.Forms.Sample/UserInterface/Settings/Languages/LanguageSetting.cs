@@ -41,6 +41,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 						_ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
 					};
 				});
+
+			this.SaveOnChange();
 		}
 	}
 }
