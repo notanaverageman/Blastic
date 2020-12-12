@@ -6,17 +6,21 @@ using Blastic.Reactive;
 
 namespace Blastic.Execution
 {
+	/// <summary>
+	/// A class that is mostly used on view models to enable cancellation, progress, and
+	/// busyness.
+	/// </summary>
 	public class ExecutionContext
 	{
-		public IReactiveProperty<bool> IsBusy { get; set; }
-		public IReactiveProperty<string> ProgressMessage { get; set; }
+		public IReactiveProperty<bool> IsBusy { get; }
+		public IReactiveProperty<string> ProgressMessage { get; }
 		public ReactiveCollection<string> ProgressDetails { get; }
 
-		public IReactiveProperty<bool> IsCancellationSupported { get; set; }
+		public IReactiveProperty<bool> IsCancellationSupported { get; }
 		public CancellationTokenSource CancellationTokenSource { get; private set; }
 
-		public IReactiveProperty<bool> IsShowingForm { get; set; }
-		public IReactiveProperty<DynamicModel> Form { get; set; }
+		public IReactiveProperty<bool> IsShowingForm { get; }
+		public IReactiveProperty<DynamicModel> Form { get; }
 
 		public ExecutionContext()
 		{

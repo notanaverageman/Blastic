@@ -1,17 +1,22 @@
 using System;
 using System.Reactive.Disposables;
 using Blastic.Commanding;
-using Blastic.Ordering;
 
 namespace Blastic.LifetimeManagement
 {
 	public static class LifetimeExtensions
 	{
+		/// <summary>
+		/// Bind the lifetime of an object to its parent's lifetime.
+		/// </summary>
+		/// <param name="lifetime">Parent's lifetime.</param>
+		/// <param name="childLifetime">Child's lifetime.</param>
+		/// <param name="lifetimeChainOptions">Options to manage the child lifetime.</param>
+		/// <returns>An <see cref="IDisposable"/> that removes the link between lifetimes when disposed.</returns>
 		public static IDisposable AddChildLifetime(
 			this ILifetime lifetime,
 			ILifetime childLifetime,
-			LifetimeChainOptions lifetimeChainOptions,
-			Order? order = null)
+			LifetimeChainOptions lifetimeChainOptions)
 		{
 			CompositeDisposable disposable = new CompositeDisposable();
 
@@ -21,7 +26,7 @@ namespace Blastic.LifetimeManagement
 					.Subscribe(async x =>
 					{
 						await child.Execute(x);
-					}, order);
+					});
 
 				disposable.Add(subscription);
 			}

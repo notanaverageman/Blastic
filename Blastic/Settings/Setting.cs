@@ -60,7 +60,7 @@ namespace Blastic.Settings
 
 			Lifetime.Closure.Subscribe(async (x, y) =>
 			{
-				if (x.DialogResult == true)
+				if (x.Result == true)
 				{
 					await Save(y);
 				}

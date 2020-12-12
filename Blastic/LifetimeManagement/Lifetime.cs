@@ -8,24 +8,42 @@ using Blastic.Reactive;
 
 namespace Blastic.LifetimeManagement
 {
+	/// <summary>
+	/// Default implementation of <see cref="ILifetime"/>.
+	/// </summary>
 	public class Lifetime : ILifetime
 	{
 		private readonly IReactiveProperty<bool> _isInitialized;
 		private readonly IReactiveProperty<bool> _isActive;
 		private readonly IReactiveProperty<bool> _isActivating;
 
+		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> IsInitialized => _isInitialized;
+
+		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> IsActive => _isActive;
+
+		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> IsActivating => _isActivating;
 
+		/// <inheritdoc />
 		public Command<InitializationContext> Initialization { get; }
 
+		/// <inheritdoc />
 		public Command<ClosureContext> Closure { get; }
+
+		/// <inheritdoc />
 		public Command<ClosureContext> CanClose { get; }
 
+		/// <inheritdoc />
 		public Command<ActivationContext> Activation { get; }
+
+		/// <inheritdoc />
 		public Command<DeactivationContext> Deactivation { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="Lifetime"/> object.
+		/// </summary>
 		public Lifetime()
 		{
 			_isInitialized = new ReactiveProperty<bool>();
@@ -55,6 +73,7 @@ namespace Blastic.LifetimeManagement
 				.WithSubscribe(AfterDeactivation, Order.AbsoluteMaximum);
 		}
 
+		/// <inheritdoc />
 		public async Task Initialize(
 			CancellationToken cancellationToken,
 			InitializationContext? context)
@@ -63,6 +82,7 @@ namespace Blastic.LifetimeManagement
 			await Initialization.Execute(context, cancellationToken);
 		}
 
+		/// <inheritdoc />
 		public async Task Activate(
 			CancellationToken cancellationToken,
 			ActivationContext? context)
@@ -71,6 +91,7 @@ namespace Blastic.LifetimeManagement
 			await Activation.Execute(context, cancellationToken);
 		}
 
+		/// <inheritdoc />
 		public async Task Deactivate(
 			CancellationToken cancellationToken,
 			DeactivationContext? context)
@@ -79,6 +100,7 @@ namespace Blastic.LifetimeManagement
 			await Deactivation.Execute(context, cancellationToken);
 		}
 
+		/// <inheritdoc />
 		public async Task Close(
 			CancellationToken cancellationToken,
 			ClosureContext? context)
