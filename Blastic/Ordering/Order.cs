@@ -4,9 +4,39 @@ using System.Linq;
 
 namespace Blastic.Ordering
 {
+	/// <summary>
+	/// A class that can be used to specify order of things in a flexible manner.
+	/// </summary>
+	/// <remarks>
+	/// This object consists of a list of integers. When two <see cref="Order"/> objects
+	/// are compared, each integer in their lists are compared according to their indexes.
+	/// If one of the lists do not have an integer at an index, it is assumed to have 0.
+	/// <para>
+	/// For example, if we compare order (1, 2) with (1), first the integers at index 0 are compared.
+	/// If they are equal then the integers at index 1 are compared. Since the second order
+	/// does not have an integer at that index, it is assumed that it has 0 and the first order
+	/// is determined to be greater than the second one.
+	/// </para>
+	/// <para>
+	/// This makes it possible to create an order between any two orders. For example,
+	/// given two orders (1, 1), (1, 2), the order (1, 1, 1) is between them.
+	/// </para>
+	/// <para>
+	/// There are two special order objects <see cref="AbsoluteMinimum"/> and <see cref="AbsoluteMaximum"/>.
+	/// <see cref="AbsoluteMinimum"/> is always less than (greater than for <see cref="AbsoluteMaximum"/>) other orders and
+	/// it is only equal to itself.
+	/// </para>
+	/// </remarks>
 	public class Order : IEquatable<Order>, IComparable<Order>, IComparable
 	{
+		/// <summary>
+		/// The order that is less than every other order.
+		/// </summary>
 		public static readonly Order AbsoluteMinimum = new Order(true, false);
+
+		/// <summary>
+		/// The order that is greater than every other order.
+		/// </summary>
 		public static readonly Order AbsoluteMaximum = new Order(false, true);
 
 		private readonly bool _isAbsoluteMinimum;
@@ -14,8 +44,15 @@ namespace Blastic.Ordering
 
 		private readonly List<int> _numbers;
 
+		/// <summary>
+		/// List of integers in this order.
+		/// </summary>
 		public IReadOnlyList<int> Numbers => _numbers;
 
+		/// <summary>
+		/// Creates a new instance.
+		/// </summary>
+		/// <param name="numbers"></param>
 		public Order(params int[] numbers)
 		{
 			_numbers = new List<int>(numbers);
@@ -29,11 +66,13 @@ namespace Blastic.Ordering
 			_numbers = new List<int>(0);
 		}
 
+		/// <inheritdoc />
 		public bool Equals(Order? other)
 		{
 			return CompareTo(other) == 0;
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
@@ -42,6 +81,7 @@ namespace Blastic.Ordering
 			return Equals((Order)obj);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return _numbers.GetHashCode();
@@ -57,6 +97,7 @@ namespace Blastic.Ordering
 			return !Equals(left, right);
 		}
 
+		/// <inheritdoc />
 		public int CompareTo(Order? other)
 		{
 			if (other == null)
@@ -112,6 +153,7 @@ namespace Blastic.Ordering
 			return 0;
 		}
 
+		/// <inheritdoc />
 		public int CompareTo(object? obj)
 		{
 			if (ReferenceEquals(null, obj)) return 1;
@@ -142,6 +184,7 @@ namespace Blastic.Ordering
 			return Comparer<Order?>.Default.Compare(left, right) >= 0;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			if (_isAbsoluteMinimum)
@@ -162,6 +205,12 @@ namespace Blastic.Ordering
 			return string.Join(".", Numbers);
 		}
 
+		/// <summary>
+		/// Parses a string to an <see cref="Order"/> object. String should be
+		/// of a format that each integer has a . between them.
+		/// </summary>
+		/// <param name="orderString">The string to parse.</param>
+		/// <returns>The parsed order.</returns>
 		public static Order Parse(string orderString)
 		{
 			if (orderString == "")
