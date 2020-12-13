@@ -9,15 +9,27 @@ using Blastic.ViewManagement.TypeMappers;
 
 namespace Blastic.Wpf.ViewManagement
 {
+	/// <summary>
+	/// Default implementation of <see cref="IViewLocator{T}"/> for WPF.
+	/// </summary>
+	/// <remarks>
+	/// This view locator subscribes to the global framework events to set the view of
+	/// an <see cref="IViewAware"/>.
+	/// </remarks>
 	public class ViewLocator : ViewLocatorBase<FrameworkElement>
 	{
+		/// <summary>
+		/// This value should be set on initialization.
+		/// </summary>
 		internal static IViewLocator<FrameworkElement> Current { get; set; }
 
+		/// <inheritdoc />
 		public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)
 		{
 		}
 
-		protected override void PostProcessAttachView(FrameworkElement view, IViewAware viewAware)
+		/// <inheritdoc />
+		protected override void AttachView(FrameworkElement view, IViewAware viewAware)
 		{
 			view.Unloaded += (sender, args) =>
 			{
@@ -25,8 +37,10 @@ namespace Blastic.Wpf.ViewManagement
 			};
 		}
 
+		/// <inheritdoc />
 		protected override FrameworkElement PostProcessCachedView(FrameworkElement view)
 		{
+			// Check for closed windows. They throw exception when their show method is called.
 			if (!(view is Window window))
 			{
 				return view;
@@ -40,11 +54,13 @@ namespace Blastic.Wpf.ViewManagement
 			return null;
 		}
 
+		/// <inheritdoc />
 		protected override void PostProcessCreatedView(FrameworkElement view, object model)
 		{
 			view.DataContext = model;
 		}
 
+		/// <inheritdoc />
 		protected override FrameworkElement CreateNotFoundView(Type type, string message)
 		{
 			return new TextBlock

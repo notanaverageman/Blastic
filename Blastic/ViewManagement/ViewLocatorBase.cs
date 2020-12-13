@@ -5,10 +5,19 @@ using Blastic.ViewManagement.TypeMappers;
 
 namespace Blastic.ViewManagement
 {
+	/// <summary>
+	/// Base implementation for <see cref="IViewLocator{T}"/>. This class can have many
+	/// <see cref="ITypeMapper"/> instances to lookup the type of the view that
+	/// corresponds to a given viewmodel.</summary>
+	/// <typeparam name="T">Base type for platform's views.</typeparam>
 	public abstract class ViewLocatorBase<T> : IViewLocator<T> where T : class
 	{
 		private readonly List<ITypeMapper> _typeMappers;
 
+		/// <summary>
+		/// Creates a new instance with given type mappers.
+		/// </summary>
+		/// <param name="typeMappers">Type mappers that are used to lookup view types for viewmodels.</param>
 		public ViewLocatorBase(IEnumerable<ITypeMapper> typeMappers)
 		{
 			_typeMappers = typeMappers
@@ -16,17 +25,30 @@ namespace Blastic.ViewManagement
 				.ToList();
 		}
 
+		/// <summary>
+		/// Fluent method that adds a new <see cref="InheritanceTypeMapper"/> for given
+		/// type parameters.
+		/// </summary>
+		/// <typeparam name="TViewModel">Type of the view model.</typeparam>
+		/// <typeparam name="TView">Type of the view.</typeparam>
+		/// <returns></returns>
 		public ViewLocatorBase<T> WithTypeMapper<TViewModel, TView>()
 		{
 			return WithTypeMapper(new InheritanceTypeMapper(typeof(TViewModel), typeof(TView)));
 		}
 
+		/// <summary>
+		/// Fluent method that adds the given type mapper to the list.
+		/// </summary>
+		/// <param name="typeMapper"></param>
+		/// <returns></returns>
 		public ViewLocatorBase<T> WithTypeMapper(ITypeMapper typeMapper)
 		{
 			_typeMappers.Add(typeMapper);
 			return this;
 		}
 
+		/// <inheritdoc />
 		public T Locate(object model)
 		{
 			IViewAware? viewAware = null;
@@ -47,7 +69,7 @@ namespace Blastic.ViewManagement
 
 			if (viewAware != null)
 			{
-				PostProcessAttachView(element, viewAware);
+				AttachView(element, viewAware);
 			}
 			
 			return element;
@@ -101,9 +123,33 @@ namespace Blastic.ViewManagement
 			return view;
 		}
 
+		/// <summary>
+		/// Create a placeholder view for a viewmodel that could not be mapped to a view.
+		/// </summary>
+		/// <param name="type">Type of viewmodel.</param>
+		/// <param name="message">Error message.</param>
+		/// <returns>A view that shows the error message.</returns>
 		protected abstract T CreateNotFoundView(Type type, string message);
-		protected abstract T PostProcessCachedView(T view);
+
+		/// <summary>
+		/// Modify or check a cached view before using it. Can return a different view or null.
+		/// </summary>
+		/// <param name="view">The view to inspect.</param>
+		/// <returns>The given view or another view or null.</returns>
+		protected abstract T? PostProcessCachedView(T view);
+
+		/// <summary>
+		/// Modify a newly created view.
+		/// </summary>
+		/// <param name="view">The view to inspect.</param>
+		/// <param name="model">The viewmodel corresponding to the view.</param>
 		protected abstract void PostProcessCreatedView(T view, object model);
-		protected abstract void PostProcessAttachView(T view, IViewAware viewAware);
+
+		/// <summary>
+		/// Attach the given view to given view aware viewmodel.
+		/// </summary>
+		/// <param name="view">The view to attach.</param>
+		/// <param name="viewAware">The viewmodel to attach the view.</param>
+		protected abstract void AttachView(T view, IViewAware viewAware);
 	}
 }

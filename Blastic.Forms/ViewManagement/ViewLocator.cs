@@ -8,15 +8,23 @@ using Xamarin.Forms;
 
 namespace Blastic.Forms.ViewManagement
 {
+	/// <summary>
+	/// Default implementation of <see cref="IViewLocator{T}"/> for Xamarin Forms.
+	/// </summary>
 	public class ViewLocator : ViewLocatorBase<VisualElement>
 	{
+		/// <summary>
+		/// This value should be set on initialization.
+		/// </summary>
 		internal static IViewLocator<VisualElement> Current { get; set; }
 
+		/// <inheritdoc />
 		public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)
 		{
 		}
 
-		protected override void PostProcessAttachView(VisualElement view, IViewAware viewAware)
+		/// <inheritdoc />
+		protected override void AttachView(VisualElement view, IViewAware viewAware)
 		{
 			viewAware.View.Value = view;
 
@@ -27,11 +35,13 @@ namespace Blastic.Forms.ViewManagement
 			//};
 		}
 
+		/// <inheritdoc />
 		protected override VisualElement PostProcessCachedView(VisualElement view)
 		{
 			return view;
 		}
 
+		/// <inheritdoc />
 		protected override void PostProcessCreatedView(VisualElement view, object model)
 		{
 			view.BindingContext = model;
@@ -42,6 +52,7 @@ namespace Blastic.Forms.ViewManagement
 			}
 		}
 
+		/// <inheritdoc />
 		protected override VisualElement CreateNotFoundView(Type type, string message)
 		{
 			return new Label

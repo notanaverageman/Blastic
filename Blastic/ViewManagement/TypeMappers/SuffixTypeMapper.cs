@@ -3,11 +3,17 @@ using Blastic.Ordering;
 
 namespace Blastic.ViewManagement.TypeMappers
 {
+	/// <summary>
+	/// A type mapper that return its view type if the given viewmodel type's name equals
+	/// to the view's type name + a suffix. This class is used for mapping values such as:
+	/// <c>SomeViewModel -> SomeView</c>
+	/// </summary>
 	public class SuffixTypeMapper : ITypeMapper
 	{
 		private readonly string _viewSuffix;
 		private readonly string _viewModelSuffix;
 
+		/// <inheritdoc />
 		public Order Order { get; }
 
 		public SuffixTypeMapper(
@@ -21,9 +27,10 @@ namespace Blastic.ViewManagement.TypeMappers
 			Order = order ?? new Order();
 		}
 
+		/// <inheritdoc />
 		public Type? Map(Type type)
 		{
-			string typeName = type.AssemblyQualifiedName;
+			string? typeName = type.AssemblyQualifiedName;
 
 			if (typeName == null)
 			{

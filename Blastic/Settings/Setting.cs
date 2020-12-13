@@ -16,8 +16,15 @@ namespace Blastic.Settings
 	{
 		private readonly IPresenterSource _presenterSource;
 
+		/// <summary>
+		/// Settings service that is used when reading or writing values.
+		/// </summary>
 		protected ISettingsService SettingsService { get; }
 
+		/// <summary>
+		/// An observable property that decides whether to show the setting on user interface.
+		/// It is true by default.
+		/// </summary>
 		public IReactiveProperty<bool> ShowOnUI { get; }
 
 		/// <summary>
@@ -36,12 +43,21 @@ namespace Blastic.Settings
 		public IPresenter Presenter => _presenterSource.CreatePresenter(Element);
 
 		/// <summary>
-		/// Key to be used when writing to the database.
+		/// Key that is used when reading from or writing to the store.
 		/// </summary>
 		public string Key { get; }
 
+		/// <summary>
+		/// Collection of diagnostic messages that is populated when a validation occurs.
+		/// </summary>
 		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; }
 
+		/// <summary>
+		/// Creates a new instance of <see cref="Setting"/>
+		/// </summary>
+		/// <param name="settingsService">The settings service.</param>
+		/// <param name="presenterSource">The presenter source.</param>
+		/// <param name="key">Key that is used when reading from or writing to the store.</param>
 		public Setting(
 			ISettingsService settingsService,
 			IPresenterSource presenterSource,
@@ -71,10 +87,29 @@ namespace Blastic.Settings
 			});
 		}
 
+		/// <summary>
+		/// Read the value of this setting from store.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>A task to be awaited.</returns>
 		public abstract Task Read(CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Write the value of this setting to store.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>A task to be awaited.</returns>
 		public abstract Task Save(CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Sets the <see cref="Setting{T}.SettingValue"/> to the <see cref="Setting{T}.Value"/>.
+		/// </summary>
 		public abstract void Revert();
 
+		/// <summary>
+		/// Return a non empty error message if there is a validation error.
+		/// </summary>
+		/// <returns></returns>
 		public virtual string? CheckError()
 		{
 			return null;
@@ -100,7 +135,7 @@ namespace Blastic.Settings
 		private IDisposable? _isEnabledSubscription;
 
 		/// <summary>
-		/// Default value to be returned when key does not exist in database.
+		/// Default value to be used when key does not exist in store.
 		/// </summary>
 		public T DefaultValue { get; }
 
@@ -126,6 +161,13 @@ namespace Blastic.Settings
 		/// </summary>
 		public T Value => ReactiveValue.Value;
 
+		/// <summary>
+		/// Creates a new instance of <see cref="Setting"/>
+		/// </summary>
+		/// <param name="settingsService">The settings service.</param>
+		/// <param name="presenterSource">The presenter source.</param>
+		/// <param name="key">Key that is used when reading from or writing to the store.</param>
+		/// <param name="defaultValue">Default value to be used when key does not exist in store.</param>
 		public Setting(
 			ISettingsService settingsService,
 			IPresenterSource presenterSource,
@@ -143,6 +185,7 @@ namespace Blastic.Settings
 			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
 		}
 
+		/// <inheritdoc />
 		public override async Task Read(CancellationToken cancellationToken)
 		{
 			_isEnabledSubscription?.Dispose();
@@ -156,6 +199,7 @@ namespace Blastic.Settings
 			ReactiveSettingValue.Value = value;
 		}
 
+		/// <inheritdoc />
 		public override async Task Save(CancellationToken cancellationToken)
 		{
 			T value = await BeforeSave(SettingValue, cancellationToken);
@@ -164,16 +208,29 @@ namespace Blastic.Settings
 			ReactiveValue.Value = SettingValue;
 		}
 
+		/// <summary>
+		/// Inspect and possibly change the value after reading from store.
+		/// </summary>
+		/// <param name="value">Value read from store.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>Return the same or changed value.</returns>
 		protected virtual Task<T> AfterRead(T value, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(value);
 		}
 
+		/// <summary>
+		/// Inspect and possibly change the value before writing to store.
+		/// </summary>
+		/// <param name="value">Value to write to store.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>Return the same or changed value.</returns>
 		protected virtual Task<T> BeforeSave(T value, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(value);
 		}
 
+		/// <inheritdoc />
 		public override void Revert()
 		{
 			ReactiveSettingValue.Value = Value;
