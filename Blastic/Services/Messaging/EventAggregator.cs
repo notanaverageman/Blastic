@@ -5,20 +5,26 @@ using Blastic.Platform;
 
 namespace Blastic.Services.Messaging
 {
+	/// <summary>
+	/// Default implementation of <see cref="IEventAggregator"/>.
+	/// </summary>
 	public class EventAggregator : IEventAggregator
 	{
 		private readonly Subject<object?> _subject = new Subject<object?>();
 
+		/// <inheritdoc />
 		public IObservable<T> GetEventBus<T>()
 		{
 			return _subject.OfType<T>().AsObservable();
 		}
 
+		/// <inheritdoc />
 		public IDisposable Subscribe<T>(Action<T> action)
 		{
 			return GetEventBus<T>().Subscribe(action);
 		}
 
+		/// <inheritdoc />
 		public IDisposable SubscribeOnUIThread<T>(Action<T> action)
 		{
 			return GetEventBus<T>()
@@ -26,11 +32,13 @@ namespace Blastic.Services.Messaging
 				.Subscribe(action);
 		}
 
+		/// <inheritdoc />
 		public void Publish<T>(T @event)
 		{
 			_subject.OnNext(@event);
 		}
 
+		/// <inheritdoc />
 		public void Dispose()
 		{
 			_subject.Dispose();
