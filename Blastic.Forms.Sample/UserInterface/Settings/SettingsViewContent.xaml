@@ -12,7 +12,13 @@
 
 	<ContentPage.Resources>
 		<Style TargetType="{x:Type renderers:SettingsView}">
+			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BlasticWhiteColor}, Dark={StaticResource BlasticBlackColor}}" />
 			<Setter Property="CellAccentColor" Value="{DynamicResource BlasticGreenColorMedium}" />
+			<Setter Property="CellBackgroundColor" Value="{AppThemeBinding Light={StaticResource BlasticWhiteColor}, Dark={StaticResource BlasticBlackColor}}" />
+			<Setter Property="CellDescriptionColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
+			<Setter Property="CellHintTextColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
+			<Setter Property="CellTitleColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
+			<Setter Property="CellValueTextColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
 		</Style>
 	</ContentPage.Resources>
 

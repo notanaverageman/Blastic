@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Forms", "Blastic.Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.CodeGeneration", "Blastic.CodeGeneration\Blastic.CodeGeneration.csproj", "{B36695DB-AC4A-41C3-8A17-C6787D0CE61E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blastic.CodeGeneration.Test", "Blastic.CodeGeneration.Test\Blastic.CodeGeneration.Test.csproj", "{67613341-524B-4164-9F0C-E1532CDE6D18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.CodeGeneration.Test", "Blastic.CodeGeneration.Test\Blastic.CodeGeneration.Test.csproj", "{67613341-524B-4164-9F0C-E1532CDE6D18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -436,6 +436,7 @@ Global
 		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|ARM64.ActiveCfg = Release|iPhoneSimulator
 		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|iPhone.ActiveCfg = Release|iPhone
 		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|iPhone.Build.0 = Release|iPhone
+		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|iPhone.Deploy.0 = Release|iPhone
 		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{DD9C9EA0-8D30-4202-B90B-64396260BF36}.Release|x64.ActiveCfg = Release|iPhoneSimulator
