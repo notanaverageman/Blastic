@@ -1,6 +1,6 @@
 using System;
 
-namespace Blastic.Forms.Sample.Librivox
+namespace Blastic.Forms.Sample.ArchiveOrg
 {
 	public class ArchiveOrgResponse
 	{

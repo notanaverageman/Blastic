@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Blastic.Forms.Sample.Data;
 
-namespace Blastic.Forms.Sample.Librivox
+namespace Blastic.Forms.Sample.ArchiveOrg
 {
 	public class ArchiveOrgQueryResult
 	{
