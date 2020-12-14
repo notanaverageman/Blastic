@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
 using Blastic.Services.Settings;
@@ -9,12 +9,12 @@ namespace Blastic.Wpf.Sample.UserInterface
 	public sealed class FolderSetting : FileBrowserSetting
 	{
 		public FolderSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			IDialogService dialogService)
 			:
 			base(
-				settingsService,
+				settingsStorage,
 				presenterSource,
 				dialogService,
 				default,

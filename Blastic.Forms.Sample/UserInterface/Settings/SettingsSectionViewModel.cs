@@ -15,11 +15,11 @@ namespace Blastic.Forms.Sample.UserInterface.Settings
 	{
 		public abstract IReadOnlyReactiveProperty<string> Title { get; }
 		
-		public ISettingsService SettingsService { get; }
+		public ISettingsStorage SettingsStorage { get; }
 		
-		protected SettingsSectionViewModel(ISettingsService settingsService)
+		protected SettingsSectionViewModel(ISettingsStorage settingsStorage)
 		{
-			SettingsService = settingsService;
+			SettingsStorage = settingsStorage;
 			Lifetime.Initialization.Subscribe(OnInitialize, Order.AbsoluteMinimum);
 		}
 

@@ -107,10 +107,10 @@ namespace Blastic.Wpf.Initialization
 			return this;
 		}
 
-		public BlasticApplicationBuilder AddSettingsService<T>() where T : class, ISettingsService
+		public BlasticApplicationBuilder AddSettingsService<T>() where T : class, ISettingsStorage
 		{
 			_serviceCollection.AddSingleton<SettingsViewModel>();
-			_serviceCollection.AddSingleton<ISettingsService, T>();
+			_serviceCollection.AddSingleton<ISettingsStorage, T>();
 			_serviceCollection.AddSingleton<IInitializationStep, ReadSettingsStep>();
 
 			return this;

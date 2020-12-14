@@ -17,9 +17,9 @@ namespace Blastic.Settings
 		private readonly IPresenterSource _presenterSource;
 
 		/// <summary>
-		/// Settings service that is used when reading or writing values.
+		/// Settings storage that is used when reading or writing values.
 		/// </summary>
-		protected ISettingsService SettingsService { get; }
+		protected ISettingsStorage SettingsStorage { get; }
 
 		/// <summary>
 		/// An observable property that decides whether to show the setting on user interface.
@@ -55,17 +55,17 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Creates a new instance of <see cref="Setting"/>
 		/// </summary>
-		/// <param name="settingsService">The settings service.</param>
+		/// <param name="settingsStorage">The settings storage.</param>
 		/// <param name="presenterSource">The presenter source.</param>
 		/// <param name="key">Key that is used when reading from or writing to the store.</param>
 		public Setting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			string key)
 		{
 			_presenterSource = presenterSource;
 
-			SettingsService = settingsService;
+			SettingsStorage = settingsStorage;
 			Key = key;
 
 			Lifetime = new Lifetime();
@@ -164,17 +164,17 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Creates a new instance of <see cref="Setting"/>
 		/// </summary>
-		/// <param name="settingsService">The settings service.</param>
+		/// <param name="settingsStorage">The settings storage.</param>
 		/// <param name="presenterSource">The presenter source.</param>
 		/// <param name="key">Key that is used when reading from or writing to the store.</param>
 		/// <param name="defaultValue">Default value to be used when key does not exist in store.</param>
 		public Setting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			string key,
 			T defaultValue)
 			:
-			base(settingsService, presenterSource, key)
+			base(settingsStorage, presenterSource, key)
 		{
 			DefaultValue = defaultValue;
 
@@ -191,7 +191,7 @@ namespace Blastic.Settings
 			_isEnabledSubscription?.Dispose();
 			_isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.TriggerValidation());
 
-			T value = await SettingsService.Get(Key, DefaultValue, cancellationToken);
+			T value = await SettingsStorage.Get(Key, DefaultValue, cancellationToken);
 
 			value = await AfterRead(value, cancellationToken);
 
@@ -204,7 +204,7 @@ namespace Blastic.Settings
 		{
 			T value = await BeforeSave(SettingValue, cancellationToken);
 
-			await SettingsService.Put(Key, value, cancellationToken);
+			await SettingsStorage.Put(Key, value, cancellationToken);
 			ReactiveValue.Value = SettingValue;
 		}
 

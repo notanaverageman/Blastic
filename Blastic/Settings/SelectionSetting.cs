@@ -23,19 +23,19 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Creates a new instance of <see cref="Setting"/>
 		/// </summary>
-		/// <param name="settingsService">The settings service.</param>
+		/// <param name="settingsStorage">The settings storage.</param>
 		/// <param name="presenterSource">The presenter source.</param>
 		/// <param name="key">Key that is used when reading from or writing to the store.</param>
 		/// <param name="defaultValue">Default value to be used when key does not exist in store.</param>
 		/// <param name="allValues">The values to choose one from.</param>
 		public SelectionSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			string key,
 			T defaultValue,
 			IEnumerable<T> allValues)
 			:
-			base(settingsService, presenterSource, key, defaultValue)
+			base(settingsStorage, presenterSource, key, defaultValue)
 		{
 			SelectionField = new SelectionField<T>(ReactiveSettingValue, new ReactiveCollection<T>(allValues));
 		}

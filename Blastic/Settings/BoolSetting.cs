@@ -19,12 +19,12 @@ namespace Blastic.Settings
 
 		/// <inheritdoc />
 		public BoolSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			string key,
 			bool defaultValue)
 			:
-			base(settingsService, presenterSource, key, defaultValue)
+			base(settingsStorage, presenterSource, key, defaultValue)
 		{
 			BooleanField = new BooleanField(ReactiveSettingValue);
 		}

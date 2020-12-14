@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 namespace Blastic.Services.Settings
 {
 	/// <summary>
-	/// Default implementation of <see cref="ISettingsService"/> that uses an in-memory
+	/// Default implementation of <see cref="ISettingsStorage"/> that uses an in-memory
 	/// <see cref="Dictionary{TKey,TValue}"/> to store the values.
 	/// </summary>
-	public class InMemorySettingsService : ISettingsService
+	public class InMemorySettingsStorage : ISettingsStorage
 	{
 		private readonly Dictionary<string, object?> _settings;
 
 		/// <summary>
 		/// Creates a new instance.
 		/// </summary>
-		public InMemorySettingsService()
+		public InMemorySettingsStorage()
 		{
 			_settings = new Dictionary<string, object?>();
 		}

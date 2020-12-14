@@ -19,12 +19,12 @@ namespace Blastic.Settings
 
 		/// <inheritdoc />
 		public StringSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			string key,
 			string defaultValue)
 			:
-			base(settingsService, presenterSource, key, defaultValue)
+			base(settingsStorage, presenterSource, key, defaultValue)
 		{
 			TextField = new TextField(ReactiveSettingValue);
 		}

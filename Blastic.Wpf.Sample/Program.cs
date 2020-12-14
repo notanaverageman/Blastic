@@ -37,7 +37,7 @@ namespace Blastic.Wpf.Sample
 						.AddMainTab<HomeViewModel>()
 						.AddMainTab<MainTabViewModel>()
 						.AddLogsWindow()
-						.AddSettingsService<DatabaseSettingsService>()
+						.AddSettingsService<DatabaseSettingsStorage>()
 						.AddProgramDatabase(DatabaseProvider.SQLite, "Data Source=Settings.sqlite;")
 						.AddLocalizationSource(Resources.ResourceManager))
 				.Build();

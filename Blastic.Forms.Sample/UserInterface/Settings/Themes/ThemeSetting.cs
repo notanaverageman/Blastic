@@ -10,12 +10,12 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 	public sealed class ThemeSetting : SelectionSetting<Theme>
 	{
 		public ThemeSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			LocalizableProperties localizableProperties)
 			:
 			base(
-				settingsService,
+				settingsStorage,
 				presenterSource,
 				"Sample.Theme",
 				Theme.System,

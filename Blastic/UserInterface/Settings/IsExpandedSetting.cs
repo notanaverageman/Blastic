@@ -1,4 +1,4 @@
-﻿using Blastic.DynamicControls;
+using Blastic.DynamicControls;
 using Blastic.Services.Settings;
 using Blastic.Settings;
 
@@ -7,11 +7,11 @@ namespace Blastic.UserInterface.Settings
 	public class IsExpandedSetting : BoolSetting
 	{
 		public IsExpandedSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			string sectionName)
 			:
-			base(settingsService, presenterSource, $"Blastic.Settings.IsExpanded.{sectionName}", false)
+			base(settingsStorage, presenterSource, $"Blastic.Settings.IsExpanded.{sectionName}", false)
 		{
 			ShowOnUI.Value = false;
 		}

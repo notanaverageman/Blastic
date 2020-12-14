@@ -1,4 +1,4 @@
-﻿using Blastic.DynamicControls;
+using Blastic.DynamicControls;
 using Blastic.Services.Settings;
 using Blastic.UserInterface.Settings;
 
@@ -11,12 +11,12 @@ namespace Blastic.Wpf.UserInterface.Logs.Settings
 		public OpenWindowOnErrorSetting OpenWindowOnErrorSetting { get; }
 		
 		public LogSettingsViewModel(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource)
 			:
-			base(settingsService, presenterSource)
+			base(settingsStorage, presenterSource)
 		{
-			OpenWindowOnErrorSetting = new OpenWindowOnErrorSetting(settingsService, presenterSource);
+			OpenWindowOnErrorSetting = new OpenWindowOnErrorSetting(settingsStorage, presenterSource);
 		}
 	}
 }

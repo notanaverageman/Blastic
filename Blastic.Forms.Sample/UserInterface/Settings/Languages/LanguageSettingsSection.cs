@@ -14,18 +14,18 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 		public LanguageSetting Language { get; }
 		
 		public LanguageSettingsSection(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			ILocalizationService localizationService,
 			LocalizableProperties localizableProperties)
 			:
-			base(settingsService)
+			base(settingsStorage)
 		{
 			Title = localizableProperties.SettingsLanguage;
 			Help = localizableProperties.SettingsLanguageHelp;
 
 			Language = new LanguageSetting(
-				settingsService,
+				settingsStorage,
 				presenterSource,
 				localizationService,
 				localizableProperties);

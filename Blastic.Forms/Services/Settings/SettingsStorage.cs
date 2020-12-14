@@ -1,16 +1,16 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Forms.Data.ProgramData;
 using Blastic.Services.Settings;
-using Blastic.Wpf.Data.ProgramData;
 
-namespace Blastic.Wpf.Services.Settings
+namespace Blastic.Forms.Services.Settings
 {
-	public class DatabaseSettingsService : ISettingsService
+	public class SettingsStorage : ISettingsStorage
 	{
 		private readonly ProgramDatabase _database;
 
-		public DatabaseSettingsService(ProgramDatabase database)
+		public SettingsStorage(ProgramDatabase database)
 		{
 			_database = database;
 		}

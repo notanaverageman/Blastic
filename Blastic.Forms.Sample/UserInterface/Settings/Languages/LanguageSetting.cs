@@ -11,13 +11,13 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 	public sealed class LanguageSetting : SelectionSetting<Language>
 	{
 		public LanguageSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			ILocalizationService localizationService,
 			LocalizableProperties localizableProperties)
 			:
 			base(
-				settingsService,
+				settingsStorage,
 				presenterSource,
 				"Sample.Language",
 				Language.System,

@@ -96,7 +96,7 @@ namespace Blastic.Forms.Initialization
 		public BlasticApplicationBuilder AddSettingsService()
 		{
 			_serviceCollection.AddSingleton<SettingsViewModel>();
-			_serviceCollection.AddSingleton<ISettingsService, SettingsService>();
+			_serviceCollection.AddSingleton<ISettingsStorage, SettingsStorage>();
 			_serviceCollection.AddSingleton<IInitializationStep, ReadSettingsStep>();
 
 			return this;

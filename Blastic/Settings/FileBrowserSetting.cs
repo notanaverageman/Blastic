@@ -22,14 +22,14 @@ namespace Blastic.Settings
 		public Command BrowseCommand { get; }
 
 		public FileBrowserSetting(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			IDialogService dialogService,
 			IFileDialogFilter filter,
 			string key,
 			string? defaultValue)
 			:
-			base(settingsService, presenterSource, key, defaultValue)
+			base(settingsStorage, presenterSource, key, defaultValue)
 		{
 			_dialogService = dialogService;
 			_filter = filter;

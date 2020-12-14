@@ -21,16 +21,16 @@ namespace Blastic.UserInterface.Settings
 		public ReactiveCollection<Setting> SettingsToShow { get; }
 
 		public abstract string SectionName { get; }
-		public ISettingsService SettingsService { get; }
+		public ISettingsStorage SettingsStorage { get; }
 
 		public IsExpandedSetting IsExpanded { get; private set; }
 
 		protected SettingsSectionViewModel(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource)
 		{
 			_presenterSource = presenterSource;
-			SettingsService = settingsService;
+			SettingsStorage = settingsStorage;
 
 			SettingsToShow = new ReactiveCollection<Setting>();
 
@@ -41,7 +41,7 @@ namespace Blastic.UserInterface.Settings
 			InitializationContext context,
 			CancellationToken cancellationToken)
 		{
-			IsExpanded = new IsExpandedSetting(SettingsService, _presenterSource, SectionName);
+			IsExpanded = new IsExpandedSetting(SettingsStorage, _presenterSource, SectionName);
 
 			List<Setting> settings = GetType()
 				.GetProperties()

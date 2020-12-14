@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 namespace Blastic.Services.Settings
 {
 	/// <summary>
-	/// An interface that provides CRUD operations for setting storage.
+	/// An interface that provides CRUD operations for settings.
 	/// </summary>
-	public interface ISettingsService
+	public interface ISettingsStorage
 	{
 		/// <summary>
 		/// Check if given key exists in store.

@@ -13,17 +13,17 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 		public ThemeSetting Theme { get; }
 		
 		public ThemeSettingsSection(
-			ISettingsService settingsService,
+			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
 			LocalizableProperties localizableProperties)
 			:
-			base(settingsService)
+			base(settingsStorage)
 		{
 			Title = localizableProperties.SettingsTheme;
 			Help = localizableProperties.SettingsThemeHelp;
 
 			Theme = new ThemeSetting(
-				settingsService,
+				settingsStorage,
 				presenterSource,
 				localizableProperties);
 		}
