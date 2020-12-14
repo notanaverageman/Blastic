@@ -2,6 +2,7 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.BookView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:generic="clr-namespace:System.Collections.Generic;assembly=netstandard"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
@@ -16,7 +17,7 @@
 
 	<Grid>
 		<ScrollView Margin="10,20,10,0">
-			<Grid RowDefinitions="Auto,Auto,Auto,*"
+			<Grid RowDefinitions="Auto,Auto,*"
 				  RowSpacing="20">
 
 				<Grid Grid.Row="0"
@@ -54,55 +55,11 @@
 							   Text="{Binding Author.Value, Mode=OneTime}"
 							   TextColor="{DynamicResource LightTextColor}" />
 
-						<StackLayout Grid.Row="2"
-									 Orientation="Horizontal"
-									 VerticalOptions="Center">
-							<BindableLayout.ItemsSource>
-								<generic:List x:TypeArguments="x:Int32">
-									<x:Int32>0</x:Int32>
-									<x:Int32>0</x:Int32>
-									<x:Int32>0</x:Int32>
-									<x:Int32>0</x:Int32>
-									<x:Int32>0</x:Int32>
-								</generic:List>
-							</BindableLayout.ItemsSource>
-							<BindableLayout.ItemTemplate>
-								<DataTemplate>
-									<Image>
-										<Image.Source>
-											<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-															 Glyph="{x:Static icons:IconFont.Star}"
-															 Size="Medium"
-															 Color="{DynamicResource BlasticYellowColorMedium}" />
-										</Image.Source>
-									</Image>
-								</DataTemplate>
-							</BindableLayout.ItemTemplate>
-						</StackLayout>
-
-						<StackLayout Grid.Row="3"
-									 Orientation="Horizontal">
-							<BindableLayout.ItemsSource>
-								<generic:List x:TypeArguments="x:String">
-									<x:String>Literature</x:String>
-									<x:String>Science Fiction</x:String>
-								</generic:List>
-							</BindableLayout.ItemsSource>
-							<BindableLayout.ItemTemplate>
-								<DataTemplate>
-									<Frame Padding="10,3"
-										   BackgroundColor="Transparent"
-										   BorderColor="{DynamicResource BlasticGrayColorLight}"
-										   CornerRadius="3"
-										   HasShadow="False">
-
-										<Label FontSize="Micro"
-											   Text="{Binding}"
-											   TextColor="{DynamicResource BlasticGrayColorLight}" />
-									</Frame>
-								</DataTemplate>
-							</BindableLayout.ItemTemplate>
-						</StackLayout>
+						<controls:RatingBar Grid.Row="2"
+											FontFamily="{StaticResource MaterialFontFamily}"
+											Rating="{Binding Book.Rating}"
+											VerticalOptions="End"
+											Color="{DynamicResource BlasticYellowColorMedium}" />
 					</Grid>
 				</Grid>
 
@@ -263,8 +220,7 @@
 										   Margin="0,-10,0,0"
 										   FontSize="Micro"
 										   Text="{Binding SizeInBytes.Value}"
-										   TextColor="{DynamicResource MediumTextColor}">
-									</Label>
+										   TextColor="{DynamicResource MediumTextColor}" />
 								</Grid>
 							</DataTemplate>
 						</BindableLayout.ItemTemplate>

@@ -9,6 +9,7 @@ using Blastic.Forms.Sample.ArchiveOrg;
 
 namespace Blastic.Forms.Sample.Services
 {
+	// TODO: Debug.WriteLine to proper handling.
 	public class ArchiveOrgService
 	{
 		private const string Mp3Format1 = "64Kbps MP3";
@@ -22,16 +23,10 @@ namespace Blastic.Forms.Sample.Services
 		public const string ArchiveOrgImageUrlPrefix = "https://archive.org/services/img";
 
 		private readonly HttpClient _httpClient;
-		private readonly JsonSerializerOptions _jsonSerializerOptions;
 
 		public ArchiveOrgService(HttpClient httpClient)
 		{
 			_httpClient = httpClient;
-
-			_jsonSerializerOptions = new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true
-			};
 		}
 
 		public async Task<ArchiveOrgQueryResult?> GetAudioBookList(
@@ -45,6 +40,10 @@ namespace Blastic.Forms.Sample.Services
 			url += @"&fl[]=title";
 			url += @"&fl[]=creator";
 			url += @"&fl[]=description";
+			url += @"&fl[]=downloads";
+			url += @"&fl[]=avg_rating";
+			url += @"&fl[]=subject";
+			url += @"&sort[]=downloads+desc";
 			url += $@"&rows={numberOfItemsInPage}";
 			url += $@"&page={page}";
 			url += @"&output=json";
@@ -53,10 +52,28 @@ namespace Blastic.Forms.Sample.Services
 
 			string result = await responseMessage.Content.ReadAsStringAsync();
 
-			ArchiveOrgQueryResult? queryResult = JsonSerializer.Deserialize<ArchiveOrgQueryResult>(
-				result,
-				_jsonSerializerOptions);
+			ArchiveOrgQueryResult queryResult = new();
 
+			using JsonDocument document = JsonDocument.Parse(result);
+			JsonElement response = document.RootElement.GetProperty("response");
+
+			foreach (JsonElement doc in response.GetProperty("docs").EnumerateArray())
+			{
+				ArchiveOrgDocument archiveOrgDocument = new()
+				{
+					Identifier = GetStringProperty(doc, "identifier"),
+					Title = GetStringProperty(doc, "title"),
+					Creator = GetStringProperty(doc, "creator"),
+					Description = GetStringProperty(doc, "description"),
+					Rating = GetDoublePropertyFromString(doc, "avg_rating"),
+					Downloads = GetIntProperty(doc, "downloads")
+				};
+
+				// ParseTags(doc, archiveOrgDocument);
+
+				queryResult.Documents.Add(archiveOrgDocument);
+			}
+			
 			return queryResult;
 		}
 
@@ -64,8 +81,6 @@ namespace Blastic.Forms.Sample.Services
 			string archiveOrgId,
 			CancellationToken cancellationToken)
 		{
-			// TODO: Debug.WriteLine to proper handling.
-
 			string url = AudioBookMetadataUrl + "/" + archiveOrgId;
 
 			Debug.WriteLine("Id: " + archiveOrgId);
@@ -76,22 +91,11 @@ namespace Blastic.Forms.Sample.Services
 
 			using JsonDocument document = JsonDocument.Parse(result);
 
-			ArchiveOrgMetadata metadata = new ArchiveOrgMetadata();
-
-			string? description = document.RootElement
-				.GetProperty("metadata")
-				.GetProperty("description")
-				.GetString();
-
-			if (description == null)
+			ArchiveOrgMetadata metadata = new()
 			{
-				Debug.WriteLine("Description is null.");
-			}
-			else
-			{
-				metadata.Description = description;
-			}
-
+				Description = GetStringProperty(document.RootElement.GetProperty("metadata"), "description")
+			};
+			
 			ParseFiles(document, metadata, Mp3Format1);
 
 			if (!metadata.Chapters.Any())
@@ -102,91 +106,32 @@ namespace Blastic.Forms.Sample.Services
 			return metadata;
 		}
 
-		private static void ParseFiles(
+		private void ParseFiles(
 			JsonDocument document,
 			ArchiveOrgMetadata metadata,
 			string fileFormat)
 		{
 			foreach (JsonElement file in document.RootElement.GetProperty("files").EnumerateArray())
 			{
-				string? format = file.GetProperty("format").GetString();
-
-				if (format == null)
-				{
-					Debug.WriteLine("Format is null.");
-
-					continue;
-				}
+				string format = GetStringProperty(file, "format");
 
 				if (!string.Equals(format, fileFormat, StringComparison.InvariantCultureIgnoreCase))
 				{
 					continue;
 				}
 
-				ArchiveOrgChapterMetadata chapterMetadata = new ArchiveOrgChapterMetadata();
-
-				string? title = file.GetProperty("title").GetString();
-
-				if (title == null)
+				ArchiveOrgChapterMetadata chapterMetadata = new()
 				{
-					Debug.WriteLine("Title is null");
-				}
-				else
-				{
-					chapterMetadata.Title = title;
-				}
+					Title = GetStringProperty(file, "title"),
+					FileName = GetStringProperty(file, "name"),
+					Sha1 = GetStringProperty(file, "sha1"),
+					SizeInBytes = GetIntPropertyFromString(file, "size"),
+					Duration = ParseLength(file.GetProperty("length").GetString()),
+				};
+				
+				string trackString = GetStringProperty(file, "track");
 
-				string? fileName = file.GetProperty("name").GetString();
-
-				if (fileName == null)
-				{
-					Debug.WriteLine("Name is null");
-				}
-				else
-				{
-					chapterMetadata.FileName = fileName;
-				}
-
-				string? length = file.GetProperty("length").GetString();
-
-				chapterMetadata.Duration = ParseLength(length);
-
-				string? size = file.GetProperty("size").GetString();
-
-				if (size == null)
-				{
-					Debug.WriteLine("Size is null");
-				}
-				else
-				{
-					if (!int.TryParse(size, out int sizeInBytes))
-					{
-						Debug.WriteLine("Size is not in expected form: " + size);
-					}
-					else
-					{
-						chapterMetadata.SizeInBytes = sizeInBytes;
-					}
-				}
-
-				string? sha1 = file.GetProperty("sha1").GetString();
-
-				if (sha1 == null)
-				{
-					Debug.WriteLine("Sha1 is null");
-				}
-				else
-				{
-					chapterMetadata.Sha1 = sha1;
-				}
-
-				string? trackString = file.GetProperty("track").GetString();
-
-				if (trackString == null)
-				{
-					Debug.WriteLine("Track is null");
-				}
-				else
+				if (!string.IsNullOrEmpty(trackString))
 				{
 					int index = trackString.IndexOf('/');
 
@@ -209,7 +154,118 @@ namespace Blastic.Forms.Sample.Services
 			}
 		}
 
-		private static TimeSpan ParseLength(string? length)
+		private string GetStringProperty(JsonElement element, string property)
+		{
+			if (!element.TryGetProperty(property, out JsonElement propertyElement))
+			{
+				Debug.WriteLine($"{property} does not exist");
+				return "";
+			}
+			
+			string? value = propertyElement.GetString();
+
+			if (value == null)
+			{
+				Debug.WriteLine($"{property} is null");
+				return "";
+			}
+
+			return value;
+		}
+
+		private int GetIntProperty(JsonElement element, string property)
+		{
+			if (!element.TryGetProperty(property, out JsonElement propertyElement))
+			{
+				Debug.WriteLine($"{property} does not exist");
+				return 0;
+			}
+
+			if (!propertyElement.TryGetInt32(out int intValue))
+			{
+				Debug.WriteLine($"Cannot parse {property}");
+			}
+
+			return intValue;
+		}
+
+		private int GetIntPropertyFromString(JsonElement element, string property)
+		{
+			if (!element.TryGetProperty(property, out JsonElement propertyElement))
+			{
+				Debug.WriteLine($"{property} does not exist");
+				return 0;
+			}
+
+			string? value = propertyElement.GetString();
+
+			if (value == null)
+			{
+				Debug.WriteLine($"{property} is null");
+				return 0;
+			}
+
+			if (!int.TryParse(value, out int intValue))
+			{
+				Debug.WriteLine($"{property} is not in expected form: " + value);
+			}
+			
+			return intValue;
+		}
+
+		private double GetDoublePropertyFromString(JsonElement element, string property)
+		{
+			if (!element.TryGetProperty(property, out JsonElement propertyElement))
+			{
+				Debug.WriteLine($"{property} does not exist");
+				return 0;
+			}
+			
+			string? value = propertyElement.GetString();
+
+			if (value == null)
+			{
+				Debug.WriteLine($"{property} is null");
+				return 0;
+			}
+
+			if (!double.TryParse(value, out double doubleValue))
+			{
+				Debug.WriteLine($"{property} is not in expected form: " + value);
+			}
+			
+			return doubleValue;
+		}
+
+		private void ParseTags(in JsonElement element, ArchiveOrgDocument archiveOrgDocument)
+		{
+			if (!element.TryGetProperty("subject", out JsonElement tagsElement))
+			{
+				Debug.WriteLine("subject does not exist");
+				return;
+			}
+
+			if (tagsElement.GetArrayLength() <= 0)
+			{
+				Debug.WriteLine("Empty subject array.");
+				return;
+			}
+
+			foreach (JsonElement tagElement in tagsElement.EnumerateArray())
+			{
+				string? tag = tagElement.GetString();
+
+				if (string.IsNullOrEmpty(tag))
+				{
+					Debug.WriteLine($"Tag is empty or null: {tag}");
+					continue;
+				}
+
+				archiveOrgDocument.Tags.Add(tag!);
+			}
+		}
+
+		private TimeSpan ParseLength(string? length)
 		{
 			void Error()
 			{

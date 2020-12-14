@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -29,6 +29,9 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\RatingBar.xaml.cs">
+      <DependentUpon>RatingBar.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UserInterface\ChapterDetailsOverlayView.xaml.cs">
       <DependentUpon>ChapterDetailsOverlayView.xaml</DependentUpon>
     </Compile>

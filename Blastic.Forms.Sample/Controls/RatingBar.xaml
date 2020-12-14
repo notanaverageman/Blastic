@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout x:Class="Blastic.Forms.Sample.Controls.RatingBar"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d"
+			 Orientation="Horizontal"
+			 VerticalOptions="Center">
+
+	<StackLayout.Resources>
+		<DataTemplate x:Key="ImageTemplate">
+			<Image>
+				<Image.Source>
+					<FontImageSource FontFamily="{Binding FontFamily, Source={RelativeSource FindAncestor, AncestorType={x:Type controls:RatingBar}}}"
+									 Size="{Binding FontSize, Source={RelativeSource FindAncestor, AncestorType={x:Type controls:RatingBar}}}"
+									 Color="{Binding Color, Source={RelativeSource FindAncestor, AncestorType={x:Type controls:RatingBar}}}" />
+				</Image.Source>
+			</Image>
+		</DataTemplate>
+	</StackLayout.Resources>
+</StackLayout>
