@@ -40,8 +40,8 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<OverlayState> ChapterDetailsOverlayState { get; }
 		public IReactiveProperty<ChapterViewModel> ChapterForDetails { get; }
 
+		public Command PlayCommand { get; }
 		public Command ToggleDescriptionLengthCommand { get; }
-		public Command<ChapterViewModel> PlayChapterCommand { get; }
 
 		public Command<ChapterViewModel> ShowDetailsCommand { get; }
 		public Command<ChapterViewModel> HideDetailsCommand { get; }
@@ -79,13 +79,25 @@ namespace Blastic.Forms.Sample.UserInterface
 			ChapterDetailsOverlayState = new ReactiveProperty<OverlayState>();
 			ChapterForDetails = new ReactiveProperty<ChapterViewModel>();
 
+			PlayCommand = new Command(Play);
 			ToggleDescriptionLengthCommand = new Command(ToggleDescriptionLength);
-			PlayChapterCommand = new Command<ChapterViewModel>(mediaPlayer.PlayChapter);
 
 			ShowDetailsCommand = new Command<ChapterViewModel>(ShowDetails);
 			HideDetailsCommand = new Command<ChapterViewModel>(HideDetails);
 
 			Lifetime.Initialization.Subscribe(FetchDetails);
+		}
+
+		private void Play()
+		{
+			ChapterViewModel? firstChapter = Chapters.FirstOrDefault();
+
+			if (firstChapter == null)
+			{
+				return;
+			}
+
+			_mediaPlayer.PlayChapter(firstChapter);
 		}
 
 		private void ToggleDescriptionLength()

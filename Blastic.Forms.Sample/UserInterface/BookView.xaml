@@ -4,7 +4,6 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-			 xmlns:generic="clr-namespace:System.Collections.Generic;assembly=netstandard"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
@@ -17,7 +16,7 @@
 
 	<Grid>
 		<ScrollView Margin="10,20,10,0">
-			<Grid RowDefinitions="Auto,Auto,*"
+			<Grid RowDefinitions="Auto,Auto,Auto"
 				  RowSpacing="20">
 
 				<Grid Grid.Row="0"
@@ -69,6 +68,7 @@
 					  ColumnSpacing="0">
 
 					<Button Grid.Column="0"
+							Command="{Binding PlayCommand}"
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"

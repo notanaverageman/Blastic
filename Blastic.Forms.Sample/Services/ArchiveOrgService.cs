@@ -82,11 +82,8 @@ namespace Blastic.Forms.Sample.Services
 			CancellationToken cancellationToken)
 		{
 			string url = AudioBookMetadataUrl + "/" + archiveOrgId;
-
-			Debug.WriteLine("Id: " + archiveOrgId);
-
+			
 			HttpResponseMessage responseMessage = await _httpClient.GetAsync(url, cancellationToken);
-
 			string result = await responseMessage.Content.ReadAsStringAsync();
 
 			using JsonDocument document = JsonDocument.Parse(result);
