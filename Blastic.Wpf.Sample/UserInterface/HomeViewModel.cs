@@ -122,7 +122,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 		public async Task Test()
 		{
-			_localizationService.Culture = _x
+			_localizationService.Culture.Value = _x
 				? CultureInfo.GetCultureInfo("en-US")
 				: CultureInfo.GetCultureInfo("tr-TR");
 

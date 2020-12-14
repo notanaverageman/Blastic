@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Blastic.Reactive;
 
 namespace Blastic.Services.Localization
 {
@@ -14,9 +15,9 @@ namespace Blastic.Services.Localization
 		event EventHandler<CultureChangedEventArgs>? CultureChanged;
 
 		/// <summary>
-		/// Current culture.
+		/// An observable property that holds the current culture.
 		/// </summary>
-		CultureInfo Culture { get; set; }
+		IReactiveProperty<CultureInfo> Culture { get; }
 
 		/// <summary>
 		/// Get localized string for given key.

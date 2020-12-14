@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Blastic.Reactive;
 
 namespace Blastic.Services.Localization
 {
@@ -15,41 +16,38 @@ namespace Blastic.Services.Localization
 		public event EventHandler<CultureChangedEventArgs>? CultureChanged;
 
 		private readonly ILocalizationSource[] _sources;
-
-		private CultureInfo _culture;
-
+		
 		/// <inheritdoc />
-		public CultureInfo Culture
-		{
-			get => _culture;
-			set
-			{
-				_culture = value;
-				CultureChanged?.Invoke(this, new CultureChangedEventArgs(_culture));
-			}
-		}
+		public IReactiveProperty<CultureInfo> Culture { get; }
 
 		/// <summary>
 		/// Creates a new instance with given localization sources.
 		/// </summary>
 		/// <param name="sources">Localization sources that provide localized strings.</param>
-		public LocalizationService(IEnumerable<ILocalizationSource> sources)
+		/// <param name="currentCulture">Initial value of current culture.</param>
+		public LocalizationService(
+			IEnumerable<ILocalizationSource> sources,
+			CultureInfo? currentCulture = null)
 		{
-			_culture = CultureInfo.InvariantCulture;
+			currentCulture ??= CultureInfo.InvariantCulture;
 
 			_sources = sources
 				.OrderBy(x => x.Order)
 				.ToArray();
+
+			Culture = new ReactiveProperty<CultureInfo>(currentCulture);
+			Culture.Subscribe(x => CultureChanged?.Invoke(this, new CultureChangedEventArgs(x)), false);
 		}
 
 		/// <inheritdoc />
 		public string? GetValue(string key)
 		{
 			string? result = null;
+			CultureInfo culture = Culture.Value;
 
 			foreach (ILocalizationSource source in _sources)
 			{
-				result = source.GetValue(key, _culture);
+				result = source.GetValue(key, culture);
 
 				if (!string.IsNullOrEmpty(result))
 				{

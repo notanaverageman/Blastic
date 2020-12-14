@@ -33,7 +33,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 			ReactiveSettingValue.Subscribe(
 				x =>
 				{
-					localizationService.Culture = x switch
+					localizationService.Culture.Value = x switch
 					{
 						Language.English => CultureInfo.GetCultureInfo("en-US"),
 						Language.Turkish => CultureInfo.GetCultureInfo("tr-TR"),

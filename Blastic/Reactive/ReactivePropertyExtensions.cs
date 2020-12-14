@@ -1,4 +1,5 @@
 using System;
+using System.Reactive;
 using System.Reactive.Linq;
 
 namespace Blastic.Reactive
@@ -27,6 +28,19 @@ namespace Blastic.Reactive
 			}
 
 			return result;
+		}
+
+		/// <see cref="IReadOnlyReactiveProperty{T}.Subscribe(IObserver{T},bool)"/>
+		/// <param name="property">The reactive property.</param>
+		/// <param name="onNext">Action to invoke when the property changes.</param>
+		/// <param name="raiseLatestValue">Whether to emit the current value upon subscription.</param>
+		/// <returns>A disposable that unsubscribes the observer upon disposal.</returns>
+		public static IDisposable Subscribe<T>(
+			this IReadOnlyReactiveProperty<T> property,
+			Action<T> onNext,
+			bool raiseLatestValue)
+		{
+			return property.Subscribe(Observer.Create(onNext), raiseLatestValue);
 		}
 	}
 }
