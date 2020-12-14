@@ -189,4 +189,7 @@
   <data name="Home.Book.Description.Less" xml:space="preserve">
 	  <value>Daha az</value>
   </data>
+  <data name="Common.Pause" xml:space="preserve">
+	  <value>Duraklat</value>
+  </data>
 </root>

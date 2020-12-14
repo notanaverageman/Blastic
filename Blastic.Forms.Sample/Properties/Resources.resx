@@ -189,4 +189,7 @@
   <data name="Home.Book.Description.Less" xml:space="preserve">
 	  <value>Less</value>
   </data>
+  <data name="Common.Pause" xml:space="preserve">
+	  <value>Pause</value>
+  </data>
 </root>

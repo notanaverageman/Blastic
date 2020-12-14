@@ -44,7 +44,7 @@
 								<DataTrigger Binding="{Binding ChapterForDetails.Value.IsPlaying.Value}"
 											 TargetType="{x:Type Button}"
 											 Value="True">
-									<Setter Property="Text" Value="Pause" />
+									<Setter Property="Text" Value="{Binding LocalizableProperties.CommonPause.Value}" />
 								</DataTrigger>
 							</Button.Triggers>
 
