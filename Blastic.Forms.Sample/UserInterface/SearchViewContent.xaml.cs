@@ -1,8 +1,8 @@
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public partial class SearchView
+	public partial class SearchViewContent
 	{
-		public SearchView() : base(new SearchViewContent())
+		public SearchViewContent()
 		{
 			InitializeComponent();
 		}

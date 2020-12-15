@@ -29,52 +29,25 @@ namespace Blastic.Forms.Sample.Services
 			_httpClient = httpClient;
 		}
 
-		public async Task<ArchiveOrgQueryResult?> GetAudioBookList(
+		public async Task<ArchiveOrgQueryResult> GetAudioBookList(
 			int page = 1,
 			int numberOfItemsInPage = 20,
 			CancellationToken cancellationToken = default)
 		{
-			string url = AudioBookSearchUrl;
-
-			url += @"&fl[]=identifier";
-			url += @"&fl[]=title";
-			url += @"&fl[]=creator";
-			url += @"&fl[]=description";
-			url += @"&fl[]=downloads";
-			url += @"&fl[]=avg_rating";
-			url += @"&fl[]=subject";
+			string url = $"{AudioBookSearchUrl}";
 			url += @"&sort[]=downloads+desc";
-			url += $@"&rows={numberOfItemsInPage}";
-			url += $@"&page={page}";
-			url += @"&output=json";
-
-			HttpResponseMessage responseMessage = await _httpClient.GetAsync(url, cancellationToken);
-
-			string result = await responseMessage.Content.ReadAsStringAsync();
-
-			ArchiveOrgQueryResult queryResult = new();
-
-			using JsonDocument document = JsonDocument.Parse(result);
-			JsonElement response = document.RootElement.GetProperty("response");
-
-			foreach (JsonElement doc in response.GetProperty("docs").EnumerateArray())
-			{
-				ArchiveOrgDocument archiveOrgDocument = new()
-				{
-					Identifier = GetStringProperty(doc, "identifier"),
-					Title = GetStringProperty(doc, "title"),
-					Creator = GetStringProperty(doc, "creator"),
-					Description = GetStringProperty(doc, "description"),
-					Rating = GetDoublePropertyFromString(doc, "avg_rating"),
-					Downloads = GetIntProperty(doc, "downloads")
-				};
-
-				// ParseTags(doc, archiveOrgDocument);
-
-				queryResult.Documents.Add(archiveOrgDocument);
-			}
 			
-			return queryResult;
+			return await GetAudioBookList(url , page, numberOfItemsInPage, cancellationToken);
+		}
+
+		public async Task<ArchiveOrgQueryResult> Search(
+			string title,
+			int page = 1,
+			int numberOfItemsInPage = 20,
+			CancellationToken cancellationToken = default)
+		{
+			string url = $"{AudioBookSearchUrl} AND title:({title})";
+			return await GetAudioBookList(url, page, numberOfItemsInPage, cancellationToken);
 		}
 
 		public async Task<ArchiveOrgMetadata?> GetAudioBookMetadata(
@@ -101,6 +74,50 @@ namespace Blastic.Forms.Sample.Services
 			}
 
 			return metadata;
+		}
+
+		public async Task<ArchiveOrgQueryResult> GetAudioBookList(
+			string url,
+			int page = 1,
+			int numberOfItemsInPage = 20,
+			CancellationToken cancellationToken = default)
+		{
+			url += @"&fl[]=identifier";
+			url += @"&fl[]=title";
+			url += @"&fl[]=creator";
+			url += @"&fl[]=description";
+			url += @"&fl[]=downloads";
+			url += @"&fl[]=avg_rating";
+			url += @"&fl[]=subject";
+			url += $@"&rows={numberOfItemsInPage}";
+			url += $@"&page={page}";
+			url += @"&output=json";
+
+			HttpResponseMessage responseMessage = await _httpClient.GetAsync(url, cancellationToken);
+
+			string result = await responseMessage.Content.ReadAsStringAsync();
+
+			ArchiveOrgQueryResult queryResult = new();
+
+			using JsonDocument document = JsonDocument.Parse(result);
+			JsonElement response = document.RootElement.GetProperty("response");
+
+			foreach (JsonElement doc in response.GetProperty("docs").EnumerateArray())
+			{
+				ArchiveOrgDocument archiveOrgDocument = new()
+				{
+					Identifier = GetStringProperty(doc, "identifier"),
+					Title = GetStringProperty(doc, "title"),
+					Creator = GetStringProperty(doc, "creator"),
+					Description = GetStringProperty(doc, "description"),
+					Rating = GetDoublePropertyFromString(doc, "avg_rating"),
+					Downloads = GetIntProperty(doc, "downloads")
+				};
+
+				queryResult.Documents.Add(archiveOrgDocument);
+			}
+
+			return queryResult;
 		}
 
 		private void ParseFiles(

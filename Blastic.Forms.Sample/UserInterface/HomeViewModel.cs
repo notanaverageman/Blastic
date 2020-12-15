@@ -38,11 +38,9 @@ namespace Blastic.Forms.Sample.UserInterface
 		public LocalizableProperties LocalizableProperties { get; }
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
-
-		public IReactiveProperty<BookViewModel> SelectedBook { get; }
-
+		
 		public Command FetchBooksCommand { get; }
-		public Command<BookViewModel> ChangeSelectedBook { get; }
+		public Command<BookViewModel> NavigateToBookCommand { get; }
 
 		public HomeViewModel(
 			MediaPlayerViewModel mediaPlayer,
@@ -72,16 +70,14 @@ namespace Blastic.Forms.Sample.UserInterface
 				.Bind(out _books)
 				.DisposeMany()
 				.Subscribe();
-
-			SelectedBook = new ReactiveProperty<BookViewModel>();
-
+			
 			FetchBooksCommand = new Command(FetchBooks);
-			ChangeSelectedBook = new Command<BookViewModel>(SelectBook);
+			NavigateToBookCommand = new Command<BookViewModel>(NavigateToBook);
 
 			Lifetime.Initialization.Subscribe(FetchBooks);
 		}
 
-		private async Task SelectBook(BookViewModel book)
+		private async Task NavigateToBook(BookViewModel book)
 		{
 			await _navigationService.NavigateTo(this, book);
 		}
@@ -90,7 +86,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		{
 			async Task Fetch(CancellationToken cancellationToken)
 			{
-				ArchiveOrgQueryResult? bookList = await _archiveOrgService.GetAudioBookList(cancellationToken: cancellationToken);
+				ArchiveOrgQueryResult bookList = await _archiveOrgService.GetAudioBookList(cancellationToken: cancellationToken);
 
 				List<Book> books = bookList.ToBooks();
 				List<BookViewModel> viewModels = new List<BookViewModel>();

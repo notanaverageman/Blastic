@@ -192,4 +192,7 @@
   <data name="Common.Pause" xml:space="preserve">
 	  <value>Duraklat</value>
   </data>
+  <data name="Common.Search" xml:space="preserve">
+	  <value>Ara</value>
+  </data>
 </root>

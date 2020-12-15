@@ -47,6 +47,9 @@
     <Compile Update="UserInterface\MediaPlayer\ExtendedView.xaml.cs">
       <DependentUpon>ExtendedView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="UserInterface\SearchViewContent.xaml.cs">
+      <DependentUpon>SearchViewContent.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UserInterface\Settings\SettingsViewContent.xaml.cs">
       <DependentUpon>SettingsViewContent.xaml</DependentUpon>
     </Compile>

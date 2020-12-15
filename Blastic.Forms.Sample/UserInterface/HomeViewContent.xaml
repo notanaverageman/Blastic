@@ -21,7 +21,7 @@
 				  WidthRequest="{StaticResource BookImageWidth}">
 
 				<Grid.GestureRecognizers>
-					<TapGestureRecognizer Command="{Binding BindingContext.ChangeSelectedBook, Source={RelativeSource FindAncestor, AncestorType={x:Type userInterface:HomeViewContent}}}"
+					<TapGestureRecognizer Command="{Binding BindingContext.NavigateToBookCommand, Source={RelativeSource FindAncestor, AncestorType={x:Type userInterface:HomeViewContent}}}"
 										  CommandParameter="{Binding}" />
 				</Grid.GestureRecognizers>
 
