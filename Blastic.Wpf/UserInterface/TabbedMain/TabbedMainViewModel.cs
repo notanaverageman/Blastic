@@ -9,9 +9,9 @@ using Blastic.LifetimeManagement;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
 using Blastic.Services.Windowing;
-using Blastic.UserInterface.Settings;
 using Blastic.Wpf.UserInterface.Events;
 using Blastic.Wpf.UserInterface.Logs;
+using Blastic.Wpf.UserInterface.Settings;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Wpf.UserInterface.TabbedMain

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Wpf.UserInterface.Settings
 {
 	public interface ISettingsSectionViewModel : IHasLifetime
 	{

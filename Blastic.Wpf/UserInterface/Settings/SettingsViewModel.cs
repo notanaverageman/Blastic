@@ -9,7 +9,7 @@ using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Wpf.UserInterface.Settings
 {
 	public class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>
 	{

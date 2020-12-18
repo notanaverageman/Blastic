@@ -12,7 +12,6 @@ using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.Sample.UserInterface.Settings;
 using Blastic.Forms.Sample.UserInterface.Settings.Languages;
 using Blastic.Forms.Sample.UserInterface.Settings.Themes;
-using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,12 +40,12 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.AddShellTab<LibraryViewModel>()
 							.AddShellTab<SettingsViewModel>()
 							.UseMainViewModel<MainViewModel>()
-							.AddSettingsService()
+							.AddSettingsStorage()
 							.AddProgramDatabase<ProgramDatabase>(DatabaseProvider.SQLite, $"Data Source={databasePath};");
 					})
 				.AddMigrations()
 				.ConfigureServices(
-					(x, y) =>
+					(_, y) =>
 					{
 						y.AddSingleton(new HttpClient());
 						y.AddSingleton<MediaPlayerViewModel>();
@@ -54,7 +53,6 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton<DownloadService>();
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
-						y.AddSingleton<IInitializationStep, ReadSettingsStep>();
 						
 						y.AddSingleton<ThemeSettingsSection>();
 						y.AddSingleton<LanguageSettingsSection>();
@@ -65,7 +63,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 
 		public static IHostBuilder AddMigrations(this IHostBuilder hostBuilder)
 		{
-			hostBuilder.ConfigureServices((x, y) =>
+			hostBuilder.ConfigureServices((_, y) =>
 			{
 				void AddMigration<T>() where T : ProgramDatabaseMigrationBase
 				{

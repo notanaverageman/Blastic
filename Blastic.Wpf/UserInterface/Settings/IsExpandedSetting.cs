@@ -2,7 +2,7 @@ using Blastic.DynamicControls;
 using Blastic.Services.Settings;
 using Blastic.Settings;
 
-namespace Blastic.UserInterface.Settings
+namespace Blastic.Wpf.UserInterface.Settings
 {
 	public class IsExpandedSetting : BoolSetting
 	{

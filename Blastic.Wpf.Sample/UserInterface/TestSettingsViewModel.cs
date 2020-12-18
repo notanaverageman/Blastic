@@ -2,7 +2,7 @@ using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
 using Blastic.Services.Localization;
 using Blastic.Services.Settings;
-using Blastic.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.Settings;
 
 namespace Blastic.Wpf.Sample.UserInterface
 {

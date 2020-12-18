@@ -1,15 +1,17 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Initialization.Steps;
 using Blastic.Ordering;
-using Blastic.UserInterface.Settings;
+using Blastic.Wpf.UserInterface.Settings;
 
-namespace Blastic.Initialization.Steps
+namespace Blastic.Wpf.Initialization.Steps
 {
 	public class ReadSettingsStep : IInitializationStep
 	{
-		public static readonly Order Order = new Order(-1);
-
-		private readonly SettingsViewModel _settingsViewModel;
+		public static readonly Order Order = new(-1);
+		
+		private readonly IEnumerable<ISettingsSectionViewModel> _sections;
 
 		Order IInitializationStep.Order => Order;
 
@@ -20,9 +22,9 @@ namespace Blastic.Initialization.Steps
 		public bool IsCancellationSupported => false;
 		public bool ShowBusyIndicator => true;
 
-		public ReadSettingsStep(SettingsViewModel settingsViewModel)
+		public ReadSettingsStep(IEnumerable<ISettingsSectionViewModel> sections)
 		{
-			_settingsViewModel = settingsViewModel;
+			_sections = sections;
 
 			Description = "Reading settings...";
 			SuccessMessage = "";
@@ -36,7 +38,10 @@ namespace Blastic.Initialization.Steps
 
 		public async Task Execute(CancellationToken cancellationToken)
 		{
-			await _settingsViewModel.Lifetime.Initialize(cancellationToken);
+			foreach (ISettingsSectionViewModel section in _sections)
+			{
+				await section.Lifetime.Initialize(cancellationToken);
+			}
 		}
 	}
 }

@@ -16,7 +16,6 @@ using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
 using Blastic.Services.Settings;
-using Blastic.UserInterface.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,12 +68,6 @@ namespace Blastic.Forms.Initialization
 			return this;
 		}
 
-		public BlasticApplicationBuilder AddSetting<T>() where T : ISettingsSectionViewModel
-		{
-			RegisterType<ISettingsSectionViewModel>(typeof(T));
-			return this;
-		}
-
 		public BlasticApplicationBuilder AddShellTab<T>() where T : IShellTab
 		{
 			RegisterType<IShellTab>(typeof(T));
@@ -93,12 +86,9 @@ namespace Blastic.Forms.Initialization
 			return this;
 		}
 
-		public BlasticApplicationBuilder AddSettingsService()
+		public BlasticApplicationBuilder AddSettingsStorage()
 		{
-			_serviceCollection.AddSingleton<SettingsViewModel>();
 			_serviceCollection.AddSingleton<ISettingsStorage, SettingsStorage>();
-			_serviceCollection.AddSingleton<IInitializationStep, ReadSettingsStep>();
-
 			return this;
 		}
 
@@ -107,9 +97,9 @@ namespace Blastic.Forms.Initialization
 			string connectionString)
 			where T : ProgramDatabase
 		{
-			DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(databaseProvider, connectionString);
+			DatabaseConfiguration databaseConfiguration = new(databaseProvider, connectionString);
 
-			_serviceCollection.AddSingleton(y => databaseConfiguration);
+			_serviceCollection.AddSingleton(_ => databaseConfiguration);
 			_serviceCollection.AddSingleton<ConnectionFactory>();
 			_serviceCollection.AddSingleton<T>();
 			_serviceCollection.AddSingleton<ProgramDatabase>(x => x.GetRequiredService<T>());
@@ -126,7 +116,7 @@ namespace Blastic.Forms.Initialization
 			_serviceCollection.AddSingleton<INotificationService, NotificationService>();
 			_serviceCollection.AddSingleton<INavigationService, NavigationService>();
 			_serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
-			_serviceCollection.AddSingleton<IPresenterSource, PresenterSource>(y => PresenterSource.Instance);
+			_serviceCollection.AddSingleton<IPresenterSource, PresenterSource>(_ => PresenterSource.Instance);
 
 			_serviceCollection.AddSingleton<IHostLifetime, FormsHostLifetime>();
 
