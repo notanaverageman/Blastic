@@ -209,9 +209,10 @@ namespace Blastic.Settings
 			_isEnabledSubscription?.Dispose();
 			_isEnabledSubscription = Element.IsEnabled.Subscribe(_ => ReactiveSettingValue.TriggerValidation());
 
-			T value = await SettingsStorage.Get(Key, DefaultValue, cancellationToken);
+			object defaultValue = await GetValueBeforeSave(DefaultValue, cancellationToken);
+			object storageValue = (await SettingsStorage.Get(Key, defaultValue, cancellationToken))!;
 
-			value = await AfterRead(value, cancellationToken);
+			T value = await GetValueAfterRead(storageValue, cancellationToken);
 
 			ReactiveValue.Value = value;
 			ReactiveSettingValue.Value = value;
@@ -220,32 +221,40 @@ namespace Blastic.Settings
 		/// <inheritdoc />
 		public override async Task Save(CancellationToken cancellationToken)
 		{
-			T value = await BeforeSave(SettingValue, cancellationToken);
+			object value = await GetValueBeforeSave(SettingValue, cancellationToken);
 
 			await SettingsStorage.Put(Key, value, cancellationToken);
 			ReactiveValue.Value = SettingValue;
 		}
 
 		/// <summary>
-		/// Inspect and possibly change the value after reading from store.
+		/// Return the setting value corresponding to the value read from store.
 		/// </summary>
+		/// <remarks>
+		/// Override <see cref="GetValueBeforeSave"/> to implement the forward conversion.
+		/// By default the sent value is returned.
+		/// </remarks>
 		/// <param name="value">Value read from store.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>Return the same or changed value.</returns>
-		protected virtual Task<T> AfterRead(T value, CancellationToken cancellationToken)
+		/// <returns>Return the same object or the setting value constructed from sent value.</returns>
+		protected virtual Task<T> GetValueAfterRead(object value, CancellationToken cancellationToken)
 		{
-			return Task.FromResult(value);
+			return Task.FromResult((T) value);
 		}
 
 		/// <summary>
-		/// Inspect and possibly change the value before writing to store.
+		/// Return an object to save to the storage.
 		/// </summary>
+		/// <remarks>
+		/// If the returned value is not equal to the sent value, override <see cref="GetValueAfterRead"/> to implement
+		/// the back conversion. By default the sent value is returned.
+		/// </remarks>
 		/// <param name="value">Value to write to store.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>Return the same or changed value.</returns>
-		protected virtual Task<T> BeforeSave(T value, CancellationToken cancellationToken)
+		/// <returns>Return the same object or the value represents the setting value.</returns>
+		protected virtual Task<object> GetValueBeforeSave(T value, CancellationToken cancellationToken)
 		{
-			return Task.FromResult(value);
+			return Task.FromResult((object) value!);
 		}
 
 		/// <inheritdoc />

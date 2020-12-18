@@ -195,4 +195,19 @@
   <data name="Common.Search" xml:space="preserve">
 	  <value>Ara</value>
   </data>
+  <data name="Common.System" xml:space="preserve">
+	  <value>Sistem</value>
+  </data>
+  <data name="Settings.Language.English" xml:space="preserve">
+	  <value>English</value>
+  </data>
+  <data name="Settings.Language.Turkish" xml:space="preserve">
+	  <value>Türkçe</value>
+  </data>
+  <data name="Settings.Theme.Light" xml:space="preserve">
+	  <value>Aydınlık</value>
+  </data>
+  <data name="Settings.Theme.Dark" xml:space="preserve">
+	  <value>Karanlık</value>
+  </data>
 </root>

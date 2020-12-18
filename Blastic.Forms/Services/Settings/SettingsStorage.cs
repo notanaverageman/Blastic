@@ -1,46 +1,94 @@
-using System.Text.Json;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Forms.Data.ProgramData;
 using Blastic.Services.Settings;
+using Xamarin.Essentials;
 
 namespace Blastic.Forms.Services.Settings
 {
 	public class SettingsStorage : ISettingsStorage
 	{
-		private readonly ProgramDatabase _database;
-
-		public SettingsStorage(ProgramDatabase database)
+		public Task<bool> Contains(string key, CancellationToken cancellationToken)
 		{
-			_database = database;
-		}
-
-		public async Task<bool> Contains(string key, CancellationToken cancellationToken)
-		{
-			return await _database.SettingsTable.Contains(key, cancellationToken);
+			return Task.FromResult(Preferences.ContainsKey(key));
 		}
 
 		public async Task<T> Get<T>(string key, T defaultValue, CancellationToken cancellationToken)
 		{
-			string serializedData = await _database.SettingsTable.Get(key, cancellationToken);
+			bool contains = await Contains(key, cancellationToken);
 
-			if (serializedData == null)
+			if (!contains)
 			{
 				return defaultValue;
 			}
 
-			return JsonSerializer.Deserialize<T>(serializedData);
+			Type type = defaultValue.GetType();
+
+			if (type.IsEnum)
+			{
+				string s = Preferences.Get(key, Enum.GetName(type, defaultValue));
+				return (T)Enum.Parse(type, s);
+			}
+
+			object value = defaultValue switch
+			{
+				bool x => Preferences.Get(key, x),
+				int x => Preferences.Get(key, x),
+				long x => Preferences.Get(key, x),
+				float x => Preferences.Get(key, x),
+				double x => Preferences.Get(key, x),
+				string x => Preferences.Get(key, x),
+				DateTime x => Preferences.Get(key, x),
+				_ => throw new ArgumentException($"{type} is not supported.")
+			};
+
+			return (T)value;
 		}
 
-		public async Task Put<T>(string key, T value, CancellationToken cancellationToken)
+		public Task Put<T>(string key, T value, CancellationToken cancellationToken)
 		{
-			string serializedData = JsonSerializer.Serialize(value);
-			await _database.SettingsTable.Put(key, serializedData, cancellationToken);
+			Type type = value.GetType();
+
+			if (type.IsEnum)
+			{
+				Preferences.Set(key, Enum.GetName(type, value));
+				return Task.CompletedTask;
+			}
+			
+			switch (value)
+			{
+				case bool x:
+					Preferences.Set(key, x);
+					break;
+				case int x:
+					Preferences.Set(key, x);
+					break;
+				case long x:
+					Preferences.Set(key, x);
+					break;
+				case float x:
+					Preferences.Set(key, x);
+					break;
+				case double x:
+					Preferences.Set(key, x);
+					break;
+				case string x:
+					Preferences.Set(key, x);
+					break;
+				case DateTime x:
+					Preferences.Set(key, x);
+					break;
+				default:
+					throw new ArgumentException($"{type} is not supported.");
+			}
+
+			return Task.CompletedTask;
 		}
 
-		public async Task Delete(string key, CancellationToken cancellationToken)
+		public Task Delete(string key, CancellationToken cancellationToken)
 		{
-			await _database.SettingsTable.Delete(key, cancellationToken);
+			Preferences.Remove(key);
+			return Task.CompletedTask;
 		}
 	}
 }
