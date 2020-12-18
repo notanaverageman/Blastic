@@ -35,8 +35,6 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 			
 			Element.WithLabel(localizableProperties.SettingsTheme);
 			Lifetime.Initialization.Subscribe(Initialize);
-
-			this.SaveOnChange();
 		}
 
 		private void Initialize()
