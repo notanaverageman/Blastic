@@ -11,13 +11,9 @@
 			 mc:Ignorable="d"
 			 x:DataType="mediaPlayer:MediaPlayerViewModel">
 
-	<pancakeView:PancakeView CornerRadius="18,18,0,0">
-		<pancakeView:PancakeView.Background>
-			<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-				<GradientStop Offset="0" Color="{DynamicResource MediaPlayerExpandedBackground}" />
-				<GradientStop Offset="1" Color="{DynamicResource Background}" />
-			</LinearGradientBrush>
-		</pancakeView:PancakeView.Background>
+	<pancakeView:PancakeView Background="{AppThemeBinding Light={StaticResource OverlayBackground},
+														  Dark={StaticResource DarkOverlayBackground}}"
+							 CornerRadius="18,18,0,0">
 
 		<Grid Margin="16,16,16,0"
 			  RowDefinitions="Auto,*,Auto,Auto"
@@ -35,7 +31,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.ChevronDown}"
-										 Size="32" />
+										 Size="32"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 
@@ -52,7 +50,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.DotsHorizontal}"
-										 Size="32" />
+										 Size="32"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 			</Grid>
@@ -71,7 +71,8 @@
 
 				<Label FontSize="Small"
 					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
-					   TextColor="{StaticResource LightTextColor}" />
+					   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
+												   Dark={StaticResource DarkSecondaryTextColor}}" />
 			</StackLayout>
 
 			<StackLayout Grid.Row="2"
@@ -89,6 +90,8 @@
 
 				<Slider DragCompletedCommand="{Binding CurrentChapter.Value.SeekCompletedCommand}"
 						DragStartedCommand="{Binding CurrentChapter.Value.SeekStartedCommand}"
+						MinimumTrackColor="{AppThemeBinding Light={StaticResource Accent},
+															Dark={StaticResource DarkAccent}}"
 						Value="{Binding CurrentChapter.Value.ProgressPercent.Value, Mode=TwoWay}" />
 			</StackLayout>
 
@@ -101,7 +104,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.SkipPrevious}"
-										 Size="36" />
+										 Size="36"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 
@@ -111,7 +116,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.SkipBackward}"
-										 Size="36" />
+										 Size="36"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 
@@ -121,7 +128,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
-										 Size="72" />
+										 Size="72"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 
@@ -131,7 +140,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.SkipForward}"
-										 Size="36" />
+										 Size="36"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 
@@ -140,7 +151,9 @@
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
 										 Glyph="{x:Static icons:IconFont.SkipNext}"
-										 Size="36" />
+										 Size="36"
+										 Color="{AppThemeBinding Light={StaticResource TextColor},
+																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 			</Grid>

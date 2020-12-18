@@ -2,6 +2,7 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Settings.SettingsViewContent"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:renderers="clr-namespace:AiForms.Renderers;assembly=SettingsView"
@@ -10,33 +11,21 @@
 			 x:DataType="settings:SettingsViewModel"
 			 Style="{StaticResource PageStyle}">
 
-	<ContentPage.Resources>
-		<Style TargetType="{x:Type renderers:SettingsView}">
-			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BlasticWhiteColor}, Dark={StaticResource BlasticBlackColor}}" />
-			<Setter Property="CellAccentColor" Value="{DynamicResource BlasticGreenColorMedium}" />
-			<Setter Property="CellBackgroundColor" Value="{AppThemeBinding Light={StaticResource BlasticWhiteColor}, Dark={StaticResource BlasticBlackColor}}" />
-			<Setter Property="CellDescriptionColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
-			<Setter Property="CellHintTextColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
-			<Setter Property="CellTitleColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
-			<Setter Property="CellValueTextColor" Value="{AppThemeBinding Light={StaticResource BlasticBlackColor}, Dark={StaticResource BlasticWhiteColor}}" />
-		</Style>
-	</ContentPage.Resources>
-
 	<renderers:SettingsView>
 		<renderers:Section Title="{Binding ThemeSettings.Title.Value}"
 						   FooterText="{Binding ThemeSettings.Help.Value}">
-			<renderers:PickerCell Title="{Binding ThemeSettings.Theme.Element.Label.Value}"
-								  ItemsSource="{Binding ThemeSettings.Theme.SelectionField.Values}"
-								  SelectedItem="{Binding ThemeSettings.Theme.ReactiveSettingValue.Value}"
-								  SelectionMode="Single" />
+			<controls:PickerCellSelectionColorFix Title="{Binding ThemeSettings.Theme.Element.Label.Value}"
+												  ItemsSource="{Binding ThemeSettings.Theme.SelectionField.Values}"
+												  SelectedItem="{Binding ThemeSettings.Theme.ReactiveSettingValue.Value}"
+												  SelectionMode="Single" />
 		</renderers:Section>
 
 		<renderers:Section Title="{Binding LanguageSettings.Title.Value}"
 						   FooterText="{Binding LanguageSettings.Help.Value}">
-			<renderers:PickerCell Title="{Binding LanguageSettings.Language.Element.Label.Value}"
-								  ItemsSource="{Binding LanguageSettings.Language.SelectionField.Values}"
-								  SelectedItem="{Binding LanguageSettings.Language.ReactiveSettingValue.Value}"
-								  SelectionMode="Single" />
+			<controls:PickerCellSelectionColorFix Title="{Binding LanguageSettings.Language.Element.Label.Value}"
+												  ItemsSource="{Binding LanguageSettings.Language.SelectionField.Values}"
+												  SelectedItem="{Binding LanguageSettings.Language.ReactiveSettingValue.Value}"
+												  SelectionMode="Single" />
 		</renderers:Section>
 	</renderers:SettingsView>
 </ContentPage>

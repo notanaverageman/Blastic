@@ -51,25 +51,38 @@
 						<Label FontSize="Micro"
 							   LineBreakMode="TailTruncation"
 							   Text="{Binding Author.Value, Mode=OneTime}"
-							   TextColor="{DynamicResource LightTextColorToolbar}" />
+							   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
+														   Dark={StaticResource DarkSecondaryTextColor}}" />
 
 						<controls:RatingBar FontFamily="{StaticResource MaterialFontFamily}"
 											Rating="{Binding Book.Rating}"
 											VerticalOptions="End"
-											Color="{DynamicResource BlasticYellowColorMedium}" />
+											Color="{AppThemeBinding Light={StaticResource RatingBarForegroundColor},
+																	Dark={StaticResource DarkRatingBarForegroundColor}}" />
 					</StackLayout>
 				</Grid>
 			</ViewCell>
 		</DataTemplate>
 	</ContentPage.Resources>
 
-	<StackLayout controlExtensions:GridExtensions.RowDefinitions="Auto,*">
-		<SearchBar Placeholder="{Binding LocalizableProperties.CommonSearch.Value}"
-				   Text="{Binding SearchQuery.Value}" />
+	<StackLayout controlExtensions:GridExtensions.RowDefinitions="Auto,*"
+				 Spacing="0">
 
+		<SearchBar BackgroundColor="{AppThemeBinding Light={StaticResource Background},
+													 Dark={StaticResource DarkBackground}}"
+				   CancelButtonColor="{AppThemeBinding Light={StaticResource Accent},
+													   Dark={StaticResource DarkAccent}}"
+				   Placeholder="{Binding LocalizableProperties.CommonSearch.Value}"
+				   PlaceholderColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
+													  Dark={StaticResource DarkSecondaryTextColor}}"
+				   Text="{Binding SearchQuery.Value}"
+				   TextColor="{AppThemeBinding Light={StaticResource TextColor},
+											   Dark={StaticResource DarkTextColor}}" />
 
 		<!--  TODO: Semaphore exception if CollectionView is used: https://github.com/xamarin/Xamarin.Forms/issues/11853  -->
-		<ListView HasUnevenRows="True"
+		<ListView BackgroundColor="{AppThemeBinding Light={StaticResource Background},
+													Dark={StaticResource DarkBackground}}"
+				  HasUnevenRows="True"
 				  ItemTemplate="{StaticResource BookTemplate}"
 				  ItemsSource="{Binding Books}"
 				  SeparatorVisibility="None" />

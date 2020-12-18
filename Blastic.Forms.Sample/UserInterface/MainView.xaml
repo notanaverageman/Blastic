@@ -13,11 +13,16 @@
 		   mc:Ignorable="d"
 		   iOsSpecific:Page.UseSafeArea="True"
 		   x:DataType="userInterface:MainViewModel"
-		   x:TypeArguments="Page">
+		   x:TypeArguments="Page"
+		   Style="{StaticResource PageStyle}">
 
 	<controls:ExtendedTabbedPage x:Name="TabbedPage"
-								 viewManagement:View.ItemTemplate="{Binding}"
-								 ItemsSource="{Binding Items}" />
+	                             viewManagement:View.ItemTemplate="{Binding}"
+	                             BarBackgroundColor="{AppThemeBinding Light={StaticResource Background},
+																	  Dark={StaticResource DarkBackground}}"
+	                             ItemsSource="{Binding Items}"
+	                             SelectedTabColor="{AppThemeBinding Light={StaticResource Accent},
+																	Dark={StaticResource DarkAccent}}" />
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">
 		<overlay:OverlayView State="{Binding MediaPlayer.OverlayState.Value}"
