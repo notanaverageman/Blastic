@@ -1,5 +1,6 @@
 using Blastic.DynamicControls;
 using Blastic.Services.Dialog;
+using Blastic.Services.Localization;
 using Blastic.Services.Settings;
 using Blastic.UserInterface.Settings;
 
@@ -14,11 +15,12 @@ namespace Blastic.Wpf.Sample.UserInterface
 		public TestSettingsViewModel(
 			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
+			ILocalizationService localizationService,
 			IDialogService dialogService)
 			:
 			base(settingsStorage, presenterSource)
 		{
-			FolderSetting = new FolderSetting(settingsStorage, presenterSource, dialogService);
+			FolderSetting = new FolderSetting(settingsStorage, presenterSource, localizationService, dialogService);
 		}
 	}
 }

@@ -109,8 +109,17 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Return a non empty error message if there is a validation error.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A non empty error message if there is a validation error.</returns>
 		public virtual string? CheckError()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Return a non null observable property for error message if there is a validation error.
+		/// </summary>
+		/// <returns>A non null observable property for error message if there is a validation error.</returns>
+		public virtual IReadOnlyReactiveProperty<string>? CheckErrorReactive()
 		{
 			return null;
 		}
@@ -122,6 +131,13 @@ namespace Blastic.Settings
 			if (!string.IsNullOrEmpty(error))
 			{
 				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error!));
+			}
+
+			IReadOnlyReactiveProperty<string>? errorProperty = CheckErrorReactive();
+
+			if (errorProperty != null)
+			{
+				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, errorProperty));
 			}
 		}
 	}
@@ -181,15 +197,17 @@ namespace Blastic.Settings
 			ReactiveValue = new ReactiveProperty<T>(DefaultValue);
 			ReactiveSettingValue = new ReactiveProperty<T>(DefaultValue);
 
-			ReactiveSettingValue.AddValidator(_ => Element?.IsEnabled.Value == true ? CheckError() : null);
-			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged());
+			ReactiveSettingValue.AddValidator(_ => Element.IsEnabled.Value ? CheckError() : null);
+			ReactiveSettingValue.AddValidator(_ => Element.IsEnabled.Value ? CheckErrorReactive() : null);
+
+			ReactiveSettingValue.Subscribe(_ => OnSettingValueChanged(), false);
 		}
 
 		/// <inheritdoc />
 		public override async Task Read(CancellationToken cancellationToken)
 		{
 			_isEnabledSubscription?.Dispose();
-			_isEnabledSubscription = Element.IsEnabled.Subscribe(x => ReactiveSettingValue.TriggerValidation());
+			_isEnabledSubscription = Element.IsEnabled.Subscribe(_ => ReactiveSettingValue.TriggerValidation());
 
 			T value = await SettingsStorage.Get(Key, DefaultValue, cancellationToken);
 
@@ -240,7 +258,7 @@ namespace Blastic.Settings
 		{
 			DiagnosticMessages.Clear();
 
-			if (Element?.IsEnabled.Value != true)
+			if (Element.IsEnabled.Value != true)
 			{
 				return;
 			}

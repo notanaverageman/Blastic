@@ -132,4 +132,7 @@
   <data name="Blastic.Sample.InvalidInitial" xml:space="preserve">
     <value>A ile başlamıyor.</value>
   </data>
+  <data name="Blastic.Sample.InvalidWorkspace" xml:space="preserve">
+	  <value>Çalışma klasörü bulunamadı.</value>
+  </data>
 </root>

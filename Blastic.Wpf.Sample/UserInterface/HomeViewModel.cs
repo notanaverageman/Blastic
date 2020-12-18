@@ -63,11 +63,12 @@ namespace Blastic.Wpf.Sample.UserInterface
 				.Select(x => string.Format(x.ErrorMessage, x.Text?.Length ?? 0, 5))
 				.ToReadOnlyReactiveProperty();
 
-			Text.AddValidator(x => x?.Length > 4, lengthErrorMessage);
+			Text.AddValidator(x => x?.Length > 4 ? null : lengthErrorMessage);
 
 			Text.AddValidator(
-				x => x?.StartsWith("A") == true,
-				new LocalizableReactiveProperty(_localizationService, "Blastic.Sample.InvalidInitial"));
+				x => x?.StartsWith("A") == true
+					? null
+					: new LocalizableReactiveProperty(_localizationService, "Blastic.Sample.InvalidInitial"));
 
 			HelpCommand = Text.HasErrorObservable!
 				.Select(x => !x)

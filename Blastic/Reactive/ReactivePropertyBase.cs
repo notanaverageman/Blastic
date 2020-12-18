@@ -74,11 +74,11 @@ namespace Blastic.Reactive
 			_errorHandler.AddValidator(validator);
 		}
 
-		/// <inheritdoc cref="IReadOnlyReactiveProperty{T}.AddValidator(System.Func{T,bool},IReadOnlyReactiveProperty{string})"/>
-		public void AddValidator(Func<T, bool> validator, IReadOnlyReactiveProperty<string> errorMessage)
+		/// <inheritdoc cref="IReadOnlyReactiveProperty{T}.AddValidator(System.Func{T,IReadOnlyReactiveProperty{string}?})"/>
+		public void AddValidator(Func<T, IReadOnlyReactiveProperty<string>?> validator)
 		{
 			_errorHandler ??= new ReactivePropertyErrorHandler<T>(this);
-			_errorHandler.AddValidator(validator, errorMessage);
+			_errorHandler.AddValidator(validator);
 		}
 
 		/// <inheritdoc cref="IReadOnlyReactiveProperty.TriggerValidation"/>

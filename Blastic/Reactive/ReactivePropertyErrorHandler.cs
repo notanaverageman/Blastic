@@ -11,8 +11,8 @@ namespace Blastic.Reactive
 		private readonly List<string> _errors;
 
 		private readonly List<Func<T, string?>> _validators;
-		private readonly Dictionary<Func<T, bool>, IReadOnlyReactiveProperty<string>> _reactiveValidators;
-		private readonly Dictionary<IReadOnlyReactiveProperty<string>, bool> _reactiveValidatorIsValid;
+		private readonly List<Func<T, IReadOnlyReactiveProperty<string>?>> _reactiveValidators;
+		private readonly Dictionary<Func<T, IReadOnlyReactiveProperty<string>?>, IDisposable> _reactiveValidatorSubscriptions;
 
 		public IEnumerable<string> Errors => _errors;
 
@@ -26,14 +26,14 @@ namespace Blastic.Reactive
 
 			_validators = new List<Func<T, string?>>();
 
-			_reactiveValidators = new Dictionary<Func<T, bool>, IReadOnlyReactiveProperty<string>>();
-			_reactiveValidatorIsValid = new Dictionary<IReadOnlyReactiveProperty<string>, bool>();
+			_reactiveValidators = new List<Func<T, IReadOnlyReactiveProperty<string>?>>();
+			_reactiveValidatorSubscriptions = new Dictionary<Func<T, IReadOnlyReactiveProperty<string>?>, IDisposable>();
 
 			HasErrorObservable = Observable
 				.FromEventPattern<DataErrorsChangedEventArgs>(
 					x => source.ErrorsChanged += x,
 					x => source.ErrorsChanged -= x)
-				.Select(x => HasErrors);
+				.Select(_ => HasErrors);
 		}
 
 		public void AddValidator(Func<T, string?> validator)
@@ -41,32 +41,9 @@ namespace Blastic.Reactive
 			_validators.Add(validator);
 		}
 
-		public void AddValidator(Func<T, bool> validator, IReadOnlyReactiveProperty<string> errorMessage)
+		public void AddValidator(Func<T, IReadOnlyReactiveProperty<string>?> validator)
 		{
-			_reactiveValidators.Add(validator, errorMessage);
-
-			errorMessage
-				.Scan<string, (string Previous, string Current)>(
-					("", ""),
-					(accumulator, current) => (accumulator.Current, current))
-				.Subscribe(
-					x =>
-					{
-						if (!_reactiveValidatorIsValid.TryGetValue(errorMessage, out bool isValid))
-						{
-							return;
-						}
-
-						if (isValid)
-						{
-							return;
-						}
-
-						_errors.Remove(x.Previous);
-						_errors.Add(x.Current);
-
-						_source.InvokeErrorsChanged();
-					});
+			_reactiveValidators.Add(validator);
 		}
 
 		public void TriggerValidation(T value)
@@ -85,21 +62,33 @@ namespace Blastic.Reactive
 				_errors.Add(error!);
 			}
 
-			foreach (KeyValuePair<Func<T, bool>, IReadOnlyReactiveProperty<string>> pair in _reactiveValidators)
+			foreach (IDisposable subscription in _reactiveValidatorSubscriptions.Values)
 			{
-				Func<T, bool> validator = pair.Key;
-				IReadOnlyReactiveProperty<string> errorMessage = pair.Value;
+				subscription.Dispose();
+			}
 
-				bool isValid = validator(value);
+			_reactiveValidatorSubscriptions.Clear();
 
-				_reactiveValidatorIsValid[errorMessage] = isValid;
+			foreach (Func<T, IReadOnlyReactiveProperty<string>?> validator in _reactiveValidators)
+			{
+				IReadOnlyReactiveProperty<string>? errorMessage = validator(value);
 
-				if (isValid)
+				IDisposable? subscription = errorMessage?.Scan<string, (string Previous, string Current)>(
+						("", ""),
+						(accumulator, current) => (accumulator.Current, current))
+					.Subscribe(
+						x =>
+						{
+							_errors.Remove(x.Previous);
+							_errors.Add(x.Current);
+
+							_source.InvokeErrorsChanged();
+						});
+
+				if (subscription != null)
 				{
-					continue;
+					_reactiveValidatorSubscriptions[validator] = subscription;
 				}
-
-				_errors.Add(errorMessage.Value);
 			}
 
 			_source.InvokeErrorsChanged();

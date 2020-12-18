@@ -43,6 +43,19 @@ namespace Blastic.Diagnostics
 		}
 
 		/// <summary>
+		/// Creates a new instance with given severity and message.
+		/// </summary>
+		/// <param name="severity">The constant severity value.</param>
+		/// <param name="message">An observable property for message.</param>
+		public DiagnosticMessage(
+			Severity severity,
+			IReadOnlyReactiveProperty<string> message)
+			:
+			this(new ReactiveProperty<Severity>(severity), message, null, null)
+		{
+		}
+
+		/// <summary>
 		/// Creates a new instance with given observable properties for severity, message, action, and label.
 		/// </summary>
 		/// <param name="severity">An observable property for severity.</param>

@@ -64,9 +64,8 @@ namespace Blastic.Reactive
 		/// Add a validator function to this property.
 		/// </summary>
 		/// <param name="validator">
-		/// A function that returns false if current value is not valid.
+		/// A function that returns a non-null observable property for error message if current value is not valid.
 		/// </param>
-		/// <param name="errorMessage">An observable that emits the error message.</param>
-		void AddValidator(Func<T, bool> validator, IReadOnlyReactiveProperty<string> errorMessage);
+		void AddValidator(Func<T, IReadOnlyReactiveProperty<string>?> validator);
 	}
 }

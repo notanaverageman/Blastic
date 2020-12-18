@@ -129,4 +129,7 @@
   <data name="Blastic.Sample.InvalidInitial" xml:space="preserve">
     <value>Does not start with A.</value>
   </data>
+  <data name="Blastic.Sample.InvalidWorkspace" xml:space="preserve">
+	  <value>Workspace directory does not exist.</value>
+  </data>
 </root>
