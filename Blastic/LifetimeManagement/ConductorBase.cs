@@ -10,10 +10,13 @@ namespace Blastic.LifetimeManagement
 	/// are managed by this class.
 	/// </summary>
 	/// <typeparam name="T">A type with a lifecycle.</typeparam>
-	public class ConductorBase<T> : Screen where T : IHasLifetime
+	public class ConductorBase<T> : IHasLifetime where T : IHasLifetime
 	{
 		private readonly Dictionary<T, IDisposable> _lifetimeSubscriptions;
 
+		/// <inheritdoc />
+		public ILifetime Lifetime { get; }
+		
 		/// <summary>
 		/// Children of this object.
 		/// </summary>
@@ -40,6 +43,7 @@ namespace Blastic.LifetimeManagement
 		{
 			_lifetimeSubscriptions = new Dictionary<T, IDisposable>();
 
+			Lifetime = new Lifetime();
 			Items = new ReactiveCollection<T>();
 
 			ConductorOptions = conductorOptions ?? new ConductorOptions();

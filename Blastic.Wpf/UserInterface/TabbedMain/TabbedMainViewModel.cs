@@ -12,6 +12,7 @@ using Blastic.Services.Windowing;
 using Blastic.UserInterface.Settings;
 using Blastic.Wpf.UserInterface.Events;
 using Blastic.Wpf.UserInterface.Logs;
+using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Wpf.UserInterface.TabbedMain
 {
@@ -20,6 +21,8 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 		private readonly IWindowManager _windowManager;
 		private readonly List<IInitializationStep> _initializationSteps;
 		private bool _isInitializationStepsRun;
+
+		public ExecutionContext ExecutionContext { get; }
 
 		public INotificationService NotificationService { get; }
 
@@ -47,6 +50,8 @@ namespace Blastic.Wpf.UserInterface.TabbedMain
 			ProductInformation = productInformation;
 			LogsViewModel = logsViewModel;
 			SettingsViewModel = settingsViewModel;
+
+			ExecutionContext = new ExecutionContext();
 
 			_initializationSteps = initializationSteps
 				.OrderBy(x => x.Order)

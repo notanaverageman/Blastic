@@ -16,11 +16,13 @@ using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
+using Blastic.ViewManagement;
 using DynamicData;
+using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public class HomeViewModel : Screen, IShellTab
+	public class HomeViewModel : IShellTab, IViewAware
 	{
 		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
@@ -29,6 +31,10 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		private readonly SourceCache<BookViewModel, string> _booksSource;
 		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
+
+		public ILifetime Lifetime { get; }
+		public ExecutionContext ExecutionContext { get; }
+		public IReactiveProperty<object?> View { get; }
 
 		public Order Order { get; }
 		public IReadOnlyReactiveProperty<string> Title { get; }
@@ -57,6 +63,10 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			MediaPlayer = mediaPlayer;
 			LocalizableProperties = localizableProperties;
+
+			Lifetime = new Lifetime();
+			ExecutionContext = new ExecutionContext();
+			View = new ReactiveProperty<object?>();
 
 			Order = new Order(0);
 			Title = localizableProperties.HomeTitle;
@@ -89,11 +99,11 @@ namespace Blastic.Forms.Sample.UserInterface
 				ArchiveOrgQueryResult bookList = await _archiveOrgService.GetAudioBookList(cancellationToken: cancellationToken);
 
 				List<Book> books = bookList.ToBooks();
-				List<BookViewModel> viewModels = new List<BookViewModel>();
+				List<BookViewModel> viewModels = new();
 
 				foreach (Book book in books)
 				{
-					BookViewModel viewModel = new BookViewModel(
+					BookViewModel viewModel = new(
 						book,
 						MediaPlayer,
 						LocalizableProperties,

@@ -11,22 +11,24 @@ using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
 using Blastic.Services.Notifications;
+using Blastic.ViewManagement;
 using Blastic.Wpf.Automation;
 using Blastic.Wpf.Commanding;
 using Blastic.Wpf.UserInterface.TabbedMain;
 using InputSimulatorStandard;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Wpf.Sample.UserInterface
 {
-	public class HomeViewModel : Screen, IMainTab
+	public class HomeViewModel : IViewAware, IMainTab
 	{
 		private readonly INotificationService _notificationService;
 		private readonly ILocalizationService _localizationService;
-		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<HomeViewModel> _logger;
 
+		public ILifetime Lifetime { get; }
+		public IReactiveProperty<object?> View { get; }
+		
 		public Order Order { get; }
 		public bool IsFixed => true;
 
@@ -42,14 +44,15 @@ namespace Blastic.Wpf.Sample.UserInterface
 			TestSettingsViewModel testSettings,
 			INotificationService notificationService,
 			ILocalizationService localizationService,
-			IServiceProvider serviceProvider,
 			ILogger<HomeViewModel> logger)
 		{
 			_notificationService = notificationService;
 			_localizationService = localizationService;
-			_serviceProvider = serviceProvider;
 			_logger = logger;
 
+			Lifetime = new Lifetime();
+			View = new ReactiveProperty<object?>();
+			
 			Order = new Order(1);
 
 			Text = new ReactiveProperty<string>();
@@ -92,8 +95,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 		protected Task OnInitialize()
 		{
-			TabbedMainViewModel mainViewModel = _serviceProvider.GetService<TabbedMainViewModel>();
-			TestCommand.AddInputGesture(new KeyGesture(Key.A, ModifierKeys.Control), mainViewModel);
+			TestCommand.AddInputGesture(new KeyGesture(Key.A, ModifierKeys.Control));
 
 			Text.Value = "Initialized";
 			return Task.CompletedTask;

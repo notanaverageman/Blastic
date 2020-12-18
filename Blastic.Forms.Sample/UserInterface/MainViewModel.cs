@@ -7,11 +7,14 @@ using Blastic.Forms.UserInterface;
 using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
+using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
 	public class MainViewModel : ConductorOneActive<IShellTab>
 	{
+		public ExecutionContext ExecutionContext { get; }
+		
 		public MediaPlayerViewModel MediaPlayer { get; }
 
 		public MainViewModel(
@@ -20,6 +23,8 @@ namespace Blastic.Forms.Sample.UserInterface
 			IEnumerable<IInitializationStep> initializationSteps)
 		{
 			MediaPlayer = mediaPlayer;
+
+			ExecutionContext = new ExecutionContext();
 
 			tabs = tabs
 				.OrderBy(x => x.Order)

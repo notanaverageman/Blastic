@@ -12,10 +12,11 @@ using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
+using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public class BookViewModel : Screen
+	public class BookViewModel : IHasLifetime
 	{
 		private readonly MediaPlayerViewModel _mediaPlayer;
 		private readonly DownloadService _downloadService;
@@ -24,6 +25,9 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public Book Book { get; }
 		public LocalizableProperties LocalizableProperties { get; }
+
+		public ILifetime Lifetime { get; }
+		public ExecutionContext ExecutionContext { get; }
 
 		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> Author { get; }
@@ -61,6 +65,9 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			Book = book;
 			LocalizableProperties = localizableProperties;
+
+			Lifetime = new Lifetime();
+			ExecutionContext = new ExecutionContext();
 
 			Title = new ReactiveProperty<string>(Book.Title);
 			Description = new ReactiveProperty<string>(Book.Description);
@@ -166,7 +173,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			foreach (ArchiveOrgChapterMetadata chapterMetadata in metadata.Chapters)
 			{
-				Chapter chapter = new Chapter
+				Chapter chapter = new()
 				{
 					Title = chapterMetadata.Title,
 					Duration = chapterMetadata.Duration,

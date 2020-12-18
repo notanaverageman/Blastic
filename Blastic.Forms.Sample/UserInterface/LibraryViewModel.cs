@@ -7,14 +7,18 @@ using Blastic.Reactive;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public class LibraryViewModel : Screen, IShellTab
+	public class LibraryViewModel : IShellTab
 	{
+		public ILifetime Lifetime { get; }
+		
 		public Order Order { get; }
 		public IReadOnlyReactiveProperty<string> Title { get; }
 		public IReadOnlyReactiveProperty<string> IconGlyph { get; }
 
 		public LibraryViewModel(LocalizableProperties localizableProperties)
 		{
+			Lifetime = new Lifetime();
+			
 			Order = new Order(2);
 			Title = localizableProperties.LibraryTitle;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Bookshelf);

@@ -18,11 +18,13 @@ using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
+using Blastic.ViewManagement;
 using DynamicData;
+using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public class SearchViewModel : Screen, IShellTab
+	public class SearchViewModel : IViewAware, IShellTab
 	{
 		private readonly ProgramDatabase _database;
 		private readonly MediaPlayerViewModel _mediaPlayer;
@@ -34,7 +36,11 @@ namespace Blastic.Forms.Sample.UserInterface
 		private readonly ReadOnlyObservableCollection<BookViewModel> _books;
 
 		private CancellationTokenSource? _searchCancellationTokenSource;
-		
+
+		public ILifetime Lifetime { get; }
+		public ExecutionContext ExecutionContext { get; }
+		public IReactiveProperty<object?> View { get; }
+
 		public Order Order { get; }
 		public IReadOnlyReactiveProperty<string> Title { get; }
 		public IReadOnlyReactiveProperty<string> IconGlyph { get; }
@@ -60,6 +66,10 @@ namespace Blastic.Forms.Sample.UserInterface
 			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
 			LocalizableProperties = localizableProperties;
+
+			Lifetime = new Lifetime();
+			ExecutionContext = new ExecutionContext();
+			View = new ReactiveProperty<object?>();
 
 			Order = new Order(1);
 			Title = localizableProperties.SearchTitle;

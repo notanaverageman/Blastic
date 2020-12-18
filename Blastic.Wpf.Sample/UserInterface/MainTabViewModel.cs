@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Properties;
+using Blastic.Execution;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
@@ -15,9 +16,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Blastic.Wpf.Sample.UserInterface
 {
-	public class MainTabViewModel : Screen, IMainTab
+	public class MainTabViewModel : IMainTab
 	{
 		private readonly ILogger<MainTabViewModel> _logger;
+
+		public ILifetime Lifetime { get; }
+		public ExecutionContext ExecutionContext { get; }
 
 		public Order Order { get; }
 		public bool IsFixed => true;
@@ -33,6 +37,10 @@ namespace Blastic.Wpf.Sample.UserInterface
 			ILogger<MainTabViewModel> logger)
 		{
 			_logger = logger;
+
+			Lifetime = new Lifetime();
+			ExecutionContext = new ExecutionContext();
+			
 			Order = new Order(2);
 
 			Text = new ReactiveProperty<string>();
@@ -67,11 +75,11 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 		public async Task Test()
 		{
-			ReactiveProperty<string> name = new ReactiveProperty<string>();
-			ReactiveProperty<string> password = new ReactiveProperty<string>();
-			ReactiveProperty<int> age = new ReactiveProperty<int>();
-			ReactiveProperty<bool> boolean = new ReactiveProperty<bool>();
-			Command command = new Command(boolean);
+			ReactiveProperty<string> name = new();
+			ReactiveProperty<string> password = new();
+			ReactiveProperty<int> age = new();
+			ReactiveProperty<bool> boolean = new();
+			Command command = new(boolean);
 
 			int asd = 0;
 			command.Subscribe(() =>
