@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Net.Http;
 using Blastic.Data;
-using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
@@ -40,10 +39,9 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.AddShellTab<LibraryViewModel>()
 							.AddShellTab<SettingsViewModel>()
 							.UseMainViewModel<MainViewModel>()
-							.AddSettingsStorage()
-							.AddProgramDatabase<ProgramDatabase>(DatabaseProvider.SQLite, $"Data Source={databasePath};");
+							.AddSettingsStorage();
 					})
-				.AddMigrations()
+				.AddProgramDatabase(DatabaseProvider.SQLite, $"Data Source={databasePath};")
 				.ConfigureServices(
 					(_, y) =>
 					{
@@ -53,7 +51,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton<DownloadService>();
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
-						
+
 						y.AddSingleton<ThemeSettingsSection>();
 						y.AddSingleton<LanguageSettingsSection>();
 					});
@@ -61,16 +59,25 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 			return hostBuilder;
 		}
 
-		public static IHostBuilder AddMigrations(this IHostBuilder hostBuilder)
+		public static IHostBuilder AddProgramDatabase(
+			this IHostBuilder hostBuilder,
+			DatabaseProvider databaseProvider,
+			string connectionString)
 		{
-			hostBuilder.ConfigureServices((_, y) =>
+			DatabaseConfiguration databaseConfiguration = new(databaseProvider, connectionString);
+
+			hostBuilder.ConfigureServices((_, x) =>
 			{
-				void AddMigration<T>() where T : ProgramDatabaseMigrationBase
-				{
-					y.AddSingleton<ProgramDatabaseMigrationBase, T>();
-				}
+				x.AddSingleton(_ => databaseConfiguration);
+				x.AddSingleton<ConnectionFactory>();
+				x.AddSingleton<ProgramDatabase>();
 
 				AddMigration<CreateBooksTable>();
+
+				void AddMigration<T>() where T : ProgramDatabaseMigrationBase
+				{
+					x.AddSingleton<ProgramDatabaseMigrationBase, T>();
+				}
 			});
 
 			return hostBuilder;
