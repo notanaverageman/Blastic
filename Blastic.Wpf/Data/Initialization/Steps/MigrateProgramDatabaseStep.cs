@@ -1,8 +1,8 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Wpf.Data.ProgramData;
+using Blastic.Wpf.Initialization.Steps;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Wpf.Data.Initialization.Steps

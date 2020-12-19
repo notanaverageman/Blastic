@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Blastic.Data;
-using Blastic.Initialization;
+using Blastic.Wpf.Initialization;
 using Blastic.Wpf.Sample.Properties;
 using Blastic.Wpf.Initialization.Extensions;
 using Blastic.Wpf.Material.Extensions;

@@ -2,26 +2,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.UserInterface;
-using Blastic.Initialization.Steps;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
+using Microsoft.Extensions.Logging;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface
 {
 	public class MainViewModel : ConductorOneActive<IShellTab>
 	{
+		private readonly ProgramDatabase _programDatabase;
+		private readonly ILogger<MainViewModel> _logger;
+
 		public ExecutionContext ExecutionContext { get; }
 		
 		public MediaPlayerViewModel MediaPlayer { get; }
 
 		public MainViewModel(
+			ProgramDatabase programDatabase,
+			ILogger<MainViewModel> logger,
 			MediaPlayerViewModel mediaPlayer,
-			IEnumerable<IShellTab> tabs,
-			IEnumerable<IInitializationStep> initializationSteps)
+			IEnumerable<IShellTab> tabs)
 		{
+			_programDatabase = programDatabase;
+			_logger = logger;
+			
 			MediaPlayer = mediaPlayer;
 
 			ExecutionContext = new ExecutionContext();
@@ -35,7 +43,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			Lifetime.Initialization.Subscribe(
 				async x =>
 				{
-					await ExecuteInitializationSteps(x, initializationSteps);
+					await MigrateDatabase(x);
 				},
 				// This order ensures that we are running before child initializations.
 				new Order(int.MinValue));
@@ -46,25 +54,16 @@ namespace Blastic.Forms.Sample.UserInterface
 			});
 		}
 
-		private async Task ExecuteInitializationSteps(
-			CancellationToken cancellationToken,
-			IEnumerable<IInitializationStep> initializationSteps)
+		private async Task MigrateDatabase(CancellationToken cancellationToken)
 		{
-			foreach (IInitializationStep initializationStep in initializationSteps)
+			if (!await _programDatabase.IsMigrationAvailable(cancellationToken))
 			{
-				if (!await initializationStep.ShouldExecute(cancellationToken))
-				{
-					continue;
-				}
-
-				await ExecutionContext.Execute(
-					initializationStep.Execute,
-					initializationStep.Description,
-					initializationStep.ShowBusyIndicator,
-					rethrowUnhandledException: false,
-					initializationStep.IsCancellationSupported,
-					cancellationToken);
+				return;
 			}
+
+			_logger.LogDebug("Checking and applying migrations.");
+			await _programDatabase.Migrate(cancellationToken);
+			_logger.LogDebug("Finished checking and applying migrations.");
 		}
 	}
 }

@@ -4,13 +4,11 @@ using Blastic.Data;
 using Blastic.DynamicControls;
 using Blastic.Forms.Data.ProgramData;
 using Blastic.Forms.Data.ProgramData.Migrations;
-using Blastic.Forms.Data.Steps;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.Services.Settings;
 using Blastic.Forms.UserInterface;
 using Blastic.Forms.ViewManagement;
-using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
@@ -73,13 +71,7 @@ namespace Blastic.Forms.Initialization
 			RegisterType<IShellTab>(typeof(T));
 			return this;
 		}
-
-		public BlasticApplicationBuilder AddInitializationStep<T>() where T : class, IInitializationStep
-		{
-			RegisterType<IInitializationStep>(typeof(T));
-			return this;
-		}
-
+		
 		public BlasticApplicationBuilder AddLocalizationSource(ResourceManager resourceManager, Order order = null)
 		{
 			_serviceCollection.AddSingleton<ILocalizationSource>(new ResourceManagerLocalizationSource(resourceManager, order));
@@ -104,7 +96,6 @@ namespace Blastic.Forms.Initialization
 			_serviceCollection.AddSingleton<T>();
 			_serviceCollection.AddSingleton<ProgramDatabase>(x => x.GetRequiredService<T>());
 			_serviceCollection.AddSingleton<ProgramDatabaseMigrationBase, CreateSettingsTable>();
-			_serviceCollection.AddSingleton<IInitializationStep, MigrateProgramDatabaseStep>();
 
 			return this;
 		}

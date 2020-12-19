@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Threading;
 using Blastic.Data;
 using Blastic.DynamicControls;
-using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Services.Dialog;
 using Blastic.Services.Localization;

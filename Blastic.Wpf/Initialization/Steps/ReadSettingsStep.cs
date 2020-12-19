@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Initialization.Steps;
 using Blastic.Ordering;
 using Blastic.Wpf.UserInterface.Settings;
 
