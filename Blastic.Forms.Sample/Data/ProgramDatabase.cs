@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using Blastic.Data;
-using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.Sample.Data.Tables;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Forms.Sample.Data
 {
-	public class ProgramDatabase : Forms.Data.ProgramData.ProgramDatabase
+	public class ProgramDatabase : DatabaseBase<ProgramDatabaseMigrationBase>
 	{
 		public BooksTable BooksTable { get; }
 

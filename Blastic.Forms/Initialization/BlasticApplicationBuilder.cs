@@ -1,9 +1,6 @@
 using System;
 using System.Resources;
-using Blastic.Data;
 using Blastic.DynamicControls;
-using Blastic.Forms.Data.ProgramData;
-using Blastic.Forms.Data.ProgramData.Migrations;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.Services.Settings;
@@ -81,22 +78,6 @@ namespace Blastic.Forms.Initialization
 		public BlasticApplicationBuilder AddSettingsStorage()
 		{
 			_serviceCollection.AddSingleton<ISettingsStorage, SettingsStorage>();
-			return this;
-		}
-
-		public BlasticApplicationBuilder AddProgramDatabase<T>(
-			DatabaseProvider databaseProvider,
-			string connectionString)
-			where T : ProgramDatabase
-		{
-			DatabaseConfiguration databaseConfiguration = new(databaseProvider, connectionString);
-
-			_serviceCollection.AddSingleton(_ => databaseConfiguration);
-			_serviceCollection.AddSingleton<ConnectionFactory>();
-			_serviceCollection.AddSingleton<T>();
-			_serviceCollection.AddSingleton<ProgramDatabase>(x => x.GetRequiredService<T>());
-			_serviceCollection.AddSingleton<ProgramDatabaseMigrationBase, CreateSettingsTable>();
-
 			return this;
 		}
 

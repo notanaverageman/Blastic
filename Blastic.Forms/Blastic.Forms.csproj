@@ -23,7 +23,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
 		<ProjectReference Include="..\Blastic\Blastic.csproj" />
 	</ItemGroup>
 
