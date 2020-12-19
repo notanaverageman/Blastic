@@ -7,8 +7,8 @@ using System.Windows.Data;
 using Blastic.Commanding;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
-using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
+using Blastic.Wpf.Services.Windowing;
 using Blastic.Wpf.UserInterface.Logs.Settings;
 using Microsoft.Extensions.Logging;
 

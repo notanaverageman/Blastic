@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Blastic.Services.Dialog.FileFilters
+namespace Blastic.Wpf.Services.Dialog.FileFilters
 {
 	public interface IFileDialogFilter
 	{

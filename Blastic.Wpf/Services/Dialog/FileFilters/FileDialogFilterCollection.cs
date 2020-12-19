@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Blastic.Services.Dialog.FileFilters
+namespace Blastic.Wpf.Services.Dialog.FileFilters
 {
 	public class FileDialogFilterCollection : List<FileDialogFilter>, IFileDialogFilter
 	{

@@ -1,10 +1,11 @@
 using System.IO;
 using Blastic.DynamicControls;
 using Blastic.Reactive;
-using Blastic.Services.Dialog;
 using Blastic.Services.Localization;
 using Blastic.Services.Settings;
 using Blastic.Settings;
+using Blastic.Wpf.Services.Dialog;
+using Blastic.Wpf.Settings;
 
 namespace Blastic.Wpf.Sample.UserInterface
 {

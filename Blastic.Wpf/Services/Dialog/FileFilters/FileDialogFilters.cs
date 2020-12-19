@@ -1,4 +1,4 @@
-namespace Blastic.Services.Dialog.FileFilters
+namespace Blastic.Wpf.Services.Dialog.FileFilters
 {
 	public class FileDialogFilters
 	{

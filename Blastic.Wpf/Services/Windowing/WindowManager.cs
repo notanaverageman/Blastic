@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Interop;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
-using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 
 namespace Blastic.Wpf.Services.Windowing
