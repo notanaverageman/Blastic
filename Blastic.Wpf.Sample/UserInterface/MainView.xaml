@@ -1,0 +1,87 @@
+﻿<Window x:Class="Blastic.Wpf.Sample.UserInterface.MainView"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions;assembly=Blastic.Wpf"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+		xmlns:userInterface="clr-namespace:Blastic.Wpf.Sample.UserInterface"
+		Title="{Binding Title.Value}"
+		mc:Ignorable="d"
+		Width="1200"
+		d:DataContext="{d:DesignInstance userInterface:MainViewModel}"
+		FontFamily="Helvetica"
+		SizeToContent="Height">
+
+	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
+		<Image Source="https://img5.goodfon.com/wallpaper/nbig/b/c7/aleksandar-pasaric-by-aleksandar-pasaric-dubai-uae-united-12.jpg"
+			   Stretch="Uniform" />
+
+		<Grid Margin="100,50">
+
+			<Grid.Background>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+					<GradientStop Offset="0" Color="#88000000" />
+					<GradientStop Offset="1" Color="#66000044" />
+				</LinearGradientBrush>
+			</Grid.Background>
+
+			<Grid Margin="20"
+				  controlExtensions:GridExtensions.RowDefinitions="Auto,*,*">
+
+				<TextBlock Grid.Row="0"
+						   FontSize="20"
+						   Foreground="Blue"
+						   Text="GLOBAL FORECAST" />
+
+
+				<Grid Grid.Row="1"
+					  controlExtensions:GridExtensions.ColumnDefinitions="*,*"
+					  Opacity="{Binding ViewValues.Opacity.Value}"
+					  RenderTransform="{Binding ViewValues.Offset.Value, Converter={StaticResource XOffsetToTransformConverter}}">
+
+					<StackPanel Grid.Column="0">
+
+						<TextBlock FontFamily="{StaticResource ZillaSlab}"
+								   FontSize="48"
+								   Foreground="White"
+								   Text="{Binding MainCity.Value.City.Value}" />
+
+						<TextBlock HorizontalAlignment="Center"
+								   FontFamily="{StaticResource Gravity}"
+								   FontSize="100"
+								   Foreground="White"
+								   Text="{Binding MainCity.Value.TemperatureText.Value}" />
+					</StackPanel>
+
+					<svgc:SvgViewbox Grid.Column="2"
+									 Width="200"
+									 VerticalAlignment="Center"
+									 Source="{Binding MainCity.Value.Weather.Value, Converter={StaticResource WeatherToIconConverter}}" />
+				</Grid>
+
+				<ItemsControl Grid.Row="2"
+							  ItemsSource="{Binding Cities}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<UniformGrid Columns="3" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<userInterface:CityView Margin="10,0" />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</Grid>
+		</Grid>
+
+		<StackPanel HorizontalAlignment="Left"
+					VerticalAlignment="Top">
+
+			<Button Command="{Binding TestCommand}"
+					Content="Text" />
+		</StackPanel>
+	</Grid>
+</Window>

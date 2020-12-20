@@ -5,15 +5,21 @@
 		<OutputType>WinExe</OutputType>
 		<UseWPF>true</UseWPF>
 		<StartupObject>Blastic.Wpf.Sample.Program</StartupObject>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="DynamicData" Version="7.1.1" />
 		<PackageReference Include="InputSimulatorStandard" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+		<PackageReference Include="SharpVectors" Version="1.7.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Blastic.Wpf.Material\Blastic.Wpf.Material.csproj" />
 		<ProjectReference Include="..\Blastic.Wpf\Blastic.Wpf.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Resources\*" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Properties\Resource.Designer.cs">
@@ -32,5 +38,10 @@
 		<None Update="AppSettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="UserInterface\CityView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
 	</ItemGroup>
 </Project>
