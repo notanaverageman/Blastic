@@ -1,8 +1,8 @@
 namespace Blastic.Forms.Sample.UserInterface
 {
-	public partial class ChapterDetailsOverlayView
+	public partial class ChapterDetailsView
 	{
-		public ChapterDetailsOverlayView()
+		public ChapterDetailsView()
 		{
 			InitializeComponent();
 		}

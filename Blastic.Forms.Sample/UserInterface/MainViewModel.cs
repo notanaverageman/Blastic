@@ -20,17 +20,20 @@ namespace Blastic.Forms.Sample.UserInterface
 		public ExecutionContext ExecutionContext { get; }
 		
 		public MediaPlayerViewModel MediaPlayer { get; }
-
+		public ChapterDetailsViewModel ChapterDetails { get; }
+		
 		public MainViewModel(
 			ProgramDatabase programDatabase,
 			ILogger<MainViewModel> logger,
 			MediaPlayerViewModel mediaPlayer,
+			ChapterDetailsViewModel chapterDetails,
 			IEnumerable<IShellTab> tabs)
 		{
 			_programDatabase = programDatabase;
 			_logger = logger;
 			
 			MediaPlayer = mediaPlayer;
+			ChapterDetails = chapterDetails;
 
 			ExecutionContext = new ExecutionContext();
 

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.ArchiveOrg;
-using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
@@ -40,19 +39,16 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<IReadOnlyReactiveProperty<string>> DescriptionToggleLabel { get; }
 
 		public ObservableCollection<ChapterViewModel> Chapters { get; }
-
-		public IReactiveProperty<OverlayState> ChapterDetailsOverlayState { get; }
-		public IReactiveProperty<ChapterViewModel> ChapterForDetails { get; }
-
+		
 		public Command PlayCommand { get; }
 		public Command ToggleDescriptionLengthCommand { get; }
 
 		public Command<ChapterViewModel> ShowDetailsCommand { get; }
-		public Command<ChapterViewModel> HideDetailsCommand { get; }
 
 		public BookViewModel(
 			Book book,
 			MediaPlayerViewModel mediaPlayer,
+			ChapterDetailsViewModel chapterDetails,
 			LocalizableProperties localizableProperties,
 			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
@@ -82,15 +78,11 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			DescriptionExpanded = new ReactiveProperty<bool>();
 			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.HomeBookDescriptionMore);
-
-			ChapterDetailsOverlayState = new ReactiveProperty<OverlayState>();
-			ChapterForDetails = new ReactiveProperty<ChapterViewModel>();
-
+			
 			PlayCommand = new Command(Play);
 			ToggleDescriptionLengthCommand = new Command(ToggleDescriptionLength);
 
-			ShowDetailsCommand = new Command<ChapterViewModel>(ShowDetails);
-			HideDetailsCommand = new Command<ChapterViewModel>(HideDetails);
+			ShowDetailsCommand = new Command<ChapterViewModel>(chapterDetails.ShowDetails);
 
 			Lifetime.Initialization.Subscribe(FetchDetails);
 		}
@@ -114,17 +106,6 @@ namespace Blastic.Forms.Sample.UserInterface
 			DescriptionToggleLabel.Value = DescriptionExpanded.Value
 				? LocalizableProperties.HomeBookDescriptionLess
 				: LocalizableProperties.HomeBookDescriptionMore;
-		}
-
-		private void ShowDetails(ChapterViewModel chapter)
-		{
-			ChapterForDetails.Value = chapter;
-			ChapterDetailsOverlayState.Value = OverlayState.Expanded;
-		}
-
-		private void HideDetails()
-		{
-			ChapterDetailsOverlayState.Value = OverlayState.Invisible;
 		}
 
 		private async Task FetchDetails(CancellationToken cancellationToken)

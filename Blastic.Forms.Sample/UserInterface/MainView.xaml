@@ -17,11 +17,11 @@
 		   Style="{StaticResource PageStyle}">
 
 	<controls:ExtendedTabbedPage x:Name="TabbedPage"
-	                             viewManagement:View.ItemTemplate="{Binding}"
-	                             BarBackgroundColor="{AppThemeBinding Light={StaticResource Background},
+								 viewManagement:View.ItemTemplate="{Binding}"
+								 BarBackgroundColor="{AppThemeBinding Light={StaticResource Background},
 																	  Dark={StaticResource DarkBackground}}"
-	                             ItemsSource="{Binding Items}"
-	                             SelectedTabColor="{AppThemeBinding Light={StaticResource Accent},
+								 ItemsSource="{Binding Items}"
+								 SelectedTabColor="{AppThemeBinding Light={StaticResource Accent},
 																	Dark={StaticResource DarkAccent}}" />
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">
@@ -34,5 +34,10 @@
 				<mediaPlayer:ExtendedView BindingContext="{Binding MediaPlayer}" />
 			</overlay:OverlayView.Expanded>
 		</overlay:OverlayView>
+	</controls:InputPassthroughPage>
+
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<userInterface:ChapterDetailsView BindingContext="{Binding ChapterDetails}"
+		                                  TabBar="{Binding Source={x:Reference TabbedPage}}" />
 	</controls:InputPassthroughPage>
 </MultiPage>

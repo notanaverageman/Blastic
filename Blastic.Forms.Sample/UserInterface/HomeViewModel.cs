@@ -24,6 +24,7 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : IShellTab, IViewAware
 	{
+		private readonly ChapterDetailsViewModel _chapterDetails;
 		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly INavigationService _navigationService;
@@ -50,12 +51,14 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public HomeViewModel(
 			MediaPlayerViewModel mediaPlayer,
+			ChapterDetailsViewModel chapterDetails,
 			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
 			ProgramDatabase database,
 			LocalizableProperties localizableProperties)
 		{
+			_chapterDetails = chapterDetails;
 			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
@@ -106,6 +109,7 @@ namespace Blastic.Forms.Sample.UserInterface
 					BookViewModel viewModel = new(
 						book,
 						MediaPlayer,
+						_chapterDetails,
 						LocalizableProperties,
 						_downloadService,
 						_archiveOrgService,

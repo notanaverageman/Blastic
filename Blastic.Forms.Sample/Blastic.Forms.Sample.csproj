@@ -32,8 +32,8 @@
     <Compile Update="Controls\RatingBar.xaml.cs">
       <DependentUpon>RatingBar.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\ChapterDetailsOverlayView.xaml.cs">
-      <DependentUpon>ChapterDetailsOverlayView.xaml</DependentUpon>
+    <Compile Update="UserInterface\ChapterDetailsView.xaml.cs">
+      <DependentUpon>ChapterDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\BookView.xaml.cs">
       <DependentUpon>BookView.xaml</DependentUpon>

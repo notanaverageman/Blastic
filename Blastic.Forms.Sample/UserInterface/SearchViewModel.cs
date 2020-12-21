@@ -28,6 +28,7 @@ namespace Blastic.Forms.Sample.UserInterface
 	{
 		private readonly ProgramDatabase _database;
 		private readonly MediaPlayerViewModel _mediaPlayer;
+		private readonly ChapterDetailsViewModel _chapterDetails;
 		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly INavigationService _navigationService;
@@ -55,6 +56,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public SearchViewModel(
 			ProgramDatabase database,
 			MediaPlayerViewModel mediaPlayer,
+			ChapterDetailsViewModel chapterDetails,
 			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
@@ -62,6 +64,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		{
 			_database = database;
 			_mediaPlayer = mediaPlayer;
+			_chapterDetails = chapterDetails;
 			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
@@ -114,6 +117,7 @@ namespace Blastic.Forms.Sample.UserInterface
 							BookViewModel viewModel = new(
 								book,
 								_mediaPlayer,
+								_chapterDetails,
 								LocalizableProperties,
 								_downloadService,
 								_archiveOrgService,

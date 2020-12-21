@@ -237,7 +237,5 @@
 				</StackLayout>
 			</Grid>
 		</ScrollView>
-
-		<userInterface:ChapterDetailsOverlayView />
 	</Grid>
 </ContentPage>

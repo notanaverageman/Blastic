@@ -46,11 +46,13 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 					(_, y) =>
 					{
 						y.AddSingleton(new HttpClient());
-						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ArchiveOrgService>();
 						y.AddSingleton<DownloadService>();
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
+
+						y.AddSingleton<MediaPlayerViewModel>();
+						y.AddSingleton<ChapterDetailsViewModel>();
 
 						y.AddSingleton<ThemeSettingsSection>();
 						y.AddSingleton<LanguageSettingsSection>();

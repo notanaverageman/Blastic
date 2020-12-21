@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<overlay:OverlayView x:Class="Blastic.Forms.Sample.UserInterface.ChapterDetailsOverlayView"
+<overlay:OverlayView x:Class="Blastic.Forms.Sample.UserInterface.ChapterDetailsView"
 					 xmlns="http://xamarin.com/schemas/2014/forms"
 					 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 					 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
@@ -8,8 +8,8 @@
 					 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 					 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 					 mc:Ignorable="d"
-					 x:DataType="userInterface:BookViewModel"
-					 State="{Binding ChapterDetailsOverlayState.Value}">
+					 x:DataType="userInterface:ChapterDetailsViewModel"
+					 State="{Binding State.Value}">
 
 	<overlay:OverlayView.Expanded>
 		<ContentView Background="{AppThemeBinding Light={StaticResource OverlayBackground}, Dark={StaticResource DarkOverlayBackground}}">
@@ -21,28 +21,28 @@
 						<Image Aspect="Fill"
 							   HeightRequest="{StaticResource BookImageHeight}"
 							   HorizontalOptions="Center"
-							   Source="{Binding ImageUrl.Value}"
+							   Source="{Binding Chapter.Value.Book.ImageUrl.Value}"
 							   WidthRequest="{StaticResource BookImageWidth}" />
 
 						<Label Margin="0,20,0,0"
 							   HorizontalOptions="Center"
 							   LineBreakMode="TailTruncation"
-							   Text="{Binding ChapterForDetails.Value.Title.Value}" />
+							   Text="{Binding Chapter.Value.Title.Value}" />
 
 						<Label Margin="0,10,0,80"
 							   FontSize="Small"
 							   HorizontalOptions="Center"
 							   LineBreakMode="TailTruncation"
-							   Text="{Binding ChapterForDetails.Value.Book.Title.Value}"
+							   Text="{Binding Chapter.Value.Book.Title.Value}"
 							   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
 														   Dark={StaticResource DarkSecondaryTextColor}}" />
 
-						<Button Command="{Binding ChapterForDetails.Value.TogglePlayCommand}"
+						<Button Command="{Binding Chapter.Value.TogglePlayCommand}"
 								HorizontalOptions="Start"
 								Text="{Binding LocalizableProperties.CommonPlay.Value}">
 
 							<Button.Triggers>
-								<DataTrigger Binding="{Binding ChapterForDetails.Value.IsPlaying.Value}"
+								<DataTrigger Binding="{Binding Chapter.Value.IsPlaying.Value}"
 											 TargetType="{x:Type Button}"
 											 Value="True">
 									<Setter Property="Text" Value="{Binding LocalizableProperties.CommonPause.Value}" />
@@ -51,7 +51,7 @@
 
 							<Button.ImageSource>
 								<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-												 Glyph="{Binding ChapterForDetails.Value.PlayPauseIconGlyph.Value}"
+												 Glyph="{Binding Chapter.Value.PlayPauseIconGlyph.Value}"
 												 Color="{AppThemeBinding Light={StaticResource TextColor},
 																		 Dark={StaticResource DarkTextColor}}" />
 							</Button.ImageSource>
@@ -70,13 +70,13 @@
 						<Grid ColumnDefinitions="Auto,Auto,*">
 
 							<Button Grid.Column="0"
-									Command="{Binding ChapterForDetails.Value.DownloadCommand}"
+									Command="{Binding Chapter.Value.DownloadCommand}"
 									HorizontalOptions="Start"
 									Text="{Binding LocalizableProperties.CommonDownload.Value}"
 									VerticalOptions="Center">
 
 								<Button.Triggers>
-									<DataTrigger Binding="{Binding ChapterForDetails.Value.IsDownloaded.Value}"
+									<DataTrigger Binding="{Binding Chapter.Value.IsDownloaded.Value}"
 												 TargetType="{x:Type Button}"
 												 Value="True">
 										<Setter Property="Text" Value="{Binding LocalizableProperties.CommonDownloaded.Value}" />
@@ -93,21 +93,21 @@
 
 							<Label Grid.Column="1"
 								   FontAttributes="Bold"
-								   IsVisible="{Binding ChapterForDetails.Value.IsDownloaded.Value}"
+								   IsVisible="{Binding Chapter.Value.IsDownloaded.Value}"
 								   Text="✓"
 								   TextColor="{AppThemeBinding Light={StaticResource Accent},
 															   Dark={StaticResource DarkAccent}}"
 								   VerticalOptions="Center" />
 
 							<ProgressBar Grid.Column="2"
-										 IsVisible="{Binding ChapterForDetails.Value.DownloadCommand.IsExecuting.Value}"
-										 Progress="{Binding ChapterForDetails.Value.DownloadProgress.Value}"
+										 IsVisible="{Binding Chapter.Value.DownloadCommand.IsExecuting.Value}"
+										 Progress="{Binding Chapter.Value.DownloadProgress.Value}"
 										 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
 																		 Dark={StaticResource DarkAccent}}"
 										 VerticalOptions="Center" />
 						</Grid>
 
-						<Button Command="{Binding ChapterForDetails.Value.DeleteDownloadedFileCommand}"
+						<Button Command="{Binding Chapter.Value.DeleteDownloadedFileCommand}"
 								HorizontalOptions="Start"
 								Text="{Binding LocalizableProperties.CommonDelete.Value}"
 								VerticalOptions="Center">
@@ -129,4 +129,7 @@
 			</Grid>
 		</ContentView>
 	</overlay:OverlayView.Expanded>
+	<overlay:OverlayView.Collapsed>
+		<Grid />
+	</overlay:OverlayView.Collapsed>
 </overlay:OverlayView>
