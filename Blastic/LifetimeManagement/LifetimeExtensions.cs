@@ -16,9 +16,10 @@ namespace Blastic.LifetimeManagement
 		public static IDisposable AddChildLifetime(
 			this ILifetime lifetime,
 			ILifetime childLifetime,
-			LifetimeChainOptions lifetimeChainOptions)
+			LifetimeChainOptions? lifetimeChainOptions = null)
 		{
-			CompositeDisposable disposable = new CompositeDisposable();
+			CompositeDisposable disposable = new();
+			lifetimeChainOptions ??= new LifetimeChainOptions();
 
 			void Subscribe<T>(Command<T> parent, Command<T> child)
 			{

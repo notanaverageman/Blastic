@@ -1,12 +1,26 @@
 ﻿<Application x:Class="Blastic.Wpf.Sample.App"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:converters="clr-namespace:Blastic.Wpf.Sample.Converters">
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="/Blastic.Wpf;component/Themes/Blastic.xaml" />
-				<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/Blastic.Material.xaml" />
+				<!--<ResourceDictionary Source="/Blastic.Wpf.Material;component/Themes/Blastic.Material.xaml" />-->
 			</ResourceDictionary.MergedDictionaries>
+
+			<converters:EnumToResourceConverter x:Key="EnumToSvgResourceConverter"
+												FileExtension="svg" />
+			<converters:EnumToResourceConverter x:Key="EnumToJpgResourceConverter"
+												FileExtension="jpg" />
+
+			<converters:OffsetToTransformConverter x:Key="XOffsetToTransformConverter"
+												   ApplyX="True" />
+			<converters:OffsetToTransformConverter x:Key="YOffsetToTransformConverter"
+												   ApplyY="True" />
+
+			<FontFamily x:Key="Gravity">pack://application:,,,/Resources/Gravity.otf#Gravity Ultra Light</FontFamily>
+			<FontFamily x:Key="ZillaSlab">pack://application:,,,/Resources/ZillaSlab.ttf#Zilla Slab Bold</FontFamily>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

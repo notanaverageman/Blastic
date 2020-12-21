@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Blastic.Wpf.Sample.UserInterface.CityView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions;assembly=Blastic.Wpf"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+			 xmlns:userInterface="clr-namespace:Blastic.Wpf.Sample.UserInterface"
+			 mc:Ignorable="d"
+			 d:DataContext="{d:DesignInstance userInterface:CityViewModel}">
+
+	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,Auto"
+		  Opacity="{Binding Animations.Opacity.Value}"
+		  RenderTransform="{Binding Animations.Offset.Value, Converter={StaticResource YOffsetToTransformConverter}}">
+
+		<Grid Grid.Row="0"
+			  controlExtensions:GridExtensions.ColumnDefinitions="*,Auto,Auto">
+
+			<TextBlock Grid.Column="0"
+					   VerticalAlignment="Center"
+					   FontSize="24"
+					   Foreground="White"
+					   Text="{Binding City.Value}" />
+
+			<TextBlock Grid.Column="1"
+					   VerticalAlignment="Center"
+					   FontSize="24"
+					   Foreground="White"
+					   Text="{Binding TemperatureText.Value}" />
+
+			<svgc:SvgViewbox Grid.Column="2"
+							 Width="40"
+							 Height="40"
+							 Margin="20,0,0,0"
+							 VerticalAlignment="Center"
+							 Source="{Binding Weather.Value, Converter={StaticResource EnumToSvgResourceConverter}}" />
+		</Grid>
+
+		<ProgressBar Grid.Row="1"
+					 Margin="0,5,0,0"
+					 HorizontalAlignment="Stretch"
+					 BorderBrush="Transparent"
+					 Foreground="LightGray"
+					 Maximum="1"
+					 Minimum="0"
+					 Value="{Binding Animations.UnderlineWidth.Value}" />
+	</Grid>
+</UserControl>
