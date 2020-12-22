@@ -2,13 +2,13 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Books.BookView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
+			 xmlns:chapters="clr-namespace:Blastic.Forms.Sample.UserInterface.Chapters;assembly=Blastic.Forms.Sample"
 			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:chapters="clr-namespace:Blastic.Forms.Sample.UserInterface.Chapters;assembly=Blastic.Forms.Sample"
-			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
 			 x:Name="Root"
 			 Title="{Binding Title.Value}"
 			 mc:Ignorable="d"
@@ -177,7 +177,7 @@
 									  RowSpacing="0">
 
 									<Grid.GestureRecognizers>
-										<TapGestureRecognizer Command="{Binding TogglePlayCommand}" />
+										<TapGestureRecognizer Command="{Binding Media.TogglePlayCommand}" />
 									</Grid.GestureRecognizers>
 
 									<Grid Grid.Row="0"
@@ -190,7 +190,7 @@
 											   VerticalOptions="Center">
 
 											<Label.Triggers>
-												<DataTrigger Binding="{Binding IsPlaying.Value}"
+												<DataTrigger Binding="{Binding Media.IsPlaying.Value}"
 															 TargetType="{x:Type Label}"
 															 Value="True">
 													<Setter Property="Label.TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
@@ -201,7 +201,7 @@
 										<Label Grid.Column="1"
 											   FontFamily="{StaticResource MaterialFontFamily}"
 											   FontSize="Micro"
-											   IsVisible="{Binding IsDownloaded.Value}"
+											   IsVisible="{Binding Download.IsDownloaded.Value}"
 											   Text="{x:Static icons:IconFont.Download}"
 											   TextColor="{AppThemeBinding Light={StaticResource Accent},
 																		   Dark={StaticResource DarkAccent}}"
@@ -209,11 +209,11 @@
 
 										<Label Grid.Column="2"
 											   FontSize="Micro"
-											   Text="{Binding Duration.Value, StringFormat='{}{0:mm\\:ss}', Mode=OneTime}"
+											   Text="{Binding Media.Duration.Value, StringFormat='{}{0:mm\\:ss}', Mode=OneTime}"
 											   VerticalOptions="Center">
 
 											<Label.Triggers>
-												<DataTrigger Binding="{Binding IsPlaying.Value}"
+												<DataTrigger Binding="{Binding Media.IsPlaying.Value}"
 															 TargetType="{x:Type Label}"
 															 Value="True">
 													<Setter Property="Label.TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
@@ -238,7 +238,7 @@
 									<Label Grid.Row="1"
 										   Margin="0,-10,0,0"
 										   FontSize="Micro"
-										   Text="{Binding SizeInBytes.Value}"
+										   Text="{Binding Media.SizeLabel.Value}"
 										   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
 																	   Dark={StaticResource DarkSecondaryTextColor}}" />
 								</Grid>

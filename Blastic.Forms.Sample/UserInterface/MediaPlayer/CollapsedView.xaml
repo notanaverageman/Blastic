@@ -21,7 +21,7 @@
 		</Grid.GestureRecognizers>
 
 		<ProgressBar Grid.Row="0"
-					 Progress="{Binding CurrentChapter.Value.ProgressPercent.Value}"
+					 Progress="{Binding CurrentChapter.Value.Media.PlayedPercent.Value}"
 					 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
 													 Dark={StaticResource DarkAccent}}" />
 
@@ -54,11 +54,11 @@
 
 			<ImageButton Grid.Column="2"
 						 Margin="0,0,16,0"
-						 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
+						 Command="{Binding CurrentChapter.Value.Media.TogglePlayCommand}"
 						 VerticalOptions="Center">
 				<ImageButton.Source>
 					<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-									 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
+									 Glyph="{Binding CurrentChapter.Value.Media.PlayPauseIconGlyph.Value}"
 									 Color="{AppThemeBinding Light={StaticResource TextColor},
 															 Dark={StaticResource DarkTextColor}}" />
 				</ImageButton.Source>

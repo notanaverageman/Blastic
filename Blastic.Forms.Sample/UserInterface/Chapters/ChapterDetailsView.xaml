@@ -37,12 +37,12 @@
 							   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
 														   Dark={StaticResource DarkSecondaryTextColor}}" />
 
-						<Button Command="{Binding Chapter.Value.TogglePlayCommand}"
+						<Button Command="{Binding Chapter.Value.Media.TogglePlayCommand}"
 								HorizontalOptions="Start"
 								Text="{Binding LocalizableProperties.CommonPlay.Value}">
 
 							<Button.Triggers>
-								<DataTrigger Binding="{Binding Chapter.Value.IsPlaying.Value}"
+								<DataTrigger Binding="{Binding Chapter.Value.Media.IsPlaying.Value}"
 											 TargetType="{x:Type Button}"
 											 Value="True">
 									<Setter Property="Text" Value="{Binding LocalizableProperties.CommonPause.Value}" />
@@ -51,7 +51,7 @@
 
 							<Button.ImageSource>
 								<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-												 Glyph="{Binding Chapter.Value.PlayPauseIconGlyph.Value}"
+												 Glyph="{Binding Chapter.Value.Media.PlayPauseIconGlyph.Value}"
 												 Color="{AppThemeBinding Light={StaticResource TextColor},
 																		 Dark={StaticResource DarkTextColor}}" />
 							</Button.ImageSource>
@@ -70,13 +70,13 @@
 						<Grid ColumnDefinitions="Auto,Auto,*">
 
 							<Button Grid.Column="0"
-									Command="{Binding Chapter.Value.DownloadCommand}"
+									Command="{Binding Chapter.Value.Download.DownloadCommand}"
 									HorizontalOptions="Start"
 									Text="{Binding LocalizableProperties.CommonDownload.Value}"
 									VerticalOptions="Center">
 
 								<Button.Triggers>
-									<DataTrigger Binding="{Binding Chapter.Value.IsDownloaded.Value}"
+									<DataTrigger Binding="{Binding Chapter.Value.Download.IsDownloaded.Value}"
 												 TargetType="{x:Type Button}"
 												 Value="True">
 										<Setter Property="Text" Value="{Binding LocalizableProperties.CommonDownloaded.Value}" />
@@ -93,21 +93,21 @@
 
 							<Label Grid.Column="1"
 								   FontAttributes="Bold"
-								   IsVisible="{Binding Chapter.Value.IsDownloaded.Value}"
+								   IsVisible="{Binding Chapter.Value.Download.IsDownloaded.Value}"
 								   Text="✓"
 								   TextColor="{AppThemeBinding Light={StaticResource Accent},
 															   Dark={StaticResource DarkAccent}}"
 								   VerticalOptions="Center" />
 
 							<ProgressBar Grid.Column="2"
-										 IsVisible="{Binding Chapter.Value.IsDownloading.Value}"
-										 Progress="{Binding Chapter.Value.DownloadProgress.Value}"
+										 IsVisible="{Binding Chapter.Value.Download.IsDownloading.Value}"
+										 Progress="{Binding Chapter.Value.Download.DownloadProgress.Value}"
 										 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
 																		 Dark={StaticResource DarkAccent}}"
 										 VerticalOptions="Center" />
 						</Grid>
 
-						<Button Command="{Binding Chapter.Value.DeleteDownloadedFileCommand}"
+						<Button Command="{Binding Chapter.Value.Download.DeleteDownloadedFileCommand}"
 								HorizontalOptions="Start"
 								Text="{Binding LocalizableProperties.CommonDelete.Value}"
 								VerticalOptions="Center">

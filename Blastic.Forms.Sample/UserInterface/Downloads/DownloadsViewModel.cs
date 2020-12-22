@@ -73,12 +73,12 @@ namespace Blastic.Forms.Sample.UserInterface.Downloads
 		{
 			DownloadData downloadData = new(
 				chapter.Title,
-				chapter.Url.Value,
+				chapter.Media.Url.Value,
 				GetFilePath(chapter),
 				statusListener)
 			{
-				Size = chapter.SizeInBytes,
-				Progress = chapter.DownloadProgress
+				Size = chapter.Media.SizeLabel,
+				Progress = chapter.Download.DownloadProgress
 			};
 
 			_downloadsSource.AddOrUpdate(downloadData);

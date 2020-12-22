@@ -12,7 +12,9 @@ using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.LifetimeManagement;
+using Blastic.Platform;
 using Blastic.Reactive;
+using DynamicData;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface.Books
@@ -23,6 +25,9 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 		private readonly DownloadsViewModel _downloads;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly ProgramDatabase _database;
+
+		private readonly SourceCache<ChapterViewModel, string> _chaptersSource;
+		private readonly ReadOnlyObservableCollection<ChapterViewModel> _chapters;
 
 		public Book Book { get; }
 		public LocalizableProperties LocalizableProperties { get; }
@@ -40,8 +45,8 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 		public IReactiveProperty<bool> DescriptionExpanded { get; }
 		public IReactiveProperty<IReadOnlyReactiveProperty<string>> DescriptionToggleLabel { get; }
 
-		public ObservableCollection<ChapterViewModel> Chapters { get; }
-		
+		public ReadOnlyObservableCollection<ChapterViewModel> Chapters => _chapters;
+
 		public Command PlayCommand { get; }
 		public Command DownloadCommand { get; }
 		public Command ToggleDescriptionLengthCommand { get; }
@@ -77,13 +82,26 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 			ImageUrl = new ReactiveProperty<string>(imageUrl);
 			TotalDuration = new ReactiveProperty<TimeSpan>();
 
-			Chapters = new ObservableCollection<ChapterViewModel>();
-
 			DescriptionExpanded = new ReactiveProperty<bool>();
 			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.HomeBookDescriptionMore);
-			
+
+			_chaptersSource = new SourceCache<ChapterViewModel, string>(x => x.Media.Url.Value);
+			_chaptersSource
+				.Connect()
+				.ObserveOnUI()
+				.Bind(out _chapters)
+				.DisposeMany()
+				.Subscribe();
+
+			DownloadCommand = _chaptersSource
+				.Connect()
+				.TrueForAny(
+					x => x.Download.DownloadCommand.CanExecuteObservable,
+					x => x)
+				.ToCommand()
+				.WithSubscribe(Download);
+
 			PlayCommand = new Command(Play);
-			DownloadCommand = new Command(Download);
 			ToggleDescriptionLengthCommand = new Command(ToggleDescriptionLength);
 
 			ShowDetailsCommand = new Command<ChapterViewModel>(chapterDetails.Show);
@@ -107,7 +125,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 		{
 			foreach (ChapterViewModel chapter in Chapters)
 			{
-				await chapter.DownloadCommand.Execute();
+				await chapter.Download.DownloadCommand.Execute();
 			}
 		}
 
@@ -148,7 +166,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 
 			foreach (Chapter chapter in book.Chapters)
 			{
-				Chapters.Add(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
+				_chaptersSource.AddOrUpdate(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
 			}
 		}
 
@@ -176,7 +194,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 				};
 
 				Book.Chapters.Add(chapter);
-				Chapters.Add(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
+				_chaptersSource.AddOrUpdate(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
 			}
 
 			await _database.BooksTable.Put(Book, cancellationToken);

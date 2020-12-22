@@ -69,7 +69,7 @@ namespace Blastic.Forms.Sample.iOS.Media
 				return;
 			}
 
-			NSUrl url = NSUrl.FromString(chapter.Url.Value);
+			NSUrl url = NSUrl.FromString(chapter.Media.Url.Value);
 			AVPlayerItem playerItem = AVPlayerItem.FromUrl(url);
 
 			Stop();
@@ -109,7 +109,7 @@ namespace Blastic.Forms.Sample.iOS.Media
 				Title = chapter.Title.Value,
 				AlbumTitle = chapter.Book.Title.Value,
 				Artist = chapter.Book.Author.Value,
-				PlaybackDuration = chapter.Duration.Value.TotalSeconds,
+				PlaybackDuration = chapter.Media.Duration.Value.TotalSeconds,
 				PlaybackRate = _player.Rate
 			};
 
