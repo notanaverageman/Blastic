@@ -33,7 +33,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 		{
 			_localizableProperties = localizableProperties;
 			
-			Element.WithLabel(localizableProperties.SettingsTheme);
+			Element.WithLabel(localizableProperties.Settings.Theme);
 			Lifetime.Initialization.Subscribe(Initialize);
 		}
 
@@ -78,9 +78,9 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 		{
 			return theme switch
 			{
-				Theme.System => localizableProperties.CommonSystem,
-				Theme.Light => localizableProperties.SettingsThemeLight,
-				Theme.Dark => localizableProperties.SettingsThemeDark,
+				Theme.System => localizableProperties.Common.System,
+				Theme.Light => localizableProperties.Settings.Theme.Light,
+				Theme.Dark => localizableProperties.Settings.Theme.Dark,
 				_ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
 			};
 		}

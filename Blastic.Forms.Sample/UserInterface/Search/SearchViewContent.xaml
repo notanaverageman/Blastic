@@ -73,7 +73,7 @@
 													 Dark={StaticResource DarkBackground}}"
 				   CancelButtonColor="{AppThemeBinding Light={StaticResource Accent},
 													   Dark={StaticResource DarkAccent}}"
-				   Placeholder="{Binding LocalizableProperties.CommonSearch.Value}"
+				   Placeholder="{Binding LocalizableProperties.Common.Search.Value}"
 				   PlaceholderColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
 													  Dark={StaticResource DarkSecondaryTextColor}}"
 				   Text="{Binding SearchQuery.Value}"

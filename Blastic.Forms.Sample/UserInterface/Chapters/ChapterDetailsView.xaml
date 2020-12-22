@@ -39,13 +39,13 @@
 
 						<Button Command="{Binding Chapter.Value.Media.TogglePlayCommand}"
 								HorizontalOptions="Start"
-								Text="{Binding LocalizableProperties.CommonPlay.Value}">
+								Text="{Binding LocalizableProperties.Common.Play.Value}">
 
 							<Button.Triggers>
 								<DataTrigger Binding="{Binding Chapter.Value.Media.IsPlaying.Value}"
 											 TargetType="{x:Type Button}"
 											 Value="True">
-									<Setter Property="Text" Value="{Binding LocalizableProperties.CommonPause.Value}" />
+									<Setter Property="Text" Value="{Binding LocalizableProperties.Common.Pause.Value}" />
 								</DataTrigger>
 							</Button.Triggers>
 
@@ -58,7 +58,7 @@
 						</Button>
 
 						<Button HorizontalOptions="Start"
-								Text="{Binding LocalizableProperties.CommonLike.Value}">
+								Text="{Binding LocalizableProperties.Common.Like.Value}">
 							<Button.ImageSource>
 								<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
 												 Glyph="{x:Static icons:IconFont.Heart}"
@@ -72,14 +72,14 @@
 							<Button Grid.Column="0"
 									Command="{Binding Chapter.Value.Download.DownloadCommand}"
 									HorizontalOptions="Start"
-									Text="{Binding LocalizableProperties.CommonDownload.Value}"
+									Text="{Binding LocalizableProperties.Common.Download.Value}"
 									VerticalOptions="Center">
 
 								<Button.Triggers>
 									<DataTrigger Binding="{Binding Chapter.Value.Download.IsDownloaded.Value}"
 												 TargetType="{x:Type Button}"
 												 Value="True">
-										<Setter Property="Text" Value="{Binding LocalizableProperties.CommonDownloaded.Value}" />
+										<Setter Property="Text" Value="{Binding LocalizableProperties.Common.Downloaded.Value}" />
 									</DataTrigger>
 								</Button.Triggers>
 
@@ -109,7 +109,7 @@
 
 						<Button Command="{Binding Chapter.Value.Download.DeleteDownloadedFileCommand}"
 								HorizontalOptions="Start"
-								Text="{Binding LocalizableProperties.CommonDelete.Value}"
+								Text="{Binding LocalizableProperties.Common.Delete.Value}"
 								VerticalOptions="Center">
 
 							<Button.ImageSource>
@@ -125,7 +125,7 @@
 				<Button Grid.Row="1"
 						Command="{Binding HideCommand}"
 						HorizontalOptions="CenterAndExpand"
-						Text="{Binding LocalizableProperties.CommonClose.Value}" />
+						Text="{Binding LocalizableProperties.Common.Close.Value}" />
 			</Grid>
 		</ContentView>
 	</overlay:OverlayView.Expanded>

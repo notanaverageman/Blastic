@@ -77,7 +77,7 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 			View = new ReactiveProperty<object?>();
 
 			Order = new Order(0);
-			Title = localizableProperties.HomeTitle;
+			Title = localizableProperties.Home.Title;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Home);
 
 			_booksSource = new SourceCache<BookViewModel, string>(x => x.Book.ArchiveOrgId);

@@ -30,7 +30,7 @@
 																						 Dark={StaticResource DarkCancelColor}}"
 													   Command="{Binding BindingContext.RemoveCommand, Source={x:Reference Root}}"
 													   CommandParameter="{Binding}"
-													   Text="{Binding BindingContext.LocalizableProperties.CommonDelete.Value, Source={x:Reference Root}}" />
+													   Text="{Binding BindingContext.LocalizableProperties.Common.Delete.Value, Source={x:Reference Root}}" />
 										</SwipeItems>
 									</SwipeView.RightItems>
 
@@ -94,7 +94,7 @@
 				<Button Grid.Row="1"
 						Command="{Binding HideCommand}"
 						HorizontalOptions="CenterAndExpand"
-						Text="{Binding LocalizableProperties.CommonClose.Value}" />
+						Text="{Binding LocalizableProperties.Common.Close.Value}" />
 			</Grid>
 		</ContentView>
 	</overlay:OverlayView.Expanded>

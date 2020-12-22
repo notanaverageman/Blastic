@@ -20,7 +20,7 @@ namespace Blastic.Forms.Sample.UserInterface.Library
 			Lifetime = new Lifetime();
 			
 			Order = new Order(2);
-			Title = localizableProperties.LibraryTitle;
+			Title = localizableProperties.Library.Title;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Bookshelf);
 		}
 	}

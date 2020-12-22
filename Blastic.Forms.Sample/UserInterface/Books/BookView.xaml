@@ -75,7 +75,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="{Binding LocalizableProperties.CommonListen.Value}"
+							Text="{Binding LocalizableProperties.Common.Listen.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -90,7 +90,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="{Binding LocalizableProperties.CommonDownload.Value}"
+							Text="{Binding LocalizableProperties.Common.Download.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -104,7 +104,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="{Binding LocalizableProperties.CommonLike.Value}"
+							Text="{Binding LocalizableProperties.Common.Like.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -118,7 +118,7 @@
 							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="Center"
-							Text="{Binding LocalizableProperties.CommonSave.Value}"
+							Text="{Binding LocalizableProperties.Common.Save.Value}"
 							VerticalOptions="Center">
 						<Button.ImageSource>
 							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -137,7 +137,7 @@
 													 Dark={StaticResource DarkSeparatorColor}}" />
 
 					<Label FontAttributes="Bold"
-						   Text="{Binding LocalizableProperties.HomeBookDescription.Value}" />
+						   Text="{Binding LocalizableProperties.Home.Book.Description.Value}" />
 
 					<Label FontSize="Small"
 						   LineBreakMode="WordWrap"
@@ -168,7 +168,7 @@
 
 					<Label Margin="0,0,0,10"
 						   FontAttributes="Bold"
-						   Text="{Binding LocalizableProperties.HomeBookChapters.Value}" />
+						   Text="{Binding LocalizableProperties.Home.Book.Chapters.Value}" />
 
 					<StackLayout BindableLayout.ItemsSource="{Binding Chapters, Mode=OneTime}">
 						<BindableLayout.ItemTemplate>

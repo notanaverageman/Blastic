@@ -83,7 +83,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 			TotalDuration = new ReactiveProperty<TimeSpan>();
 
 			DescriptionExpanded = new ReactiveProperty<bool>();
-			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.HomeBookDescriptionMore);
+			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.Home.Book.Description.More);
 
 			_chaptersSource = new SourceCache<ChapterViewModel, string>(x => x.Media.Url.Value);
 			_chaptersSource
@@ -134,8 +134,8 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 			DescriptionExpanded.Value = !DescriptionExpanded.Value;
 
 			DescriptionToggleLabel.Value = DescriptionExpanded.Value
-				? LocalizableProperties.HomeBookDescriptionLess
-				: LocalizableProperties.HomeBookDescriptionMore;
+				? LocalizableProperties.Home.Book.Description.Less
+				: LocalizableProperties.Home.Book.Description.More;
 		}
 
 		private async Task FetchDetails(CancellationToken cancellationToken)

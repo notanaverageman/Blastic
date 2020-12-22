@@ -72,13 +72,13 @@ namespace Blastic.CodeGeneration
 			this StringBuilder builder,
 			string @namespace)
 		{
-			
 			builder.Replace("\r\n", "\r\n    ");
 
 			builder.Insert(0, "{\r\n    ");
 			builder.Insert(0, $"namespace {@namespace}\r\n");
+			
+			builder.Replace("    ", "", builder.Length - 4, 4);
 
-			builder.AppendLine();
 			builder.AppendLine("}");
 		}
 	}

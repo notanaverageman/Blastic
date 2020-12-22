@@ -64,5 +64,10 @@ namespace Blastic.CodeGeneration
 
 			return variableName;
 		}
+
+		public static string ToClassName(this string s)
+		{
+			return s.ToPropertyName();
+		}
 	}
 }

@@ -78,7 +78,7 @@ namespace Blastic.Forms.Sample.UserInterface.Search
 			View = new ReactiveProperty<object?>();
 
 			Order = new Order(1);
-			Title = localizableProperties.SearchTitle;
+			Title = localizableProperties.Search.Title;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Magnify);
 			
 			_booksSource = new SourceCache<BookViewModel, string>(x => x.Book.ArchiveOrgId);

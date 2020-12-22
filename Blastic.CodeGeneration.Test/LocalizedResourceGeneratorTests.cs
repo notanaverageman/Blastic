@@ -13,8 +13,8 @@ namespace Blastic.CodeGeneration.Test
 		public static void Main()
 		{
 			string source = GenerateSource(
-				"../../../../Blastic.Wpf/Properties/Resources.resx",
-				"../../../../Blastic.Wpf/Properties/Resources.tr-tr.resx");
+				"../../../../Blastic.Forms.Sample/Properties/Resources.resx",
+				"../../../../Blastic.Forms.Sample/Properties/Resources.tr-tr.resx");
 
 			if (!string.IsNullOrEmpty(source))
 			{
@@ -44,8 +44,8 @@ namespace Blastic.CodeGeneration.Test
 				additionalTexts.Add(additionalText);
 			}
 			
-			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizationSource(\"Blastic.Wpf.Resources\", className: \"Asd\")]"));
-			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizableProperties(\"Blastic.Wpf.Resources\")]"));
+			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizationSource(\"Test\", className: \"Source\")]"));
+			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizableProperties(\"Test\")]"));
 
 			CSharpCompilation compilation = CSharpCompilation.Create(
 				"original",
