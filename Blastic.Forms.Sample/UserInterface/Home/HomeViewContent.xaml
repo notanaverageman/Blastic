@@ -1,19 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.HomeViewContent"
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Home.HomeViewContent"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
+			 xmlns:home="clr-namespace:Blastic.Forms.Sample.UserInterface.Home;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d"
-			 x:DataType="userInterface:HomeViewModel"
+			 x:DataType="home:HomeViewModel"
 			 Style="{StaticResource PageStyle}">
 
 	<ContentPage.Resources>
 		<DataTemplate x:Key="BookTemplate"
-					  x:DataType="userInterface:BookViewModel">
+					  x:DataType="books:BookViewModel">
 
 			<Grid RowDefinitions="Auto,Auto,Auto"
 				  RowSpacing="0"
@@ -21,7 +22,7 @@
 				  WidthRequest="{StaticResource BookImageWidth}">
 
 				<Grid.GestureRecognizers>
-					<TapGestureRecognizer Command="{Binding BindingContext.NavigateToBookCommand, Source={RelativeSource FindAncestor, AncestorType={x:Type userInterface:HomeViewContent}}}"
+					<TapGestureRecognizer Command="{Binding BindingContext.NavigateToBookCommand, Source={RelativeSource FindAncestor, AncestorType={x:Type home:HomeViewContent}}}"
 										  CommandParameter="{Binding}" />
 				</Grid.GestureRecognizers>
 

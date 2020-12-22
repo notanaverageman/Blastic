@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.SearchViewContent"
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Search.SearchViewContent"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
@@ -7,15 +7,16 @@
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
+			 xmlns:search="clr-namespace:Blastic.Forms.Sample.UserInterface.Search;assembly=Blastic.Forms.Sample"
 			 x:Name="Root"
 			 mc:Ignorable="d"
-			 x:DataType="userInterface:SearchViewModel"
+			 x:DataType="search:SearchViewModel"
 			 Style="{StaticResource PageStyle}">
 
 	<ContentPage.Resources>
 		<DataTemplate x:Key="BookTemplate"
-					  x:DataType="userInterface:BookViewModel">
+					  x:DataType="books:BookViewModel">
 			<ViewCell>
 				<Grid Padding="10,5"
 					  ColumnDefinitions="Auto,*">

@@ -2,6 +2,7 @@ using System;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Media;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Reactive;
 
 namespace Blastic.Forms.Sample.UserInterface.MediaPlayer

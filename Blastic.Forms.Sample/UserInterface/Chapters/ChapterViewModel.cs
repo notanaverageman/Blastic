@@ -5,11 +5,12 @@ using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Services;
+using Blastic.Forms.Sample.UserInterface.Books;
 using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Reactive;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Chapters
 {
 	public class ChapterViewModel
 	{

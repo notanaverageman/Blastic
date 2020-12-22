@@ -8,13 +8,14 @@ using Blastic.Forms.Sample.ArchiveOrg;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Books
 {
 	public class BookViewModel : IHasLifetime
 	{

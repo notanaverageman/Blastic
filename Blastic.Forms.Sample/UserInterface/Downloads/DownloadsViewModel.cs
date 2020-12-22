@@ -9,6 +9,7 @@ using Blastic.Commanding;
 using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Platform;
 using Blastic.Reactive;
 using DynamicData;

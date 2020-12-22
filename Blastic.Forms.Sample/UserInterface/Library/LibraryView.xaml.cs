@@ -1,4 +1,4 @@
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Library
 {
 	public partial class LibraryView
 	{

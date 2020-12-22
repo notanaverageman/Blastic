@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<MultiPage x:Class="Blastic.Forms.Sample.UserInterface.MainView"
+<MultiPage x:Class="Blastic.Forms.Sample.UserInterface.Main.MainView"
 		   xmlns="http://xamarin.com/schemas/2014/forms"
 		   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 		   xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
@@ -8,12 +8,13 @@
 		   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		   xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 		   xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
-		   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 		   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
 		   xmlns:downloads="clr-namespace:Blastic.Forms.Sample.UserInterface.Downloads;assembly=Blastic.Forms.Sample"
+		   xmlns:chapters="clr-namespace:Blastic.Forms.Sample.UserInterface.Chapters;assembly=Blastic.Forms.Sample"
+		   xmlns:main="clr-namespace:Blastic.Forms.Sample.UserInterface.Main;assembly=Blastic.Forms.Sample"
 		   mc:Ignorable="d"
 		   iOsSpecific:Page.UseSafeArea="True"
-		   x:DataType="userInterface:MainViewModel"
+		   x:DataType="main:MainViewModel"
 		   x:TypeArguments="Page"
 		   Style="{StaticResource PageStyle}">
 
@@ -38,7 +39,7 @@
 	</controls:InputPassthroughPage>
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">
-		<userInterface:ChapterDetailsView BindingContext="{Binding ChapterDetails}" />
+		<chapters:ChapterDetailsView BindingContext="{Binding ChapterDetails}" />
 	</controls:InputPassthroughPage>
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using AVFoundation;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Media;
-using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Reactive;
 using CoreFoundation;
 using CoreMedia;

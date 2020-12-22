@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.BookView"
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Books.BookView"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
@@ -7,11 +7,12 @@
 			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+			 xmlns:chapters="clr-namespace:Blastic.Forms.Sample.UserInterface.Chapters;assembly=Blastic.Forms.Sample"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
 			 x:Name="Root"
 			 Title="{Binding Title.Value}"
 			 mc:Ignorable="d"
-			 x:DataType="userInterface:BookViewModel"
+			 x:DataType="books:BookViewModel"
 			 Style="{StaticResource PageStyle}">
 
 	<Grid>
@@ -171,7 +172,7 @@
 
 					<StackLayout BindableLayout.ItemsSource="{Binding Chapters, Mode=OneTime}">
 						<BindableLayout.ItemTemplate>
-							<DataTemplate x:DataType="userInterface:ChapterViewModel">
+							<DataTemplate x:DataType="chapters:ChapterViewModel">
 								<Grid RowDefinitions="Auto,Auto"
 									  RowSpacing="0">
 

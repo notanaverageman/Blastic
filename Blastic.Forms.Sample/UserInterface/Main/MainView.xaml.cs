@@ -1,6 +1,6 @@
 using Xamarin.Forms;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Main
 {
 	public partial class MainView
 	{

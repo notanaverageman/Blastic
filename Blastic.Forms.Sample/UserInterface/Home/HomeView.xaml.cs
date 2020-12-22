@@ -1,4 +1,4 @@
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Home
 {
 	public partial class HomeView
 	{

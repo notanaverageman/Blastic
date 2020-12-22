@@ -5,7 +5,7 @@ using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Library
 {
 	public class LibraryViewModel : IShellTab
 	{

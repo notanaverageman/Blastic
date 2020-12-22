@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Forms.Sample.Data;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.UserInterface;
@@ -11,7 +12,7 @@ using Blastic.Ordering;
 using Microsoft.Extensions.Logging;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Main
 {
 	public class MainViewModel : ConductorOneActive<IShellTab>
 	{

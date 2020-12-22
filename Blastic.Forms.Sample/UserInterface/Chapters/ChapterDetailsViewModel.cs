@@ -3,7 +3,7 @@ using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Reactive;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Chapters
 {
 	public class ChapterDetailsViewModel
 	{
