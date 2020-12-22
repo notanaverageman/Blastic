@@ -2,12 +2,12 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Search.SearchViewContent"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
 			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
 			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
 			 xmlns:search="clr-namespace:Blastic.Forms.Sample.UserInterface.Search;assembly=Blastic.Forms.Sample"
 			 x:Name="Root"
 			 mc:Ignorable="d"
@@ -51,9 +51,8 @@
 
 						<Label FontSize="Micro"
 							   LineBreakMode="TailTruncation"
-							   Text="{Binding Author.Value, Mode=OneTime}"
-							   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
-														   Dark={StaticResource DarkSecondaryTextColor}}" />
+							   StyleClass="Secondary"
+							   Text="{Binding Author.Value, Mode=OneTime}" />
 
 						<controls:RatingBar FontFamily="{StaticResource MaterialFontFamily}"
 											Rating="{Binding Book.Rating}"

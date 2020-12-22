@@ -47,9 +47,8 @@
 
 				<Label FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
-					   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
-												   Dark={StaticResource DarkSecondaryTextColor}}" />
+					   StyleClass="Secondary"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
 			</StackLayout>
 
 			<ImageButton Grid.Column="2"

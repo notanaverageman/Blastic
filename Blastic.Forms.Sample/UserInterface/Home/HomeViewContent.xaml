@@ -2,12 +2,12 @@
 <ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Home.HomeViewContent"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:home="clr-namespace:Blastic.Forms.Sample.UserInterface.Home;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
-			 xmlns:home="clr-namespace:Blastic.Forms.Sample.UserInterface.Home;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d"
 			 x:DataType="home:HomeViewModel"
 			 Style="{StaticResource PageStyle}">
@@ -51,9 +51,8 @@
 				<Label Grid.Row="2"
 					   FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding Author.Value, Mode=OneTime}"
-					   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
-												   Dark={StaticResource DarkSecondaryTextColor}}" />
+					   StyleClass="Secondary"
+					   Text="{Binding Author.Value, Mode=OneTime}" />
 			</Grid>
 		</DataTemplate>
 	</ContentPage.Resources>

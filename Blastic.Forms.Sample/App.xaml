@@ -65,6 +65,17 @@
 				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
 			</Style>
 
+			<Style Class="Secondary"
+				   TargetType="{x:Type Label}">
+				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
+			</Style>
+
+			<Style Class="Separator"
+				   TargetType="{x:Type BoxView}">
+				<Setter Property="Color" Value="{AppThemeBinding Light={StaticResource SeparatorColor}, Dark={StaticResource DarkSeparatorColor}}" />
+				<Setter Property="HeightRequest" Value="1" />
+			</Style>
+
 			<Style TargetType="{x:Type Button}">
 				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
 			</Style>

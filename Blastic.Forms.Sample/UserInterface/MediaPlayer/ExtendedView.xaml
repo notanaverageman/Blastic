@@ -70,9 +70,8 @@
 					   Text="{Binding CurrentChapter.Value.Title.Value}" />
 
 				<Label FontSize="Small"
-					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
-					   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
-												   Dark={StaticResource DarkSecondaryTextColor}}" />
+					   StyleClass="Secondary"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
 			</StackLayout>
 
 			<StackLayout Grid.Row="2"
