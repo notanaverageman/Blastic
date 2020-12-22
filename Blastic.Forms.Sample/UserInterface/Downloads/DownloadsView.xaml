@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<overlay:OverlayView x:Class="Blastic.Forms.Sample.UserInterface.DownloadsView"
+<overlay:OverlayView x:Class="Blastic.Forms.Sample.UserInterface.Downloads.DownloadsView"
 					 xmlns="http://xamarin.com/schemas/2014/forms"
 					 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 					 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 					 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 					 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
-					 xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
+					 xmlns:downloads="clr-namespace:Blastic.Forms.Sample.UserInterface.Downloads;assembly=Blastic.Forms.Sample"
 					 x:Name="Root"
 					 mc:Ignorable="d"
-					 x:DataType="userInterface:DownloadsViewModel"
+					 x:DataType="downloads:DownloadsViewModel"
 					 State="{Binding State.Value}">
 
 	<overlay:OverlayView.Expanded>
@@ -21,7 +21,7 @@
 						  HasUnevenRows="True"
 						  ItemsSource="{Binding Downloads}">
 					<ListView.ItemTemplate>
-						<DataTemplate x:DataType="userInterface:DownloadData">
+						<DataTemplate x:DataType="downloads:DownloadData">
 							<ViewCell>
 								<SwipeView>
 									<SwipeView.RightItems>

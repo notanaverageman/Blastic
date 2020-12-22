@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -14,7 +13,7 @@ using Blastic.Platform;
 using Blastic.Reactive;
 using DynamicData;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Downloads
 {
 	public class DownloadsViewModel
 	{
@@ -69,18 +68,21 @@ namespace Blastic.Forms.Sample.UserInterface
 			RemoveCommand = new Command<DownloadData>(Remove);
 		}
 
-		public void Queue(ChapterViewModel chapter)
+		public void Queue(ChapterViewModel chapter, DownloadStatusListener statusListener)
 		{
 			DownloadData downloadData = new(
 				chapter.Title,
 				chapter.Url.Value,
-				GetFilePath(chapter))
+				GetFilePath(chapter),
+				statusListener)
 			{
 				Size = chapter.SizeInBytes,
-				CompletedAction = () => chapter.IsDownloaded.Value = true
+				Progress = chapter.DownloadProgress
 			};
 
 			_downloadsSource.AddOrUpdate(downloadData);
+
+			statusListener.Queued?.Invoke();
 		}
 
 		public void Show()
@@ -106,50 +108,48 @@ namespace Blastic.Forms.Sample.UserInterface
 				_downloadsSource.Remove(downloadData);
 				_available.OnNext(Unit.Default);
 			}
-
-			void CleanUp()
-			{
-				try
-				{
-					File.Delete(downloadData.FilePath);
-				}
-				catch (Exception e)
-				{
-					Debug.WriteLine(e);
-				}
-			}
-
+			
 			if (downloadData.CancellationToken.IsCancellationRequested)
 			{
 				Completed();
 				return;
 			}
 			
-			string url = downloadData.Url;
-			IReactiveProperty<double> progress = downloadData.Progress;
-
-			Directory.CreateDirectory(Path.GetDirectoryName(downloadData.FilePath));
-
-			progress.Value = 0;
-
 			try
 			{
+				Directory.CreateDirectory(Path.GetDirectoryName(downloadData.FilePath));
+
+				downloadData.Progress.Value = 0;
+
 				using FileStream stream = File.Create(downloadData.FilePath);
 
 				await _downloadService.Download(
-					url,
+					downloadData.Url,
 					stream,
-					new Progress<double>(x => progress.Value = x),
+					new Progress<double>(x => downloadData.Progress.Value = x),
 					downloadData.CancellationToken);
 
-				downloadData.CompletedAction?.Invoke();
+				downloadData.StatusListener.Succeeded?.Invoke();
 			}
 			catch (Exception exception)
-				when(
-					exception is OperationCanceledException ||
-					exception is TimeoutException)
 			{
-				CleanUp();
+				if (exception is OperationCanceledException || exception is TimeoutException)
+				{
+					downloadData.StatusListener.Cancelled?.Invoke();
+				}
+				else
+				{
+					downloadData.StatusListener.ThrewException?.Invoke(exception);
+				}
+				
+				try
+				{
+					File.Delete(downloadData.FilePath);
+				}
+				catch (Exception e)
+				{
+					downloadData.StatusListener.ThrewException?.Invoke(e);
+				}
 			}
 
 			Completed();

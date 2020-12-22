@@ -70,7 +70,7 @@
 						<Grid ColumnDefinitions="Auto,Auto,*">
 
 							<Button Grid.Column="0"
-									Command="{Binding DownloadCommand}"
+									Command="{Binding Chapter.Value.DownloadCommand}"
 									HorizontalOptions="Start"
 									Text="{Binding LocalizableProperties.CommonDownload.Value}"
 									VerticalOptions="Center">
@@ -100,7 +100,7 @@
 								   VerticalOptions="Center" />
 
 							<ProgressBar Grid.Column="2"
-										 IsVisible="{Binding Chapter.Value.DownloadCommand.IsExecuting.Value}"
+										 IsVisible="{Binding Chapter.Value.IsDownloading.Value}"
 										 Progress="{Binding Chapter.Value.DownloadProgress.Value}"
 										 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
 																		 Dark={StaticResource DarkAccent}}"

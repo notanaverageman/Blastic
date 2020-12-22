@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Forms.Sample.Data;
+using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;

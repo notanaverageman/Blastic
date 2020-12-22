@@ -32,7 +32,7 @@
     <Compile Update="Controls\RatingBar.xaml.cs">
       <DependentUpon>RatingBar.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\DownloadsView.xaml.cs">
+    <Compile Update="UserInterface\Downloads\DownloadsView.xaml.cs">
       <DependentUpon>DownloadsView.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\ChapterDetailsView.xaml.cs">

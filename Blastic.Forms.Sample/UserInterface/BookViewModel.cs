@@ -8,6 +8,7 @@ using Blastic.Forms.Sample.ArchiveOrg;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
+using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
@@ -101,11 +102,11 @@ namespace Blastic.Forms.Sample.UserInterface
 			_mediaPlayer.PlayChapter(firstChapter);
 		}
 
-		private void Download()
+		private async Task Download()
 		{
 			foreach (ChapterViewModel chapter in Chapters)
 			{
-				_downloads.Queue(chapter);
+				await chapter.DownloadCommand.Execute();
 			}
 		}
 

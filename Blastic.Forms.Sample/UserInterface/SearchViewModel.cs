@@ -11,6 +11,7 @@ using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Forms.Sample.Services;
+using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.UserInterface;

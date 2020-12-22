@@ -5,6 +5,7 @@ using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Services;
+using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Reactive;
 
@@ -12,6 +13,7 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class ChapterViewModel
 	{
+		private readonly DownloadsViewModel _downloads;
 		private readonly MediaPlayerViewModel _mediaPlayer;
 		private readonly Chapter _chapter;
 
@@ -34,6 +36,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public IReactiveProperty<bool> IsPlaying { get; }
 		public IReadOnlyReactiveProperty<string> PlayPauseIconGlyph { get; }
 
+		public IReactiveProperty<bool> IsDownloading { get; }
 		public IReactiveProperty<bool> IsDownloaded { get; }
 		public IReactiveProperty<double> DownloadProgress { get; }
 		public Command DownloadCommand { get; }
@@ -52,6 +55,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			BookViewModel book,
 			Chapter chapter)
 		{
+			_downloads = downloads;
 			_mediaPlayer = mediaPlayer;
 			_chapter = chapter;
 			Book = book;
@@ -65,12 +69,21 @@ namespace Blastic.Forms.Sample.UserInterface
 			ProgressPercent = new ReactiveProperty<double>();
 			Seek = new ReactiveProperty<TimeSpan>();
 
+			IsDownloading = new ReactiveProperty<bool>();
 			IsDownloaded = new ReactiveProperty<bool>(File.Exists(GetDownloadedFilePath()));
 			DownloadProgress = new ReactiveProperty<double>();
 
-			DownloadCommand = new Command(IsDownloaded.Select(x => !x), () => downloads.Queue(this));
-			DeleteDownloadedFileCommand = new Command(IsDownloaded, DeleteDownloadedFile);
+			DownloadCommand = IsDownloaded
+				.Select(x => !x)
+				.CombineLatest(IsDownloading.Select(x => !x), (x, y) => x && y)
+				.ToCommand()
+				.WithSubscribe(Download);
 
+			DeleteDownloadedFileCommand = IsDownloaded
+				.CombineLatest(IsDownloading.Select(x => !x), (x, y) => x && y)
+				.ToCommand()
+				.WithSubscribe(DeleteDownloadedFile);
+			
 			ProgressLabel = ProgressPercent
 				.Select(x => ToTimeString(ToTime(x)))
 				.ToReadOnlyReactiveProperty();
@@ -92,7 +105,32 @@ namespace Blastic.Forms.Sample.UserInterface
 			SkipBackwardCommand = new Command(SkipBackward);
 			SkipForwardCommand = new Command(SkipForward);
 		}
-		
+
+		private void Download()
+		{
+			void Queued() => IsDownloading.Value = true;
+			void Completed() => IsDownloading.Value = false;
+			void Succeeded()
+			{
+				Completed();
+				IsDownloaded.Value = true;
+			}
+			void Cancelled()
+			{
+				Completed();
+				IsDownloaded.Value = false;
+			}
+
+			// TODO: Show error message.
+			DownloadStatusListener statusListener = new(
+				queued: Queued,
+				succeeded: Succeeded,
+				cancelled: Cancelled,
+				threwException: x => Cancelled());
+
+			_downloads.Queue(this, statusListener);
+		}
+
 		private void DeleteDownloadedFile()
 		{
 			string filePath = GetDownloadedFilePath();

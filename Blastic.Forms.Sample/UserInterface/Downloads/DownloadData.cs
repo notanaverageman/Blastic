@@ -1,8 +1,7 @@
-using System;
 using System.Threading;
 using Blastic.Reactive;
 
-namespace Blastic.Forms.Sample.UserInterface
+namespace Blastic.Forms.Sample.UserInterface.Downloads
 {
 	public class DownloadData
 	{
@@ -13,16 +12,21 @@ namespace Blastic.Forms.Sample.UserInterface
 		public string FilePath { get; }
 		
 		public IReactiveProperty<string> Size { get; set; }
-		public IReactiveProperty<double> Progress { get; }
+		public IReactiveProperty<double> Progress { get; set; }
 
+		public DownloadStatusListener StatusListener { get; }
 		public CancellationToken CancellationToken => _cancellationTokenSource.Token;
-		public Action? CompletedAction { get; set; }
 
-		public DownloadData(IReadOnlyReactiveProperty<string> title, string url, string filePath)
+		public DownloadData(
+			IReadOnlyReactiveProperty<string> title,
+			string url,
+			string filePath,
+			DownloadStatusListener statusListener)
 		{
 			Title = title;
 			Url = url;
 			FilePath = filePath;
+			StatusListener = statusListener;
 
 			_cancellationTokenSource = new CancellationTokenSource();
 
@@ -33,6 +37,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public void Cancel()
 		{
 			_cancellationTokenSource.Cancel();
+			StatusListener.Cancelled?.Invoke();
 		}
 	}
 }

@@ -10,6 +10,7 @@
 		   xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 		   xmlns:userInterface="clr-namespace:Blastic.Forms.Sample.UserInterface;assembly=Blastic.Forms.Sample"
 		   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
+		   xmlns:downloads="clr-namespace:Blastic.Forms.Sample.UserInterface.Downloads;assembly=Blastic.Forms.Sample"
 		   mc:Ignorable="d"
 		   iOsSpecific:Page.UseSafeArea="True"
 		   x:DataType="userInterface:MainViewModel"
@@ -41,6 +42,6 @@
 	</controls:InputPassthroughPage>
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">
-		<userInterface:DownloadsView BindingContext="{Binding Downloads}" />
+		<downloads:DownloadsView BindingContext="{Binding Downloads}" />
 	</controls:InputPassthroughPage>
 </MultiPage>

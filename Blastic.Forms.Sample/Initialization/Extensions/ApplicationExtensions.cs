@@ -7,6 +7,7 @@ using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
 using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Forms.Sample.UserInterface.Settings;
 using Blastic.Forms.Sample.UserInterface.Settings.Languages;
