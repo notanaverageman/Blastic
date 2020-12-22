@@ -21,12 +21,14 @@ namespace Blastic.Forms.Sample.UserInterface
 		
 		public MediaPlayerViewModel MediaPlayer { get; }
 		public ChapterDetailsViewModel ChapterDetails { get; }
-		
+		public DownloadsViewModel Downloads { get; }
+
 		public MainViewModel(
 			ProgramDatabase programDatabase,
 			ILogger<MainViewModel> logger,
 			MediaPlayerViewModel mediaPlayer,
 			ChapterDetailsViewModel chapterDetails,
+			DownloadsViewModel downloads,
 			IEnumerable<IShellTab> tabs)
 		{
 			_programDatabase = programDatabase;
@@ -34,6 +36,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			
 			MediaPlayer = mediaPlayer;
 			ChapterDetails = chapterDetails;
+			Downloads = downloads;
 
 			ExecutionContext = new ExecutionContext();
 

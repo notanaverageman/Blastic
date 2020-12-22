@@ -27,9 +27,9 @@ namespace Blastic.Forms.Sample.UserInterface
 	public class SearchViewModel : IViewAware, IShellTab
 	{
 		private readonly ProgramDatabase _database;
+		private readonly DownloadsViewModel _downloads;
 		private readonly MediaPlayerViewModel _mediaPlayer;
 		private readonly ChapterDetailsViewModel _chapterDetails;
-		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly INavigationService _navigationService;
 
@@ -55,17 +55,17 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public SearchViewModel(
 			ProgramDatabase database,
+			DownloadsViewModel downloads,
 			MediaPlayerViewModel mediaPlayer,
 			ChapterDetailsViewModel chapterDetails,
-			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
 			LocalizableProperties localizableProperties)
 		{
 			_database = database;
+			_downloads = downloads;
 			_mediaPlayer = mediaPlayer;
 			_chapterDetails = chapterDetails;
-			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
 			LocalizableProperties = localizableProperties;
@@ -117,9 +117,9 @@ namespace Blastic.Forms.Sample.UserInterface
 							BookViewModel viewModel = new(
 								book,
 								_mediaPlayer,
+								_downloads,
 								_chapterDetails,
 								LocalizableProperties,
-								_downloadService,
 								_archiveOrgService,
 								_database);
 

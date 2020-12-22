@@ -18,7 +18,7 @@ namespace Blastic.Forms.Sample.UserInterface
 	public class BookViewModel : IHasLifetime
 	{
 		private readonly MediaPlayerViewModel _mediaPlayer;
-		private readonly DownloadService _downloadService;
+		private readonly DownloadsViewModel _downloads;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly ProgramDatabase _database;
 
@@ -41,6 +41,7 @@ namespace Blastic.Forms.Sample.UserInterface
 		public ObservableCollection<ChapterViewModel> Chapters { get; }
 		
 		public Command PlayCommand { get; }
+		public Command DownloadCommand { get; }
 		public Command ToggleDescriptionLengthCommand { get; }
 
 		public Command<ChapterViewModel> ShowDetailsCommand { get; }
@@ -48,14 +49,14 @@ namespace Blastic.Forms.Sample.UserInterface
 		public BookViewModel(
 			Book book,
 			MediaPlayerViewModel mediaPlayer,
+			DownloadsViewModel downloads,
 			ChapterDetailsViewModel chapterDetails,
 			LocalizableProperties localizableProperties,
-			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			ProgramDatabase database)
 		{
 			_mediaPlayer = mediaPlayer;
-			_downloadService = downloadService;
+			_downloads = downloads;
 			_archiveOrgService = archiveOrgService;
 			_database = database;
 
@@ -80,9 +81,10 @@ namespace Blastic.Forms.Sample.UserInterface
 			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.HomeBookDescriptionMore);
 			
 			PlayCommand = new Command(Play);
+			DownloadCommand = new Command(Download);
 			ToggleDescriptionLengthCommand = new Command(ToggleDescriptionLength);
 
-			ShowDetailsCommand = new Command<ChapterViewModel>(chapterDetails.ShowDetails);
+			ShowDetailsCommand = new Command<ChapterViewModel>(chapterDetails.Show);
 
 			Lifetime.Initialization.Subscribe(FetchDetails);
 		}
@@ -97,6 +99,14 @@ namespace Blastic.Forms.Sample.UserInterface
 			}
 
 			_mediaPlayer.PlayChapter(firstChapter);
+		}
+
+		private void Download()
+		{
+			foreach (ChapterViewModel chapter in Chapters)
+			{
+				_downloads.Queue(chapter);
+			}
 		}
 
 		private void ToggleDescriptionLength()
@@ -136,7 +146,7 @@ namespace Blastic.Forms.Sample.UserInterface
 
 			foreach (Chapter chapter in book.Chapters)
 			{
-				Chapters.Add(new ChapterViewModel(_downloadService, _mediaPlayer, this, chapter));
+				Chapters.Add(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
 			}
 		}
 
@@ -164,7 +174,7 @@ namespace Blastic.Forms.Sample.UserInterface
 				};
 
 				Book.Chapters.Add(chapter);
-				Chapters.Add(new ChapterViewModel(_downloadService, _mediaPlayer, this, chapter));
+				Chapters.Add(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
 			}
 
 			await _database.BooksTable.Put(Book, cancellationToken);

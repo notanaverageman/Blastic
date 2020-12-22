@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Icons;
@@ -14,13 +12,13 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class ChapterViewModel
 	{
-		private readonly DownloadService _downloadService;
 		private readonly MediaPlayerViewModel _mediaPlayer;
 		private readonly Chapter _chapter;
 
 		private bool _isSeeking;
 
 		public BookViewModel Book { get; }
+		public string FileName { get; }
 
 		public IReactiveProperty<string> Title { get; }
 		public IReactiveProperty<string> Url { get; }
@@ -49,15 +47,15 @@ namespace Blastic.Forms.Sample.UserInterface
 		public Command SkipForwardCommand { get; }
 
 		public ChapterViewModel(
-			DownloadService downloadService,
+			DownloadsViewModel downloads,
 			MediaPlayerViewModel mediaPlayer,
 			BookViewModel book,
 			Chapter chapter)
 		{
-			_downloadService = downloadService;
 			_mediaPlayer = mediaPlayer;
 			_chapter = chapter;
 			Book = book;
+			FileName = chapter.FileName;
 
 			Title = new ReactiveProperty<string>(chapter.Title);
 			Url = new ReactiveProperty<string>(ToUrl(chapter.FileName));
@@ -70,11 +68,8 @@ namespace Blastic.Forms.Sample.UserInterface
 			IsDownloaded = new ReactiveProperty<bool>(File.Exists(GetDownloadedFilePath()));
 			DownloadProgress = new ReactiveProperty<double>();
 
-			DownloadCommand = new Command(IsDownloaded.Select(x => !x), Download);
-			DownloadCommand.DisableReentrance();
-
+			DownloadCommand = new Command(IsDownloaded.Select(x => !x), () => downloads.Queue(this));
 			DeleteDownloadedFileCommand = new Command(IsDownloaded, DeleteDownloadedFile);
-			DeleteDownloadedFileCommand.DisableReentrance();
 
 			ProgressLabel = ProgressPercent
 				.Select(x => ToTimeString(ToTime(x)))
@@ -97,22 +92,7 @@ namespace Blastic.Forms.Sample.UserInterface
 			SkipBackwardCommand = new Command(SkipBackward);
 			SkipForwardCommand = new Command(SkipForward);
 		}
-
-		private async Task Download(CancellationToken cancellationToken)
-		{
-			string filePath = GetDownloadedFilePath();
-
-			Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-			DownloadProgress.Value = 0;
-			Progress<double> progress = new Progress<double>(x => DownloadProgress.Value = x);
-			using FileStream stream = File.Create(filePath);
-
-			await _downloadService.Download(Url.Value, stream, progress, cancellationToken);
-
-			IsDownloaded.Value = true;
-		}
-
+		
 		private void DeleteDownloadedFile()
 		{
 			string filePath = GetDownloadedFilePath();

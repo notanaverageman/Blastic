@@ -51,6 +51,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
 
+						y.AddSingleton<DownloadsViewModel>();
 						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ChapterDetailsViewModel>();
 

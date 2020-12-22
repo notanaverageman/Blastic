@@ -24,8 +24,8 @@ namespace Blastic.Forms.Sample.UserInterface
 {
 	public class HomeViewModel : IShellTab, IViewAware
 	{
+		private readonly DownloadsViewModel _downloads;
 		private readonly ChapterDetailsViewModel _chapterDetails;
-		private readonly DownloadService _downloadService;
 		private readonly ArchiveOrgService _archiveOrgService;
 		private readonly INavigationService _navigationService;
 		private readonly ProgramDatabase _database;
@@ -46,20 +46,22 @@ namespace Blastic.Forms.Sample.UserInterface
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 		
+		public Command ShowDownloadsCommand { get; }
+		
 		public Command FetchBooksCommand { get; }
 		public Command<BookViewModel> NavigateToBookCommand { get; }
 
 		public HomeViewModel(
+			DownloadsViewModel downloads,
 			MediaPlayerViewModel mediaPlayer,
 			ChapterDetailsViewModel chapterDetails,
-			DownloadService downloadService,
 			ArchiveOrgService archiveOrgService,
 			INavigationService navigationService,
 			ProgramDatabase database,
 			LocalizableProperties localizableProperties)
 		{
+			_downloads = downloads;
 			_chapterDetails = chapterDetails;
-			_downloadService = downloadService;
 			_archiveOrgService = archiveOrgService;
 			_navigationService = navigationService;
 			_database = database;
@@ -83,7 +85,9 @@ namespace Blastic.Forms.Sample.UserInterface
 				.Bind(out _books)
 				.DisposeMany()
 				.Subscribe();
-			
+
+			ShowDownloadsCommand = new Command(downloads.Show);
+
 			FetchBooksCommand = new Command(FetchBooks);
 			NavigateToBookCommand = new Command<BookViewModel>(NavigateToBook);
 
@@ -109,9 +113,9 @@ namespace Blastic.Forms.Sample.UserInterface
 					BookViewModel viewModel = new(
 						book,
 						MediaPlayer,
+						_downloads,
 						_chapterDetails,
 						LocalizableProperties,
-						_downloadService,
 						_archiveOrgService,
 						_database);
 					viewModels.Add(viewModel);

@@ -102,25 +102,31 @@
 				</CollectionView>
 			</Grid>
 
-			<Grid Grid.Row="2"
-				  ColumnDefinitions="*,*,*"
-				  VerticalOptions="End">
+			<StackLayout Grid.Row="2"
+						 Orientation="Vertical"
+						 VerticalOptions="End">
 
-				<Button Grid.Column="0"
-						Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
-						CommandParameter="{x:Static overlay:OverlayState.Expanded}"
-						Text="Expanded" />
+				<Button Command="{Binding ShowDownloadsCommand}"
+						Text="Downloads" />
 
-				<Button Grid.Column="1"
-						Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
-						CommandParameter="{x:Static overlay:OverlayState.Collapsed}"
-						Text="Collapsed" />
+				<Grid ColumnDefinitions="*,*,*">
 
-				<Button Grid.Column="2"
-						Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
-						CommandParameter="{x:Static overlay:OverlayState.Invisible}"
-						Text="Invisible" />
-			</Grid>
+					<Button Grid.Column="0"
+							Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+							CommandParameter="{x:Static overlay:OverlayState.Expanded}"
+							Text="Expanded" />
+
+					<Button Grid.Column="1"
+							Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+							CommandParameter="{x:Static overlay:OverlayState.Collapsed}"
+							Text="Collapsed" />
+
+					<Button Grid.Column="2"
+							Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+							CommandParameter="{x:Static overlay:OverlayState.Invisible}"
+							Text="Invisible" />
+				</Grid>
+			</StackLayout>
 		</Grid>
 	</ScrollView>
 </ContentPage>

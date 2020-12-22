@@ -37,7 +37,10 @@
 	</controls:InputPassthroughPage>
 
 	<controls:InputPassthroughPage BackgroundColor="Transparent">
-		<userInterface:ChapterDetailsView BindingContext="{Binding ChapterDetails}"
-		                                  TabBar="{Binding Source={x:Reference TabbedPage}}" />
+		<userInterface:ChapterDetailsView BindingContext="{Binding ChapterDetails}" />
+	</controls:InputPassthroughPage>
+
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<userInterface:DownloadsView BindingContext="{Binding Downloads}" />
 	</controls:InputPassthroughPage>
 </MultiPage>
