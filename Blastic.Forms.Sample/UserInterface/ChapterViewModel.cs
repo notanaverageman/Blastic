@@ -73,14 +73,15 @@ namespace Blastic.Forms.Sample.UserInterface
 			IsDownloaded = new ReactiveProperty<bool>(File.Exists(GetDownloadedFilePath()));
 			DownloadProgress = new ReactiveProperty<double>();
 
-			DownloadCommand = IsDownloaded
-				.Select(x => !x)
-				.CombineLatest(IsDownloading.Select(x => !x), (x, y) => x && y)
+			IObservable<bool> downloaded = IsDownloaded;
+			IObservable<bool> notDownloaded = IsDownloaded.Not();
+			IObservable<bool> notDownloading = IsDownloading.Not();
+
+			DownloadCommand = notDownloaded.And(notDownloading)
 				.ToCommand()
 				.WithSubscribe(Download);
 
-			DeleteDownloadedFileCommand = IsDownloaded
-				.CombineLatest(IsDownloading.Select(x => !x), (x, y) => x && y)
+			DeleteDownloadedFileCommand = downloaded.And(notDownloading)
 				.ToCommand()
 				.WithSubscribe(DeleteDownloadedFile);
 			
