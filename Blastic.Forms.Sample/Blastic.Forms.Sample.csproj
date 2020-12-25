@@ -50,6 +50,9 @@
     <Compile Update="UserInterface\MediaPlayer\ExtendedView.xaml.cs">
       <DependentUpon>ExtendedView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="UserInterface\Notifications\NotificationsView.xaml.cs">
+      <DependentUpon>NotificationsView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UserInterface\Search\SearchViewContent.xaml.cs">
       <DependentUpon>SearchViewContent.xaml</DependentUpon>
     </Compile>

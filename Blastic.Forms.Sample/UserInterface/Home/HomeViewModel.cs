@@ -13,6 +13,7 @@ using Blastic.Forms.Sample.UserInterface.Books;
 using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
+using Blastic.Forms.Sample.UserInterface.Notifications;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
@@ -49,12 +50,14 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 		
+		public Command ShowNotificationsCommand { get; }
 		public Command ShowDownloadsCommand { get; }
 		
 		public Command FetchBooksCommand { get; }
 		public Command<BookViewModel> NavigateToBookCommand { get; }
 
 		public HomeViewModel(
+			NotificationsViewModel notifications,
 			DownloadsViewModel downloads,
 			MediaPlayerViewModel mediaPlayer,
 			ChapterDetailsViewModel chapterDetails,
@@ -89,6 +92,7 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 				.DisposeMany()
 				.Subscribe();
 
+			ShowNotificationsCommand = new Command(notifications.Show);
 			ShowDownloadsCommand = new Command(downloads.Show);
 
 			FetchBooksCommand = new Command(FetchBooks);

@@ -103,29 +103,33 @@
 			</Grid>
 
 			<StackLayout Grid.Row="2"
-						 Orientation="Vertical"
 						 VerticalOptions="End">
 
-				<Button Command="{Binding ShowDownloadsCommand}"
-						Text="Downloads" />
+				<StackLayout HorizontalOptions="Center"
+							 Orientation="Horizontal">
 
-				<Grid ColumnDefinitions="*,*,*">
+					<Button Command="{Binding ShowNotificationsCommand}"
+							Text="Notifications" />
 
-					<Button Grid.Column="0"
-							Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+					<Button Command="{Binding ShowDownloadsCommand}"
+							Text="Downloads" />
+				</StackLayout>
+
+				<StackLayout HorizontalOptions="Center"
+							 Orientation="Horizontal">
+
+					<Button Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
 							CommandParameter="{x:Static overlay:OverlayState.Expanded}"
 							Text="Expanded" />
 
-					<Button Grid.Column="1"
-							Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+					<Button Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
 							CommandParameter="{x:Static overlay:OverlayState.Collapsed}"
 							Text="Collapsed" />
 
-					<Button Grid.Column="2"
-							Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+					<Button Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
 							CommandParameter="{x:Static overlay:OverlayState.Invisible}"
 							Text="Invisible" />
-				</Grid>
+				</StackLayout>
 			</StackLayout>
 		</Grid>
 	</ScrollView>

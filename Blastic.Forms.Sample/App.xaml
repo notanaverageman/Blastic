@@ -32,7 +32,7 @@
 			<Color x:Key="SeparatorColor">#ACACAC</Color>
 			<Color x:Key="RatingBarForegroundColor">#D1A700</Color>
 			<Color x:Key="CancelColor">#C75364</Color>
-			<LinearGradientBrush x:Key="OverlayBackground">
+			<LinearGradientBrush x:Key="OverlayBackground" StartPoint="0,0" EndPoint="0,1">
 				<GradientStop Offset="0" Color="{StaticResource Background}" />
 				<GradientStop Offset="1" Color="{StaticResource SecondaryBackground}" />
 			</LinearGradientBrush>
@@ -45,7 +45,7 @@
 			<Color x:Key="DarkSeparatorColor">#ACACAC</Color>
 			<Color x:Key="DarkRatingBarForegroundColor">#FFCC00</Color>
 			<Color x:Key="DarkCancelColor">#C75364</Color>
-			<LinearGradientBrush x:Key="DarkOverlayBackground">
+			<LinearGradientBrush x:Key="DarkOverlayBackground" StartPoint="0,0" EndPoint="0,1">
 				<GradientStop Offset="0" Color="{StaticResource DarkBackground}" />
 				<GradientStop Offset="1" Color="{StaticResource DarkSecondaryBackground}" />
 			</LinearGradientBrush>

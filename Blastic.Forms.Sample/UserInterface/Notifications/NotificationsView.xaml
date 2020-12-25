@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="Blastic.Forms.Sample.UserInterface.Notifications.NotificationsView"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:dynamicControls="clr-namespace:Blastic.Forms.DynamicControls;assembly=Blastic.Forms"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:notifications="clr-namespace:Blastic.Forms.Sample.UserInterface.Notifications;assembly=Blastic.Forms.Sample"
+			 xmlns:notifications1="clr-namespace:Blastic.Services.Notifications;assembly=Blastic"
+			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
+			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+			 mc:Ignorable="d"
+			 Margin="10,0"
+			 Padding="0,0,0,50"
+			 x:DataType="notifications:NotificationsViewModel"
+			 CascadeInputTransparent="False"
+			 InputTransparent="True">
+
+	<StackLayout BindableLayout.ItemsSource="{Binding NotificationService.ActiveNotifications}"
+				 VerticalOptions="End">
+		<BindableLayout.ItemTemplate>
+			<DataTemplate x:DataType="notifications1:Notification">
+				<pancakeView:PancakeView BackgroundColor="YellowGreen"
+										 CornerRadius="10"
+										 VerticalOptions="Start">
+					<pancakeView:PancakeView.Shadow>
+						<pancakeView:DropShadow />
+					</pancakeView:PancakeView.Shadow>
+
+					<dynamicControls:DynamicControl HeightRequest="60"
+													Model="{Binding Model}" />
+				</pancakeView:PancakeView>
+			</DataTemplate>
+		</BindableLayout.ItemTemplate>
+	</StackLayout>
+</ContentView>

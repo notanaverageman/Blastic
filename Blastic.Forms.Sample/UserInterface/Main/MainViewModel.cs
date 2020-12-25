@@ -6,6 +6,7 @@ using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Forms.Sample.UserInterface.Downloads;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
+using Blastic.Forms.Sample.UserInterface.Notifications;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
@@ -24,6 +25,7 @@ namespace Blastic.Forms.Sample.UserInterface.Main
 		public MediaPlayerViewModel MediaPlayer { get; }
 		public ChapterDetailsViewModel ChapterDetails { get; }
 		public DownloadsViewModel Downloads { get; }
+		public NotificationsViewModel Notifications { get; }
 
 		public MainViewModel(
 			ProgramDatabase programDatabase,
@@ -31,6 +33,7 @@ namespace Blastic.Forms.Sample.UserInterface.Main
 			MediaPlayerViewModel mediaPlayer,
 			ChapterDetailsViewModel chapterDetails,
 			DownloadsViewModel downloads,
+			NotificationsViewModel notifications,
 			IEnumerable<IShellTab> tabs)
 		{
 			_programDatabase = programDatabase;
@@ -39,6 +42,7 @@ namespace Blastic.Forms.Sample.UserInterface.Main
 			MediaPlayer = mediaPlayer;
 			ChapterDetails = chapterDetails;
 			Downloads = downloads;
+			Notifications = notifications;
 
 			ExecutionContext = new ExecutionContext();
 
