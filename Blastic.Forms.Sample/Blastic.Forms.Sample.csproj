@@ -47,8 +47,8 @@
     <Compile Update="UserInterface\MediaPlayer\CollapsedView.xaml.cs">
       <DependentUpon>CollapsedView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\MediaPlayer\ExtendedView.xaml.cs">
-      <DependentUpon>ExtendedView.xaml</DependentUpon>
+    <Compile Update="UserInterface\MediaPlayer\ExpandedView.xaml.cs">
+      <DependentUpon>ExpandedView.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\Notifications\NotificationsView.xaml.cs">
       <DependentUpon>NotificationsView.xaml</DependentUpon>

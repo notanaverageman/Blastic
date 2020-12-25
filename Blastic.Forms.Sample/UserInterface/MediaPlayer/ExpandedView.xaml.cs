@@ -1,8 +1,8 @@
 namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 {
-	public partial class ExtendedView
+	public partial class ExpandedView
 	{
-		public ExtendedView()
+		public ExpandedView()
 		{
 			InitializeComponent();
 		}

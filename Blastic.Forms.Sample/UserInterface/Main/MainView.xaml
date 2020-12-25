@@ -34,7 +34,7 @@
 				<mediaPlayer:CollapsedView BindingContext="{Binding MediaPlayer}" />
 			</overlay:OverlayView.Collapsed>
 			<overlay:OverlayView.Expanded>
-				<mediaPlayer:ExtendedView BindingContext="{Binding MediaPlayer}" />
+				<mediaPlayer:ExpandedView BindingContext="{Binding MediaPlayer}" />
 			</overlay:OverlayView.Expanded>
 		</overlay:OverlayView>
 	</controls:InputPassthroughPage>

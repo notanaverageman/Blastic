@@ -7,7 +7,6 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:notifications="clr-namespace:Blastic.Forms.Sample.UserInterface.Notifications;assembly=Blastic.Forms.Sample"
 			 xmlns:notifications1="clr-namespace:Blastic.Services.Notifications;assembly=Blastic"
-			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
 			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
 			 mc:Ignorable="d"
 			 Margin="10,0"
