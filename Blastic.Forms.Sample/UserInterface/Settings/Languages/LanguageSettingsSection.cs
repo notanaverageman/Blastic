@@ -21,8 +21,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 			:
 			base(settingsStorage)
 		{
-			Title = localizableProperties.SettingsLanguage;
-			Help = localizableProperties.SettingsLanguageHelp;
+			Title = localizableProperties.Settings.Language;
+			Help = localizableProperties.Settings.Language.Help;
 
 			Language = new LanguageSetting(
 				settingsStorage,

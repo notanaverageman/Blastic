@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Books.BookView"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
+			 xmlns:chapters="clr-namespace:Blastic.Forms.Sample.UserInterface.Chapters;assembly=Blastic.Forms.Sample"
+			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+			 x:Name="Root"
+			 Title="{Binding Title.Value}"
+			 mc:Ignorable="d"
+			 x:DataType="books:BookViewModel"
+			 Style="{StaticResource PageStyle}">
+
+	<Grid>
+		<ScrollView Margin="10,20,10,0">
+			<Grid RowDefinitions="Auto,Auto,Auto"
+				  RowSpacing="20">
+
+				<Grid Grid.Row="0"
+					  ColumnDefinitions="Auto,Auto,Auto"
+					  ColumnSpacing="10">
+
+					<pancakeView:PancakeView Grid.Column="0"
+											 CornerRadius="4">
+
+						<pancakeView:PancakeView.Shadow>
+							<pancakeView:DropShadow BlurRadius="2"
+													Offset="2,2" />
+						</pancakeView:PancakeView.Shadow>
+
+						<Image Aspect="Fill"
+							   HeightRequest="{StaticResource BookImageHeight}"
+							   HorizontalOptions="Start"
+							   Source="{Binding ImageUrl.Value, Mode=OneTime}"
+							   WidthRequest="{StaticResource BookImageWidth}" />
+					</pancakeView:PancakeView>
+
+					<Grid Grid.Column="1"
+						  RowDefinitions="Auto,Auto,*,Auto">
+
+						<Label Grid.Row="0"
+							   FontAttributes="Bold"
+							   FontSize="Header"
+							   LineBreakMode="TailTruncation"
+							   MaxLines="2"
+							   Text="{Binding Title.Value, Mode=OneTime}" />
+
+						<Label Grid.Row="1"
+							   FontSize="Small"
+							   LineBreakMode="TailTruncation"
+							   StyleClass="Secondary"
+							   Text="{Binding Author.Value, Mode=OneTime}" />
+
+						<controls:RatingBar Grid.Row="2"
+											FontFamily="{StaticResource MaterialFontFamily}"
+											Rating="{Binding Book.Rating}"
+											VerticalOptions="End"
+											Color="{AppThemeBinding Light={StaticResource RatingBarForegroundColor},
+																	Dark={StaticResource DarkRatingBarForegroundColor}}" />
+					</Grid>
+				</Grid>
+
+				<Grid Grid.Row="1"
+					  Margin="0,10"
+					  ColumnDefinitions="*,*,*,*"
+					  ColumnSpacing="0">
+
+					<Button Grid.Column="0"
+							Command="{Binding PlayCommand}"
+							ContentLayout="Top"
+							FontSize="Micro"
+							HorizontalOptions="Center"
+							Text="{Binding LocalizableProperties.Common.Listen.Value}"
+							VerticalOptions="Center">
+						<Button.ImageSource>
+							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+											 Glyph="{x:Static icons:IconFont.Headphones}"
+											 Color="{AppThemeBinding Light={StaticResource TextColor},
+																	 Dark={StaticResource DarkTextColor}}" />
+						</Button.ImageSource>
+					</Button>
+
+					<Button Grid.Column="1"
+							Command="{Binding DownloadCommand}"
+							ContentLayout="Top"
+							FontSize="Micro"
+							HorizontalOptions="Center"
+							Text="{Binding LocalizableProperties.Common.Download.Value}"
+							VerticalOptions="Center">
+						<Button.ImageSource>
+							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+											 Glyph="{x:Static icons:IconFont.CloudDownload}"
+											 Color="{AppThemeBinding Light={StaticResource TextColor},
+																	 Dark={StaticResource DarkTextColor}}" />
+						</Button.ImageSource>
+					</Button>
+
+					<Button Grid.Column="2"
+							ContentLayout="Top"
+							FontSize="Micro"
+							HorizontalOptions="Center"
+							Text="{Binding LocalizableProperties.Common.Like.Value}"
+							VerticalOptions="Center">
+						<Button.ImageSource>
+							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+											 Glyph="{x:Static icons:IconFont.HeartOutline}"
+											 Color="{AppThemeBinding Light={StaticResource TextColor},
+																	 Dark={StaticResource DarkTextColor}}" />
+						</Button.ImageSource>
+					</Button>
+
+					<Button Grid.Column="3"
+							ContentLayout="Top"
+							FontSize="Micro"
+							HorizontalOptions="Center"
+							Text="{Binding LocalizableProperties.Common.Save.Value}"
+							VerticalOptions="Center">
+						<Button.ImageSource>
+							<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+											 Glyph="{x:Static icons:IconFont.BookPlus}"
+											 Color="{AppThemeBinding Light={StaticResource TextColor},
+																	 Dark={StaticResource DarkTextColor}}" />
+						</Button.ImageSource>
+					</Button>
+				</Grid>
+
+				<StackLayout Grid.Row="2">
+
+					<BoxView Margin="0,0,0,10"
+							 StyleClass="Separator" />
+
+					<Label FontAttributes="Bold"
+						   Text="{Binding LocalizableProperties.Home.Book.Description.Value}" />
+
+					<Label FontSize="Small"
+						   LineBreakMode="WordWrap"
+						   MaxLines="3"
+						   Text="{Binding Description.Value}">
+
+						<Label.Triggers>
+							<DataTrigger Binding="{Binding DescriptionExpanded.Value}"
+										 TargetType="{x:Type Label}"
+										 Value="True">
+								<Setter Property="MaxLines" Value="-1" />
+							</DataTrigger>
+						</Label.Triggers>
+					</Label>
+
+					<Button Command="{Binding ToggleDescriptionLengthCommand}"
+							FontSize="Small"
+							HorizontalOptions="End"
+							Text="{Binding DescriptionToggleLabel.Value.Value}" />
+				</StackLayout>
+
+				<StackLayout Grid.Row="3">
+
+					<BoxView Margin="0,0,0,10"
+							 StyleClass="Separator" />
+
+					<Label Margin="0,0,0,10"
+						   FontAttributes="Bold"
+						   Text="{Binding LocalizableProperties.Home.Book.Chapters.Value}" />
+
+					<StackLayout BindableLayout.ItemsSource="{Binding Chapters, Mode=OneTime}">
+						<BindableLayout.ItemTemplate>
+							<DataTemplate x:DataType="chapters:ChapterViewModel">
+								<Grid RowDefinitions="Auto,Auto"
+									  RowSpacing="0">
+
+									<Grid.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding Media.TogglePlayCommand}" />
+									</Grid.GestureRecognizers>
+
+									<Grid Grid.Row="0"
+										  ColumnDefinitions="*,Auto,Auto,Auto">
+
+										<Label Grid.Column="0"
+											   FontSize="Small"
+											   LineBreakMode="TailTruncation"
+											   Text="{Binding Title.Value, Mode=OneTime}"
+											   VerticalOptions="Center">
+
+											<Label.Triggers>
+												<DataTrigger Binding="{Binding Media.IsPlaying.Value}"
+															 TargetType="{x:Type Label}"
+															 Value="True">
+													<Setter Property="Label.TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
+												</DataTrigger>
+											</Label.Triggers>
+										</Label>
+
+										<Label Grid.Column="1"
+											   FontFamily="{StaticResource MaterialFontFamily}"
+											   FontSize="Micro"
+											   IsVisible="{Binding Download.IsDownloaded.Value}"
+											   Text="{x:Static icons:IconFont.Download}"
+											   TextColor="{AppThemeBinding Light={StaticResource Accent},
+																		   Dark={StaticResource DarkAccent}}"
+											   VerticalOptions="Center" />
+
+										<Label Grid.Column="2"
+											   FontSize="Micro"
+											   Text="{Binding Media.Duration.Value, StringFormat='{}{0:mm\\:ss}', Mode=OneTime}"
+											   VerticalOptions="Center">
+
+											<Label.Triggers>
+												<DataTrigger Binding="{Binding Media.IsPlaying.Value}"
+															 TargetType="{x:Type Label}"
+															 Value="True">
+													<Setter Property="Label.TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
+												</DataTrigger>
+											</Label.Triggers>
+										</Label>
+
+										<Button Grid.Column="3"
+												Margin="10,0,0,0"
+												Command="{Binding Book.ShowDetailsCommand}"
+												CommandParameter="{Binding}"
+												VerticalOptions="Center">
+											<Button.ImageSource>
+												<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+																 Glyph="{x:Static icons:IconFont.DotsHorizontal}"
+																 Color="{AppThemeBinding Light={StaticResource TextColor},
+																						 Dark={StaticResource DarkTextColor}}" />
+											</Button.ImageSource>
+										</Button>
+									</Grid>
+
+									<Label Grid.Row="1"
+										   Margin="0,-10,0,0"
+										   FontSize="Micro"
+										   StyleClass="Secondary"
+										   Text="{Binding Media.SizeLabel.Value}" />
+								</Grid>
+							</DataTemplate>
+						</BindableLayout.ItemTemplate>
+					</StackLayout>
+				</StackLayout>
+			</Grid>
+		</ScrollView>
+	</Grid>
+</ContentPage>

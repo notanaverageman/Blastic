@@ -35,7 +35,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 		{
 			_localizableProperties = localizableProperties;
 			
-			Element.WithLabel(localizableProperties.SettingsLanguage);
+			Element.WithLabel(localizableProperties.Settings.Language);
 
 			ReactiveSettingValue.Subscribe(
 				x =>
@@ -77,9 +77,9 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 		{
 			return language switch
 			{
-				Language.System => localizableProperties.CommonSystem,
-				Language.English => localizableProperties.SettingsLanguageEnglish,
-				Language.Turkish => localizableProperties.SettingsLanguageTurkish,
+				Language.System => localizableProperties.Common.System,
+				Language.English => localizableProperties.Settings.Language.English,
+				Language.Turkish => localizableProperties.Settings.Language.Turkish,
 				_ => throw new ArgumentOutOfRangeException(nameof(language), language, null)
 			};
 		}

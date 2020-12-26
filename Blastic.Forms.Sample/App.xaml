@@ -26,36 +26,29 @@
 
 			<Color x:Key="Accent">#FF9800</Color>
 			<Color x:Key="Background">#FFFFFF</Color>
-			<Color x:Key="SecondaryBackground">#FFFFFF</Color>
+			<Color x:Key="SecondaryBackground">#F3F2F7</Color>
 			<Color x:Key="TextColor">#000000</Color>
 			<Color x:Key="SecondaryTextColor">#ACACAC</Color>
 			<Color x:Key="SeparatorColor">#ACACAC</Color>
 			<Color x:Key="RatingBarForegroundColor">#D1A700</Color>
-			<LinearGradientBrush x:Key="OverlayBackground">
+			<Color x:Key="CancelColor">#C75364</Color>
+			<LinearGradientBrush x:Key="OverlayBackground" StartPoint="0,0" EndPoint="0,1">
 				<GradientStop Offset="0" Color="{StaticResource Background}" />
 				<GradientStop Offset="1" Color="{StaticResource SecondaryBackground}" />
 			</LinearGradientBrush>
 
 			<Color x:Key="DarkAccent">#FFB039</Color>
 			<Color x:Key="DarkBackground">#121212</Color>
-			<Color x:Key="DarkSecondaryBackground">#121212</Color>
+			<Color x:Key="DarkSecondaryBackground">#000000</Color>
 			<Color x:Key="DarkTextColor">#FFFFFF</Color>
 			<Color x:Key="DarkSecondaryTextColor">#ACACAC</Color>
 			<Color x:Key="DarkSeparatorColor">#ACACAC</Color>
 			<Color x:Key="DarkRatingBarForegroundColor">#FFCC00</Color>
-			<LinearGradientBrush x:Key="DarkOverlayBackground">
+			<Color x:Key="DarkCancelColor">#C75364</Color>
+			<LinearGradientBrush x:Key="DarkOverlayBackground" StartPoint="0,0" EndPoint="0,1">
 				<GradientStop Offset="0" Color="{StaticResource DarkBackground}" />
 				<GradientStop Offset="1" Color="{StaticResource DarkSecondaryBackground}" />
 			</LinearGradientBrush>
-
-			<Color x:Key="DarkMediaPlayerBackground">#282828</Color>
-			<Color x:Key="DarkLightTextColor">#B3B3B3</Color>
-
-			<Color x:Key="MediaPlayerCollapsedBackground">#F0DDDDDD</Color>
-			<Color x:Key="MediaPlayerExpandedBackground">#FFDDDDDD</Color>
-			<Color x:Key="DisabledTextColor">#999999</Color>
-			<Color x:Key="LightTextColor">#ACACAC</Color>
-			<Color x:Key="MediumTextColor">#777777</Color>
 
 			<x:Double x:Key="BookImageHeight">120</x:Double>
 			<x:Double x:Key="BookImageWidth">90</x:Double>
@@ -72,12 +65,23 @@
 				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
 			</Style>
 
+			<Style Class="Secondary"
+				   TargetType="{x:Type Label}">
+				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
+			</Style>
+
+			<Style Class="Separator"
+				   TargetType="{x:Type BoxView}">
+				<Setter Property="Color" Value="{AppThemeBinding Light={StaticResource SeparatorColor}, Dark={StaticResource DarkSeparatorColor}}" />
+				<Setter Property="HeightRequest" Value="1" />
+			</Style>
+
 			<Style TargetType="{x:Type Button}">
 				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
 			</Style>
 
 			<Style TargetType="{x:Type renderers:SettingsView}">
-				<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" />
+				<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
 				<Setter Property="CellAccentColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
 				<Setter Property="CellBackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" />
 				<Setter Property="CellDescriptionColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />

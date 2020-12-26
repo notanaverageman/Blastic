@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Blastic.Ordering;
 using Blastic.Reactive;
@@ -9,22 +10,28 @@ namespace Blastic.Services.Notifications
 	/// </summary>
 	public class NotificationService : INotificationService
 	{
+		private readonly ObservableCollection<Notification> _notifications;
+		private readonly ObservableCollection<Notification> _activeNotifications;
+		
 		/// <inheritdoc />
 		public int MaximumActiveNotificationCount { get; set; }
 
 		/// <inheritdoc />
-		public ReactiveCollection<Notification> Notifications { get; }
+		public ReadOnlyObservableCollection<Notification> Notifications { get; }
 
 		/// <inheritdoc />
-		public ReactiveCollection<Notification> ActiveNotifications { get; }
+		public ReadOnlyObservableCollection<Notification> ActiveNotifications { get; }
 
 		/// <summary>
 		/// Creates a new instance of <see cref="NotificationService"/>.
 		/// </summary>
 		public NotificationService()
 		{
-			Notifications = new ReactiveCollection<Notification>();
-			ActiveNotifications = new ReactiveCollection<Notification>();
+			_notifications = new ReactiveCollection<Notification>();
+			_activeNotifications = new ReactiveCollection<Notification>();
+			
+			Notifications = new ReadOnlyObservableCollection<Notification>(_notifications);
+			ActiveNotifications = new ReadOnlyObservableCollection<Notification>(_activeNotifications);
 
 			MaximumActiveNotificationCount = -1;
 		}
@@ -34,16 +41,14 @@ namespace Blastic.Services.Notifications
 		{
 			await EnqueueWithoutNotifying(notification);
 
-			if (MaximumActiveNotificationCount == 0)
+			if (MaximumActiveNotificationCount != 0)
 			{
-				return;
+				_activeNotifications.Add(notification);
 			}
-
-			ActiveNotifications.Add(notification);
 
 			if (MaximumActiveNotificationCount > -1 && ActiveNotifications.Count > MaximumActiveNotificationCount)
 			{
-				ActiveNotifications.RemoveAt(0);
+				_activeNotifications.RemoveAt(0);
 			}
 
 			await notification.Lifetime.Activate();
@@ -52,16 +57,16 @@ namespace Blastic.Services.Notifications
 		/// <inheritdoc />
 		public Task EnqueueWithoutNotifying(Notification notification)
 		{
-			Notifications.Add(notification);
+			_notifications.Add(notification);
 
 			notification.Lifetime.Deactivation.Subscribe(() =>
 			{
-				ActiveNotifications.Remove(notification);
+				_activeNotifications.Remove(notification);
 			}, Order.AbsoluteMaximum);
 
 			notification.Lifetime.Closure.Subscribe(() =>
 			{
-				Notifications.Remove(notification);
+				_notifications.Remove(notification);
 				return Task.CompletedTask;
 			}, Order.AbsoluteMaximum);
 

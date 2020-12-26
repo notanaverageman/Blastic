@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MultiPage x:Class="Blastic.Forms.Sample.UserInterface.Main.MainView"
+		   xmlns="http://xamarin.com/schemas/2014/forms"
+		   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		   xmlns:chapters="clr-namespace:Blastic.Forms.Sample.UserInterface.Chapters;assembly=Blastic.Forms.Sample"
+		   xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
+		   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+		   xmlns:downloads="clr-namespace:Blastic.Forms.Sample.UserInterface.Downloads;assembly=Blastic.Forms.Sample"
+		   xmlns:iOsSpecific="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+		   xmlns:main="clr-namespace:Blastic.Forms.Sample.UserInterface.Main;assembly=Blastic.Forms.Sample"
+		   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		   xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
+		   xmlns:notifications="clr-namespace:Blastic.Forms.Sample.UserInterface.Notifications;assembly=Blastic.Forms.Sample"
+		   xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
+		   xmlns:viewManagement="clr-namespace:Blastic.Forms.ViewManagement;assembly=Blastic.Forms"
+		   mc:Ignorable="d"
+		   iOsSpecific:Page.UseSafeArea="True"
+		   x:DataType="main:MainViewModel"
+		   x:TypeArguments="Page"
+		   Style="{StaticResource PageStyle}">
+
+	<controls:ExtendedTabbedPage x:Name="TabbedPage"
+								 viewManagement:View.ItemTemplate="{Binding}"
+								 BarBackgroundColor="{AppThemeBinding Light={StaticResource Background},
+																	  Dark={StaticResource DarkBackground}}"
+								 ItemsSource="{Binding Items}"
+								 SelectedTabColor="{AppThemeBinding Light={StaticResource Accent},
+																	Dark={StaticResource DarkAccent}}" />
+
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<overlay:OverlayView State="{Binding MediaPlayer.OverlayState.Value}"
+							 TabBar="{Binding Source={x:Reference TabbedPage}}">
+			<overlay:OverlayView.Collapsed>
+				<mediaPlayer:CollapsedView BindingContext="{Binding MediaPlayer}" />
+			</overlay:OverlayView.Collapsed>
+			<overlay:OverlayView.Expanded>
+				<mediaPlayer:ExtendedView BindingContext="{Binding MediaPlayer}" />
+			</overlay:OverlayView.Expanded>
+		</overlay:OverlayView>
+	</controls:InputPassthroughPage>
+
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<chapters:ChapterDetailsView BindingContext="{Binding ChapterDetails}" />
+	</controls:InputPassthroughPage>
+
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<downloads:DownloadsView BindingContext="{Binding Downloads}" />
+	</controls:InputPassthroughPage>
+
+	<controls:InputPassthroughPage BackgroundColor="Transparent">
+		<notifications:NotificationsView BindingContext="{Binding Notifications}" />
+	</controls:InputPassthroughPage>
+</MultiPage>

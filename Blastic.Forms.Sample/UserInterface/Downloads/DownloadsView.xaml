@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<overlay:OverlayView x:Class="Blastic.Forms.Sample.UserInterface.Downloads.DownloadsView"
+					 xmlns="http://xamarin.com/schemas/2014/forms"
+					 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+					 xmlns:downloads="clr-namespace:Blastic.Forms.Sample.UserInterface.Downloads;assembly=Blastic.Forms.Sample"
+					 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
+					 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
+					 x:Name="Root"
+					 mc:Ignorable="d"
+					 x:DataType="downloads:DownloadsViewModel"
+					 State="{Binding State.Value}">
+
+	<overlay:OverlayView.Expanded>
+		<ContentView Background="{AppThemeBinding Light={StaticResource OverlayBackground}, Dark={StaticResource DarkOverlayBackground}}">
+			<Grid RowDefinitions="*,Auto">
+				<ListView BackgroundColor="{AppThemeBinding Light={StaticResource Background},
+															Dark={StaticResource DarkBackground}}"
+						  Footer=""
+						  HasUnevenRows="True"
+						  ItemsSource="{Binding Downloads}">
+					<ListView.ItemTemplate>
+						<DataTemplate x:DataType="downloads:DownloadData">
+							<ViewCell>
+								<SwipeView>
+									<SwipeView.RightItems>
+										<SwipeItems Mode="Execute">
+											<SwipeItem BackgroundColor="{AppThemeBinding Light={StaticResource CancelColor},
+																						 Dark={StaticResource DarkCancelColor}}"
+													   Command="{Binding BindingContext.RemoveCommand, Source={x:Reference Root}}"
+													   CommandParameter="{Binding}"
+													   Text="{Binding BindingContext.LocalizableProperties.Common.Delete.Value, Source={x:Reference Root}}" />
+										</SwipeItems>
+									</SwipeView.RightItems>
+
+									<Grid Margin="10"
+										  BackgroundColor="{AppThemeBinding Light={StaticResource Background},
+																			Dark={StaticResource DarkBackground}}"
+										  RowDefinitions="*,Auto">
+										<Grid Grid.Row="0"
+											  ColumnDefinitions="Auto,*,Auto">
+
+											<BoxView Grid.Column="0"
+													 BackgroundColor="{AppThemeBinding Light={StaticResource Accent},
+																					   Dark={StaticResource DarkAccent}}"
+													 WidthRequest="{Binding Height, Source={RelativeSource Self}}" />
+
+											<StackLayout Grid.Column="1">
+												<Label Text="{Binding Title.Value}" />
+
+												<Label StyleClass="Secondary"
+													   Text="{Binding Size.Value}" />
+											</StackLayout>
+
+											<StackLayout Grid.Column="2"
+														 Orientation="Horizontal">
+												<Button>
+													<Button.ImageSource>
+														<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+																		 Glyph="{x:Static icons:IconFont.Pause}"
+																		 Color="{AppThemeBinding Light={StaticResource TextColor},
+																								 Dark={StaticResource DarkTextColor}}" />
+													</Button.ImageSource>
+												</Button>
+
+												<Button Margin="10,0,0,0"
+														Command="{Binding BindingContext.RemoveCommand, Source={x:Reference Root}}"
+														CommandParameter="{Binding}">
+
+													<Button.ImageSource>
+														<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+																		 Glyph="{x:Static icons:IconFont.Close}"
+																		 Color="{AppThemeBinding Light={StaticResource CancelColor},
+																								 Dark={StaticResource DarkCancelColor}}" />
+													</Button.ImageSource>
+												</Button>
+											</StackLayout>
+
+										</Grid>
+
+										<ProgressBar Grid.Row="1"
+													 Progress="{Binding Progress.Value}"
+													 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
+																					 Dark={StaticResource DarkAccent}}" />
+									</Grid>
+								</SwipeView>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
+				<Button Grid.Row="1"
+						Command="{Binding HideCommand}"
+						HorizontalOptions="CenterAndExpand"
+						Text="{Binding LocalizableProperties.Common.Close.Value}" />
+			</Grid>
+		</ContentView>
+	</overlay:OverlayView.Expanded>
+	<overlay:OverlayView.Collapsed>
+		<Grid />
+	</overlay:OverlayView.Collapsed>
+</overlay:OverlayView>

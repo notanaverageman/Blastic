@@ -2,6 +2,7 @@ using System;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Controls.Overlay;
 using Blastic.Forms.Sample.Media;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Reactive;
 
 namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
@@ -47,7 +48,7 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 			if (currentChapter != null && currentChapter == chapter)
 			{
 				_audioPlayer.Play();
-				chapter.IsPlaying.Value = true;
+				chapter.Media.IsPlaying.Value = true;
 
 				return;
 			}
@@ -58,7 +59,7 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 				_audioPlayer.Stop();
 				_seekSubscription?.Dispose();
 
-				currentChapter.IsPlaying.Value = false;
+				currentChapter.Media.IsPlaying.Value = false;
 			}
 
 			CurrentChapter.Value = chapter;
@@ -71,9 +72,9 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 			_audioPlayer.Load(chapter);
 			_audioPlayer.Play();
 
-			chapter.IsPlaying.Value = true;
+			chapter.Media.IsPlaying.Value = true;
 
-			_seekSubscription = chapter.Seek.Subscribe(x => _audioPlayer.Seek(x));
+			_seekSubscription = chapter.Media.SeekTime.Subscribe(x => _audioPlayer.Seek(x));
 
 			OverlayState.Value = Controls.Overlay.OverlayState.Collapsed;
 		}
@@ -88,7 +89,7 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 			}
 
 			_audioPlayer.Pause();
-			currentChapter.IsPlaying.Value = false;
+			currentChapter.Media.IsPlaying.Value = false;
 		}
 
 		public void Stop()
@@ -101,22 +102,22 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 			}
 
 			_audioPlayer.Stop();
-			currentChapter.IsPlaying.Value = false;
+			currentChapter.Media.IsPlaying.Value = false;
 		}
 
 		private void SkipBackward()
 		{
-			CurrentChapter.Value?.SkipBackwardCommand.Execute();
+			CurrentChapter.Value?.Media.SkipBackwardCommand.Execute();
 		}
 
 		private void SkipForward()
 		{
-			CurrentChapter.Value?.SkipForwardCommand.Execute();
+			CurrentChapter.Value?.Media.SkipForwardCommand.Execute();
 		}
 
 		private void UpdateProgress(TimeSpan progress)
 		{
-			CurrentChapter.Value?.UpdateProgress(progress);
+			CurrentChapter.Value?.Media.UpdateProgress(progress);
 		}
 	}
 }

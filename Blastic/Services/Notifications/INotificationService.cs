@@ -1,5 +1,5 @@
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Blastic.Reactive;
 
 namespace Blastic.Services.Notifications
 {
@@ -21,14 +21,14 @@ namespace Blastic.Services.Notifications
 		/// Collection of all notifications. Notifications will be removed from
 		/// this collection when they are deinitialized.
 		/// </summary>
-		ReactiveCollection<Notification> Notifications { get; }
+		ReadOnlyObservableCollection<Notification> Notifications { get; }
 
 		/// <summary>
 		/// Collection of active notifications. Notifications will be added to this
 		/// collection when they are activated and removed from this collection when
 		/// they are deactivated.
 		/// </summary>
-		ReactiveCollection<Notification> ActiveNotifications { get; }
+		ReadOnlyObservableCollection<Notification> ActiveNotifications { get; }
 
 		/// <summary>
 		/// Enqueue a new notification. If the number of active notifications

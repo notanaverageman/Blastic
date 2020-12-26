@@ -6,13 +6,20 @@ using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
 using Blastic.Forms.Sample.Services;
-using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.UserInterface.Chapters;
+using Blastic.Forms.Sample.UserInterface.Downloads;
+using Blastic.Forms.Sample.UserInterface.Home;
+using Blastic.Forms.Sample.UserInterface.Library;
+using Blastic.Forms.Sample.UserInterface.Main;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
+using Blastic.Forms.Sample.UserInterface.Notifications;
+using Blastic.Forms.Sample.UserInterface.Search;
 using Blastic.Forms.Sample.UserInterface.Settings;
 using Blastic.Forms.Sample.UserInterface.Settings.Languages;
 using Blastic.Forms.Sample.UserInterface.Settings.Themes;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
+using Blastic.Services.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xamarin.Forms;
@@ -46,11 +53,15 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 					(_, y) =>
 					{
 						y.AddSingleton(new HttpClient());
-						y.AddSingleton<MediaPlayerViewModel>();
 						y.AddSingleton<ArchiveOrgService>();
 						y.AddSingleton<DownloadService>();
 						y.AddSingleton<ILocalizationSource>(new Resources.LocalizationSource(Order.AbsoluteMaximum));
 						y.AddSingleton<Resources.LocalizableProperties>();
+
+						y.AddSingleton<NotificationsViewModel>();
+						y.AddSingleton<DownloadsViewModel>();
+						y.AddSingleton<MediaPlayerViewModel>();
+						y.AddSingleton<ChapterDetailsViewModel>();
 
 						y.AddSingleton<ThemeSettingsSection>();
 						y.AddSingleton<LanguageSettingsSection>();

@@ -84,7 +84,7 @@ namespace Blastic.CodeGeneration
 
 			classBuilder.AppendLine();
 			classBuilder.Append(methodBuilder);
-			classBuilder.Append("}");
+			classBuilder.AppendLine("}");
 
 			classBuilder.WrapWithNamespace(@namespace!);
 			string source = classBuilder.ToString();

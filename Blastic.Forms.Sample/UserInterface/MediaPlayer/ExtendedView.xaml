@@ -70,9 +70,8 @@
 					   Text="{Binding CurrentChapter.Value.Title.Value}" />
 
 				<Label FontSize="Small"
-					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
-					   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
-												   Dark={StaticResource DarkSecondaryTextColor}}" />
+					   StyleClass="Secondary"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
 			</StackLayout>
 
 			<StackLayout Grid.Row="2"
@@ -81,18 +80,18 @@
 				<Grid>
 					<Label FontSize="Micro"
 						   HorizontalOptions="Start"
-						   Text="{Binding CurrentChapter.Value.ProgressLabel.Value}" />
+						   Text="{Binding CurrentChapter.Value.Media.PlayedDurationLabel.Value}" />
 
 					<Label FontSize="Micro"
 						   HorizontalOptions="End"
-						   Text="{Binding CurrentChapter.Value.RemainingLabel.Value}" />
+						   Text="{Binding CurrentChapter.Value.Media.RemainingDurationLabel.Value}" />
 				</Grid>
 
-				<Slider DragCompletedCommand="{Binding CurrentChapter.Value.SeekCompletedCommand}"
-						DragStartedCommand="{Binding CurrentChapter.Value.SeekStartedCommand}"
+				<Slider DragCompletedCommand="{Binding CurrentChapter.Value.Media.SeekCompletedCommand}"
+						DragStartedCommand="{Binding CurrentChapter.Value.Media.SeekStartedCommand}"
 						MinimumTrackColor="{AppThemeBinding Light={StaticResource Accent},
 															Dark={StaticResource DarkAccent}}"
-						Value="{Binding CurrentChapter.Value.ProgressPercent.Value, Mode=TwoWay}" />
+						Value="{Binding CurrentChapter.Value.Media.PlayedPercent.Value, Mode=TwoWay}" />
 			</StackLayout>
 
 			<Grid Grid.Row="3"
@@ -111,7 +110,7 @@
 				</ImageButton>
 
 				<ImageButton Grid.Column="1"
-							 Command="{Binding CurrentChapter.Value.SkipBackwardCommand}"
+							 Command="{Binding CurrentChapter.Value.Media.SkipBackwardCommand}"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
@@ -123,11 +122,11 @@
 				</ImageButton>
 
 				<ImageButton Grid.Column="2"
-							 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
+							 Command="{Binding CurrentChapter.Value.Media.TogglePlayCommand}"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
+										 Glyph="{Binding CurrentChapter.Value.Media.PlayPauseIconGlyph.Value}"
 										 Size="72"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
 																 Dark={StaticResource DarkTextColor}}" />
@@ -135,7 +134,7 @@
 				</ImageButton>
 
 				<ImageButton Grid.Column="3"
-							 Command="{Binding CurrentChapter.Value.SkipForwardCommand}"
+							 Command="{Binding CurrentChapter.Value.Media.SkipForwardCommand}"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
 						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"

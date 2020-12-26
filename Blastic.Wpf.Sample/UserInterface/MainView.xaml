@@ -1,0 +1,124 @@
+﻿<Window x:Class="Blastic.Wpf.Sample.UserInterface.MainView"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:controlExtensions="clr-namespace:Blastic.Wpf.ControlExtensions;assembly=Blastic.Wpf"
+		xmlns:controls="clr-namespace:Blastic.Wpf.Sample.Controls"
+		xmlns:converters="clr-namespace:Blastic.Wpf.Sample.Converters"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+		xmlns:userInterface="clr-namespace:Blastic.Wpf.Sample.UserInterface"
+		Title="{Binding Title.Value}"
+		mc:Ignorable="d"
+		Width="1200"
+		Height="800"
+		d:DataContext="{d:DesignInstance userInterface:MainViewModel}"
+		FontFamily="Helvetica">
+
+	<Window.Resources>
+		<converters:OffsetToTransformConverter x:Key="CityImage1OffsetConverter"
+											   ApplyX="True"
+											   Scale="{Binding ActualWidth, Source={x:Reference CityImage1}}" />
+		<converters:OffsetToTransformConverter x:Key="CityImage2OffsetConverter"
+											   ApplyX="True"
+											   Scale="{Binding ActualWidth, Source={x:Reference CityImage2}}" />
+	</Window.Resources>
+
+	<Grid controlExtensions:GridExtensions.RowDefinitions="Auto,*">
+		<Image x:Name="CityImage2"
+			   Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
+			   RenderTransform="{Binding Animations.CityImage2Offset.Value, Converter={StaticResource CityImage2OffsetConverter}}"
+			   Source="{Binding CityImageSource2.Value, Converter={StaticResource EnumToJpgResourceConverter}}"
+			   Margin="-20,0"
+			   Stretch="Fill" />
+
+		<Image x:Name="CityImage1"
+			   Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
+			   Margin="-20,0"
+			   RenderTransform="{Binding Animations.CityImage1Offset.Value, Converter={StaticResource CityImage1OffsetConverter}}"
+			   Source="{Binding CityImageSource1.Value, Converter={StaticResource EnumToJpgResourceConverter}}"
+			   Stretch="Fill" />
+
+		<Grid Margin="100,50">
+			<Grid.Background>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+					<GradientStop Offset="0" Color="#88000000" />
+					<GradientStop Offset="1" Color="#66000044" />
+				</LinearGradientBrush>
+			</Grid.Background>
+
+			<Grid Margin="20"
+				  controlExtensions:GridExtensions.RowDefinitions="Auto,*,Auto">
+
+				<TextBlock Grid.Row="0"
+						   FontFamily="Arial"
+						   FontSize="20"
+						   FontWeight="Bold"
+						   Foreground="#017BE1"
+						   Text="GLOBAL FORECAST">
+					<TextBlock.LayoutTransform>
+						<ScaleTransform ScaleY="1.2" />
+					</TextBlock.LayoutTransform>
+				</TextBlock>
+
+				<Grid Grid.Row="1"
+					  controlExtensions:GridExtensions.ColumnDefinitions="*,*"
+					  Opacity="{Binding Animations.Opacity.Value}">
+
+					<StackPanel Grid.Column="0"
+								ClipToBounds="True">
+
+						<TextBlock FontFamily="{StaticResource ZillaSlab}"
+								   FontSize="56"
+								   Foreground="#FAFAFF"
+								   RenderTransform="{Binding Animations.CityTextOffset.Value, Converter={StaticResource XOffsetToTransformConverter}}"
+								   Text="{Binding MainCity.Value.City.Value}" />
+
+						<TextBlock HorizontalAlignment="Center"
+								   FontFamily="{StaticResource Gravity}"
+								   FontSize="160"
+								   Foreground="#D4D4D4"
+								   RenderTransform="{Binding Animations.TemperatureOffset.Value, Converter={StaticResource XOffsetToTransformConverter}}"
+								   Text="{Binding MainCity.Value.TemperatureText.Value}" />
+					</StackPanel>
+
+					<svgc:SvgViewbox Grid.Column="2"
+									 Width="200"
+									 VerticalAlignment="Center"
+									 RenderTransform="{Binding Animations.WeatherOffset.Value, Converter={StaticResource XOffsetToTransformConverter}}"
+									 Source="{Binding MainCity.Value.Weather.Value, Converter={StaticResource EnumToSvgResourceConverter}}" />
+				</Grid>
+
+				<ItemsControl Grid.Row="2"
+							  ItemsSource="{Binding Cities}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<controls:UniformGridWithOrientation VerticalAlignment="Top"
+																 Columns="3"
+																 Orientation="Vertical" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<userInterface:CityView Margin="10,10" />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</Grid>
+		</Grid>
+
+		<StackPanel HorizontalAlignment="Left"
+					VerticalAlignment="Top">
+
+			<Button Command="{Binding CycleCommand}"
+					Content="Cycle" />
+
+			<Button Command="{Binding ActivateCommand}"
+					Content="Activate" />
+
+			<Button Command="{Binding DeactivateCommand}"
+					Content="Deactivate" />
+		</StackPanel>
+	</Grid>
+</Window>

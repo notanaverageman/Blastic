@@ -1,6 +1,7 @@
 using System;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Reactive;
 
 namespace Blastic.Forms.Sample.Media

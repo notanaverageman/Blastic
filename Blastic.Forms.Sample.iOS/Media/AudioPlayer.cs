@@ -3,7 +3,7 @@ using System.Diagnostics;
 using AVFoundation;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Media;
-using Blastic.Forms.Sample.UserInterface;
+using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Reactive;
 using CoreFoundation;
 using CoreMedia;
@@ -69,7 +69,7 @@ namespace Blastic.Forms.Sample.iOS.Media
 				return;
 			}
 
-			NSUrl url = NSUrl.FromString(chapter.Url.Value);
+			NSUrl url = NSUrl.FromString(chapter.Media.Url.Value);
 			AVPlayerItem playerItem = AVPlayerItem.FromUrl(url);
 
 			Stop();
@@ -109,7 +109,7 @@ namespace Blastic.Forms.Sample.iOS.Media
 				Title = chapter.Title.Value,
 				AlbumTitle = chapter.Book.Title.Value,
 				Artist = chapter.Book.Author.Value,
-				PlaybackDuration = chapter.Duration.Value.TotalSeconds,
+				PlaybackDuration = chapter.Media.Duration.Value.TotalSeconds,
 				PlaybackRate = _player.Rate
 			};
 

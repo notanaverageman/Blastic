@@ -5,14 +5,11 @@
 					xmlns:dynamicControls="clr-namespace:Blastic.Forms.DynamicControls;assembly=Blastic.Forms">
 
 	<Style TargetType="{x:Type dynamicControls:DynamicControl}">
-		<Setter Property="Padding" Value="16" />
 		<Setter Property="ControlTemplate">
 			<Setter.Value>
 				<ControlTemplate>
-					<ScrollView>
-						<Grid x:Name="PART_RootGrid"
-							  Margin="{TemplateBinding Padding}" />
-					</ScrollView>
+					<Grid x:Name="PART_RootGrid"
+						  Margin="{TemplateBinding Padding}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

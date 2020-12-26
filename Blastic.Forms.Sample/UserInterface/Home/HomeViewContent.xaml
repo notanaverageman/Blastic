@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Blastic.Forms.Sample.UserInterface.Home.HomeViewContent"
+			 xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:home="clr-namespace:Blastic.Forms.Sample.UserInterface.Home;assembly=Blastic.Forms.Sample"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
+			 xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+			 mc:Ignorable="d"
+			 x:DataType="home:HomeViewModel"
+			 Style="{StaticResource PageStyle}">
+
+	<ContentPage.Resources>
+		<DataTemplate x:Key="BookTemplate"
+					  x:DataType="books:BookViewModel">
+
+			<Grid RowDefinitions="Auto,Auto,Auto"
+				  RowSpacing="0"
+				  VerticalOptions="Start"
+				  WidthRequest="{StaticResource BookImageWidth}">
+
+				<Grid.GestureRecognizers>
+					<TapGestureRecognizer Command="{Binding BindingContext.NavigateToBookCommand, Source={RelativeSource FindAncestor, AncestorType={x:Type home:HomeViewContent}}}"
+										  CommandParameter="{Binding}" />
+				</Grid.GestureRecognizers>
+
+				<pancakeView:PancakeView Grid.Row="0"
+										 CornerRadius="4">
+
+					<pancakeView:PancakeView.Shadow>
+						<pancakeView:DropShadow BlurRadius="2"
+												Offset="2,2" />
+					</pancakeView:PancakeView.Shadow>
+
+					<Image x:Name="Image"
+						   Aspect="Fill"
+						   HeightRequest="{StaticResource BookImageHeight}"
+						   HorizontalOptions="Start"
+						   Source="{Binding ImageUrl.Value, Mode=OneTime}"
+						   WidthRequest="{StaticResource BookImageWidth}" />
+				</pancakeView:PancakeView>
+
+				<Label Grid.Row="1"
+					   Margin="0,8,0,0"
+					   FontSize="Small"
+					   LineBreakMode="TailTruncation"
+					   Text="{Binding Title.Value, Mode=OneTime}" />
+
+				<Label Grid.Row="2"
+					   FontSize="Micro"
+					   LineBreakMode="TailTruncation"
+					   StyleClass="Secondary"
+					   Text="{Binding Author.Value, Mode=OneTime}" />
+			</Grid>
+		</DataTemplate>
+	</ContentPage.Resources>
+
+	<ScrollView Margin="10,20,10,0">
+		<Grid RowDefinitions="Auto,Auto,*"
+			  RowSpacing="20">
+
+			<Grid Grid.Row="0"
+				  RowDefinitions="Auto,Auto"
+				  RowSpacing="10"
+				  VerticalOptions="Start">
+
+				<Label Grid.Row="0"
+					   FontAttributes="Bold"
+					   FontSize="Header"
+					   Text="{Binding LocalizableProperties.Home.Latest.Value}" />
+
+				<CollectionView Grid.Row="1"
+								HeightRequest="160"
+								ItemTemplate="{StaticResource BookTemplate}"
+								ItemsSource="{Binding Books}">
+					<CollectionView.ItemsLayout>
+						<LinearItemsLayout ItemSpacing="8"
+										   Orientation="Horizontal" />
+					</CollectionView.ItemsLayout>
+				</CollectionView>
+			</Grid>
+
+			<Grid Grid.Row="1"
+				  RowDefinitions="Auto,*"
+				  RowSpacing="10">
+
+				<Label Grid.Row="0"
+					   FontAttributes="Bold"
+					   FontSize="Header"
+					   Text="{Binding LocalizableProperties.Home.Popular.Value}" />
+
+				<CollectionView Grid.Row="1"
+								HeightRequest="160"
+								ItemTemplate="{StaticResource BookTemplate}"
+								ItemsSource="{Binding Books}">
+					<CollectionView.ItemsLayout>
+						<LinearItemsLayout ItemSpacing="8"
+										   Orientation="Horizontal" />
+					</CollectionView.ItemsLayout>
+				</CollectionView>
+			</Grid>
+
+			<StackLayout Grid.Row="2"
+						 VerticalOptions="End">
+
+				<StackLayout HorizontalOptions="Center"
+							 Orientation="Horizontal">
+
+					<Button Command="{Binding ShowNotificationsCommand}"
+							Text="Notifications" />
+
+					<Button Command="{Binding ShowDownloadsCommand}"
+							Text="Downloads" />
+				</StackLayout>
+
+				<StackLayout HorizontalOptions="Center"
+							 Orientation="Horizontal">
+
+					<Button Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+							CommandParameter="{x:Static overlay:OverlayState.Expanded}"
+							Text="Expanded" />
+
+					<Button Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+							CommandParameter="{x:Static overlay:OverlayState.Collapsed}"
+							Text="Collapsed" />
+
+					<Button Command="{Binding MediaPlayer.ChangeOverlayStateCommand}"
+							CommandParameter="{x:Static overlay:OverlayState.Invisible}"
+							Text="Invisible" />
+				</StackLayout>
+			</StackLayout>
+		</Grid>
+	</ScrollView>
+</ContentPage>

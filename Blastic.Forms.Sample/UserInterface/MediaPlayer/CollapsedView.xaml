@@ -21,7 +21,7 @@
 		</Grid.GestureRecognizers>
 
 		<ProgressBar Grid.Row="0"
-					 Progress="{Binding CurrentChapter.Value.ProgressPercent.Value}"
+					 Progress="{Binding CurrentChapter.Value.Media.PlayedPercent.Value}"
 					 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
 													 Dark={StaticResource DarkAccent}}" />
 
@@ -47,18 +47,17 @@
 
 				<Label FontSize="Micro"
 					   LineBreakMode="TailTruncation"
-					   Text="{Binding CurrentChapter.Value.Book.Title.Value}"
-					   TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor},
-												   Dark={StaticResource DarkSecondaryTextColor}}" />
+					   StyleClass="Secondary"
+					   Text="{Binding CurrentChapter.Value.Book.Title.Value}" />
 			</StackLayout>
 
 			<ImageButton Grid.Column="2"
 						 Margin="0,0,16,0"
-						 Command="{Binding CurrentChapter.Value.TogglePlayCommand}"
+						 Command="{Binding CurrentChapter.Value.Media.TogglePlayCommand}"
 						 VerticalOptions="Center">
 				<ImageButton.Source>
 					<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-									 Glyph="{Binding CurrentChapter.Value.PlayPauseIconGlyph.Value}"
+									 Glyph="{Binding CurrentChapter.Value.Media.PlayPauseIconGlyph.Value}"
 									 Color="{AppThemeBinding Light={StaticResource TextColor},
 															 Dark={StaticResource DarkTextColor}}" />
 				</ImageButton.Source>

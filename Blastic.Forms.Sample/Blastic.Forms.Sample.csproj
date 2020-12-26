@@ -32,13 +32,16 @@
     <Compile Update="Controls\RatingBar.xaml.cs">
       <DependentUpon>RatingBar.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\ChapterDetailsOverlayView.xaml.cs">
-      <DependentUpon>ChapterDetailsOverlayView.xaml</DependentUpon>
+    <Compile Update="UserInterface\Downloads\DownloadsView.xaml.cs">
+      <DependentUpon>DownloadsView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\BookView.xaml.cs">
+    <Compile Update="UserInterface\Chapters\ChapterDetailsView.xaml.cs">
+      <DependentUpon>ChapterDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\Books\BookView.xaml.cs">
       <DependentUpon>BookView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\HomeViewContent.xaml.cs">
+    <Compile Update="UserInterface\Home\HomeViewContent.xaml.cs">
       <DependentUpon>HomeViewContent.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\MediaPlayer\CollapsedView.xaml.cs">
@@ -47,7 +50,10 @@
     <Compile Update="UserInterface\MediaPlayer\ExtendedView.xaml.cs">
       <DependentUpon>ExtendedView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\SearchViewContent.xaml.cs">
+    <Compile Update="UserInterface\Notifications\NotificationsView.xaml.cs">
+      <DependentUpon>NotificationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInterface\Search\SearchViewContent.xaml.cs">
       <DependentUpon>SearchViewContent.xaml</DependentUpon>
     </Compile>
     <Compile Update="UserInterface\Settings\SettingsViewContent.xaml.cs">
@@ -56,22 +62,22 @@
     <Compile Update="UserInterface\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\SearchView.xaml.cs">
+    <Compile Update="UserInterface\Search\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\LibraryView.xaml.cs">
+    <Compile Update="UserInterface\Library\LibraryView.xaml.cs">
       <DependentUpon>LibraryView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\HomeView.xaml.cs">
+    <Compile Update="UserInterface\Home\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="UserInterface\HomeView.xaml">
+    <EmbeddedResource Update="UserInterface\Home\HomeView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="UserInterface\MainView.xaml">
+    <EmbeddedResource Update="UserInterface\Main\MainView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
