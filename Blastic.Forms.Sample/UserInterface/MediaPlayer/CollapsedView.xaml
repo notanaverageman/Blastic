@@ -22,9 +22,7 @@
 		</Grid.GestureRecognizers>
 
 		<ProgressBar Grid.Row="0"
-					 Progress="{Binding CurrentChapter.Value.Media.PlayedPercent.Value}"
-					 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
-													 Dark={StaticResource DarkAccent}}" />
+					 Progress="{Binding CurrentChapter.Value.Media.PlayedPercent.Value}" />
 
 		<Grid Grid.Row="1"
 			  ColumnDefinitions="Auto,*,Auto"

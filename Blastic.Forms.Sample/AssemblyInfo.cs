@@ -1,7 +1,9 @@
 using Xamarin.Forms.Xaml;
 using Blastic.CodeGeneration;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
+[assembly: Preserve(AllMembers = true)]
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 [assembly: CreateLocalizableProperties("Blastic.Forms.Sample.Resources")]
 [assembly: CreateLocalizationSource("Blastic.Forms.Sample.Resources")]

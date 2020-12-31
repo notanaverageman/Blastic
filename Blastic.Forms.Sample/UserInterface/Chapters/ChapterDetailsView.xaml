@@ -65,16 +65,6 @@
 							</Button.ImageSource>
 						</Button>
 
-						<Button HorizontalOptions="Start"
-								Text="{Binding LocalizableProperties.Common.Like.Value}">
-							<Button.ImageSource>
-								<FontImageSource FontFamily="Material"
-												 Glyph="{x:Static icons:IconFont.Favorite}"
-												 Color="{AppThemeBinding Light={StaticResource TextColor},
-																		 Dark={StaticResource DarkTextColor}}" />
-							</Button.ImageSource>
-						</Button>
-
 						<Grid ColumnDefinitions="Auto,Auto,*">
 
 							<Button Grid.Column="0"

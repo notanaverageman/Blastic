@@ -60,10 +60,16 @@
 			<StackLayout Grid.Row="1"
 						 Margin="16,16,16,0">
 
-				<Image Aspect="Fill"
-					   HorizontalOptions="FillAndExpand"
-					   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}"
-					   VerticalOptions="FillAndExpand" />
+				<pancakeView:PancakeView CornerRadius="4"
+										 HorizontalOptions="FillAndExpand"
+										 VerticalOptions="FillAndExpand">
+					<Image Aspect="Fill"
+						   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}" />
+
+					<pancakeView:PancakeView.Shadow>
+						<pancakeView:DropShadow />
+					</pancakeView:PancakeView.Shadow>
+				</pancakeView:PancakeView>
 
 				<Label Margin="0,16,0,0"
 					   FontSize="Large"

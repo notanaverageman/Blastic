@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+	<Style TargetType="{x:Type Label}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
+		<Setter Property="FontFamily" Value="Roboto" />
+		<Style.Triggers>
+			<Trigger TargetType="Label" Property="FontAttributes" Value="Bold">
+				<Setter Property="FontFamily" Value="RobotoBold" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<Style Class="Primary"
+		   TargetType="{x:Type Label}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
+	</Style>
+
+	<Style Class="Secondary"
+		   TargetType="{x:Type Label}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
+	</Style>
+
+	<Style Class="Accent"
+		   TargetType="{x:Type Label}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
+	</Style>
+</ResourceDictionary>

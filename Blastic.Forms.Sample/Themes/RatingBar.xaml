@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample">
+
+	<Style TargetType="{x:Type controls:RatingBar}">
+		<Setter Property="Color" Value="{AppThemeBinding Light={StaticResource RatingBarForegroundColor}, Dark={StaticResource DarkRatingBarForegroundColor}}" />
+		<Setter Property="FontFamily" Value="Material" />
+	</Style>
+</ResourceDictionary>

@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+	<Color x:Key="DarkAccent">#FFB039</Color>
+	<Color x:Key="DarkBackground">#121212</Color>
+	<Color x:Key="DarkSecondaryBackground">#000000</Color>
+	<Color x:Key="DarkTextColor">#FFFFFF</Color>
+	<Color x:Key="DarkSecondaryTextColor">#ACACAC</Color>
+	<Color x:Key="DarkSeparatorColor">#ACACAC</Color>
+	<Color x:Key="DarkRatingBarForegroundColor">#FFCC00</Color>
+	<Color x:Key="DarkCancelColor">#C75364</Color>
+	<LinearGradientBrush x:Key="DarkOverlayBackground" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Offset="0" Color="{StaticResource DarkBackground}" />
+		<GradientStop Offset="1" Color="{StaticResource DarkSecondaryBackground}" />
+	</LinearGradientBrush>
+</ResourceDictionary>

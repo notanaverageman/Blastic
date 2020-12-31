@@ -2,107 +2,22 @@
 <Application x:Class="Blastic.Forms.Sample.App"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:renderers="clr-namespace:AiForms.Renderers;assembly=SettingsView"
 			 xmlns:theme="clr-namespace:Blastic.Forms.Themes;assembly=Blastic.Forms"
-			 xmlns:userInterface="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
+			 xmlns:themes="clr-namespace:Blastic.Forms.Sample.Themes;assembly=Blastic.Forms.Sample"
 			 mc:Ignorable="d">
 
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<theme:Blastic />
+				<themes:Theme />
+				<ResourceDictionary Source="Themes/Theme.xaml" />
 			</ResourceDictionary.MergedDictionaries>
-
-			<Color x:Key="Accent">#FF9800</Color>
-			<Color x:Key="Background">#FFFFFF</Color>
-			<Color x:Key="SecondaryBackground">#F3F2F7</Color>
-			<Color x:Key="TextColor">#000000</Color>
-			<Color x:Key="SecondaryTextColor">#ACACAC</Color>
-			<Color x:Key="SeparatorColor">#ACACAC</Color>
-			<Color x:Key="RatingBarForegroundColor">#D1A700</Color>
-			<Color x:Key="CancelColor">#C75364</Color>
-			<LinearGradientBrush x:Key="OverlayBackground" StartPoint="0,0" EndPoint="0,1">
-				<GradientStop Offset="0" Color="{StaticResource Background}" />
-				<GradientStop Offset="1" Color="{StaticResource SecondaryBackground}" />
-			</LinearGradientBrush>
-
-			<Color x:Key="DarkAccent">#FFB039</Color>
-			<Color x:Key="DarkBackground">#121212</Color>
-			<Color x:Key="DarkSecondaryBackground">#000000</Color>
-			<Color x:Key="DarkTextColor">#FFFFFF</Color>
-			<Color x:Key="DarkSecondaryTextColor">#ACACAC</Color>
-			<Color x:Key="DarkSeparatorColor">#ACACAC</Color>
-			<Color x:Key="DarkRatingBarForegroundColor">#FFCC00</Color>
-			<Color x:Key="DarkCancelColor">#C75364</Color>
-			<LinearGradientBrush x:Key="DarkOverlayBackground" StartPoint="0,0" EndPoint="0,1">
-				<GradientStop Offset="0" Color="{StaticResource DarkBackground}" />
-				<GradientStop Offset="1" Color="{StaticResource DarkSecondaryBackground}" />
-			</LinearGradientBrush>
 
 			<x:Double x:Key="BookImageHeight">120</x:Double>
 			<x:Double x:Key="BookImageWidth">90</x:Double>
-
-			<Style x:Key="PageStyle"
-				   x:DataType="userInterface:IShellTab"
-				   TargetType="{x:Type Page}">
-				<Setter Property="Title" Value="{Binding Title.Value}" />
-				<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" />
-				<Setter Property="IconImageSource" Value="{Binding IconGlyph.Value, Converter={converters:ToolBarIconValueConverter}}" />
-			</Style>
-
-			<Style TargetType="{x:Type Label}">
-				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
-				<Setter Property="FontFamily" Value="Roboto" />
-				<Style.Triggers>
-					<Trigger TargetType="Label" Property="FontAttributes" Value="Bold">
-						<Setter Property="FontFamily" Value="RobotoBold" />
-					</Trigger>
-				</Style.Triggers>
-			</Style>
-
-			<Style TargetType="{x:Type ProgressBar}">
-				<Setter Property="ProgressColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
-			</Style>
-
-			<Style Class="Primary"
-				   TargetType="{x:Type Label}">
-				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
-			</Style>
-
-			<Style Class="Secondary"
-				   TargetType="{x:Type Label}">
-				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
-			</Style>
-
-			<Style Class="Accent"
-				   TargetType="{x:Type Label}">
-				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
-			</Style>
-
-			<Style Class="Separator"
-				   TargetType="{x:Type BoxView}">
-				<Setter Property="Color" Value="{AppThemeBinding Light={StaticResource SeparatorColor}, Dark={StaticResource DarkSeparatorColor}}" />
-				<Setter Property="HeightRequest" Value="1" />
-			</Style>
-
-			<Style TargetType="{x:Type Button}">
-				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
-			</Style>
-
-			<Style TargetType="{x:Type renderers:SettingsView}">
-				<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
-				<Setter Property="CellAccentColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
-				<Setter Property="CellBackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" />
-				<Setter Property="CellDescriptionColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
-				<Setter Property="CellHintTextColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
-				<Setter Property="CellTitleColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
-				<Setter Property="CellValueTextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
-				<Setter Property="SelectedColor" Value="{AppThemeBinding Light={StaticResource SecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
-				<Setter Property="SeparatorColor" Value="{AppThemeBinding Light={StaticResource SeparatorColor}, Dark={StaticResource DarkSeparatorColor}}" />
-			</Style>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

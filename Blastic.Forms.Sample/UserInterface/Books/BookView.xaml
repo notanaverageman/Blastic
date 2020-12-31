@@ -55,21 +55,16 @@
 						   Text="{Binding Author.Value, Mode=OneTime}" />
 
 					<controls:RatingBar Margin="0,10,0,0"
-										FontFamily="Material"
 										HorizontalOptions="Center"
-										Rating="{Binding Book.Rating}"
-										Color="{AppThemeBinding Light={StaticResource RatingBarForegroundColor},
-																Dark={StaticResource DarkRatingBarForegroundColor}}" />
+										Rating="{Binding Book.Rating}" />
 				</StackLayout>
 
 				<StackLayout Margin="0,10"
 							 Orientation="Horizontal">
 
 					<Button Command="{Binding PlayCommand}"
-							ContentLayout="Top,50"
 							FontSize="Micro"
 							HorizontalOptions="FillAndExpand"
-							Text="{Binding LocalizableProperties.Common.Listen.Value}"
 							VerticalOptions="Center">
 
 						<Button.ImageSource>
@@ -81,15 +76,13 @@
 					</Button>
 
 					<Button Command="{Binding DownloadCommand}"
-							ContentLayout="Top"
 							FontSize="Micro"
 							HorizontalOptions="FillAndExpand"
-							Text="{Binding LocalizableProperties.Common.Download.Value}"
 							VerticalOptions="Center">
 
 						<Button.ImageSource>
 							<FontImageSource FontFamily="Material"
-											 Glyph="{x:Static icons:IconFont.CloudDownload}"
+											 Glyph="{x:Static icons:IconFont.FileDownload}"
 											 Color="{AppThemeBinding Light={StaticResource TextColor},
 																	 Dark={StaticResource DarkTextColor}}" />
 						</Button.ImageSource>
