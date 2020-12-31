@@ -16,14 +16,6 @@
 				<theme:Blastic />
 			</ResourceDictionary.MergedDictionaries>
 
-			<OnPlatform x:Key="MaterialFontFamily"
-						x:TypeArguments="x:String">
-				<On Platform="iOS"
-					Value="Material Design Icons" />
-				<On Platform="Android"
-					Value="materialdesignicons.ttf#Material Design Icons" />
-			</OnPlatform>
-
 			<Color x:Key="Accent">#FF9800</Color>
 			<Color x:Key="Background">#FFFFFF</Color>
 			<Color x:Key="SecondaryBackground">#F3F2F7</Color>
@@ -63,11 +55,31 @@
 
 			<Style TargetType="{x:Type Label}">
 				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
+				<Setter Property="FontFamily" Value="Roboto" />
+				<Style.Triggers>
+					<Trigger TargetType="Label" Property="FontAttributes" Value="Bold">
+						<Setter Property="FontFamily" Value="RobotoBold" />
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+
+			<Style TargetType="{x:Type ProgressBar}">
+				<Setter Property="ProgressColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
+			</Style>
+
+			<Style Class="Primary"
+				   TargetType="{x:Type Label}">
+				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />
 			</Style>
 
 			<Style Class="Secondary"
 				   TargetType="{x:Type Label}">
 				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
+			</Style>
+
+			<Style Class="Accent"
+				   TargetType="{x:Type Label}">
+				<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource DarkAccent}}" />
 			</Style>
 
 			<Style Class="Separator"

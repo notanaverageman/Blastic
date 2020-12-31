@@ -12,7 +12,7 @@ namespace Blastic.Forms.Converters
 		{
 			return new FontImageSource
 			{
-				FontFamily = (OnPlatform<string>)Application.Current.Resources["MaterialFontFamily"],
+				FontFamily = "Material",
 				Glyph = (string)value
 			};
 		}

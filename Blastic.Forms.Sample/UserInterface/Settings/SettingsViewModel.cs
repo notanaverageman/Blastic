@@ -28,7 +28,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings
 
 			Order = new Order(3);
 			Title = localizableProperties.Settings.Title;
-			IconGlyph = new ReactiveProperty<string>(IconFont.Cog);
+			IconGlyph = new ReactiveProperty<string>(IconFont.Settings);
 
 			Items.Add(ThemeSettings);
 			Items.Add(LanguageSettings);

@@ -1,11 +1,17 @@
 using System;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Properties;
 using Blastic.Forms.Sample.Controls.Overlay;
+using Blastic.Platform;
 using Blastic.Reactive;
 using Blastic.Services.Notifications;
+using Blastic.ViewManagement;
 using DynamicData.Binding;
+using Xamarin.Forms;
+using Animation = Blastic.Animations.Animation;
+using Thickness = Blastic.DynamicControls.Properties.Thickness;
 
 namespace Blastic.Forms.Sample.UserInterface.Notifications
 {
@@ -40,7 +46,7 @@ namespace Blastic.Forms.Sample.UserInterface.Notifications
 		{
 			_test++;
 			DynamicModel model = new();
-			Notification notification = new(model, TimeSpan.FromSeconds(5000));
+			ViewAwareNotification notification = new(model, TimeSpan.FromSeconds(10));
 
 			model
 				.AddGroup(
@@ -63,6 +69,64 @@ namespace Blastic.Forms.Sample.UserInterface.Notifications
 			NotificationService.Enqueue(notification);
 
 			State.Value = OverlayState.Collapsed;
+		}
+
+		public class ViewAwareNotification : Notification, IViewAware
+		{
+			public IReactiveProperty<object?> View { get; }
+			
+			public ViewAwareNotification(
+				DynamicModel model,
+				TimeSpan? showDuration = null,
+				bool dismissOnTimeout = true)
+				:
+				base(model, showDuration, dismissOnTimeout)
+			{
+				View = new ReactiveProperty<object?>();
+
+				Lifetime.Activation.Subscribe(
+					() =>
+					{
+						if (View.Value is not VisualElement view)
+						{
+							return;
+						}
+						
+						IObservable<double> animation = Animation.Create(TimeSpan.FromMilliseconds(300));
+
+						animation
+							.ObserveOnUI()
+							.Subscribe(
+								x =>
+								{
+									view.Opacity = x;
+								});
+					});
+
+				Lifetime.Deactivation.Subscribe(
+					() =>
+					{
+						TaskCompletionSource<bool> taskCompletionSource = new();
+						
+						if (View.Value is not VisualElement view)
+						{
+							return Task.CompletedTask;
+						}
+						
+						IObservable<double> animation = Animation.Create(TimeSpan.FromMilliseconds(300));
+
+						animation
+							.ObserveOnUI()
+							.Subscribe(
+								x =>
+								{
+									view.Opacity = 1 - x;
+								},
+								() => taskCompletionSource.SetResult(true));
+
+						return taskCompletionSource.Task;
+					});
+			}
 		}
 	}
 }

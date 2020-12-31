@@ -2,7 +2,6 @@ using System;
 using System.Reactive.Linq;
 using Blastic.Commanding;
 using Blastic.Forms.Sample.Data;
-using Blastic.Forms.Sample.Icons;
 using Blastic.Forms.Sample.Services;
 using Blastic.Forms.Sample.UserInterface.MediaPlayer;
 using Blastic.Reactive;
@@ -28,7 +27,6 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 			public IReadOnlyReactiveProperty<string> RemainingDurationLabel { get; }
 
 			public IReactiveProperty<bool> IsPlaying { get; }
-			public IReadOnlyReactiveProperty<string> PlayPauseIconGlyph { get; }
 
 			public Command SeekStartedCommand { get; }
 			public Command SeekCompletedCommand { get; }
@@ -63,10 +61,6 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 				SeekCompletedCommand = new Command(SeekCompleted);
 
 				IsPlaying = new ReactiveProperty<bool>();
-
-				PlayPauseIconGlyph = IsPlaying
-					.Select(x => x ? IconFont.PauseCircle : IconFont.PlayCircle)
-					.ToReadOnlyReactiveProperty();
 
 				TogglePlayCommand = new Command(TogglePlay);
 				SkipBackwardCommand = new Command(SkipBackward);

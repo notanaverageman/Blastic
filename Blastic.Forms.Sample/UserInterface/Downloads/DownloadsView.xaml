@@ -57,7 +57,7 @@
 														 Orientation="Horizontal">
 												<Button>
 													<Button.ImageSource>
-														<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+														<FontImageSource FontFamily="Material"
 																		 Glyph="{x:Static icons:IconFont.Pause}"
 																		 Color="{AppThemeBinding Light={StaticResource TextColor},
 																								 Dark={StaticResource DarkTextColor}}" />
@@ -69,7 +69,7 @@
 														CommandParameter="{Binding}">
 
 													<Button.ImageSource>
-														<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+														<FontImageSource FontFamily="Material"
 																		 Glyph="{x:Static icons:IconFont.Close}"
 																		 Color="{AppThemeBinding Light={StaticResource CancelColor},
 																								 Dark={StaticResource DarkCancelColor}}" />
@@ -80,9 +80,7 @@
 										</Grid>
 
 										<ProgressBar Grid.Row="1"
-													 Progress="{Binding Progress.Value}"
-													 ProgressColor="{AppThemeBinding Light={StaticResource Accent},
-																					 Dark={StaticResource DarkAccent}}" />
+													 Progress="{Binding Progress.Value}" />
 									</Grid>
 								</SwipeView>
 							</ViewCell>

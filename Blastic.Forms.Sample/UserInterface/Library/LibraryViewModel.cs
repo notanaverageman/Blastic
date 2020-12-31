@@ -21,7 +21,7 @@ namespace Blastic.Forms.Sample.UserInterface.Library
 			
 			Order = new Order(2);
 			Title = localizableProperties.Library.Title;
-			IconGlyph = new ReactiveProperty<string>(IconFont.Bookshelf);
+			IconGlyph = new ReactiveProperty<string>(IconFont.LibraryBooks);
 		}
 	}
 }

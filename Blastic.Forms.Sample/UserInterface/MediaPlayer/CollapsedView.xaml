@@ -3,6 +3,7 @@
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:icons="clr-namespace:Blastic.Forms.Sample.Icons;assembly=Blastic.Forms.Sample"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:mediaPlayer="clr-namespace:Blastic.Forms.Sample.UserInterface.MediaPlayer;assembly=Blastic.Forms.Sample"
 			 xmlns:overlay="clr-namespace:Blastic.Forms.Sample.Controls.Overlay;assembly=Blastic.Forms.Sample"
@@ -56,11 +57,26 @@
 						 Command="{Binding CurrentChapter.Value.Media.TogglePlayCommand}"
 						 VerticalOptions="Center">
 				<ImageButton.Source>
-					<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-									 Glyph="{Binding CurrentChapter.Value.Media.PlayPauseIconGlyph.Value}"
+					<FontImageSource FontFamily="Material"
+									 Glyph="{x:Static icons:IconFont.PlayCircleOutline}"
 									 Color="{AppThemeBinding Light={StaticResource TextColor},
 															 Dark={StaticResource DarkTextColor}}" />
 				</ImageButton.Source>
+
+				<ImageButton.Triggers>
+					<DataTrigger Binding="{Binding CurrentChapter.Value.Media.IsPlaying.Value}"
+								 TargetType="ImageButton"
+								 Value="True">
+						<Setter Property="Source">
+							<Setter.Value>
+								<FontImageSource FontFamily="Material"
+												 Glyph="{x:Static icons:IconFont.PauseCircleOutline}"
+												 Color="{AppThemeBinding Light={StaticResource TextColor},
+																		 Dark={StaticResource DarkTextColor}}" />
+							</Setter.Value>
+						</Setter>
+					</DataTrigger>
+				</ImageButton.Triggers>
 			</ImageButton>
 		</Grid>
 

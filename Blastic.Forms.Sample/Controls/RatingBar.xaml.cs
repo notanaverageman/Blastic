@@ -32,7 +32,7 @@ namespace Blastic.Forms.Sample.Controls
 			nameof(EmptyGlyphProperty).Replace("Property", ""),
 			typeof(string),
 			typeof(RatingBar),
-			IconFont.StarOutline);
+			IconFont.StarBorder);
 		public string EmptyGlyph
 		{
 			get => (string)GetValue(EmptyGlyphProperty);
@@ -43,7 +43,7 @@ namespace Blastic.Forms.Sample.Controls
 			nameof(HalfGlyphProperty).Replace("Property", ""),
 			typeof(string),
 			typeof(RatingBar),
-			IconFont.StarHalfFull);
+			IconFont.StarHalf);
 		public string HalfGlyph
 		{
 			get => (string)GetValue(HalfGlyphProperty);

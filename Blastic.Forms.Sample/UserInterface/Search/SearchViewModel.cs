@@ -79,7 +79,7 @@ namespace Blastic.Forms.Sample.UserInterface.Search
 
 			Order = new Order(1);
 			Title = localizableProperties.Search.Title;
-			IconGlyph = new ReactiveProperty<string>(IconFont.Magnify);
+			IconGlyph = new ReactiveProperty<string>(IconFont.Search);
 			
 			_booksSource = new SourceCache<BookViewModel, string>(x => x.Book.ArchiveOrgId);
 			_booksSource

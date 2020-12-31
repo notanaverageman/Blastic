@@ -3,7 +3,6 @@
 			 xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:books="clr-namespace:Blastic.Forms.Sample.UserInterface.Books;assembly=Blastic.Forms.Sample"
-			 xmlns:controlExtensions="clr-namespace:Blastic.Forms.ControlExtensions;assembly=Blastic.Forms"
 			 xmlns:controls="clr-namespace:Blastic.Forms.Sample.Controls;assembly=Blastic.Forms.Sample"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -65,8 +64,7 @@
 		</DataTemplate>
 	</ContentPage.Resources>
 
-	<StackLayout controlExtensions:GridExtensions.RowDefinitions="Auto,*"
-				 Spacing="0">
+	<StackLayout Spacing="0">
 
 		<SearchBar BackgroundColor="{AppThemeBinding Light={StaticResource Background},
 													 Dark={StaticResource DarkBackground}}"

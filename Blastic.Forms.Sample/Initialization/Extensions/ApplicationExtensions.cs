@@ -46,6 +46,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.AddShellTab<LibraryViewModel>()
 							.AddShellTab<SettingsViewModel>()
 							.UseMainViewModel<MainViewModel>()
+							.AddTypeMapper<Notification, NotificationView>()
 							.AddSettingsStorage();
 					})
 				.AddProgramDatabase(DatabaseProvider.SQLite, $"Data Source={databasePath};")

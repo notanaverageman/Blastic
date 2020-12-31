@@ -29,8 +29,8 @@
 							 HorizontalOptions="Start"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.ChevronDown}"
+						<FontImageSource FontFamily="Material"
+										 Glyph="{x:Static icons:IconFont.KeyboardArrowDown}"
 										 Size="32"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
 																 Dark={StaticResource DarkTextColor}}" />
@@ -48,8 +48,8 @@
 							 HorizontalOptions="End"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.DotsHorizontal}"
+						<FontImageSource FontFamily="Material"
+										 Glyph="{x:Static icons:IconFont.MoreHoriz}"
 										 Size="32"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
 																 Dark={StaticResource DarkTextColor}}" />
@@ -96,12 +96,12 @@
 
 			<Grid Grid.Row="3"
 				  Margin="16,20"
-				  ColumnDefinitions="Auto,*,2*,*,Auto">
+				  ColumnDefinitions="Auto,*,Auto,*,Auto">
 
 				<ImageButton Grid.Column="0"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+						<FontImageSource FontFamily="Material"
 										 Glyph="{x:Static icons:IconFont.SkipPrevious}"
 										 Size="36"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
@@ -113,32 +113,51 @@
 							 Command="{Binding CurrentChapter.Value.Media.SkipBackwardCommand}"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.SkipBackward}"
+						<FontImageSource FontFamily="Material"
+										 Glyph="{x:Static icons:IconFont.Replay30}"
 										 Size="36"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
 																 Dark={StaticResource DarkTextColor}}" />
 					</ImageButton.Source>
 				</ImageButton>
 
-				<ImageButton Grid.Column="2"
-							 Command="{Binding CurrentChapter.Value.Media.TogglePlayCommand}"
-							 VerticalOptions="Center">
-					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{Binding CurrentChapter.Value.Media.PlayPauseIconGlyph.Value}"
+				<Button Grid.Column="2"
+						Command="{Binding CurrentChapter.Value.Media.TogglePlayCommand}"
+						CornerRadius="20"
+						HeightRequest="{Binding Width, Source={RelativeSource Self}}"
+						VerticalOptions="Center">
+
+					<Button.ImageSource>
+						<FontImageSource FontFamily="Material"
+										 Glyph="{x:Static icons:IconFont.PlayCircleOutline}"
 										 Size="72"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
 																 Dark={StaticResource DarkTextColor}}" />
-					</ImageButton.Source>
-				</ImageButton>
+					</Button.ImageSource>
+
+					<Button.Triggers>
+						<DataTrigger Binding="{Binding CurrentChapter.Value.Media.IsPlaying.Value}"
+									 TargetType="Button"
+									 Value="True">
+							<Setter Property="ImageSource">
+								<Setter.Value>
+									<FontImageSource FontFamily="Material"
+													 Glyph="{x:Static icons:IconFont.Pause}"
+													 Size="72"
+													 Color="{AppThemeBinding Light={StaticResource TextColor},
+																			 Dark={StaticResource DarkTextColor}}" />
+								</Setter.Value>
+							</Setter>
+						</DataTrigger>
+					</Button.Triggers>
+				</Button>
 
 				<ImageButton Grid.Column="3"
 							 Command="{Binding CurrentChapter.Value.Media.SkipForwardCommand}"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
-										 Glyph="{x:Static icons:IconFont.SkipForward}"
+						<FontImageSource FontFamily="Material"
+										 Glyph="{x:Static icons:IconFont.Forward30}"
 										 Size="36"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},
 																 Dark={StaticResource DarkTextColor}}" />
@@ -148,7 +167,7 @@
 				<ImageButton Grid.Column="4"
 							 VerticalOptions="Center">
 					<ImageButton.Source>
-						<FontImageSource FontFamily="{DynamicResource MaterialFontFamily}"
+						<FontImageSource FontFamily="Material"
 										 Glyph="{x:Static icons:IconFont.SkipNext}"
 										 Size="36"
 										 Color="{AppThemeBinding Light={StaticResource TextColor},

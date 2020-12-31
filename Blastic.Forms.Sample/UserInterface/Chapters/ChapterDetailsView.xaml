@@ -45,12 +45,21 @@
 											 TargetType="{x:Type Button}"
 											 Value="True">
 									<Setter Property="Text" Value="{Binding LocalizableProperties.Common.Pause.Value}" />
+
+									<Setter Property="ImageSource">
+										<Setter.Value>
+											<FontImageSource FontFamily="Material"
+															 Glyph="{x:Static icons:IconFont.PauseCircleFilled}"
+															 Color="{AppThemeBinding Light={StaticResource TextColor},
+																					 Dark={StaticResource DarkTextColor}}" />
+										</Setter.Value>
+									</Setter>
 								</DataTrigger>
 							</Button.Triggers>
 
 							<Button.ImageSource>
-								<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-												 Glyph="{Binding Chapter.Value.Media.PlayPauseIconGlyph.Value}"
+								<FontImageSource FontFamily="Material"
+												 Glyph="{x:Static icons:IconFont.PlayCircleFilled}"
 												 Color="{AppThemeBinding Light={StaticResource TextColor},
 																		 Dark={StaticResource DarkTextColor}}" />
 							</Button.ImageSource>
@@ -59,8 +68,8 @@
 						<Button HorizontalOptions="Start"
 								Text="{Binding LocalizableProperties.Common.Like.Value}">
 							<Button.ImageSource>
-								<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-												 Glyph="{x:Static icons:IconFont.Heart}"
+								<FontImageSource FontFamily="Material"
+												 Glyph="{x:Static icons:IconFont.Favorite}"
 												 Color="{AppThemeBinding Light={StaticResource TextColor},
 																		 Dark={StaticResource DarkTextColor}}" />
 							</Button.ImageSource>
@@ -83,8 +92,8 @@
 								</Button.Triggers>
 
 								<Button.ImageSource>
-									<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
-													 Glyph="{x:Static icons:IconFont.DownloadOutline}"
+									<FontImageSource FontFamily="Material"
+													 Glyph="{x:Static icons:IconFont.FileDownload}"
 													 Color="{AppThemeBinding Light={StaticResource TextColor},
 																			 Dark={StaticResource DarkTextColor}}" />
 								</Button.ImageSource>
@@ -112,7 +121,7 @@
 								VerticalOptions="Center">
 
 							<Button.ImageSource>
-								<FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+								<FontImageSource FontFamily="Material"
 												 Glyph="{x:Static icons:IconFont.Delete}"
 												 Color="{AppThemeBinding Light={StaticResource TextColor},
 																		 Dark={StaticResource DarkTextColor}}" />

@@ -28,6 +28,12 @@
 		<AdditionalFiles Include="Properties\Resources.tr-tr.resx" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\MaterialIcons-Regular.ttf" />
+	  <EmbeddedResource Include="Resources\Roboto-Bold.ttf" />
+	  <EmbeddedResource Include="Resources\Roboto-Regular.ttf" />
+	</ItemGroup>
+
   <ItemGroup>
     <Compile Update="Controls\RatingBar.xaml.cs">
       <DependentUpon>RatingBar.xaml</DependentUpon>
@@ -50,6 +56,9 @@
     <Compile Update="UserInterface\MediaPlayer\ExpandedView.xaml.cs">
       <DependentUpon>ExpandedView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="UserInterface\Notifications\NotificationView.xaml.cs">
+      <DependentUpon>NotificationView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UserInterface\Notifications\NotificationsView.xaml.cs">
       <DependentUpon>NotificationsView.xaml</DependentUpon>
     </Compile>
@@ -71,14 +80,8 @@
     <Compile Update="UserInterface\Home\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="UserInterface\Home\HomeView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="UserInterface\Main\MainView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
+    <Compile Update="UserInterface\Main\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
