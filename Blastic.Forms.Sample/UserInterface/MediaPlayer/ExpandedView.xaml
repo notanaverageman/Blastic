@@ -62,13 +62,10 @@
 
 				<pancakeView:PancakeView CornerRadius="4"
 										 HorizontalOptions="FillAndExpand"
+										 StyleClass="Shadow"
 										 VerticalOptions="FillAndExpand">
 					<Image Aspect="Fill"
 						   Source="{Binding CurrentChapter.Value.Book.ImageUrl.Value}" />
-
-					<pancakeView:PancakeView.Shadow>
-						<pancakeView:DropShadow />
-					</pancakeView:PancakeView.Shadow>
 				</pancakeView:PancakeView>
 
 				<Label Margin="0,16,0,0"

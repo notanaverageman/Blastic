@@ -9,8 +9,10 @@
 		<ResourceDictionary Source="Button.xaml" />
 		<ResourceDictionary Source="Label.xaml" />
 		<ResourceDictionary Source="Page.xaml" />
+		<ResourceDictionary Source="Pancake.xaml" />
 		<ResourceDictionary Source="ProgressBar.xaml" />
 		<ResourceDictionary Source="RatingBar.xaml" />
+		<ResourceDictionary Source="SearchBar.xaml" />
 		<ResourceDictionary Source="Separator.xaml" />
 		<ResourceDictionary Source="Settings.xaml" />
 	</ResourceDictionary.MergedDictionaries>

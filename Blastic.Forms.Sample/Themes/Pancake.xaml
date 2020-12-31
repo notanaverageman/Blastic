@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView">
+
+	<Style Class="Shadow"
+		   TargetType="{x:Type pancakeView:PancakeView}">
+		<Setter Property="Shadow">
+			<pancakeView:DropShadow />
+		</Setter>
+	</Style>
+
+	<Style Class="LessShadow"
+		   TargetType="{x:Type pancakeView:PancakeView}">
+		<Setter Property="Shadow">
+			<pancakeView:DropShadow BlurRadius="2"
+			                        Offset="2,2" />
+		</Setter>
+	</Style>
+</ResourceDictionary>

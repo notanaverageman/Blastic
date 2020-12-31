@@ -24,11 +24,8 @@
 				<StackLayout Spacing="0">
 					<pancakeView:PancakeView Margin="0,60,0,0"
 											 CornerRadius="8"
-											 HorizontalOptions="Center">
-
-						<pancakeView:PancakeView.Shadow>
-							<pancakeView:DropShadow />
-						</pancakeView:PancakeView.Shadow>
+											 HorizontalOptions="Center"
+											 StyleClass="Shadow">
 
 						<Image Aspect="Fill"
 							   HeightRequest="160"
@@ -124,7 +121,8 @@
 		<CollectionView.ItemTemplate>
 			<DataTemplate x:DataType="chapters:ChapterViewModel">
 				<StackLayout>
-					<Grid ColumnDefinitions="*,Auto,Auto"
+					<Grid Padding="0,5"
+						  ColumnDefinitions="*,Auto,Auto"
 						  ColumnSpacing="15">
 
 						<Grid.GestureRecognizers>

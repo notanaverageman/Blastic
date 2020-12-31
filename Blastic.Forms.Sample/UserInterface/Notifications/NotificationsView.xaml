@@ -21,10 +21,8 @@
 			<DataTemplate x:DataType="notifications1:Notification">
 				<pancakeView:PancakeView BackgroundColor="YellowGreen"
 										 CornerRadius="10"
+										 StyleClass="Shadow"
 										 VerticalOptions="Start">
-					<pancakeView:PancakeView.Shadow>
-						<pancakeView:DropShadow />
-					</pancakeView:PancakeView.Shadow>
 
 					<dynamicControls:DynamicControl HeightRequest="60"
 													Model="{Binding Model}" />

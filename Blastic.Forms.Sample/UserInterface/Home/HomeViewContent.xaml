@@ -27,12 +27,8 @@
 				</Grid.GestureRecognizers>
 
 				<pancakeView:PancakeView Grid.Row="0"
-										 CornerRadius="4">
-
-					<pancakeView:PancakeView.Shadow>
-						<pancakeView:DropShadow BlurRadius="2"
-												Offset="2,2" />
-					</pancakeView:PancakeView.Shadow>
+										 CornerRadius="4"
+										 StyleClass="LessShadow">
 
 					<Image x:Name="Image"
 						   Aspect="Fill"
