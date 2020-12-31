@@ -1,6 +1,13 @@
-﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-					xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView">
+﻿<ResourceDictionary x:Class="Blastic.Forms.Sample.Themes.Pancake"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                    xmlns:themes="clr-namespace:Blastic.Forms.Sample.Themes;assembly=Blastic.Forms.Sample">
+
+	<ResourceDictionary.MergedDictionaries>
+		<themes:ColorsDark />
+		<themes:ColorsLight />
+	</ResourceDictionary.MergedDictionaries>
 
 	<Style Class="Shadow"
 		   TargetType="{x:Type pancakeView:PancakeView}">

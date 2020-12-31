@@ -1,19 +1,20 @@
 ﻿<ResourceDictionary x:Class="Blastic.Forms.Sample.Themes.Theme"
 					xmlns="http://xamarin.com/schemas/2014/forms"
-					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:themes="clr-namespace:Blastic.Forms.Sample.Themes;assembly=Blastic.Forms.Sample">
 
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="Colors.Dark.xaml" />
-		<ResourceDictionary Source="Colors.Light.xaml" />
+		<themes:ColorsDark />
+		<themes:ColorsLight />
 
-		<ResourceDictionary Source="Button.xaml" />
-		<ResourceDictionary Source="Label.xaml" />
-		<ResourceDictionary Source="Page.xaml" />
-		<ResourceDictionary Source="Pancake.xaml" />
-		<ResourceDictionary Source="ProgressBar.xaml" />
-		<ResourceDictionary Source="RatingBar.xaml" />
-		<ResourceDictionary Source="SearchBar.xaml" />
-		<ResourceDictionary Source="Separator.xaml" />
-		<ResourceDictionary Source="Settings.xaml" />
+		<themes:Button />
+		<themes:Label />
+		<themes:Page />
+		<themes:Pancake />
+		<themes:ProgressBar />
+		<themes:RatingBar />
+		<themes:SearchBar />
+		<themes:Separator />
+		<themes:Settings />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -16,11 +16,10 @@
 			 x:DataType="books:BookViewModel"
 			 Style="{StaticResource PageStyle}">
 
-	<CollectionView Margin="15,0"
-					ItemSizingStrategy="MeasureFirstItem"
+	<CollectionView ItemSizingStrategy="MeasureFirstItem"
 					ItemsSource="{Binding Chapters, Mode=OneTime}">
 		<CollectionView.Header>
-			<StackLayout>
+			<StackLayout Padding="15,0">
 				<StackLayout Spacing="0">
 					<pancakeView:PancakeView Margin="0,60,0,0"
 											 CornerRadius="8"
@@ -120,7 +119,7 @@
 
 		<CollectionView.ItemTemplate>
 			<DataTemplate x:DataType="chapters:ChapterViewModel">
-				<StackLayout>
+				<StackLayout Padding="15,0">
 					<Grid Padding="0,5"
 						  ColumnDefinitions="*,Auto,Auto"
 						  ColumnSpacing="15">

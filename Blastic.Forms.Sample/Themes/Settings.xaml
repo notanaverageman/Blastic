@@ -1,6 +1,13 @@
-﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<ResourceDictionary x:Class="Blastic.Forms.Sample.Themes.Settings"
+					xmlns="http://xamarin.com/schemas/2014/forms"
 					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-					xmlns:renderers="clr-namespace:AiForms.Renderers;assembly=SettingsView">
+					xmlns:renderers="clr-namespace:AiForms.Renderers;assembly=SettingsView"
+					xmlns:themes="clr-namespace:Blastic.Forms.Sample.Themes;assembly=Blastic.Forms.Sample">
+
+	<ResourceDictionary.MergedDictionaries>
+		<themes:ColorsDark />
+		<themes:ColorsLight />
+	</ResourceDictionary.MergedDictionaries>
 
 	<Style TargetType="{x:Type renderers:SettingsView}">
 		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />

@@ -1,5 +1,6 @@
-﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+﻿<ResourceDictionary x:Class="Blastic.Forms.Sample.Themes.ColorsDark"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
 	<Color x:Key="DarkAccent">#FFB039</Color>
 	<Color x:Key="DarkBackground">#121212</Color>

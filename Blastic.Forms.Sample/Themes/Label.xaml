@@ -1,5 +1,12 @@
-﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+﻿<ResourceDictionary x:Class="Blastic.Forms.Sample.Themes.Label"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:themes="clr-namespace:Blastic.Forms.Sample.Themes;assembly=Blastic.Forms.Sample">
+
+	<ResourceDictionary.MergedDictionaries>
+		<themes:ColorsDark />
+		<themes:ColorsLight />
+	</ResourceDictionary.MergedDictionaries>
 
 	<Style TargetType="{x:Type Label}">
 		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextColor}, Dark={StaticResource DarkTextColor}}" />

@@ -13,7 +13,6 @@
 			<ResourceDictionary.MergedDictionaries>
 				<theme:Blastic />
 				<themes:Theme />
-				<ResourceDictionary Source="Themes/Theme.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
 			<x:Double x:Key="BookImageHeight">120</x:Double>

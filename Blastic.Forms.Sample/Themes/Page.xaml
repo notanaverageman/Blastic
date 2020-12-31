@@ -1,7 +1,14 @@
-﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:userInterface="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
-             xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms">
+﻿<ResourceDictionary x:Class="Blastic.Forms.Sample.Themes.Page"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:userInterface="clr-namespace:Blastic.Forms.UserInterface;assembly=Blastic.Forms"
+                    xmlns:converters="clr-namespace:Blastic.Forms.Converters;assembly=Blastic.Forms"
+                    xmlns:themes="clr-namespace:Blastic.Forms.Sample.Themes;assembly=Blastic.Forms.Sample">
+
+	<ResourceDictionary.MergedDictionaries>
+		<themes:ColorsDark />
+		<themes:ColorsLight />
+	</ResourceDictionary.MergedDictionaries>
 
 	<Style x:Key="PageStyle"
 	       x:DataType="userInterface:IShellTab"
