@@ -35,6 +35,12 @@ steps:
 
 - template: azure-pipelines-project-template.yml	
   parameters:	
+    project: Blastic.CodeGeneration
+    version: ${{ variables.version }}
+    buildConfiguration: ${{ variables.buildConfiguration }}
+
+- template: azure-pipelines-project-template.yml	
+  parameters:	
     project: Blastic.Data
     version: ${{ variables.version }}
     buildConfiguration: ${{ variables.buildConfiguration }}
