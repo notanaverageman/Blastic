@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.Reactive;
@@ -6,11 +8,39 @@ using Blastic.Services.Settings;
 
 namespace Blastic.Settings
 {
+	/// <inheritdoc />
+	public class SelectionSetting<T> : SelectionSetting<T, T>
+	{
+		/// <inheritdoc />
+		public SelectionSetting(
+			ISettingsStorage settingsStorage,
+			IPresenterSource presenterSource,
+			string key,
+			T defaultValue,
+			IEnumerable<T> allValues)
+			:
+			base(settingsStorage, presenterSource, key, defaultValue, allValues)
+		{
+		}
+
+		/// <inheritdoc />
+		protected override Task<T> GetValueAfterRead(T value, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(value);
+		}
+
+		/// <inheritdoc />
+		protected override Task<T> GetValueBeforeSave(T value, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(value);
+		}
+	}
+	
 	/// <summary>
 	/// A setting that stores a generic value that is selected among multiple choices.
 	/// Corresponds to a dropdown on UI.
 	/// </summary>
-	public class SelectionSetting<T> : Setting<T>
+	public abstract class SelectionSetting<T, TStored> : Setting<T, TStored>
 	{
 		/// <summary>
 		/// Field to customize the UI behavior.
@@ -21,7 +51,7 @@ namespace Blastic.Settings
 		public override IElement Element => SelectionField;
 
 		/// <summary>
-		/// Creates a new instance of <see cref="Setting"/>
+		/// Creates a new instance of <see cref="SelectionSetting{T,TStored}"/>
 		/// </summary>
 		/// <param name="settingsStorage">The settings storage.</param>
 		/// <param name="presenterSource">The presenter source.</param>

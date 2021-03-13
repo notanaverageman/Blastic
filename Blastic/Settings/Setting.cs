@@ -28,6 +28,11 @@ namespace Blastic.Settings
 		public IReactiveProperty<bool> ShowOnUI { get; }
 
 		/// <summary>
+		/// If set to true, setting will be saved to storage whenever its value changes.
+		/// </summary>
+		public bool SaveOnChange { get; set; }
+
+		/// <summary>
 		/// Lifetime object that initates the read and save operations.
 		/// </summary>
 		public ILifetime Lifetime { get; }
@@ -146,9 +151,11 @@ namespace Blastic.Settings
 	/// An individual setting.
 	/// </summary>
 	/// <typeparam name="T">Type of the value.</typeparam>
-	public abstract class Setting<T> : Setting
+	/// <typeparam name="TStored">Type of the object to store.</typeparam>
+	public abstract class Setting<T, TStored> : Setting
 	{
 		private IDisposable? _isEnabledSubscription;
+		private bool _isReadingValue;
 
 		/// <summary>
 		/// Default value to be used when key does not exist in store.
@@ -159,7 +166,7 @@ namespace Blastic.Settings
 		/// This property will be bound to the setting UI. Use this property while
 		/// checking for errors.
 		/// </summary>
-		public ReactiveProperty<T> ReactiveSettingValue { get; set; }
+		public ReactiveProperty<T> ReactiveSettingValue { get; }
 
 		/// <summary>
 		/// This property will be bound to the setting UI. Use this property while
@@ -170,7 +177,7 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Use this property to check for the effective value of the setting.
 		/// </summary>
-		public ReactiveProperty<T> ReactiveValue { get; set; }
+		public ReactiveProperty<T> ReactiveValue { get; }
 
 		/// <summary>
 		/// Use this property to check for the effective value of the setting.
@@ -206,22 +213,26 @@ namespace Blastic.Settings
 		/// <inheritdoc />
 		public override async Task Read(CancellationToken cancellationToken)
 		{
+			_isReadingValue = true;
+			
 			_isEnabledSubscription?.Dispose();
 			_isEnabledSubscription = Element.IsEnabled.Subscribe(_ => ReactiveSettingValue.TriggerValidation());
 
-			object defaultValue = await GetValueBeforeSave(DefaultValue, cancellationToken);
-			object storageValue = (await SettingsStorage.Get(Key, defaultValue, cancellationToken))!;
+			TStored defaultValue = await GetValueBeforeSave(DefaultValue, cancellationToken);
+			TStored storageValue = (await SettingsStorage.Get(Key, defaultValue, cancellationToken))!;
 
 			T value = await GetValueAfterRead(storageValue, cancellationToken);
 
 			ReactiveValue.Value = value;
 			ReactiveSettingValue.Value = value;
+
+			_isReadingValue = false;
 		}
 
 		/// <inheritdoc />
 		public override async Task Save(CancellationToken cancellationToken)
 		{
-			object value = await GetValueBeforeSave(SettingValue, cancellationToken);
+			TStored value = await GetValueBeforeSave(SettingValue, cancellationToken);
 
 			await SettingsStorage.Put(Key, value, cancellationToken);
 			ReactiveValue.Value = SettingValue;
@@ -230,32 +241,18 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Return the setting value corresponding to the value read from store.
 		/// </summary>
-		/// <remarks>
-		/// Override <see cref="GetValueBeforeSave"/> to implement the forward conversion.
-		/// By default the sent value is returned.
-		/// </remarks>
 		/// <param name="value">Value read from store.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Return the same object or the setting value constructed from sent value.</returns>
-		protected virtual Task<T> GetValueAfterRead(object value, CancellationToken cancellationToken)
-		{
-			return Task.FromResult((T) value);
-		}
+		protected abstract Task<T> GetValueAfterRead(TStored value, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Return an object to save to the storage.
 		/// </summary>
-		/// <remarks>
-		/// If the returned value is not equal to the sent value, override <see cref="GetValueAfterRead"/> to implement
-		/// the back conversion. By default the sent value is returned.
-		/// </remarks>
 		/// <param name="value">Value to write to store.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Return the same object or the value represents the setting value.</returns>
-		protected virtual Task<object> GetValueBeforeSave(T value, CancellationToken cancellationToken)
-		{
-			return Task.FromResult((object) value!);
-		}
+		protected abstract Task<TStored> GetValueBeforeSave(T value, CancellationToken cancellationToken);
 
 		/// <inheritdoc />
 		public override void Revert()
@@ -263,7 +260,7 @@ namespace Blastic.Settings
 			ReactiveSettingValue.Value = Value;
 		}
 
-		private void OnSettingValueChanged()
+		private async void OnSettingValueChanged()
 		{
 			DiagnosticMessages.Clear();
 
@@ -273,6 +270,47 @@ namespace Blastic.Settings
 			}
 
 			PopulateDiagnosticMessages();
+
+			if (SaveOnChange && !_isReadingValue)
+			{
+				await Save(CancellationToken.None);
+			}
+		}
+	}
+
+	/// <summary>
+	/// An individual setting.
+	/// </summary>
+	/// <typeparam name="T">Type of the value.</typeparam>
+	public abstract class Setting<T> : Setting<T, T>
+	{
+		/// <summary>
+		/// Creates a new instance of <see cref="Setting"/>
+		/// </summary>
+		/// <param name="settingsStorage">The settings storage.</param>
+		/// <param name="presenterSource">The presenter source.</param>
+		/// <param name="key">Key that is used when reading from or writing to the store.</param>
+		/// <param name="defaultValue">Default value to be used when key does not exist in store.</param>
+		public Setting(
+			ISettingsStorage settingsStorage,
+			IPresenterSource presenterSource,
+			string key,
+			T defaultValue)
+			:
+			base(settingsStorage, presenterSource, key, defaultValue)
+		{
+		}
+
+		/// <inheritdoc cref="Setting{T,TStored}.GetValueAfterRead"/>
+		protected override Task<T> GetValueAfterRead(T value, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(value);
+		}
+
+		/// <inheritdoc cref="Setting{T,TStored}.GetValueAfterRead"/>
+		protected override Task<T> GetValueBeforeSave(T value, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(value);
 		}
 	}
 }

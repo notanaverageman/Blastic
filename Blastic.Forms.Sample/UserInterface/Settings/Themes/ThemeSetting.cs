@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 {
-	public sealed class ThemeSetting : SelectionSetting<LocalizedSettingValue<Theme>>
+	public sealed class ThemeSetting : SelectionSetting<LocalizedSettingValue<Theme>, Theme>
 	{
 		private readonly LocalizableProperties _localizableProperties;
 
@@ -50,26 +50,24 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 					};
 				});
 
-			this.SaveOnChange();
+			SaveOnChange = true;
 		}
 
-		protected override Task<object> GetValueBeforeSave(
+		protected override Task<Theme> GetValueBeforeSave(
 			LocalizedSettingValue<Theme> value,
 			CancellationToken cancellationToken)
 		{
-			return Task.FromResult((object)value.Value);
+			return Task.FromResult(value.Value);
 		}
 
 		protected override Task<LocalizedSettingValue<Theme>> GetValueAfterRead(
-			object value,
+			Theme value,
 			CancellationToken cancellationToken)
 		{
-			Theme theme = (Theme)value;
-
 			return Task.FromResult(
 				new LocalizedSettingValue<Theme>(
-					theme,
-					GetName(_localizableProperties, theme)));
+					value,
+					GetName(_localizableProperties, value)));
 		}
 
 		private static IReadOnlyReactiveProperty<string> GetName(

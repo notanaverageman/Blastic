@@ -11,7 +11,7 @@ using Blastic.Settings;
 
 namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 {
-	public sealed class LanguageSetting : SelectionSetting<LocalizedSettingValue<Language>>
+	public sealed class LanguageSetting : SelectionSetting<LocalizedSettingValue<Language>, Language>
 	{
 		private readonly LocalizableProperties _localizableProperties;
 
@@ -49,18 +49,18 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 					};
 				});
 
-			this.SaveOnChange();
+			SaveOnChange = true;
 		}
 
-		protected override Task<object> GetValueBeforeSave(
+		protected override Task<Language> GetValueBeforeSave(
 			LocalizedSettingValue<Language> value,
 			CancellationToken cancellationToken)
 		{
-			return Task.FromResult((object)value.Value);
+			return Task.FromResult(value.Value);
 		}
 
 		protected override Task<LocalizedSettingValue<Language>> GetValueAfterRead(
-			object value,
+			Language value,
 			CancellationToken cancellationToken)
 		{
 			Language language = (Language)value;
