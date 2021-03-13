@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
 		<LangVersion>preview</LangVersion>
 		<ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
 		<Nullable>enable</Nullable>
@@ -16,7 +17,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="System.Reactive" Version="4.4.1" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Blastic\Blastic.csproj" />
@@ -28,9 +29,6 @@
 		<AdditionalFiles Include="Properties\Resources.tr-tr.resx" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Update="Controls\ChildWindow.cs">
-			<SubType>Code</SubType>
-		</Compile>
 		<Compile Update="Properties\Resources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
@@ -45,19 +43,5 @@
 		<EmbeddedResource Update="Properties\Resources.tr-tr.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 		</EmbeddedResource>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Themes\NotificationAreaView.xaml">
-			<SubType>Designer</SubType>
-		</Page>
-		<Page Update="Themes\BusyIndicator.xaml">
-			<SubType>Designer</SubType>
-		</Page>
-		<Page Update="Themes\ChildWindow.xaml">
-			<SubType>Designer</SubType>
-		</Page>
-		<Page Update="Themes\DualView.xaml">
-			<SubType>Designer</SubType>
-		</Page>
 	</ItemGroup>
 </Project>
