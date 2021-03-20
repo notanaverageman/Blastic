@@ -5,19 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Blastic.Data;
 using Blastic.DynamicControls;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
-using Blastic.Services.Settings;
 using Blastic.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
-using Blastic.Wpf.Data.ProgramData;
-using Blastic.Wpf.Data.ProgramData.Migrations;
 using Blastic.Wpf.DynamicControls;
 using Blastic.Wpf.Initialization.Extensions;
 using Blastic.Wpf.Platform;
@@ -25,7 +21,6 @@ using Blastic.Wpf.Properties;
 using Blastic.Wpf.Services.Dialog;
 using Blastic.Wpf.Services.Windowing;
 using Blastic.Wpf.UserInterface.Logs;
-using Blastic.Wpf.UserInterface.Settings;
 using Blastic.Wpf.ViewManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -93,26 +88,6 @@ namespace Blastic.Wpf.Initialization
 			return this;
 		}
 
-		public BlasticApplicationBuilder AddSettingsService<T>() where T : class, ISettingsStorage
-		{
-			_serviceCollection.AddSingleton<SettingsViewModel>();
-			_serviceCollection.AddSingleton<ISettingsStorage, T>();
-
-			return this;
-		}
-
-		public BlasticApplicationBuilder AddProgramDatabase(DatabaseProvider databaseProvider, string connectionString)
-		{
-			DatabaseConfiguration databaseConfiguration = new(databaseProvider, connectionString);
-
-			_serviceCollection.AddSingleton(_ => databaseConfiguration);
-			_serviceCollection.AddSingleton<ConnectionFactory>();
-			_serviceCollection.AddSingleton<ProgramDatabase>();
-			_serviceCollection.AddSingleton<ProgramDatabaseMigrationBase, CreateSettingsTable>();
-
-			return this;
-		}
-
 		public BlasticApplicationBuilder AddLogsWindow()
 		{
 			_serviceCollection.AddSingleton<UILogger>();
@@ -159,9 +134,6 @@ namespace Blastic.Wpf.Initialization
 			//_serviceCollection.AddSingleton<ILocalizationSource>(new LocalizationSource(Order.AbsoluteMaximum));
 
 			AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
-
-			AddTypeMapper<SettingGroup, FormSettingSectionView>(new Order(int.MaxValue));
-			AddTypeMapper<SettingsViewModel, SettingsView>(new Order(int.MaxValue));
 			AddTypeMapper(new SuffixTypeMapper("View", "ViewModel", Order.AbsoluteMaximum));
 		}
 

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using Blastic.Data;
+using Blastic.Data.Migrations;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.Data.Migrations;
@@ -83,13 +84,7 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 				x.AddSingleton(_ => databaseConfiguration);
 				x.AddSingleton<ConnectionFactory>();
 				x.AddSingleton<ProgramDatabase>();
-
-				AddMigration<CreateBooksTable>();
-
-				void AddMigration<T>() where T : ProgramDatabaseMigrationBase
-				{
-					x.AddSingleton<ProgramDatabaseMigrationBase, T>();
-				}
+				x.AddSingleton<MigrationBase, CreateBooksTable>();
 			});
 
 			return hostBuilder;

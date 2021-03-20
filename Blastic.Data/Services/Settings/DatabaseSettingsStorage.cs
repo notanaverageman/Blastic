@@ -2,27 +2,26 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Services.Settings;
-using Blastic.Wpf.Data.ProgramData;
 
-namespace Blastic.Wpf.Services.Settings
+namespace Blastic.Data.Services.Settings
 {
 	public class DatabaseSettingsStorage : ISettingsStorage
 	{
-		private readonly ProgramDatabase _database;
+		private readonly SettingsTable _settingsTable;
 
-		public DatabaseSettingsStorage(ProgramDatabase database)
+		public DatabaseSettingsStorage(SettingsTable settingsTable)
 		{
-			_database = database;
+			_settingsTable = settingsTable;
 		}
 
 		public async Task<bool> Contains(string key, CancellationToken cancellationToken)
 		{
-			return await _database.SettingsTable.Contains(key, cancellationToken);
+			return await _settingsTable.Contains(key, cancellationToken);
 		}
 
 		public async Task<T> Get<T>(string key, T defaultValue, CancellationToken cancellationToken)
 		{
-			string serializedData = await _database.SettingsTable.Get(key, cancellationToken);
+			string? serializedData = await _settingsTable.Get(key, cancellationToken);
 
 			if (serializedData == null)
 			{
@@ -35,12 +34,12 @@ namespace Blastic.Wpf.Services.Settings
 		public async Task Put<T>(string key, T value, CancellationToken cancellationToken)
 		{
 			string serializedData = JsonSerializer.Serialize(value);
-			await _database.SettingsTable.Put(key, serializedData, cancellationToken);
+			await _settingsTable.Put(key, serializedData, cancellationToken);
 		}
 
 		public async Task Delete(string key, CancellationToken cancellationToken)
 		{
-			await _database.SettingsTable.Delete(key, cancellationToken);
+			await _settingsTable.Delete(key, cancellationToken);
 		}
 	}
 }

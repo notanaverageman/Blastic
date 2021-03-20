@@ -1,14 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Data;
+using Blastic.Data.Migrations;
 using Blastic.Data.ProviderSpecific;
 using Blastic.Ordering;
 
 namespace Blastic.Forms.Sample.Data.Migrations
 {
-	public class CreateBooksTable : ProgramDatabaseMigrationBase
+	public class CreateBooksTable : MigrationBase
 	{
-		public override Version Version { get; } = new Version(1, 0, 0);
+		public override Version Version { get; } = new(1, 0, 0);
 
 		public override async Task MigrateUp(Connection connection, CancellationToken cancellationToken)
 		{

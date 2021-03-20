@@ -1,9 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Data;
 using Blastic.Data.Tables;
 
-namespace Blastic.Wpf.Data.ProgramData.Tables
+namespace Blastic.Data.Services.Settings
 {
 	public class SettingsTable : TableBase
 	{
@@ -11,7 +10,7 @@ namespace Blastic.Wpf.Data.ProgramData.Tables
 		{
 		}
 
-		public async Task<string> Get(string key, CancellationToken cancellationToken)
+		public async Task<string?> Get(string key, CancellationToken cancellationToken)
 		{
 			using Connection connection = ConnectionFactory.CreateConnection();
 			using Command command = connection.CreateCommand();

@@ -8,11 +8,10 @@ using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Wpf.Commanding;
-using Blastic.Wpf.UserInterface.TabbedMain;
 
 namespace Blastic.Wpf.Sample.UserInterface
 {
-	public partial class MainViewModel : IMainTab
+	public partial class MainViewModel : IHasLifetime
 	{
 		private static readonly IReadOnlyList<string> CityNames = new[]
 		{

@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Data;
+using Blastic.Data.Migrations;
 using Blastic.Data.ProviderSpecific;
 using Blastic.Ordering;
 
-namespace Blastic.Wpf.Data.ProgramData.Migrations
+namespace Blastic.Data.Services.Settings
 {
-	public class CreateSettingsTable : ProgramDatabaseMigrationBase
+	public class CreateSettingsTable : MigrationBase
 	{
-		public override Version Version { get; } = new Version(int.MinValue, 1, 0);
+		public override Version Version { get; } = new(int.MinValue, 1, 0);
 
 		public override async Task MigrateUp(Connection connection, CancellationToken cancellationToken)
 		{

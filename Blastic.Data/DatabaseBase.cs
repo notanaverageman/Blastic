@@ -11,24 +11,24 @@ using Version = Blastic.Ordering.Version;
 
 namespace Blastic.Data
 {
-	public abstract class DatabaseBase<T> where T : MigrationBase
+	public abstract class DatabaseBase
 	{
 		private readonly List<MigrationBase> _migrations;
 
-		protected ILogger<DatabaseBase<T>> Logger { get; }
+		protected ILogger<DatabaseBase> Logger { get; }
 
 		public DatabaseInformationTable DatabaseInformationTable { get; }
 		public ConnectionFactory ConnectionFactory { get; }
 
 		protected DatabaseBase(
 			ConnectionFactory connectionFactory,
-			ILogger<DatabaseBase<T>> logger,
-			IEnumerable<T> migrations)
+			ILogger<DatabaseBase> logger,
+			IEnumerable<MigrationBase> migrations)
 		{
 			ConnectionFactory = connectionFactory;
 			Logger = logger;
 
-			_migrations = migrations.Cast<MigrationBase>().ToList();
+			_migrations = migrations.ToList();
 			_migrations.Insert(0, new CreateDatabaseInformationTable());
 
 			DatabaseInformationTable = new DatabaseInformationTable(connectionFactory);
@@ -36,7 +36,7 @@ namespace Blastic.Data
 
 		public TransactionScope CreateTransactionScope()
 		{
-			return new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+			return new(TransactionScopeAsyncFlowOption.Enabled);
 		}
 
 		public async Task<bool> IsMigrationAvailable(CancellationToken cancellationToken)
