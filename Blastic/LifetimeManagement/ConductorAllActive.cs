@@ -1,5 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Platform;
+using DynamicData;
 
 namespace Blastic.LifetimeManagement
 {
@@ -9,14 +11,6 @@ namespace Blastic.LifetimeManagement
 	/// <typeparam name="T">A type with a lifetime.</typeparam>
 	public class ConductorAllActive<T> : ConductorBase<T> where T : IHasLifetime
 	{
-		/// <summary>
-		/// Creates a new instance.
-		/// </summary>
-		public ConductorAllActive()
-		{
-			InitializeChildLifetimeSubscriptions();
-		}
-
 		/// <summary>
 		/// Activate the given item. The item is added to the children it it is not added before.
 		/// </summary>
@@ -32,7 +26,7 @@ namespace Blastic.LifetimeManagement
 
 			if (!Items.Contains(item))
 			{
-				Items.Add(item);
+				ItemsSource.Add(item);
 			}
 
 			await item.Lifetime.Activate(cancellationToken);
@@ -48,7 +42,7 @@ namespace Blastic.LifetimeManagement
 		{
 			if (!Items.Contains(item))
 			{
-				Items.Add(item);
+				ItemsSource.Add(item);
 			}
 
 			await item.Lifetime.Deactivate(cancellationToken);

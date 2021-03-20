@@ -1,19 +1,30 @@
-﻿using System;
-using Blastic.Reactive;
+using System;
+using System.Collections.ObjectModel;
+using System.Reactive.Disposables;
+using Blastic.Platform;
+using DynamicData;
 using Microsoft.Extensions.Logging;
 
 namespace Blastic.Wpf.UserInterface.Logs
 {
-	internal class UILogger : ILogger
+	public class UILogger : ILogger
 	{
-		public static readonly UILogger Instance = new UILogger();
+		private readonly SourceList<Log> _logs;
 
-		public ReactiveCollection<Log> Logs { get; }
+		public ReadOnlyObservableCollection<Log> Logs { get; }
 		public LogLevel MinimumLogLevel { get; set; }
 
-		private UILogger()
+		public UILogger(IPlatformSpecifics platformSpecifics)
 		{
-			Logs = new ReactiveCollection<Log>();
+			_logs = new SourceList<Log>();
+
+			_logs
+				.Connect()
+				.ObserveOnUI(platformSpecifics)
+				.Bind(out ReadOnlyObservableCollection<Log> logs)
+				.Subscribe();
+			
+			Logs = logs;
 		}
 
 		public void Log<TState>(
@@ -28,16 +39,14 @@ namespace Blastic.Wpf.UserInterface.Logs
 				return;
 			}
 
-			Log log = new Log
+			Log log = new()
 			{
 				Date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),
 				Level = logLevel,
 				Message = formatter(state, exception)
 			};
-
-			// ReactiveCollection should be thread safe as it modifies the internal collection
-			// only on UI thread.
-			Logs.Add(log);
+			
+			_logs.Add(log);
 		}
 
 		public bool IsEnabled(LogLevel logLevel)
@@ -47,19 +56,12 @@ namespace Blastic.Wpf.UserInterface.Logs
 
 		public IDisposable BeginScope<TState>(TState state)
 		{
-			return null;
-		}
-	}
-
-	internal class UILoggerProvider : ILoggerProvider
-	{
-		public void Dispose()
-		{
+			return Disposable.Empty;
 		}
 
-		public ILogger CreateLogger(string categoryName)
+		public void Clear()
 		{
-			return UILogger.Instance;
+			_logs.Clear();
 		}
 	}
 }

@@ -9,18 +9,18 @@ namespace Blastic.Forms.Platform
 {
 	public class FormsPlatformSpecifics : IPlatformSpecifics
 	{
-		private readonly SynchronizationContext _synchronizationContext;
+		public IScheduler UIThreadScheduler { get; }
 
 		public FormsPlatformSpecifics(SynchronizationContext synchronizationContext)
 		{
-			_synchronizationContext = synchronizationContext;
+			UIThreadScheduler = new SynchronizationContextScheduler(synchronizationContext);
 		}
 
 		public IObservable<T> ObserveOnUI<T>(IObservable<T> observable)
 		{
 			return Synchronization.ObserveOn(
 				observable,
-				_synchronizationContext);
+				UIThreadScheduler);
 		}
 
 		public void OnUIThread(Action action)

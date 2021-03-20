@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Diagnostics;
@@ -6,6 +7,7 @@ using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
 using Blastic.Reactive;
 using Blastic.Services.Settings;
+using DynamicData;
 
 namespace Blastic.Settings
 {
@@ -15,6 +17,11 @@ namespace Blastic.Settings
 	public abstract class Setting : IHasLifetime
 	{
 		private readonly IPresenterSource _presenterSource;
+
+		/// <summary>
+		/// Items source for diagnostic messages that is populated when a validation occurs.
+		/// </summary>
+		protected SourceList<DiagnosticMessage> DiagnosticMessagesSource { get; }
 
 		/// <summary>
 		/// Settings storage that is used when reading or writing values.
@@ -55,7 +62,7 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Collection of diagnostic messages that is populated when a validation occurs.
 		/// </summary>
-		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; }
+		public ReadOnlyObservableCollection<DiagnosticMessage> DiagnosticMessages { get; }
 
 		/// <summary>
 		/// Creates a new instance of <see cref="Setting"/>
@@ -69,13 +76,20 @@ namespace Blastic.Settings
 			string key)
 		{
 			_presenterSource = presenterSource;
+			DiagnosticMessagesSource = new SourceList<DiagnosticMessage>();
 
 			SettingsStorage = settingsStorage;
 			Key = key;
 
 			Lifetime = new Lifetime();
-			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
 			ShowOnUI = new ReactiveProperty<bool>(true);
+
+			DiagnosticMessagesSource
+				.Connect()
+				.Bind(out ReadOnlyObservableCollection<DiagnosticMessage> diagnosticMessages)
+				.Subscribe();
+
+			DiagnosticMessages = diagnosticMessages;
 
 			Lifetime.Initialization.Subscribe(Read);
 
@@ -135,14 +149,14 @@ namespace Blastic.Settings
 
 			if (!string.IsNullOrEmpty(error))
 			{
-				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, error!));
+				DiagnosticMessagesSource.Add(new DiagnosticMessage(Severity.Error, error!));
 			}
 
 			IReadOnlyReactiveProperty<string>? errorProperty = CheckErrorReactive();
 
 			if (errorProperty != null)
 			{
-				DiagnosticMessages.Add(new DiagnosticMessage(Severity.Error, errorProperty));
+				DiagnosticMessagesSource.Add(new DiagnosticMessage(Severity.Error, errorProperty));
 			}
 		}
 	}
@@ -262,7 +276,7 @@ namespace Blastic.Settings
 
 		private async void OnSettingValueChanged()
 		{
-			DiagnosticMessages.Clear();
+			DiagnosticMessagesSource.Clear();
 
 			if (Element.IsEnabled.Value != true)
 			{
@@ -271,7 +285,7 @@ namespace Blastic.Settings
 
 			PopulateDiagnosticMessages();
 
-			if (SaveOnChange && !_isReadingValue)
+			if (SaveOnChange && !_isReadingValue && DiagnosticMessages.Count == 0)
 			{
 				await Save(CancellationToken.None);
 			}

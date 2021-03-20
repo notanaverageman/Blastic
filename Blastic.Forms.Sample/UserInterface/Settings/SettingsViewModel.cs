@@ -6,6 +6,7 @@ using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
 using Blastic.Reactive;
+using DynamicData;
 
 namespace Blastic.Forms.Sample.UserInterface.Settings
 {
@@ -30,8 +31,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings
 			Title = localizableProperties.Settings.Title;
 			IconGlyph = new ReactiveProperty<string>(IconFont.Settings);
 
-			Items.Add(ThemeSettings);
-			Items.Add(LanguageSettings);
+			ItemsSource.Add(ThemeSettings);
+			ItemsSource.Add(LanguageSettings);
 		}
 	}
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,16 +8,21 @@ using Blastic.Commanding;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
+using Blastic.Platform;
 using Blastic.Reactive;
+using Blastic.Settings;
+using DynamicData;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Wpf.UserInterface.Settings
 {
-	public class SettingsViewModel : ConductorAllActive<ISettingsSectionViewModel>
+	public class SettingsViewModel : ConductorAllActive<SettingGroup>
 	{
+		private readonly SourceList<DiagnosticMessage> _diagnosticMessages;
+		
 		public ExecutionContext ExecutionContext { get; }
 
-		public ReactiveCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
+		public ReadOnlyObservableCollection<DiagnosticMessage> DiagnosticMessages { get; set; }
 
 		public TaskCompletionSource<bool>? ShowDiagnosticMessagesTaskCompletionSource { get; set; }
 		public ReactiveProperty<bool> IsDiagnosticMessagesVisible { get; set; }
@@ -26,14 +33,24 @@ namespace Blastic.Wpf.UserInterface.Settings
 		public Command HideDiagnosticMessagesCommand { get; }
 		public Command HideDiagnosticMessagesIgnoreErrorsCommand { get; }
 		
-		public SettingsViewModel(IEnumerable<ISettingsSectionViewModel> sections)
+		public SettingsViewModel(
+			IPlatformSpecifics platformSpecifics,
+			IEnumerable<SettingGroup> groups)
 		{
-			ExecutionContext = new ExecutionContext();
+			_diagnosticMessages = new SourceList<DiagnosticMessage>();
+
+			_diagnosticMessages
+				.Connect()
+				.ObserveOnUI(platformSpecifics)
+				.Bind(out ReadOnlyObservableCollection<DiagnosticMessage> diagnosticMessages)
+				.Subscribe();
+
+			DiagnosticMessages = diagnosticMessages;
 			
-			DiagnosticMessages = new ReactiveCollection<DiagnosticMessage>();
+			ExecutionContext = new ExecutionContext();
 			IsDiagnosticMessagesVisible = new ReactiveProperty<bool>();
 
-			Items.AddRange(sections);
+			ItemsSource.AddRange(groups);
 
 			SaveCommand = new Command(Save);
 			CancelCommand = new Command(Cancel);
@@ -46,12 +63,12 @@ namespace Blastic.Wpf.UserInterface.Settings
 		{
 			async Task Check(CancellationToken c)
 			{
-				DiagnosticMessages.Clear();
+				_diagnosticMessages.Clear();
 
-				foreach (ISettingsSectionViewModel item in Items)
+				foreach (SettingGroup item in Items)
 				{
 					IEnumerable<DiagnosticMessage> diagnosticMessages = await item.GetDiagnosticMessages(c);
-					DiagnosticMessages.AddRange(diagnosticMessages);
+					_diagnosticMessages.AddRange(diagnosticMessages);
 				}
 			}
 
@@ -76,7 +93,7 @@ namespace Blastic.Wpf.UserInterface.Settings
 		private Task<bool> ShowDiagnosticMessages()
 		{
 			// Initialize if the task is null or already completed.
-			if (ShowDiagnosticMessagesTaskCompletionSource?.Task?.IsCompleted != false)
+			if (ShowDiagnosticMessagesTaskCompletionSource?.Task.IsCompleted != false)
 			{
 				ShowDiagnosticMessagesTaskCompletionSource = new TaskCompletionSource<bool>();
 			}

@@ -59,7 +59,7 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<string?> property,
 			Action<TextField>? configure = null) where T : IElementContainer
 		{
-			TextField element = new TextField(property);
+			TextField element = new(property);
 			container.AddElement(element, configure);
 
 			return container;
@@ -70,7 +70,7 @@ namespace Blastic.DynamicControls
 			IReadOnlyReactiveProperty<string?> property,
 			Action<LabelField>? configure = null) where T : IElementContainer
 		{
-			LabelField element = new LabelField(property);
+			LabelField element = new(property);
 			container.AddElement(element, configure);
 
 			return container;
@@ -89,7 +89,7 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<string> property,
 			Action<PasswordField>? configure = null) where T : IElementContainer
 		{
-			PasswordField element = new PasswordField(property);
+			PasswordField element = new(property);
 			container.AddElement(element, configure);
 
 			return container;
@@ -100,7 +100,7 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<int> property,
 			Action<TextField>? configure = null) where T : IElementContainer
 		{
-			TextField element = new TextField(property)
+			TextField element = new(property)
 			{
 				Mask =
 				{
@@ -122,7 +122,7 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<double> property,
 			Action<TextField>? configure = null) where T : IElementContainer
 		{
-			TextField element = new TextField(property)
+			TextField element = new(property)
 			{
 				Mask =
 				{
@@ -144,7 +144,7 @@ namespace Blastic.DynamicControls
 			IReactiveProperty<bool> property,
 			Action<BooleanField>? configure = null) where T : IElementContainer
 		{
-			BooleanField element = new BooleanField(property);
+			BooleanField element = new(property);
 			container.AddElement(element, configure);
 
 			return container;
@@ -153,10 +153,10 @@ namespace Blastic.DynamicControls
 		public static T AddSelection<T, TSelection>(
 			this T container,
 			IReactiveProperty<TSelection> property,
-			ReactiveCollection<TSelection> values,
+			IEnumerable<TSelection> values,
 			Action<SelectionField<TSelection>>? configure = null) where T : IElementContainer
 		{
-			SelectionField<TSelection> element = new SelectionField<TSelection>(property, values);
+			SelectionField<TSelection> element = new(property, values);
 			container.AddElement(element, configure);
 
 			return container;
@@ -167,7 +167,7 @@ namespace Blastic.DynamicControls
 			Command command,
 			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
-			ActionElement element = new ActionElement(command);
+			ActionElement element = new(command);
 			container.AddElement(element, configure);
 
 			return container;
@@ -193,7 +193,7 @@ namespace Blastic.DynamicControls
 			this T container,
 			Action<GroupElement>? configure = null) where T : IElementContainer
 		{
-			GroupElement element = new GroupElement();
+			GroupElement element = new();
 			container.AddElement(element, configure);
 
 			return container;

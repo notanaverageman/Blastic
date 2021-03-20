@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Blastic.Ordering;
-using Blastic.Reactive;
+using Blastic.Platform;
+using DynamicData;
 
 namespace Blastic.LifetimeManagement
 {
@@ -16,11 +18,16 @@ namespace Blastic.LifetimeManagement
 
 		/// <inheritdoc />
 		public ILifetime Lifetime { get; }
-		
+
+		/// <summary>
+		/// Children of this object as <see cref="ISourceList{T}"/>
+		/// </summary>
+		public ISourceList<T> ItemsSource { get; }
+
 		/// <summary>
 		/// Children of this object.
 		/// </summary>
-		public ReactiveCollection<T> Items { get; }
+		public ReadOnlyObservableCollection<T> Items { get; }
 
 		/// <summary>
 		/// Options for managing the children.
@@ -43,81 +50,86 @@ namespace Blastic.LifetimeManagement
 		{
 			_lifetimeSubscriptions = new Dictionary<T, IDisposable>();
 
-			Lifetime = new Lifetime();
-			Items = new ReactiveCollection<T>();
-
 			ConductorOptions = conductorOptions ?? new ConductorOptions();
 			LifetimeChainOptions = lifetimeChainOptions ?? new LifetimeChainOptions();
-		}
+			
+			Lifetime = new Lifetime();
+			ItemsSource = new SourceList<T>();
 
-		/// <summary>
-		/// Subscribe to the collection changed events of <see cref="Items"/> to manage
-		/// the lifecycles of children.
-		/// </summary>
-		protected void InitializeChildLifetimeSubscriptions()
-		{
+			ItemsSource
+				.Connect()
+				.ObserveOnUI()
+				.Bind(out ReadOnlyObservableCollection<T> items)
+				.DisposeMany()
+				.Subscribe(ItemsChanged);
+
+			Items = items;
+
 			if (ConductorOptions.ClearItemsOnDeinitialize)
 			{
 				Lifetime.Closure.Subscribe(() =>
 				{
-					Items.Clear();
+					ItemsSource.Clear();
 				}, Order.AbsoluteMaximum);
 			}
+		}
 
-			void AddChildren(IEnumerable<T> items)
+		private void ItemsChanged(IChangeSet<T> changeSet)
+		{
+			void HandleAdd(T item)
 			{
-				foreach (T item in items)
+				if (_lifetimeSubscriptions.ContainsKey(item))
 				{
-					if (_lifetimeSubscriptions.ContainsKey(item))
-					{
-						continue;
-					}
+					return;
+				}
 
-					_lifetimeSubscriptions[item] = Lifetime.AddChildLifetime(item.Lifetime, LifetimeChainOptions);
+				_lifetimeSubscriptions[item] = Lifetime.AddChildLifetime(item.Lifetime, LifetimeChainOptions);
+			}
+
+			void HandleRemove(T item)
+			{
+				if (!_lifetimeSubscriptions.TryGetValue(item, out IDisposable subscription))
+				{
+					return;
+				}
+
+				subscription.Dispose();
+				_lifetimeSubscriptions.Remove(item);
+			}
+
+			foreach (Change<T> change in changeSet)
+			{
+				switch (change.Reason)
+				{
+					case ListChangeReason.Add:
+						HandleAdd(change.Item.Current);
+						break;
+
+					case ListChangeReason.AddRange:
+						foreach (T item in change.Range)
+						{
+							HandleAdd(item);
+						}
+						break;
+
+					case ListChangeReason.Remove:
+						HandleRemove(change.Item.Current);
+						break;
+
+					case ListChangeReason.RemoveRange:
+					case ListChangeReason.Clear:
+						foreach (T item in change.Range)
+						{
+							HandleRemove(item);
+						}
+						break;
+					
+					case ListChangeReason.Replace:
+						HandleRemove(change.Item.Previous.Value);
+						HandleAdd(change.Item.Current);
+						break;
 				}
 			}
-
-			void RemoveChildren(IEnumerable<T> items)
-			{
-				foreach (T item in items)
-				{
-					if (!_lifetimeSubscriptions.TryGetValue(item, out IDisposable subscription))
-					{
-						continue;
-					}
-
-					subscription.Dispose();
-					_lifetimeSubscriptions.Remove(item);
-				}
-			}
-
-			void ReplaceChildren((T[] OldItems, T[] NewItems) items)
-			{
-				RemoveChildren(items.OldItems);
-				AddChildren(items.NewItems);
-			}
-
-			void ResetChildren()
-			{
-				RemoveChildren(Items);
-				AddChildren(Items);
-			}
-
-			Items
-				.ObserveAdd<T>()
-				.Subscribe(AddChildren);
-
-			Items
-				.ObserveRemove<T>()
-				.Subscribe(RemoveChildren);
-
-			Items
-				.ObserveReplace<T>()
-				.Subscribe(ReplaceChildren);
-
-			Items
-				.ObserveReset()
-				.Subscribe(_ => ResetChildren());
 		}
 	}
 }

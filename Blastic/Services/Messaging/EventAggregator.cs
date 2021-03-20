@@ -10,7 +10,18 @@ namespace Blastic.Services.Messaging
 	/// </summary>
 	public class EventAggregator : IEventAggregator
 	{
-		private readonly Subject<object?> _subject = new Subject<object?>();
+		private readonly IPlatformSpecifics _platformSpecifics;
+		private readonly Subject<object?> _subject;
+
+		/// <summary>
+		/// Creates a new instance of <see cref="EventAggregator"/>.
+		/// </summary>
+		/// <param name="platformSpecifics">Platform specifics to access the UI thread.</param>
+		public EventAggregator(IPlatformSpecifics platformSpecifics)
+		{
+			_platformSpecifics = platformSpecifics;
+			_subject = new Subject<object?>();
+		}
 
 		/// <inheritdoc />
 		public IObservable<T> GetEventBus<T>()
@@ -28,7 +39,7 @@ namespace Blastic.Services.Messaging
 		public IDisposable SubscribeOnUIThread<T>(Action<T> action)
 		{
 			return GetEventBus<T>()
-				.ObserveOnUI()
+				.ObserveOnUI(_platformSpecifics)
 				.Subscribe(action);
 		}
 

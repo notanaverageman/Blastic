@@ -14,5 +14,19 @@ namespace Blastic.Platform
 		{
 			return PlatformSpecifics.Current.ObserveOnUI(observable);
 		}
+		
+		/// <summary>
+		/// Observe the given observable on current platform's UI thread.
+		/// </summary>
+		/// <typeparam name="T">Type of the observable.</typeparam>
+		/// <param name="observable">Observable to observe.</param>
+		/// <param name="platformSpecifics">Platform specifics to access the UI thread.</param>
+		/// <returns>The new observable that emits on UI thread.</returns>
+		public static IObservable<T> ObserveOnUI<T>(
+			this IObservable<T> observable,
+			IPlatformSpecifics platformSpecifics)
+		{
+			return platformSpecifics.ObserveOnUI(observable);
+		}
 	}
 }

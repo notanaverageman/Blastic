@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
-using Blastic.Reactive;
 using Blastic.Services.Settings;
 
 namespace Blastic.Settings
@@ -67,7 +66,7 @@ namespace Blastic.Settings
 			:
 			base(settingsStorage, presenterSource, key, defaultValue)
 		{
-			SelectionField = new SelectionField<T>(ReactiveSettingValue, new ReactiveCollection<T>(allValues));
+			SelectionField = new SelectionField<T>(ReactiveSettingValue, allValues);
 		}
 	}
 }

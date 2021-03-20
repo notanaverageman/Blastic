@@ -9,12 +9,8 @@ namespace Blastic.Services.Notifications
 	public interface INotificationService
 	{
 		/// <summary>
-		/// Maximum number of notifications that can be active. It is -1 by default.
+		/// Maximum number of notifications that can be active. It is <see cref="int.MaxValue"/> by default.
 		/// </summary>
-		/// <remarks>
-		/// If this property is 0, no notifications will be activated. If it is -1,
-		/// then number of active notifications will have no limit.
-		/// </remarks>
 		int MaximumActiveNotificationCount { get; set; }
 
 		/// <summary>

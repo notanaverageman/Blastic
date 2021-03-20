@@ -1,7 +1,10 @@
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Blastic.Ordering;
-using Blastic.Reactive;
+using Blastic.Platform;
+using DynamicData;
 
 namespace Blastic.Services.Notifications
 {
@@ -10,8 +13,8 @@ namespace Blastic.Services.Notifications
 	/// </summary>
 	public class NotificationService : INotificationService
 	{
-		private readonly ObservableCollection<Notification> _notifications;
-		private readonly ObservableCollection<Notification> _activeNotifications;
+		private readonly SourceList<Notification> _notifications;
+		private readonly SourceList<Notification> _activeNotifications;
 		
 		/// <inheritdoc />
 		public int MaximumActiveNotificationCount { get; set; }
@@ -25,15 +28,28 @@ namespace Blastic.Services.Notifications
 		/// <summary>
 		/// Creates a new instance of <see cref="NotificationService"/>.
 		/// </summary>
-		public NotificationService()
+		/// <param name="platformSpecifics">Platform specifics to access the UI thread.</param>
+		public NotificationService(IPlatformSpecifics platformSpecifics)
 		{
-			_notifications = new ReactiveCollection<Notification>();
-			_activeNotifications = new ReactiveCollection<Notification>();
-			
-			Notifications = new ReadOnlyObservableCollection<Notification>(_notifications);
-			ActiveNotifications = new ReadOnlyObservableCollection<Notification>(_activeNotifications);
+			_notifications = new SourceList<Notification>();
+			_activeNotifications = new SourceList<Notification>();
 
-			MaximumActiveNotificationCount = -1;
+			MaximumActiveNotificationCount = int.MaxValue;
+			
+			_notifications
+				.Connect()
+				.ObserveOnUI(platformSpecifics)
+				.Bind(out ReadOnlyObservableCollection<Notification> notifications)
+				.Subscribe();
+
+			_activeNotifications
+				.Connect()
+				.ObserveOnUI(platformSpecifics)
+				.Bind(out ReadOnlyObservableCollection<Notification> activeNotifications)
+				.Subscribe();
+
+			Notifications = notifications;
+			ActiveNotifications = activeNotifications;
 		}
 
 		/// <inheritdoc />
@@ -41,21 +57,27 @@ namespace Blastic.Services.Notifications
 		{
 			await EnqueueWithoutNotifying(notification);
 
-			if (MaximumActiveNotificationCount != 0)
+			if (MaximumActiveNotificationCount <= 0)
 			{
-				_activeNotifications.Add(notification);
+				return;
 			}
 
-			if (MaximumActiveNotificationCount > -1 && ActiveNotifications.Count > MaximumActiveNotificationCount)
+			if (ActiveNotifications.Count >= MaximumActiveNotificationCount)
 			{
-				_activeNotifications.RemoveAt(0);
+				Notification? first = _activeNotifications.Items.FirstOrDefault();
+
+				if (first != null)
+				{
+					await first.Lifetime.Deactivate();
+				}
 			}
 
+			_activeNotifications.Add(notification);
 			await notification.Lifetime.Activate();
 		}
 
 		/// <inheritdoc />
-		public Task EnqueueWithoutNotifying(Notification notification)
+		public async Task EnqueueWithoutNotifying(Notification notification)
 		{
 			_notifications.Add(notification);
 
@@ -67,10 +89,9 @@ namespace Blastic.Services.Notifications
 			notification.Lifetime.Closure.Subscribe(() =>
 			{
 				_notifications.Remove(notification);
-				return Task.CompletedTask;
 			}, Order.AbsoluteMaximum);
-
-			return Task.CompletedTask;
+			
+			await notification.Lifetime.Initialize();
 		}
 	}
 }

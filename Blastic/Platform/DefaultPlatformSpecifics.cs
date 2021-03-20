@@ -1,4 +1,5 @@
 using System;
+using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 
 namespace Blastic.Platform
@@ -9,6 +10,9 @@ namespace Blastic.Platform
 	public class DefaultPlatformSpecifics : IPlatformSpecifics
 	{
 		/// <inheritdoc />
+		public IScheduler UIThreadScheduler => Scheduler.Default;
+
+		/// <inheritdoc />
 		public IObservable<T> ObserveOnUI<T>(IObservable<T> observable)
 		{
 			return observable;
@@ -18,12 +22,6 @@ namespace Blastic.Platform
 		public void OnUIThread(Action action)
 		{
 			action();
-		}
-
-		/// <inheritdoc />
-		public async Task OnUIThread(Func<Task> func)
-		{
-			await func();
 		}
 	}
 }

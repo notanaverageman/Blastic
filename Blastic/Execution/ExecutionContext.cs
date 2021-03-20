@@ -1,8 +1,11 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.DynamicControls;
+using Blastic.Platform;
 using Blastic.Reactive;
+using DynamicData;
 
 namespace Blastic.Execution
 {
@@ -12,9 +15,11 @@ namespace Blastic.Execution
 	/// </summary>
 	public class ExecutionContext
 	{
+		private readonly SourceList<string> _progressDetails;
+		
 		public IReactiveProperty<bool> IsBusy { get; }
 		public IReactiveProperty<string> ProgressMessage { get; }
-		public ReactiveCollection<string> ProgressDetails { get; }
+		public ReadOnlyObservableCollection<string> ProgressDetails { get; }
 
 		public IReactiveProperty<bool> IsCancellationSupported { get; }
 		public CancellationTokenSource CancellationTokenSource { get; private set; }
@@ -24,9 +29,18 @@ namespace Blastic.Execution
 
 		public ExecutionContext()
 		{
+			_progressDetails = new SourceList<string>();
+
+			_progressDetails
+				.Connect()
+				.ObserveOnUI()
+				.Bind(out ReadOnlyObservableCollection<string> progressDetails)
+				.Subscribe();
+
+			ProgressDetails = progressDetails;
+			
 			IsBusy = new ReactiveProperty<bool>();
 			ProgressMessage = new ReactiveProperty<string>();
-			ProgressDetails = new ReactiveCollection<string>();
 
 			IsCancellationSupported = new ReactiveProperty<bool>();
 			CancellationTokenSource = new CancellationTokenSource();
@@ -51,12 +65,12 @@ namespace Blastic.Execution
 					ProgressMessage.Value = progressMessage;
 				}
 
-				ProgressDetails.Clear();
+				_progressDetails.Clear();
 				IsCancellationSupported.Value = isCancellationSupported;
 				
 				if (CancellationTokenSource.IsCancellationRequested)
 				{
-					CancellationTokenSource?.Dispose();
+					CancellationTokenSource.Dispose();
 					CancellationTokenSource = new CancellationTokenSource();
 				}
 
@@ -81,6 +95,11 @@ namespace Blastic.Execution
 					IsBusy.Value = false;
 				}
 			}
+		}
+
+		public void AddProgressDetail(string progressDetail)
+		{
+			_progressDetails.Add(progressDetail);
 		}
 
 		public async Task<bool> ShowForm(DynamicModel form)

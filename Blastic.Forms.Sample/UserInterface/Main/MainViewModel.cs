@@ -10,6 +10,7 @@ using Blastic.Forms.Sample.UserInterface.Notifications;
 using Blastic.Forms.UserInterface;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
+using DynamicData;
 using Microsoft.Extensions.Logging;
 using ExecutionContext = Blastic.Execution.ExecutionContext;
 
@@ -50,7 +51,7 @@ namespace Blastic.Forms.Sample.UserInterface.Main
 				.OrderBy(x => x.Order)
 				.ToList();
 
-			Items.AddRange(tabs);
+			ItemsSource.AddRange(tabs);
 
 			Lifetime.Initialization.Subscribe(
 				async x =>

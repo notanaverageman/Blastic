@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Reactive.Concurrency;
 
 namespace Blastic.Platform
 {
@@ -8,6 +8,11 @@ namespace Blastic.Platform
 	/// </summary>
 	public interface IPlatformSpecifics
 	{
+		/// <summary>
+		/// Scheduler that schedules the work on application's UI thread.
+		/// </summary>
+		IScheduler UIThreadScheduler { get; }
+
 		/// <summary>
 		/// Observe the given observable on platform's UI thread.
 		/// </summary>
@@ -21,11 +26,5 @@ namespace Blastic.Platform
 		/// </summary>
 		/// <param name="action">The action to run on UI thread.</param>
 		void OnUIThread(Action action);
-
-		/// <summary>
-		/// Run the given action on platform's UI thread.
-		/// </summary>
-		/// <param name="func">The action to run on UI thread.</param>
-		Task OnUIThread(Func<Task> func);
 	}
 }

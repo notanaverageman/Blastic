@@ -8,6 +8,7 @@ using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Services.Settings;
 using Blastic.Settings;
+using DynamicData;
 
 namespace Blastic.Forms.Sample.UserInterface.Settings
 {
@@ -33,8 +34,8 @@ namespace Blastic.Forms.Sample.UserInterface.Settings
 				.Select(x => (Setting)x.GetValue(this))
 				.ToList();
 
-			Items.Clear();
-			Items.AddRange(settings);
+			ItemsSource.Clear();
+			ItemsSource.AddRange(settings);
 			
 			foreach (Setting setting in settings)
 			{

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
+using DynamicData;
 
 namespace Blastic.LifetimeManagement
 {
@@ -34,7 +35,7 @@ namespace Blastic.LifetimeManagement
 		public IReactiveProperty<int> ActiveItemIndex { get; }
 
 		/// <summary>
-		/// Creates a new instance.
+		/// Creates a new instance of <see cref="ConductorOneActive{T}"/>.
 		/// </summary>
 		public ConductorOneActive()
 			:
@@ -66,8 +67,6 @@ namespace Blastic.LifetimeManagement
 					await Activate(Items[x]);
 				}
 			});
-
-			InitializeChildLifetimeSubscriptions();
 		}
 
 		/// <summary>
@@ -86,7 +85,7 @@ namespace Blastic.LifetimeManagement
 
 			if (item != null && index < 0)
 			{
-				Items.Add(item);
+				ItemsSource.Add(item);
 				index = Items.Count - 1;
 			}
 
@@ -122,7 +121,7 @@ namespace Blastic.LifetimeManagement
 			CancellationToken cancellationToken = default,
 			bool result = false)
 		{
-			ClosureContext context = new ClosureContext(result);
+			ClosureContext context = new(result);
 
 			await item.Lifetime.Close(cancellationToken, context);
 
@@ -141,7 +140,7 @@ namespace Blastic.LifetimeManagement
 				ActiveItem.Value = _previousActiveItem.Value;
 			}
 
-			Items.Remove(item);
+			ItemsSource.Remove(item);
 		}
 
 		private async Task ChangeActiveItem(CancellationToken cancellationToken)

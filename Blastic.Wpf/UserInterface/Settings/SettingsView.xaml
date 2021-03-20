@@ -8,6 +8,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:settings="clr-namespace:Blastic.Wpf.UserInterface.Settings"
 		xmlns:viewManagement="clr-namespace:Blastic.Wpf.ViewManagement"
+		xmlns:settings1="clr-namespace:Blastic.Settings;assembly=Blastic"
 		Title="Settings"
 		mc:Ignorable="d"
 		d:DataContext="{d:DesignInstance settings:SettingsViewModel}">
@@ -23,9 +24,8 @@
 						  VerticalScrollBarVisibility="Auto">
 				<ItemsControl ItemsSource="{Binding Items}">
 					<ItemsControl.ItemTemplate>
-						<DataTemplate DataType="settings:SettingsSectionViewModel">
-							<Expander Header="{Binding SectionName}"
-									  IsExpanded="{Binding IsExpanded.ReactiveSettingValue.Value}">
+						<DataTemplate DataType="settings1:SettingGroup">
+							<Expander Header="{Binding SectionName.Value}">
 								<ContentControl Margin="32,-8,24,16"
 												HorizontalContentAlignment="Stretch"
 												VerticalContentAlignment="Stretch"
