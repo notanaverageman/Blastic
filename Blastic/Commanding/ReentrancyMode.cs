@@ -1,6 +1,6 @@
 namespace Blastic.Commanding
 {
-	public enum ReentranceMode
+	public enum ReentrancyMode
 	{
 		/// <summary>
 		/// No restriction on reentrancy.

@@ -16,7 +16,7 @@ namespace Blastic.Commanding
 		/// <summary>
 		/// The default order of the actions if their order is not specified.
 		/// </summary>
-		public static readonly Order DefaultOrder = new Order();
+		public static readonly Order DefaultOrder = new();
 
 		/// <inheritdoc />
 		public Command() : this((IObservable<bool>?)null)
@@ -95,8 +95,8 @@ namespace Blastic.Commanding
 	/// </para>
 	/// <para>
 	/// Command's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
-	/// Reentrancy can be disabled by setting <see cref="ReentranceMode"/> method to
-	/// <see cref="Commanding.ReentranceMode.IgnoreReentrant"/> or <see cref="Commanding.ReentranceMode.CancelRunning"/>.
+	/// Reentrancy can be disabled by setting <see cref="ReentrancyMode"/> method to
+	/// <see cref="Commanding.ReentrancyMode.IgnoreReentrant"/> or <see cref="Commanding.ReentrancyMode.CancelRunning"/>.
 	/// </para>
 	/// <para>
 	/// You can register an action via the constructor or the <see cref="Subscribe(Action, Order?)"/> methods.
@@ -130,7 +130,7 @@ namespace Blastic.Commanding
 		/// <summary>
 		/// Property that defines the behavior of the command when it is executed concurrently.
 		/// </summary>
-		public ReentranceMode ReentranceMode { get; set; }
+		public ReentrancyMode ReentrancyMode { get; set; }
 
 		/// <summary>
 		/// Default constructor that creates an always executable <see cref="Command"/>.
@@ -317,7 +317,7 @@ namespace Blastic.Commanding
 		public IDisposable Subscribe(Action action, Order? order = null)
 		{
 			return Subscribe(
-				(x, y) =>
+				(_, _) =>
 				{
 					action();
 					return Task.CompletedTask;
@@ -334,7 +334,7 @@ namespace Blastic.Commanding
 		public IDisposable Subscribe(Action<T> action, Order? order = null)
 		{
 			return Subscribe(
-				(x, y) =>
+				(x, _) =>
 				{
 					action(x);
 					return Task.CompletedTask;
@@ -351,7 +351,7 @@ namespace Blastic.Commanding
 		public IDisposable Subscribe(Action<CancellationToken> action, Order? order = null)
 		{
 			return Subscribe(
-				(x, y) =>
+				(_, y) =>
 				{
 					action(y);
 					return Task.CompletedTask;
@@ -384,7 +384,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable Subscribe(Func<Task> action, Order? order = null)
 		{
-			return Subscribe(async (x, y) => await action(), order);
+			return Subscribe(async (_, _) => await action(), order);
 		}
 
 		/// <summary>
@@ -395,7 +395,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable Subscribe(Func<T, Task> action, Order? order = null)
 		{
-			return Subscribe(async (x, y) => await action(x), order);
+			return Subscribe(async (x, _) => await action(x), order);
 		}
 
 		/// <summary>
@@ -406,7 +406,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable Subscribe(Func<CancellationToken, Task> action, Order? order = null)
 		{
-			return Subscribe(async (x, y) => await action(y), order);
+			return Subscribe(async (_, y) => await action(y), order);
 		}
 
 		/// <summary>
@@ -459,7 +459,7 @@ namespace Blastic.Commanding
 				return;
 			}
 
-			if (_isExecuting.Value && ReentranceMode == ReentranceMode.IgnoreReentrant)
+			if (_isExecuting.Value && ReentrancyMode == ReentrancyMode.IgnoreReentrant)
 			{
 				return;
 			}
@@ -471,7 +471,7 @@ namespace Blastic.Commanding
 
 			try
 			{
-				if (ReentranceMode == ReentranceMode.CancelRunning)
+				if (ReentrancyMode == ReentrancyMode.CancelRunning)
 				{
 					long currentExecutionNumber = Interlocked.Increment(ref _executionNumber);
 
@@ -503,7 +503,7 @@ namespace Blastic.Commanding
 						break;
 					}
 
-					if (value is ICancellable cancellable && cancellable.IsCancelled)
+					if (value is ICancellable { IsCancelled: true })
 					{
 						break;
 					}
@@ -513,7 +513,7 @@ namespace Blastic.Commanding
 			}
 			finally
 			{
-				if (ReentranceMode == ReentranceMode.CancelRunning)
+				if (ReentrancyMode == ReentrancyMode.CancelRunning)
 				{
 					_semaphore.Release();
 				}
@@ -537,221 +537,6 @@ namespace Blastic.Commanding
 			{
 				_command._actions.TryRemove(_action, out _);
 			}
-		}
-	}
-
-	public static class CommandExtensions
-	{
-		/// <summary>
-		/// Create a <see cref="Command"/> with given can execute observable.
-		/// </summary>
-		/// <param name="canExecute">The can execute observable.</param>
-		/// <returns>A command with given can execute observable.</returns>
-		public static Command ToCommand(this IObservable<bool> canExecute)
-		{
-			return new Command(canExecute);
-		}
-
-		/// <summary>
-		/// Create a <see cref="Command"/> with given can execute observable.
-		/// </summary>
-		/// <param name="canExecute">The can execute observable.</param>
-		/// <returns>A command with given can execute observable.</returns>
-		public static Command<T> ToCommand<T>(this IObservable<bool> canExecute)
-		{
-			return new Command<T>(canExecute);
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command WithSubscribe(
-			this Command command,
-			Action action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command WithSubscribe(
-			this Command command,
-			Action<CancellationToken> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command WithSubscribe(
-			this Command command,
-			Func<Task> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command WithSubscribe(
-			this Command command,
-			Func<CancellationToken, Task> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Action action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Action<T> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Action<CancellationToken> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Action<T, CancellationToken> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Func<Task> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Func<T, Task> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Func<CancellationToken, Task> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
-		}
-
-		/// <summary>
-		/// Fluent method that registers the given action and returns the command.
-		/// </summary>
-		/// <param name="command">The command to be subscribed.</param>
-		/// <param name="action">The action to register.</param>
-		/// <param name="order">Order of the action.</param>
-		/// <returns>The given command.</returns>
-		public static Command<T> WithSubscribe<T>(
-			this Command<T> command,
-			Func<T, CancellationToken, Task> action,
-			Order? order = null)
-		{
-			command.Subscribe(action, order);
-			return command;
 		}
 	}
 }
