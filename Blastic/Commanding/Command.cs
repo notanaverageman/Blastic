@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -96,7 +95,8 @@ namespace Blastic.Commanding
 	/// </para>
 	/// <para>
 	/// Command's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
-	/// Reentrancy can be disabled by calling <see cref="DisableReentrance"/> method.
+	/// Reentrancy can be disabled by setting <see cref="ReentranceMode"/> method to
+	/// <see cref="Commanding.ReentranceMode.IgnoreReentrant"/> or <see cref="Commanding.ReentranceMode.CancelRunning"/>.
 	/// </para>
 	/// <para>
 	/// You can register an action via the constructor or the <see cref="Subscribe(Action, Order?)"/> methods.
@@ -109,7 +109,9 @@ namespace Blastic.Commanding
 	{
 		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _actions;
 		private readonly IReactiveProperty<bool> _isExecuting;
-		private IDisposable? _canExecuteSubscription;
+		private readonly SemaphoreSlim _semaphore;
+
+		private long _executionNumber;
 
 		/// <inheritdoc />
 		public event EventHandler? CanExecuteChanged;
@@ -117,13 +119,18 @@ namespace Blastic.Commanding
 		/// <summary>
 		/// An observable property that emits when command's CanExecute property changes.
 		/// </summary>
-		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; private set; }
+		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
 
 		/// <summary>
 		/// An observable property that emits true when the <see cref="Command"/> starts execution and
 		/// emits false when the <see cref="Command"/> finishes the execution.
 		/// </summary>
 		public IReadOnlyReactiveProperty<bool> IsExecuting => _isExecuting;
+
+		/// <summary>
+		/// Property that defines the behavior of the command when it is executed concurrently.
+		/// </summary>
+		public ReentranceMode ReentranceMode { get; set; }
 
 		/// <summary>
 		/// Default constructor that creates an always executable <see cref="Command"/>.
@@ -140,10 +147,13 @@ namespace Blastic.Commanding
 		{
 			_actions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
 			_isExecuting = new ReactiveProperty<bool>();
+			_semaphore = new SemaphoreSlim(1, 1);
 
 			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
 
-			SubscribeToCanExecute();
+			CanExecuteObservable
+				.ObserveOnUI()
+				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
 
 		/// <summary>
@@ -449,6 +459,11 @@ namespace Blastic.Commanding
 				return;
 			}
 
+			if (_isExecuting.Value && ReentranceMode == ReentranceMode.IgnoreReentrant)
+			{
+				return;
+			}
+
 			if (cancellationToken.IsCancellationRequested)
 			{
 				return;
@@ -456,6 +471,25 @@ namespace Blastic.Commanding
 
 			try
 			{
+				if (ReentranceMode == ReentranceMode.CancelRunning)
+				{
+					long currentExecutionNumber = Interlocked.Increment(ref _executionNumber);
+
+					try
+					{
+						await _semaphore.WaitAsync(cancellationToken);
+					}
+					catch (OperationCanceledException)
+					{
+						return;
+					}
+					
+					if (currentExecutionNumber < _executionNumber)
+					{
+						return;
+					}
+				}
+
 				_isExecuting.Value = true;
 
 				IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _actions.Keys
@@ -479,31 +513,13 @@ namespace Blastic.Commanding
 			}
 			finally
 			{
+				if (ReentranceMode == ReentranceMode.CancelRunning)
+				{
+					_semaphore.Release();
+				}
+
 				_isExecuting.Value = false;
 			}
-		}
-
-		/// <summary>
-		/// Disables concurrent execution of this <see cref="Command"/>.
-		/// </summary>
-		public void DisableReentrance()
-		{
-			CanExecuteObservable = CanExecuteObservable
-				.CombineLatest(
-					IsExecuting,
-					(canExecute, isExecuting) => canExecute && !isExecuting)
-				.ToReadOnlyReactiveProperty();
-
-			SubscribeToCanExecute();
-		}
-
-		private void SubscribeToCanExecute()
-		{
-			_canExecuteSubscription?.Dispose();
-
-			_canExecuteSubscription = CanExecuteObservable
-				.ObserveOnUI()
-				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 		}
 
 		private class Subscription : IDisposable
