@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -111,6 +112,7 @@ namespace Blastic.Commanding
 		private readonly IReactiveProperty<bool> _isExecuting;
 		private readonly SemaphoreSlim _semaphore;
 
+		private TaskCompletionSource? _awaitableTask;
 		private long _executionNumber;
 
 		/// <inheritdoc />
@@ -424,10 +426,10 @@ namespace Blastic.Commanding
 		}
 
 		/// <inheritdoc />
-		bool ICommand.CanExecute(object parameter) => CanExecuteObservable.Value;
+		bool ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
 
 		/// <inheritdoc />
-		async void ICommand.Execute(object parameter) => await Execute((T)parameter);
+		async void ICommand.Execute(object? parameter) => await Execute((T)parameter);
 
 		/// <summary>
 		/// Executes the <see cref="Command"/> with given parameter.
@@ -469,6 +471,8 @@ namespace Blastic.Commanding
 				return;
 			}
 
+			TaskCompletionSource taskCompletionSource = new();
+
 			try
 			{
 				if (ReentrancyMode == ReentrancyMode.CancelRunning)
@@ -490,6 +494,7 @@ namespace Blastic.Commanding
 					}
 				}
 
+				_awaitableTask = taskCompletionSource;
 				_isExecuting.Value = true;
 
 				IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _actions.Keys
@@ -519,7 +524,13 @@ namespace Blastic.Commanding
 				}
 
 				_isExecuting.Value = false;
+				taskCompletionSource.SetResult();
 			}
+		}
+
+		public TaskAwaiter GetAwaiter()
+		{
+			return _awaitableTask?.Task.GetAwaiter() ?? Task.CompletedTask.GetAwaiter();
 		}
 
 		private class Subscription : IDisposable
