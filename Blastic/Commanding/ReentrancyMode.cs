@@ -13,8 +13,14 @@ namespace Blastic.Commanding
 		IgnoreReentrant,
 
 		/// <summary>
-		/// Cancels the running operation and runs the current request after the cancellation is complete.
+		/// Runs the last queued request after the current one finishes, ignoring the requests between.
 		/// </summary>
-		CancelRunning
+		RunLatest,
+
+		/// <summary>
+		/// Cancels the running operation and runs the last request after the cancellation is
+		/// complete, ignoring the requests between.
+		/// </summary>
+		RunLatestCancelRunning
 	}
 }

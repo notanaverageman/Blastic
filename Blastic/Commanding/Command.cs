@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -78,9 +79,9 @@ namespace Blastic.Commanding
 		}
 
 		/// <inheritdoc cref="Command{T}.Execute(T, CancellationToken)" />
-		public async Task Execute()
+		public async Task Execute(CancellationToken cancellationToken = default)
 		{
-			await Execute(null);
+			await Execute(null, cancellationToken);
 		}
 	}
 
@@ -109,9 +110,11 @@ namespace Blastic.Commanding
 	public class Command<T> : ICommand
 	{
 		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _actions;
+		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _finallyActions;
 		private readonly IReactiveProperty<bool> _isExecuting;
 		private readonly SemaphoreSlim _semaphore;
 
+		private CancellationTokenSource? _cancellationTokenSource;
 		private TaskCompletionSource? _awaitableTask;
 		private long _executionNumber;
 
@@ -148,6 +151,7 @@ namespace Blastic.Commanding
 		public Command(IObservable<bool>? canExecute)
 		{
 			_actions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
+			_finallyActions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
 			_isExecuting = new ReactiveProperty<bool>();
 			_semaphore = new SemaphoreSlim(1, 1);
 
@@ -425,6 +429,128 @@ namespace Blastic.Commanding
 			return new Subscription(this, action);
 		}
 
+		/// <summary>
+		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Action action, Order? order = null)
+		{
+			return SubscribeFinally(
+				(_, _) =>
+				{
+					action();
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Action<T> action, Order? order = null)
+		{
+			return SubscribeFinally(
+				(x, _) =>
+				{
+					action(x);
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Action<CancellationToken> action, Order? order = null)
+		{
+			return SubscribeFinally(
+				(_, y) =>
+				{
+					action(y);
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Action<T, CancellationToken> action, Order? order = null)
+		{
+			return SubscribeFinally(
+				(x, y) =>
+				{
+					action(x, y);
+					return Task.CompletedTask;
+				},
+				order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Func<Task> action, Order? order = null)
+		{
+			return SubscribeFinally(async (_, _) => await action(), order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Func<T, Task> action, Order? order = null)
+		{
+			return SubscribeFinally(async (x, _) => await action(x), order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Func<CancellationToken, Task> action, Order? order = null)
+		{
+			return SubscribeFinally(async (_, y) => await action(y), order);
+		}
+
+		/// <summary>
+		/// Registers the given action to be executed after all the normal actions are finished. These actions will
+		/// be called even if the execution is cancelled.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="order">Order of the action among other actions.</param>
+		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		public IDisposable SubscribeFinally(Func<T, CancellationToken, Task> action, Order? order = null)
+		{
+			order ??= Command.DefaultOrder;
+			_finallyActions[action] = order;
+
+			return new Subscription(this, action);
+		}
+
 		/// <inheritdoc />
 		bool ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
 
@@ -466,22 +592,27 @@ namespace Blastic.Commanding
 				return;
 			}
 
-			if (cancellationToken.IsCancellationRequested)
-			{
-				return;
-			}
-
+			bool acquiredSemaphore = false;
 			TaskCompletionSource taskCompletionSource = new();
 
 			try
 			{
-				if (ReentrancyMode == ReentrancyMode.CancelRunning)
+				CancellationTokenSource cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+				cancellationToken = cancellationTokenSource.Token;
+
+				if (ReentrancyMode is ReentrancyMode.RunLatest or ReentrancyMode.RunLatestCancelRunning)
 				{
 					long currentExecutionNumber = Interlocked.Increment(ref _executionNumber);
 
 					try
 					{
+						if (ReentrancyMode is ReentrancyMode.RunLatestCancelRunning)
+						{
+							_cancellationTokenSource?.Cancel();
+						}
+
 						await _semaphore.WaitAsync(cancellationToken);
+						acquiredSemaphore = true;
 					}
 					catch (OperationCanceledException)
 					{
@@ -490,8 +621,18 @@ namespace Blastic.Commanding
 					
 					if (currentExecutionNumber < _executionNumber)
 					{
+						if (ReentrancyMode is ReentrancyMode.RunLatestCancelRunning)
+						{
+							cancellationTokenSource.Cancel();
+						}
+
 						return;
 					}
+				}
+
+				if (ReentrancyMode is ReentrancyMode.RunLatestCancelRunning)
+				{
+					_cancellationTokenSource = cancellationTokenSource;
 				}
 
 				_awaitableTask = taskCompletionSource;
@@ -518,13 +659,34 @@ namespace Blastic.Commanding
 			}
 			finally
 			{
-				if (ReentrancyMode == ReentrancyMode.CancelRunning)
+				try
 				{
-					_semaphore.Release();
-				}
+					IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _finallyActions.Keys
+						.GroupBy(x => _finallyActions[x])
+						.OrderBy(x => x.Key);
 
-				_isExecuting.Value = false;
-				taskCompletionSource.SetResult();
+					if (!_finallyActions.IsEmpty && cancellationToken.IsCancellationRequested)
+					{
+						Debug.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAA");
+					}
+
+					foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
+					{
+						await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
+					}
+				}
+				finally
+				{
+					if (acquiredSemaphore)
+					{
+						_semaphore.Release();
+					}
+
+					_isExecuting.Value = false;
+					taskCompletionSource.SetResult();
+
+					_cancellationTokenSource = null;
+				}
 			}
 		}
 
