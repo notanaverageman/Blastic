@@ -665,11 +665,6 @@ namespace Blastic.Commanding
 						.GroupBy(x => _finallyActions[x])
 						.OrderBy(x => x.Key);
 
-					if (!_finallyActions.IsEmpty && cancellationToken.IsCancellationRequested)
-					{
-						Debug.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAA");
-					}
-
 					foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
 					{
 						await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
