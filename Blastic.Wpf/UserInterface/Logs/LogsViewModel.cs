@@ -26,7 +26,7 @@ namespace Blastic.Wpf.UserInterface.Logs
 		public ReadOnlyObservableCollection<Log> Logs => _uiLogger.Logs;
 		public IEnumerable<LogLevel> LogLevels { get; }
 
-		public Command Clear { get; }
+		public AsyncCommand Clear { get; }
 
 		public LogsViewModel(
 			UILogger uiLogger,
@@ -53,7 +53,7 @@ namespace Blastic.Wpf.UserInterface.Logs
 
 			View = new ReactiveProperty<object?>();
 
-			Clear = new Command(() => _uiLogger.Clear());
+			Clear = new AsyncCommand(() => _uiLogger.Clear());
 		}
 
 		private void OnMinimumLogLevelChanged(LogLevel level)

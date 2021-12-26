@@ -5,7 +5,7 @@ namespace Blastic.Diagnostics
 {
 	/// <summary>
 	/// A class that has a <see cref="Severity"/> and a <see cref="Message"/>.
-	/// Optionally can have a <see cref="Command"/> and a label for that command.
+	/// Optionally can have a <see cref="AsyncCommand"/> and a label for that command.
 	/// </summary>
 	public class DiagnosticMessage
 	{
@@ -22,7 +22,7 @@ namespace Blastic.Diagnostics
 		/// <summary>
 		/// Optional command to be executed.
 		/// </summary>
-		public Command? ActionCommand { get; }
+		public AsyncCommand? ActionCommand { get; }
 
 		/// <summary>
 		/// An observable property as the label of the <see cref="ActionCommand"/>.
@@ -65,7 +65,7 @@ namespace Blastic.Diagnostics
 		public DiagnosticMessage(
 			IReadOnlyReactiveProperty<Severity> severity,
 			IReadOnlyReactiveProperty<string> message,
-			Command? actionCommand,
+			AsyncCommand? actionCommand,
 			IReadOnlyReactiveProperty<string>? actionLabel)
 		{
 			Severity = severity;
@@ -97,7 +97,7 @@ namespace Blastic.Diagnostics
 		public DiagnosticMessage(
 			Severity severity,
 			string message,
-			Command? actionCommand,
+			AsyncCommand? actionCommand,
 			string? actionLabel)
 			:
 			this(

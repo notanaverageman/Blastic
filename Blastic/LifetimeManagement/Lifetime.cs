@@ -27,19 +27,19 @@ namespace Blastic.LifetimeManagement
 		public IReadOnlyReactiveProperty<bool> IsActivating => _isActivating;
 
 		/// <inheritdoc />
-		public Command<InitializationContext> Initialization { get; }
+		public AsyncCommand<InitializationContext> Initialization { get; }
 
 		/// <inheritdoc />
-		public Command<ClosureContext> Closure { get; }
+		public AsyncCommand<ClosureContext> Closure { get; }
 
 		/// <inheritdoc />
-		public Command<ClosureContext> CanClose { get; }
+		public AsyncCommand<ClosureContext> CanClose { get; }
 
 		/// <inheritdoc />
-		public Command<ActivationContext> Activation { get; }
+		public AsyncCommand<ActivationContext> Activation { get; }
 
 		/// <inheritdoc />
-		public Command<DeactivationContext> Deactivation { get; }
+		public AsyncCommand<DeactivationContext> Deactivation { get; }
 
 		/// <summary>
 		/// Creates a new <see cref="Lifetime"/> object.
@@ -52,24 +52,24 @@ namespace Blastic.LifetimeManagement
 
 			Initialization = IsInitialized
 				.Select(x => !x)
-				.ToCommand<InitializationContext>()
+				.ToAsyncCommand<InitializationContext>()
 				.WithSubscribe(AfterInitialization, Order.AbsoluteMaximum);
 
-			CanClose = new Command<ClosureContext>();
+			CanClose = new AsyncCommand<ClosureContext>();
 
 			Closure = IsInitialized
-				.ToCommand<ClosureContext>()
+				.ToAsyncCommand<ClosureContext>()
 				.WithSubscribe(BeforeClosure, Order.AbsoluteMinimum)
 				.WithSubscribe(AfterClosure, Order.AbsoluteMaximum);
 
 			Activation = IsActive
 				.Select(x => !x)
-				.ToCommand<ActivationContext>()
+				.ToAsyncCommand<ActivationContext>()
 				.WithSubscribe(BeforeActivation, Order.AbsoluteMinimum)
 				.WithSubscribe(AfterActivation, Order.AbsoluteMaximum);
 
 			Deactivation = IsActive
-				.ToCommand<DeactivationContext>()
+				.ToAsyncCommand<DeactivationContext>()
 				.WithSubscribe(AfterDeactivation, Order.AbsoluteMaximum);
 		}
 
@@ -116,16 +116,16 @@ namespace Blastic.LifetimeManagement
 			return Task.CompletedTask;
 		}
 
-		private async Task BeforeClosure(ClosureContext context, CancellationToken cancellationToken)
+		private async Task BeforeClosure(ClosureContext? context, CancellationToken cancellationToken)
 		{
 			await CanClose.Execute(context, cancellationToken);
 
-			if (context.IsCancelled)
+			if (context?.IsCancelled == true)
 			{
 				return;
 			}
 
-			DeactivationContext deactivationContext = new DeactivationContext();
+			DeactivationContext deactivationContext = new();
 
 			await Deactivation.Execute(deactivationContext, cancellationToken);
 		}
@@ -141,7 +141,7 @@ namespace Blastic.LifetimeManagement
 		{
 			_isActivating.Value = true;
 
-			InitializationContext initializationContext = new InitializationContext();
+			InitializationContext initializationContext = new();
 
 			await Initialization.Execute(initializationContext, cancellationToken);
 		}

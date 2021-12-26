@@ -20,7 +20,7 @@ namespace Blastic.Wpf.Settings
 		public bool IsFolderPicker { get; set; }
 		public bool IsSaveFilePicker { get; set; }
 
-		public Command BrowseCommand { get; }
+		public AsyncCommand BrowseCommand { get; }
 
 		public FileBrowserSetting(
 			ISettingsStorage settingsStorage,
@@ -35,7 +35,7 @@ namespace Blastic.Wpf.Settings
 			_dialogService = dialogService;
 			_filter = filter;
 
-			BrowseCommand = new Command(Browse);
+			BrowseCommand = new AsyncCommand(Browse);
 
 			GroupField = new GroupElement();
 

@@ -21,19 +21,19 @@ namespace Blastic.Wpf.DynamicControls
 			set => SetValue(ExecutionContextProperty, value);
 		}
 
-		public Command Ok { get; }
-		public Command Cancel { get; }
+		public AsyncCommand Ok { get; }
+		public AsyncCommand Cancel { get; }
 
 		public Form()
 		{
 			InitializeComponent();
 
-			Ok = new Command().WithSubscribe(x =>
+			Ok = new AsyncCommand().WithSubscribe(x =>
 			{
 				ExecutionContext?.Form.Value?.Ok();
 			});
 
-			Cancel = new Command().WithSubscribe(x =>
+			Cancel = new AsyncCommand().WithSubscribe(x =>
 			{
 				ExecutionContext?.Form.Value?.Cancel();
 			});

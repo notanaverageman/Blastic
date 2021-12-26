@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,19 +39,7 @@ namespace Blastic.Commanding
 		{
 			Subscribe(action);
 		}
-
-		/// <inheritdoc />
-		public Command(Func<Task> action) : this()
-		{
-			Subscribe(action);
-		}
-
-		/// <inheritdoc />
-		public Command(Func<CancellationToken, Task> action) : this()
-		{
-			Subscribe(action);
-		}
-
+		
 		/// <inheritdoc />
 		public Command(IObservable<bool>? canExecute, Action action) : this(canExecute)
 		{
@@ -65,23 +51,11 @@ namespace Blastic.Commanding
 		{
 			Subscribe(action);
 		}
-
-		/// <inheritdoc />
-		public Command(IObservable<bool>? canExecute, Func<Task> action) : this(canExecute)
-		{
-			Subscribe(action);
-		}
-
-		/// <inheritdoc />
-		public Command(IObservable<bool>? canExecute, Func<CancellationToken, Task> action) : this(canExecute)
-		{
-			Subscribe(action);
-		}
-
+		
 		/// <inheritdoc cref="Command{T}.Execute(T, CancellationToken)" />
-		public async Task Execute(CancellationToken cancellationToken = default)
+		public void Execute(CancellationToken cancellationToken = default)
 		{
-			await Execute(null, cancellationToken);
+			Execute(null, cancellationToken);
 		}
 	}
 
@@ -96,9 +70,9 @@ namespace Blastic.Commanding
 	/// first and actions with the same order will be executed concurrently.
 	/// </para>
 	/// <para>
-	/// Command's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
+	/// SCommand's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
 	/// Reentrancy can be disabled by setting <see cref="ReentrancyMode"/> method to
-	/// <see cref="Commanding.ReentrancyMode.IgnoreReentrant"/> or <see cref="Commanding.ReentrancyMode.CancelRunning"/>.
+	/// <see cref="Commanding.ReentrancyMode.IgnoreReentrant"/> or <see cref="Commanding.ReentrancyMode.RunLatestCancelRunning"/>.
 	/// </para>
 	/// <para>
 	/// You can register an action via the constructor or the <see cref="Subscribe(Action, Order?)"/> methods.
@@ -109,8 +83,8 @@ namespace Blastic.Commanding
 	/// <typeparam name="T"></typeparam>
 	public class Command<T> : ICommand
 	{
-		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _actions;
-		private readonly ConcurrentDictionary<Func<T, CancellationToken, Task>, Order> _finallyActions;
+		private readonly List<OrderedAction> _actions;
+		private readonly List<OrderedAction> _finallyActions;
 		private readonly IReactiveProperty<bool> _isExecuting;
 		private readonly SemaphoreSlim _semaphore;
 
@@ -150,8 +124,8 @@ namespace Blastic.Commanding
 		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
 		public Command(IObservable<bool>? canExecute)
 		{
-			_actions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
-			_finallyActions = new ConcurrentDictionary<Func<T, CancellationToken, Task>, Order>();
+			_actions = new List<OrderedAction>();
+			_finallyActions = new List<OrderedAction>();
 			_isExecuting = new ReactiveProperty<bool>();
 			_semaphore = new SemaphoreSlim(1, 1);
 
@@ -175,7 +149,7 @@ namespace Blastic.Commanding
 		/// Creates a <see cref="Command"/> and registers the given action.
 		/// </summary>
 		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(Action<T> action) : this()
+		public Command(Action<T?> action) : this()
 		{
 			Subscribe(action);
 		}
@@ -193,47 +167,11 @@ namespace Blastic.Commanding
 		/// Creates a <see cref="Command"/> and registers the given action.
 		/// </summary>
 		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(Action<T, CancellationToken> action) : this()
+		public Command(Action<T?, CancellationToken> action) : this()
 		{
 			Subscribe(action);
 		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(Func<Task> action) : this()
-		{
-			Subscribe(action);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(Func<T, Task> action) : this()
-		{
-			Subscribe(action);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(Func<CancellationToken, Task> action) : this()
-		{
-			Subscribe(action);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(Func<T, CancellationToken, Task> action) : this()
-		{
-			Subscribe(action);
-		}
-
+		
 		/// <summary>
 		/// Creates a <see cref="Command"/> and registers the given action.
 		/// </summary>
@@ -249,7 +187,7 @@ namespace Blastic.Commanding
 		/// </summary>
 		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
 		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(IObservable<bool>? canExecute, Action<T> action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute, Action<T?> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
@@ -269,51 +207,11 @@ namespace Blastic.Commanding
 		/// </summary>
 		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
 		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(IObservable<bool>? canExecute, Action<T, CancellationToken> action) : this(canExecute)
+		public Command(IObservable<bool>? canExecute, Action<T?, CancellationToken> action) : this(canExecute)
 		{
 			Subscribe(action);
 		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(IObservable<bool>? canExecute, Func<Task> action) : this(canExecute)
-		{
-			Subscribe(action);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(IObservable<bool>? canExecute, Func<T, Task> action) : this(canExecute)
-		{
-			Subscribe(action);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(IObservable<bool>? canExecute, Func<CancellationToken, Task> action) : this(canExecute)
-		{
-			Subscribe(action);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="Command"/> and registers the given action.
-		/// </summary>
-		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
-		/// <param name="action">Action to execute when command is executed.</param>
-		public Command(IObservable<bool>? canExecute, Func<T, CancellationToken, Task> action) : this(canExecute)
-		{
-			Subscribe(action);
-		}
-
+		
 		/// <summary>
 		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
 		/// </summary>
@@ -322,13 +220,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable Subscribe(Action action, Order? order = null)
 		{
-			return Subscribe(
-				(_, _) =>
-				{
-					action();
-					return Task.CompletedTask;
-				},
-				order);
+			return Subscribe((_, _) => action(), order);
 		}
 
 		/// <summary>
@@ -337,15 +229,9 @@ namespace Blastic.Commanding
 		/// <param name="action">The action to execute.</param>
 		/// <param name="order">Order of the action among other actions.</param>
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable Subscribe(Action<T> action, Order? order = null)
+		public IDisposable Subscribe(Action<T?> action, Order? order = null)
 		{
-			return Subscribe(
-				(x, _) =>
-				{
-					action(x);
-					return Task.CompletedTask;
-				},
-				order);
+			return Subscribe((x, _) =>action(x), order);
 		}
 
 		/// <summary>
@@ -356,13 +242,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable Subscribe(Action<CancellationToken> action, Order? order = null)
 		{
-			return Subscribe(
-				(_, y) =>
-				{
-					action(y);
-					return Task.CompletedTask;
-				},
-				order);
+			return Subscribe((_, y) => action(y), order);
 		}
 
 		/// <summary>
@@ -371,64 +251,18 @@ namespace Blastic.Commanding
 		/// <param name="action">The action to execute.</param>
 		/// <param name="order">Order of the action among other actions.</param>
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable Subscribe(Action<T, CancellationToken> action, Order? order = null)
-		{
-			return Subscribe(
-				(x, y) =>
-				{
-					action(x, y);
-					return Task.CompletedTask;
-				},
-				order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable Subscribe(Func<Task> action, Order? order = null)
-		{
-			return Subscribe(async (_, _) => await action(), order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable Subscribe(Func<T, Task> action, Order? order = null)
-		{
-			return Subscribe(async (x, _) => await action(x), order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable Subscribe(Func<CancellationToken, Task> action, Order? order = null)
-		{
-			return Subscribe(async (_, y) => await action(y), order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable Subscribe(Func<T, CancellationToken, Task> action, Order? order = null)
+		public IDisposable Subscribe(Action<T?, CancellationToken> action, Order? order = null)
 		{
 			order ??= Command.DefaultOrder;
-			_actions[action] = order;
 
-			return new Subscription(this, action);
+			OrderedAction orderedAction = new(action, order);
+
+			_actions.Add(orderedAction);
+			_actions.Sort(ActionSorter.Instance);
+
+			return new Subscription(this, orderedAction);
 		}
-
+		
 		/// <summary>
 		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
 		/// </summary>
@@ -437,13 +271,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable SubscribeFinally(Action action, Order? order = null)
 		{
-			return SubscribeFinally(
-				(_, _) =>
-				{
-					action();
-					return Task.CompletedTask;
-				},
-				order);
+			return SubscribeFinally((_, _) => action(), order);
 		}
 
 		/// <summary>
@@ -453,15 +281,9 @@ namespace Blastic.Commanding
 		/// <param name="action">The action to execute.</param>
 		/// <param name="order">Order of the action among other actions.</param>
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable SubscribeFinally(Action<T> action, Order? order = null)
+		public IDisposable SubscribeFinally(Action<T?> action, Order? order = null)
 		{
-			return SubscribeFinally(
-				(x, _) =>
-				{
-					action(x);
-					return Task.CompletedTask;
-				},
-				order);
+			return SubscribeFinally((x, _) => action(x), order);
 		}
 
 		/// <summary>
@@ -473,13 +295,7 @@ namespace Blastic.Commanding
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
 		public IDisposable SubscribeFinally(Action<CancellationToken> action, Order? order = null)
 		{
-			return SubscribeFinally(
-				(_, y) =>
-				{
-					action(y);
-					return Task.CompletedTask;
-				},
-				order);
+			return SubscribeFinally((_, y) => action(y), order);
 		}
 
 		/// <summary>
@@ -489,73 +305,23 @@ namespace Blastic.Commanding
 		/// <param name="action">The action to execute.</param>
 		/// <param name="order">Order of the action among other actions.</param>
 		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable SubscribeFinally(Action<T, CancellationToken> action, Order? order = null)
-		{
-			return SubscribeFinally(
-				(x, y) =>
-				{
-					action(x, y);
-					return Task.CompletedTask;
-				},
-				order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable SubscribeFinally(Func<Task> action, Order? order = null)
-		{
-			return SubscribeFinally(async (_, _) => await action(), order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable SubscribeFinally(Func<T, Task> action, Order? order = null)
-		{
-			return SubscribeFinally(async (x, _) => await action(x), order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable SubscribeFinally(Func<CancellationToken, Task> action, Order? order = null)
-		{
-			return SubscribeFinally(async (_, y) => await action(y), order);
-		}
-
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
-		public IDisposable SubscribeFinally(Func<T, CancellationToken, Task> action, Order? order = null)
+		public IDisposable SubscribeFinally(Action<T?, CancellationToken> action, Order? order = null)
 		{
 			order ??= Command.DefaultOrder;
-			_finallyActions[action] = order;
 
-			return new Subscription(this, action);
+			OrderedAction orderedAction = new(action, order);
+
+			_finallyActions.Add(orderedAction);
+			_finallyActions.Sort(ActionSorter.Instance);
+
+			return new Subscription(this, orderedAction);
 		}
-
+		
 		/// <inheritdoc />
 		bool ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
 
 		/// <inheritdoc />
-		async void ICommand.Execute(object? parameter) => await Execute((T)parameter);
+		void ICommand.Execute(object? parameter) => Execute((T?)parameter);
 
 		/// <summary>
 		/// Executes the <see cref="Command"/> with given parameter.
@@ -580,7 +346,7 @@ namespace Blastic.Commanding
 		/// of each action.
 		/// </param>
 		/// <returns>A task to be awaited.</returns>
-		public async Task Execute(T value, CancellationToken cancellationToken = default)
+		public void Execute(T? value, CancellationToken cancellationToken = default)
 		{
 			if (!CanExecuteObservable.Value)
 			{
@@ -611,7 +377,7 @@ namespace Blastic.Commanding
 							_cancellationTokenSource?.Cancel();
 						}
 
-						await _semaphore.WaitAsync(cancellationToken);
+						_semaphore.Wait(cancellationToken);
 						acquiredSemaphore = true;
 					}
 					catch (OperationCanceledException)
@@ -637,12 +403,8 @@ namespace Blastic.Commanding
 
 				_awaitableTask = taskCompletionSource;
 				_isExecuting.Value = true;
-
-				IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _actions.Keys
-					.GroupBy(x => _actions[x])
-					.OrderBy(x => x.Key);
-
-				foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
+				
+				foreach (OrderedAction orderedAction in _actions)
 				{
 					if (cancellationToken.IsCancellationRequested)
 					{
@@ -654,20 +416,16 @@ namespace Blastic.Commanding
 						break;
 					}
 
-					await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
+					orderedAction.Action(value, cancellationToken);
 				}
 			}
 			finally
 			{
 				try
 				{
-					IOrderedEnumerable<IGrouping<Order, Func<T, CancellationToken, Task>>> orderedActions = _finallyActions.Keys
-						.GroupBy(x => _finallyActions[x])
-						.OrderBy(x => x.Key);
-
-					foreach (IGrouping<Order, Func<T, CancellationToken, Task>> actionGroup in orderedActions)
+					foreach (OrderedAction orderedAction in _finallyActions)
 					{
-						await Task.WhenAll(actionGroup.Select(x => x.Invoke(value, cancellationToken)));
+						orderedAction.Action(value, cancellationToken);
 					}
 				}
 				finally
@@ -690,12 +448,24 @@ namespace Blastic.Commanding
 			return _awaitableTask?.Task.GetAwaiter() ?? Task.CompletedTask.GetAwaiter();
 		}
 
+		private struct OrderedAction
+		{
+			public Action<T?, CancellationToken> Action { get; }
+			public Order Order { get; }
+
+			public OrderedAction(Action<T?, CancellationToken> action, Order order)
+			{
+				Action = action;
+				Order = order;
+			}
+		}
+
 		private class Subscription : IDisposable
 		{
 			private readonly Command<T> _command;
-			private readonly Func<T, CancellationToken, Task> _action;
+			private readonly OrderedAction _action;
 
-			public Subscription(Command<T> command, Func<T, CancellationToken, Task> action)
+			public Subscription(Command<T> command, OrderedAction action)
 			{
 				_command = command;
 				_action = action;
@@ -703,7 +473,17 @@ namespace Blastic.Commanding
 
 			public void Dispose()
 			{
-				_command._actions.TryRemove(_action, out _);
+				_command._actions.Remove(_action);
+			}
+		}
+
+		private class ActionSorter : IComparer<OrderedAction>
+		{
+			public static readonly ActionSorter Instance = new();
+
+			public int Compare(OrderedAction x, OrderedAction y)
+			{
+				return Comparer<Order>.Default.Compare(x.Order, y.Order);
 			}
 		}
 	}

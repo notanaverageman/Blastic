@@ -11,7 +11,7 @@ namespace Blastic.Services.Notifications
 {
 	/// <summary>
 	/// Notification class holds a <see cref="DynamicModel"/> to show on UI and a
-	/// <see cref="Command"/> that can be executed to dismiss it. It can also be
+	/// <see cref="AsyncCommand"/> that can be executed to dismiss it. It can also be
 	/// automatically dismissed after some time.
 	/// </summary>
 	public class Notification
@@ -36,7 +36,7 @@ namespace Blastic.Services.Notifications
 		/// <summary>
 		/// Command that dismisses the notification when executed.
 		/// </summary>
-		public Command Dismiss { get; }
+		public AsyncCommand Dismiss { get; }
 
 		/// <summary>
 		/// Creates a new instance with given message and an optional show duration.
@@ -90,7 +90,7 @@ namespace Blastic.Services.Notifications
 			}
 
 			Dismiss = Lifetime.Closure.CanExecuteObservable
-				.ToCommand()
+				.ToAsyncCommand()
 				.WithSubscribe(DismissInternal);
 
 			if (Math.Abs(Model.MinWidth) < 1)

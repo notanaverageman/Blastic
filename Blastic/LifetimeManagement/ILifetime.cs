@@ -36,7 +36,7 @@ namespace Blastic.LifetimeManagement
 		/// Do not use <see cref="Order.AbsoluteMaximum"/> while subscribing as it is
 		/// reserved for internal use.
 		/// </remarks>
-		Command<InitializationContext> Initialization { get; }
+		AsyncCommand<InitializationContext> Initialization { get; }
 
 		/// <summary>
 		/// Command that is executed to deinitialize the object. Subscribe to this command
@@ -46,13 +46,13 @@ namespace Blastic.LifetimeManagement
 		/// Do not use <see cref="Order.AbsoluteMaximum"/> or <see cref="Order.AbsoluteMaximum"/>
 		/// while subscribing as it is reserved for internal use.
 		/// </remarks>
-		Command<ClosureContext> Closure { get; }
+		AsyncCommand<ClosureContext> Closure { get; }
 
 		/// <summary>
 		/// Command that is executed to determine if the object can be deinitialized.
 		/// Subscribe to this command to be able to cancel the deinitialization process.
 		/// </summary>
-		Command<ClosureContext> CanClose { get; }
+		AsyncCommand<ClosureContext> CanClose { get; }
 
 		/// <summary>
 		/// Command that is executed to activate the object. Subscribe to this command
@@ -62,7 +62,7 @@ namespace Blastic.LifetimeManagement
 		/// Do not use <see cref="Order.AbsoluteMaximum"/> or <see cref="Order.AbsoluteMaximum"/>
 		/// while subscribing as it is reserved for internal use.
 		/// </remarks>
-		Command<ActivationContext> Activation { get; }
+		AsyncCommand<ActivationContext> Activation { get; }
 
 		/// <summary>
 		/// Command that is executed to deactivate the object. Subscribe to this command
@@ -72,7 +72,7 @@ namespace Blastic.LifetimeManagement
 		/// Do not use <see cref="Order.AbsoluteMaximum"/> while subscribing as it is
 		/// reserved for internal use.
 		/// </remarks>
-		Command<DeactivationContext> Deactivation { get; }
+		AsyncCommand<DeactivationContext> Deactivation { get; }
 
 		/// <summary>
 		/// A method that executes the <see cref="Initialization"/> command.

@@ -28,7 +28,7 @@ namespace Blastic.DynamicControls
 
 		public Task<bool> WaitCompletion()
 		{
-			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+			TaskCompletionSource<bool> taskCompletionSource = new();
 			_taskCompletionSources.Add(taskCompletionSource);
 
 			return taskCompletionSource.Task;
@@ -90,7 +90,7 @@ namespace Blastic.DynamicControls
 			string fallbackLabel)
 			where T : IElementContainer
 		{
-			Command command = new Command(canExecute, action);
+			AsyncCommand command = new(canExecute, action);
 
 			container.AddAction(command, x =>
 			{

@@ -164,7 +164,7 @@ namespace Blastic.DynamicControls
 
 		public static T AddAction<T>(
 			this T container,
-			Command command,
+			AsyncCommand command,
 			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
 			ActionElement element = new(command);
@@ -178,7 +178,7 @@ namespace Blastic.DynamicControls
 			Action action,
 			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
-			return container.AddAction(new Command(action), configure);
+			return container.AddAction(new AsyncCommand(action), configure);
 		}
 
 		public static T AddAction<T>(
@@ -186,7 +186,7 @@ namespace Blastic.DynamicControls
 			Func<Task> action,
 			Action<ActionElement>? configure = null) where T : IElementContainer
 		{
-			return container.AddAction(new Command(action), configure);
+			return container.AddAction(new AsyncCommand(action), configure);
 		}
 
 		public static T AddGroup<T>(

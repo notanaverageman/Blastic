@@ -45,9 +45,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 		public IReactiveProperty<CityImage> CityImageSource1 { get; }
 		public IReactiveProperty<CityImage> CityImageSource2 { get; }
 
-		public Command CycleCommand { get; }
-		public Command ActivateCommand { get; }
-		public Command DeactivateCommand { get; }
+		public AsyncCommand CycleCommand { get; }
+		public AsyncCommand ActivateCommand { get; }
+		public AsyncCommand DeactivateCommand { get; }
 
 		public ViewAnimations Animations { get; }
 
@@ -71,9 +71,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 			PopulateCities();
 
-			CycleCommand = new Command(Cycle);
-			ActivateCommand = new Command(Activate);
-			DeactivateCommand = new Command(Deactivate);
+			CycleCommand = new AsyncCommand(Cycle);
+			ActivateCommand = new AsyncCommand(Activate);
+			DeactivateCommand = new AsyncCommand(Deactivate);
 
 			Lifetime.Initialization.Subscribe(() => CycleCommand.AddInputGesture(new KeyGesture(Key.Left)));
 			Lifetime.Activation.Subscribe(Activate);

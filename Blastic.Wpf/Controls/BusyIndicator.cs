@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using Blastic.Commanding;
 using Blastic.Execution;
@@ -23,11 +23,11 @@ namespace Blastic.Wpf.Controls
 			set => SetValue(ExecutionContextProperty, value);
 		}
 
-		public Command Cancel { get; }
+		public AsyncCommand Cancel { get; }
 
 		public BusyIndicator()
 		{
-			Cancel = new Command().WithSubscribe(x =>
+			Cancel = new AsyncCommand().WithSubscribe(x =>
 			{
 				ExecutionContext?.CancellationTokenSource?.Cancel();
 			});
