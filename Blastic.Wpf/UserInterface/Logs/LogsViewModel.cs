@@ -38,9 +38,8 @@ namespace Blastic.Wpf.UserInterface.Logs
 
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Logs.Window.Title");
 
-			MinimumLogLevel = new ReactiveProperty<LogLevel>();
+			MinimumLogLevel = new ReactiveProperty<LogLevel>(LogLevel.Error);
 			MinimumLogLevel.Subscribe(OnMinimumLogLevelChanged);
-			MinimumLogLevel.Value = LogLevel.Debug;
 
 			LogLevels = new[]
 			{
