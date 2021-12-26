@@ -5,7 +5,7 @@ namespace Blastic.Commanding
 		/// <summary>
 		/// No restriction on reentrancy.
 		/// </summary>
-		Enabled,
+		Concurrent,
 
 		/// <summary>
 		/// Does not execute the current request if there is already one running.
