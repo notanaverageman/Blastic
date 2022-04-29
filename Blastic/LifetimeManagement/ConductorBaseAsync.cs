@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Blastic.Ordering;
-using Blastic.Platform;
 using DynamicData;
 
 namespace Blastic.LifetimeManagement
@@ -58,7 +57,6 @@ namespace Blastic.LifetimeManagement
 
 			ItemsSource
 				.Connect()
-				.ObserveOnUI()
 				.Bind(out ReadOnlyObservableCollection<T> items)
 				.DisposeMany()
 				.Subscribe(ItemsChanged);
