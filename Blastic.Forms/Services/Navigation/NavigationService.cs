@@ -53,7 +53,12 @@ namespace Blastic.Forms.Services.Navigation
 
 			if (model is IHasLifetime hasLifetime)
 			{
-				await hasLifetime.Lifetime.Activate();
+				hasLifetime.Lifetime.Activate();
+			}
+
+			if (model is IHasAsyncLifetime hasAsyncLifetime)
+			{
+				await hasAsyncLifetime.Lifetime.Activate();
 			}
 		}
 	}

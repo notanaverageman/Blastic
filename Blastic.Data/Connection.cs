@@ -1,37 +1,77 @@
 using System;
-using System.Data.Common;
-using Blastic.Data.ProviderSpecific;
-using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
 
-namespace Blastic.Data
+namespace Blastic.Data;
+
+public class Connection : IDisposable
 {
-	public abstract class Connection : IDisposable
+	private readonly SqliteConnection _dbConnection;
+	private SqliteTransaction? _dbTransaction;
+
+	private int _nestedTransactionCount;
+
+	public bool HasTransaction => _dbTransaction != null;
+
+	public Connection(SqliteConnection dbConnection)
 	{
-		protected ILogger Logger { get; }
+		_dbConnection = dbConnection;
+	}
 
-		public abstract DatabaseProvider Provider { get; }
-		public abstract ProviderSpecifics ProviderSpecifics { get; }
+	public void Open()
+	{
+		_dbConnection.Open();
+	}
 
-		protected abstract DbConnection DbConnection { get; }
-		protected abstract DbTransaction? DbTransaction { get; }
-
-		public Connection(ILogger logger)
+	public void BeginTransaction()
+	{
+		if (_dbTransaction != null)
 		{
-			Logger = logger;
+			_nestedTransactionCount++;
+			return;
 		}
 
-		public Command CreateCommand()
+		_dbTransaction = _dbConnection.BeginTransaction();
+	}
+
+	public void CommitTransaction()
+	{
+		if (_nestedTransactionCount > 0)
 		{
-			DbCommand command = DbConnection.CreateCommand();
-
-			if (DbTransaction != null)
-			{
-				command.Transaction = DbTransaction;
-			}
-
-			return new Command(command, Provider, Logger);
+			_nestedTransactionCount--;
+			return;
 		}
 
-		public abstract void Dispose();
+		_dbTransaction!.Commit();
+		_dbTransaction = null;
+	}
+
+	public void RollbackTransaction()
+	{
+		if (_nestedTransactionCount > 0)
+		{
+			_nestedTransactionCount--;
+			return;
+		}
+
+		_dbTransaction!.Rollback();
+		_dbTransaction = null;
+	}
+	
+	public Command CreateCommand()
+	{
+		SqliteCommand command = _dbConnection.CreateCommand();
+
+		if (_dbTransaction != null)
+		{
+			command.Transaction = _dbTransaction;
+		}
+
+		return new Command(command);
+	}
+
+	public void Dispose()
+	{
+		_dbTransaction?.Dispose();
+		_dbConnection.Dispose();
 	}
 }

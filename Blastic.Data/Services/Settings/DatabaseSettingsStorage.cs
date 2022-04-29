@@ -1,6 +1,4 @@
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Services.Settings;
 
 namespace Blastic.Data.Services.Settings
@@ -14,14 +12,14 @@ namespace Blastic.Data.Services.Settings
 			_settingsTable = settingsTable;
 		}
 
-		public async Task<bool> Contains(string key, CancellationToken cancellationToken)
+		public bool Contains(string key)
 		{
-			return await _settingsTable.Contains(key, cancellationToken);
+			return _settingsTable.Contains(key);
 		}
 
-		public async Task<T> Get<T>(string key, T defaultValue, CancellationToken cancellationToken)
+		public T? Get<T>(string key, T? defaultValue)
 		{
-			string? serializedData = await _settingsTable.Get(key, cancellationToken);
+			string? serializedData = _settingsTable.Get(key);
 
 			if (serializedData == null)
 			{
@@ -31,15 +29,15 @@ namespace Blastic.Data.Services.Settings
 			return JsonSerializer.Deserialize<T>(serializedData);
 		}
 
-		public async Task Put<T>(string key, T value, CancellationToken cancellationToken)
+		public void Put<T>(string key, T value)
 		{
 			string serializedData = JsonSerializer.Serialize(value);
-			await _settingsTable.Put(key, serializedData, cancellationToken);
+			_settingsTable.Put(key, serializedData);
 		}
 
-		public async Task Delete(string key, CancellationToken cancellationToken)
+		public void Delete(string key)
 		{
-			await _settingsTable.Delete(key, cancellationToken);
+			_settingsTable.Delete(key);
 		}
 	}
 }

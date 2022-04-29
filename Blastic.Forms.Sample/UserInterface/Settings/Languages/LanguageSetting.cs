@@ -1,7 +1,5 @@
 using System;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Reactive;
@@ -52,23 +50,16 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 			SaveOnChange = true;
 		}
 
-		protected override Task<Language> GetValueBeforeSave(
-			LocalizedSettingValue<Language> value,
-			CancellationToken cancellationToken)
+		protected override Language GetValueBeforeSave(LocalizedSettingValue<Language> value)
 		{
-			return Task.FromResult(value.Value);
+			return value.Value;
 		}
 
-		protected override Task<LocalizedSettingValue<Language>> GetValueAfterRead(
-			Language value,
-			CancellationToken cancellationToken)
+		protected override LocalizedSettingValue<Language> GetValueAfterRead(Language value)
 		{
-			Language language = (Language)value;
-
-			return Task.FromResult(
-				new LocalizedSettingValue<Language>(
-					language,
-					GetName(_localizableProperties, language)));
+			return new LocalizedSettingValue<Language>(
+					value,
+					GetName(_localizableProperties, value));
 		}
 
 		private static IReadOnlyReactiveProperty<string> GetName(

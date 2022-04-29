@@ -53,8 +53,8 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 		public Command ShowNotificationsCommand { get; }
 		public Command ShowDownloadsCommand { get; }
 		
-		public Command FetchBooksCommand { get; }
-		public Command<BookViewModel> NavigateToBookCommand { get; }
+		public AsyncCommand FetchBooksCommand { get; }
+		public AsyncCommand<BookViewModel> NavigateToBookCommand { get; }
 
 		public HomeViewModel(
 			NotificationsViewModel notifications,
@@ -95,8 +95,8 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 			ShowNotificationsCommand = new Command(notifications.Show);
 			ShowDownloadsCommand = new Command(downloads.Show);
 
-			FetchBooksCommand = new Command(FetchBooks);
-			NavigateToBookCommand = new Command<BookViewModel>(NavigateToBook);
+			FetchBooksCommand = new AsyncCommand(FetchBooks);
+			NavigateToBookCommand = new AsyncCommand<BookViewModel>(NavigateToBook);
 
 			Lifetime.Initialization.Subscribe(FetchBooks);
 		}
@@ -106,7 +106,7 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 			await _navigationService.NavigateTo(this, book);
 		}
 
-		private async Task FetchBooks()
+		private async void FetchBooks()
 		{
 			async Task Fetch(CancellationToken cancellationToken)
 			{
@@ -135,7 +135,7 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 						x.AddOrUpdate(viewModels);
 					});
 
-				await _database.BooksTable.PutAll(books, cancellationToken);
+				_database.BooksTable.PutAll(books);
 			}
 
 			await ExecutionContext.Execute(

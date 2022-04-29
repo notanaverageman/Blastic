@@ -20,12 +20,15 @@ namespace Blastic.Forms.Sample
 
 		protected override async void OnStart()
 		{
-			if (!(MainPage.BindingContext is IHasLifetime hasLifetime))
+			if (MainPage.BindingContext is IHasLifetime hasLifetime)
 			{
-				return;
+				hasLifetime.Lifetime.Activate();
 			}
 
-			await hasLifetime.Lifetime.Activate();
+			if (MainPage.BindingContext is IHasAsyncLifetime hasAsyncLifetime)
+			{
+				await hasAsyncLifetime.Lifetime.Activate();
+			}
 		}
 	}
 }

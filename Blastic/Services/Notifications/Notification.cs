@@ -31,7 +31,7 @@ namespace Blastic.Services.Notifications
 		/// <summary>
 		/// Lifetime of this notification.
 		/// </summary>
-		public ILifetime Lifetime { get; }
+		public IAsyncLifetime Lifetime { get; }
 
 		/// <summary>
 		/// Command that dismisses the notification when executed.
@@ -80,7 +80,7 @@ namespace Blastic.Services.Notifications
 			bool dismissOnTimeout = true)
 		{
 			Model = model;
-			Lifetime = new Lifetime();
+			Lifetime = new AsyncLifetime();
 
 			ShowDuration = showDuration ?? TimeSpan.FromSeconds(3);
 
@@ -108,7 +108,7 @@ namespace Blastic.Services.Notifications
 				.Throttle(ShowDuration)
 				.Where(x => x == false)
 				.FirstAsync()
-				.Subscribe(async x =>
+				.SubscribeAsync(async _ =>
 				{
 					if (dismissOnTimeout)
 					{

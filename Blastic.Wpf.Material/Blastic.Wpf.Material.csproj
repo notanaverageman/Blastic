@@ -1,13 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net5.0-windows</TargetFramework>
+		<TargetFramework>net6-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Dragablz" Version="0.0.3.223" />
-		<PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
-		<PackageReference Include="NuGet.Build.Tasks.Pack" Version="5.8.1">
+		<PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+		<PackageReference Include="NuGet.Build.Tasks.Pack" Version="5.10.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>

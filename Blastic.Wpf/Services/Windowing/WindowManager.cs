@@ -39,9 +39,21 @@ namespace Blastic.Wpf.Services.Windowing
 
 			if (model is IHasLifetime hasLifetime)
 			{
-				IDisposable closeSubscription = null;
+				IDisposable? closeSubscription = null;
 				
 				closeSubscription = hasLifetime.Lifetime.Closure.Subscribe(() =>
+				{
+					window.Close();
+					closeSubscription?.Dispose();
+				}, Order.AbsoluteMaximum);
+
+				hasLifetime.Lifetime.Activate();
+			}
+			else if (model is IHasAsyncLifetime hasAsyncLifetime)
+			{
+				IDisposable? closeSubscription = null;
+				
+				closeSubscription = hasAsyncLifetime.Lifetime.Closure.Subscribe(() =>
 				{
 					window.Close();
 					closeSubscription?.Dispose();
@@ -49,7 +61,7 @@ namespace Blastic.Wpf.Services.Windowing
 					return Task.CompletedTask;
 				}, Order.AbsoluteMaximum);
 
-				await hasLifetime.Lifetime.Activate();
+				await hasAsyncLifetime.Lifetime.Activate();
 			}
 		}
 	}

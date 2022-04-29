@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:controlzEx="clr-namespace:ControlzEx;assembly=MaterialDesignThemes.Wpf"
 					xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
 					xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
@@ -38,7 +37,7 @@
 						   TextWrapping="Wrap"
 						   UseLayoutRounding="false" />
 			</Border>
-			<controlzEx:PopupEx x:Name="ValidationPopup"
+			<materialDesign:PopupEx x:Name="ValidationPopup"
 								AllowsTransparency="True"
 								IsOpen="False"
 								Placement="Bottom"
@@ -53,7 +52,7 @@
 							   TextWrapping="Wrap"
 							   UseLayoutRounding="false" />
 				</Border>
-			</controlzEx:PopupEx>
+			</materialDesign:PopupEx>
 		</StackPanel>
 		<ControlTemplate.Triggers>
 			<MultiDataTrigger>

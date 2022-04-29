@@ -1,6 +1,6 @@
-using System;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Reactive;
 using DynamicData;
@@ -11,7 +11,7 @@ namespace Blastic.LifetimeManagement
 	/// A class that can have many items and at most only one of them can be active at a time.
 	/// </summary>
 	/// <typeparam name="T">A type with a lifetime.</typeparam>
-	public class ConductorOneActive<T> : ConductorBase<T> where T : class, IHasLifetime
+	public class ConductorOneActiveAsync<T> : ConductorBaseAsync<T> where T : class, IHasAsyncLifetime
 	{
 		private readonly IReadOnlyReactiveProperty<T?> _previousActiveItem;
 
@@ -36,7 +36,7 @@ namespace Blastic.LifetimeManagement
 		/// <summary>
 		/// Creates a new instance of <see cref="ConductorOneActive{T}"/>.
 		/// </summary>
-		public ConductorOneActive()
+		public ConductorOneActiveAsync()
 			:
 			base(lifetimeChainOptions: new LifetimeChainOptions(activateChildrenOnSelfActivation: false))
 		{
@@ -50,20 +50,20 @@ namespace Blastic.LifetimeManagement
 				.Select(x => x.Previous)
 				.ToReadOnlyReactiveProperty();
 
-			ActiveItem.Subscribe(x =>
+			ActiveItem.SubscribeAsync(async x =>
 			{
-				Activate(x);
+				await Activate(x);
 			});
 
-			ActiveItemIndex.Subscribe(x =>
+			ActiveItemIndex.SubscribeAsync(async x =>
 			{
 				if (x < 0 || x >= Items.Count)
 				{
-					Activate(null);
+					await Activate(null);
 				}
 				else
 				{
-					Activate(Items[x]);
+					await Activate(Items[x]);
 				}
 			});
 		}
@@ -77,7 +77,8 @@ namespace Blastic.LifetimeManagement
 		/// </remarks>
 		/// <param name="item">Item to activate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		public void Activate(T? item, CancellationToken cancellationToken = default)
+		/// <returns>A task to be awaited.</returns>
+		public async Task Activate(T? item, CancellationToken cancellationToken = default)
 		{
 			int index = item != null ? Items.IndexOf(item) : -1;
 
@@ -100,7 +101,7 @@ namespace Blastic.LifetimeManagement
 			ActiveItem.Value = item;
 			ActiveItemIndex.Value = index;
 
-			ChangeActiveItem(cancellationToken);
+			await ChangeActiveItem(cancellationToken);
 		}
 
 		/// <summary>
@@ -113,14 +114,15 @@ namespace Blastic.LifetimeManagement
 		/// <param name="item">The item to close.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="result">The result of the closure operation.</param>
-		public void Close(
+		/// <returns>A task to be awaited.</returns>
+		public async Task Close(
 			T item,
 			CancellationToken cancellationToken = default,
 			bool result = false)
 		{
 			ClosureContext context = new(result);
 
-			item.Lifetime.Close(cancellationToken, context);
+			await item.Lifetime.Close(cancellationToken, context);
 
 			if (cancellationToken.IsCancellationRequested)
 			{
@@ -140,18 +142,25 @@ namespace Blastic.LifetimeManagement
 			ItemsSource.Remove(item);
 		}
 
-		private void ChangeActiveItem(CancellationToken cancellationToken)
+		private async Task ChangeActiveItem(CancellationToken cancellationToken)
 		{
-			IHasLifetime? previousActiveItem = _previousActiveItem.Value;
-			IHasLifetime? activeItem = ActiveItem.Value;
+			IHasAsyncLifetime? previousActiveItem = _previousActiveItem.Value;
+			IHasAsyncLifetime? activeItem = ActiveItem.Value;
 
 			if (Equals(previousActiveItem, activeItem))
 			{
 				return;
 			}
 
-			previousActiveItem?.Lifetime.Deactivate(cancellationToken);
-			activeItem?.Lifetime.Activate(cancellationToken);
+			if (previousActiveItem != null)
+			{
+				await previousActiveItem.Lifetime.Deactivate(cancellationToken);
+			}
+
+			if (activeItem != null)
+			{
+				await activeItem.Lifetime.Activate(cancellationToken);
+			}
 		}
 	}
 }

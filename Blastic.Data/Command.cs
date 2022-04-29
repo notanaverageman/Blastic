@@ -1,137 +1,94 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
 
-namespace Blastic.Data
+namespace Blastic.Data;
+
+public class Command : IDisposable
 {
-	public class Command : IDisposable
+	private readonly SqliteCommand _command;
+
+	public string CommandText
 	{
-		private readonly DbCommand _command;
-		private readonly DatabaseProvider _databaseProvider;
-		private readonly ILogger _logger;
+		get => _command.CommandText;
+		set => _command.CommandText = value;
+	}
 
-		public string CommandText
+	public Command(SqliteCommand command)
+	{
+		_command = command;
+	}
+
+	public void AddParameterWithValue(string name, object? value)
+	{
+		SqliteParameter parameter = _command.CreateParameter();
+		SetParameter(parameter, value);
+
+		parameter.ParameterName = name;
+		_command.Parameters.Add(parameter);
+	}
+
+	public void AddParameter(string name)
+	{
+		AddParameterWithValue(name, null);
+	}
+
+	public void SetParameter(string name, object value)
+	{
+		SqliteParameter parameter = _command.Parameters[name];
+		SetParameter(parameter, value);
+	}
+
+	public void SetParameter(int index, object value)
+	{
+		SqliteParameter parameter = _command.Parameters[index];
+		SetParameter(parameter, value);
+	}
+
+	public void SetParameter(SqliteParameter parameter, object? value)
+	{
+		value ??= DBNull.Value;
+
+		if (value is DateTime dateTime)
 		{
-			get => _command.CommandText;
-			set => _command.CommandText = value;
+			value = dateTime.ToFileTimeUtc();
 		}
 
-		public Command(DbCommand command, DatabaseProvider databaseProvider, ILogger logger)
+		if (DataReader.IsListOfEnums(value))
 		{
-			_command = command;
-			_databaseProvider = databaseProvider;
-			_logger = logger;
-
-			// In Azure Db connections the 30 seconds timeout occurs frequently.
-			_command.CommandTimeout = (int)TimeSpan.FromHours(1).TotalSeconds;
+			IEnumerable<object> list = ((IList)value).Cast<object>();
+			value = string.Join(DataReader.ListSeparator, list.Select(x => (int)x));
 		}
 
-		public void AddParameterWithValue(string name, object? value)
-		{
-			DbParameter parameter = _command.CreateParameter();
-			SetParameter(parameter, value);
+		parameter.Value = value;
+	}
 
-			parameter.ParameterName = name;
-			_command.Parameters.Add(parameter);
-		}
+	public void ClearParameters()
+	{
+		_command.Parameters.Clear();
+	}
+	
+	public int ExecuteNonQuery()
+	{
+		return _command.ExecuteNonQuery();
+	}
 
-		public void AddParameter(string name)
-		{
-			AddParameterWithValue(name, null);
-		}
+	public T? ExecuteScalar<T>()
+	{
+		object? result = _command.ExecuteScalar();
+		return DataReader.SafeCast<T>(result);
+	}
 
-		public void SetParameter(string name, object value)
-		{
-			DbParameter parameter = _command.Parameters[name];
-			SetParameter(parameter, value);
-		}
+	public DataReader ExecuteReader()
+	{
+		SqliteDataReader reader = _command.ExecuteReader();
+		return new DataReader(reader);
+	}
 
-		public void SetParameter(int index, object value)
-		{
-			DbParameter parameter = _command.Parameters[index];
-			SetParameter(parameter, value);
-		}
-
-		public void SetParameter(DbParameter parameter, object? value)
-		{
-			value ??= DBNull.Value;
-
-			if (_databaseProvider == DatabaseProvider.SQLite && value is DateTime dateTime)
-			{
-				value = dateTime.ToFileTimeUtc();
-			}
-
-			if (DataReader.IsListOfEnums(value))
-			{
-				IEnumerable<object> list = ((IList)value).Cast<object>();
-				value = string.Join(DataReader.ListSeparator, list.Select(x => (int)x));
-			}
-
-			parameter.Value = value;
-			FixParameterScale(parameter);
-		}
-
-		public void ClearParameters()
-		{
-			_command.Parameters.Clear();
-		}
-
-		public void RemoveExcessParameters(int requiredParameterCount)
-		{
-			for (int i = _command.Parameters.Count - 1; i >= requiredParameterCount; i--)
-			{
-				_command.Parameters.RemoveAt(i);
-			}
-		}
-
-		private void FixParameterScale(DbParameter parameter)
-		{
-			if (parameter.Value is DateTime)
-			{
-				// We set the scale property so that Azure connection does not throw datetime precision error.
-				((IDbDataParameter)parameter).Scale = 3;
-			}
-		}
-
-		public async Task<int> ExecuteNonQuery(CancellationToken cancellationToken)
-		{
-			return await ExecuteAndLogException(async () => await _command.ExecuteNonQueryAsync(cancellationToken));
-		}
-
-		public async Task<T> ExecuteScalar<T>(CancellationToken cancellationToken)
-		{
-			object result = await ExecuteAndLogException(async () => await _command.ExecuteScalarAsync(cancellationToken));
-			return DataReader.SafeCast<T>(result, _databaseProvider);
-		}
-
-		public async Task<DataReader> ExecuteReader(CancellationToken cancellationToken)
-		{
-			DbDataReader reader = await ExecuteAndLogException(async () => await _command.ExecuteReaderAsync(cancellationToken));
-			return new DataReader(reader, _databaseProvider);
-		}
-
-		public void Dispose()
-		{
-			_command.Dispose();
-		}
-
-		private async Task<T> ExecuteAndLogException<T>(Func<Task<T>> function)
-		{
-			try
-			{
-				return await function();
-			}
-			catch (Exception exception)
-			{
-				_logger.LogError(exception, "Error while executing database command.");
-				throw;
-			}
-		}
+	public void Dispose()
+	{
+		_command.Dispose();
 	}
 }

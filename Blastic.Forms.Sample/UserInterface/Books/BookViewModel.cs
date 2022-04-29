@@ -19,7 +19,7 @@ using ExecutionContext = Blastic.Execution.ExecutionContext;
 
 namespace Blastic.Forms.Sample.UserInterface.Books
 {
-	public class BookViewModel : IHasLifetime
+	public class BookViewModel : IHasAsyncLifetime
 	{
 		private readonly MediaPlayerViewModel _mediaPlayer;
 		private readonly DownloadsViewModel _downloads;
@@ -32,7 +32,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 		public Book Book { get; }
 		public LocalizableProperties LocalizableProperties { get; }
 
-		public ILifetime Lifetime { get; }
+		public IAsyncLifetime Lifetime { get; }
 		public ExecutionContext ExecutionContext { get; }
 
 		public IReactiveProperty<string> Title { get; }
@@ -48,8 +48,8 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 		public ReadOnlyObservableCollection<ChapterViewModel> Chapters => _chapters;
 
 		public Command PlayCommand { get; }
-		public Command DownloadCommand { get; }
 		public Command ToggleDescriptionLengthCommand { get; }
+		public AsyncCommand DownloadCommand { get; }
 
 		public Command<ChapterViewModel> ShowDetailsCommand { get; }
 
@@ -70,7 +70,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 			Book = book;
 			LocalizableProperties = localizableProperties;
 
-			Lifetime = new Lifetime();
+			Lifetime = new AsyncLifetime();
 			ExecutionContext = new ExecutionContext();
 
 			Title = new ReactiveProperty<string>(Book.Title);
@@ -98,7 +98,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 				.TrueForAny(
 					x => x.Download.DownloadCommand.CanExecuteObservable,
 					x => x)
-				.ToCommand()
+				.ToAsyncCommand()
 				.WithSubscribe(Download);
 
 			PlayCommand = new Command(Play);
@@ -155,19 +155,21 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 			await ExecutionContext.Execute(FetchFromArchiveOrg);
 		}
 
-		private async Task FetchFromDatabase(CancellationToken cancellationToken)
+		private Task FetchFromDatabase(CancellationToken cancellationToken)
 		{
-			Book? book = await _database.BooksTable.Get(Book.ArchiveOrgId, cancellationToken);
+			Book? book = _database.BooksTable.Get(Book.ArchiveOrgId);
 
 			if (book == null)
 			{
-				return;
+				return Task.CompletedTask;
 			}
 
 			foreach (Chapter chapter in book.Chapters)
 			{
 				_chaptersSource.AddOrUpdate(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
 			}
+
+			return Task.CompletedTask;
 		}
 
 		private async Task FetchFromArchiveOrg(CancellationToken cancellationToken)
@@ -197,7 +199,7 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 				_chaptersSource.AddOrUpdate(new ChapterViewModel(_downloads, _mediaPlayer, this, chapter));
 			}
 
-			await _database.BooksTable.Put(Book, cancellationToken);
+			_database.BooksTable.Put(Book);
 		}
 	}
 }

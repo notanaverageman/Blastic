@@ -1,24 +1,31 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Data.Tables;
 
 namespace Blastic.Data.Services.Settings
 {
 	public class SettingsTable : TableBase
 	{
-		public SettingsTable(ConnectionFactory connectionFactory) : base(connectionFactory)
+		public SettingsTable(Connection connection) : base(connection)
 		{
 		}
 
-		public async Task<string?> Get(string key, CancellationToken cancellationToken)
+		public bool Contains(string key)
 		{
-			using Connection connection = ConnectionFactory.CreateConnection();
-			using Command command = connection.CreateCommand();
+			using Command command = Connection.CreateCommand();
 
-			command.CommandText = "SELECT * FROM Settings WHERE Setting=@Setting";
-			command.AddParameterWithValue("@Setting", key);
+			command.CommandText = "SELECT COUNT(*) FROM Settings WHERE Key=@Key";
+			command.AddParameterWithValue("@Key", key);
 
-			using DataReader reader = await command.ExecuteReader(cancellationToken);
+			return command.ExecuteScalar<int>() > 0;
+		}
+
+		public string? Get(string key)
+		{
+			using Command command = Connection.CreateCommand();
+
+			command.CommandText = "SELECT * FROM Settings WHERE Key=@Key";
+			command.AddParameterWithValue("@Key", key);
+
+			using DataReader reader = command.ExecuteReader();
 
 			if (!reader.Read())
 			{
@@ -28,70 +35,26 @@ namespace Blastic.Data.Services.Settings
 			return reader.Get<string>("Value");
 		}
 
-		public async Task Put(string key, string value, CancellationToken cancellationToken)
+		public void Put(string key, string value)
 		{
-			using Connection connection = ConnectionFactory.CreateConnection();
+			using Command command = Connection.CreateCommand();
 
-			if (await Contains(connection, key, cancellationToken))
-			{
-				await Update(connection, key, value, cancellationToken);
-			}
-			else
-			{
-				await Insert(connection, key, value, cancellationToken);
-			}
-		}
+			command.CommandText = @"INSERT OR REPLACE INTO Settings (Key, Value) VALUES (@Key, @Value)";
 
-		public async Task<bool> Contains(string key, CancellationToken cancellationToken)
-		{
-			using Connection connection = ConnectionFactory.CreateConnection();
-			return await Contains(connection, key, cancellationToken);
-		}
-
-		private async Task<bool> Contains(Connection connection, string key, CancellationToken cancellationToken)
-		{
-			using Command command = connection.CreateCommand();
-
-			command.CommandText = "SELECT 1 FROM Settings WHERE Setting=@Setting";
-			command.AddParameterWithValue("@Setting", key);
-
-			using DataReader reader = await command.ExecuteReader(cancellationToken);
-			return reader.HasRows;
-		}
-
-		public async Task Delete(string key, CancellationToken cancellationToken)
-		{
-			using Connection connection = ConnectionFactory.CreateConnection();
-			using Command command = connection.CreateCommand();
-
-			command.CommandText = @"DELETE FROM Settings WHERE Setting=@Setting";
-			command.AddParameterWithValue("@Setting", key);
-
-			await command.ExecuteNonQuery(cancellationToken);
-		}
-
-		private async Task Insert(Connection connection, string key, string value, CancellationToken cancellationToken)
-		{
-			using Command command = connection.CreateCommand();
-
-			command.CommandText = @"INSERT INTO Settings (Setting, Value) VALUES (@Setting, @Value)";
-				
-			command.AddParameterWithValue("@Setting", key);
+			command.AddParameterWithValue("@Key", key);
 			command.AddParameterWithValue("@Value", value);
 
-			await command.ExecuteNonQuery(cancellationToken);
+			command.ExecuteNonQuery();
 		}
 
-		private async Task Update<T>(Connection connection, string key, T value, CancellationToken cancellationToken)
+		public void Delete(string key)
 		{
-			using Command command = connection.CreateCommand();
+			using Command command = Connection.CreateCommand();
 
-			command.CommandText = @"UPDATE Settings SET Value=@Value WHERE Setting=@Setting";
-				
-			command.AddParameterWithValue("@Value", value);
-			command.AddParameterWithValue("@Setting", key);
+			command.CommandText = @"DELETE FROM Settings WHERE Key=@Key";
+			command.AddParameterWithValue("@Key", key);
 
-			await command.ExecuteNonQuery(cancellationToken);
+			command.ExecuteNonQuery();
 		}
 	}
 }

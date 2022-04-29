@@ -54,7 +54,7 @@ namespace Blastic.Forms.Sample.UserInterface.Search
 		public ReadOnlyObservableCollection<BookViewModel> Books => _books;
 		public IReactiveProperty<string> SearchQuery { get; }
 
-		public Command<BookViewModel> NavigateToBookCommand { get; }
+		public AsyncCommand<BookViewModel> NavigateToBookCommand { get; }
 
 		public SearchViewModel(
 			ProgramDatabase database,
@@ -97,7 +97,7 @@ namespace Blastic.Forms.Sample.UserInterface.Search
 				.DistinctUntilChanged()
 				.Subscribe(Search);
 
-			NavigateToBookCommand = new Command<BookViewModel>(NavigateToBook);
+			NavigateToBookCommand = new AsyncCommand<BookViewModel>(NavigateToBook);
 		}
 
 		private async void Search(string query)

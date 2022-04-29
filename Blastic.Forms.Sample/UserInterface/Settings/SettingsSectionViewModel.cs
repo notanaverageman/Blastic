@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Blastic.LifetimeManagement;
 using Blastic.LifetimeManagement.Contexts;
 using Blastic.Ordering;
@@ -24,7 +23,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings
 			Lifetime.Initialization.Subscribe(OnInitialize, Order.AbsoluteMinimum);
 		}
 
-		private async Task OnInitialize(
+		private void OnInitialize(
 			InitializationContext context,
 			CancellationToken cancellationToken)
 		{
@@ -39,7 +38,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings
 			
 			foreach (Setting setting in settings)
 			{
-				await setting.Lifetime.Initialize(cancellationToken, context);
+				setting.Lifetime.Initialize(cancellationToken, context);
 			}
 		}
 	}

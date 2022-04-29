@@ -1,124 +1,160 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Transactions;
 using Blastic.Data.Migrations;
 using Blastic.Data.Tables;
-using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
 using Version = Blastic.Ordering.Version;
 
-namespace Blastic.Data
+namespace Blastic.Data;
+
+public abstract class DatabaseBase : IDisposable
 {
-	public abstract class DatabaseBase
+	private readonly SortedSet<MigrationBase> _migrations;
+	protected readonly Connection Connection;
+
+	public MetadataTable Metadata { get; }
+	
+	public DatabaseBase(SqliteConnectionStringBuilder connectionStringBuilder)
 	{
-		private readonly List<MigrationBase> _migrations;
+		SqliteConnection sqliteConnection = new(connectionStringBuilder.ConnectionString);
 
-		protected ILogger<DatabaseBase> Logger { get; }
+		Connection = new Connection(sqliteConnection);
+		Metadata = new MetadataTable(Connection);
 
-		public DatabaseInformationTable DatabaseInformationTable { get; }
-		public ConnectionFactory ConnectionFactory { get; }
-
-		protected DatabaseBase(
-			ConnectionFactory connectionFactory,
-			ILogger<DatabaseBase> logger,
-			IEnumerable<MigrationBase> migrations)
+		_migrations = new SortedSet<MigrationBase>(MigrationComparer.Instance)
 		{
-			ConnectionFactory = connectionFactory;
-			Logger = logger;
+			new CreateMetadataTable(Connection)
+		};
+	}
 
-			_migrations = migrations.ToList();
-			_migrations.Insert(0, new CreateDatabaseInformationTable());
+	public void OpenConnection()
+	{
+		Connection.Open();
+	}
+	
+	public void BeginTransaction()
+	{
+		Connection.BeginTransaction();
+	}
+	
+	public void CommitTransaction()
+	{
+		Connection.CommitTransaction();
+	}
+	
+	public void RollbackTransaction()
+	{
+		Connection.RollbackTransaction();
+	}
+	
+	public void SetPageSize(int bytes)
+	{
+		using Command command = Connection.CreateCommand();
+		command.CommandText = $"PRAGMA page_size = {bytes}";
 
-			DatabaseInformationTable = new DatabaseInformationTable(connectionFactory);
+		command.ExecuteNonQuery();
+	}
+	
+	public bool IsMigrationAvailable()
+	{
+		Version? currentVersion = Metadata.GetVersion();
+		Version newVersion = _migrations.Max(x => x.Version);
+
+		return currentVersion != newVersion;
+	}
+
+	public void Migrate(Version? targetVersion = null)
+	{
+		Connection.BeginTransaction();
+
+		try
+		{
+			Version? currentVersion = Metadata.GetVersion();
+			Version newVersion = Migrate(currentVersion, targetVersion);
+
+			Metadata.SetVersion(newVersion);
+
+			Connection.CommitTransaction();
 		}
-
-		public TransactionScope CreateTransactionScope()
+		catch (Exception)
 		{
-			return new(TransactionScopeAsyncFlowOption.Enabled);
+			Connection.RollbackTransaction();
+			throw;
 		}
+		
+	}
 
-		public async Task<bool> IsMigrationAvailable(CancellationToken cancellationToken)
+	private Version Migrate(Version? currentVersion, Version? targetVersion)
+	{
+		targetVersion ??= _migrations.Last().Version;
+		
+		if (currentVersion == targetVersion)
 		{
-			using Connection connection = ConnectionFactory.CreateConnection();
-
-			Version? currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
-			Version newVersion = _migrations.Max(x => x.Version);
-
-			return currentVersion != newVersion;
+			return targetVersion;
 		}
-
-		public async Task Migrate(CancellationToken cancellationToken, Version? targetVersion = null)
+		
+		if (currentVersion == null || currentVersion < targetVersion)
 		{
-			using TransactionScope transactionScope = CreateTransactionScope();
-			using Connection connection = ConnectionFactory.CreateConnection();
-			using IDisposable _ = Logger.BeginScope("Applying migrations.");
-
-			Version? currentVersion = await DatabaseInformationTable.GetVersion(connection, cancellationToken);
-			Version newVersion = await Migrate(connection, currentVersion, targetVersion, cancellationToken);
-
-			if (currentVersion == newVersion)
+			foreach (MigrationBase migration in _migrations)
 			{
-				transactionScope.Complete();
-				return;
+				if (migration.Version <= currentVersion || migration.Version > targetVersion)
+				{
+					continue;
+				}
+
+				migration.MigrateUp();
 			}
-
-			await DatabaseInformationTable.SetVersion(connection, newVersion, cancellationToken);
-			transactionScope.Complete();
-
-			Logger.LogInformation("Finished migrations. New version: {0}", newVersion);
 		}
-
-		private async Task<Version> Migrate(
-			Connection connection,
-			Version? currentVersion,
-			Version? targetVersion,
-			CancellationToken cancellationToken)
+		else
 		{
-			IEnumerable<MigrationBase> migrations = _migrations;
-
-			targetVersion ??= migrations.Max(x => x.Version);
-
-			Logger.LogInformation("Current version: {0}. Target version: {1}", currentVersion, targetVersion);
-
-			if (currentVersion == targetVersion)
+			// Migrate down in reverse order.
+			foreach (MigrationBase migration in _migrations.Reverse())
 			{
-				return targetVersion;
+				if (migration.Version <= currentVersion || migration.Version > targetVersion)
+				{
+					continue;
+				}
+
+				migration.MigrateDown();
+			}
+		}
+		
+		return targetVersion;
+	}
+
+	protected void AddMigration(MigrationBase migration)
+	{
+		_migrations.Add(migration);
+	}
+
+	public void Dispose()
+	{
+		Connection.Dispose();
+	}
+
+	private class MigrationComparer : IComparer<MigrationBase>
+	{
+		public static readonly MigrationComparer Instance = new();
+
+		public int Compare(MigrationBase? x, MigrationBase? y)
+		{
+			if (ReferenceEquals(x, y))
+			{
+				return 0;
 			}
 
-			Func<MigrationBase, Connection, CancellationToken, Task> migrationFunction;
-			Version result;
-
-			if (currentVersion == null || currentVersion < targetVersion)
+			if (ReferenceEquals(null, y))
 			{
-				migrations = migrations
-					.Where(x => x.Version > currentVersion)
-					.Where(x => x.Version <= targetVersion)
-					.OrderBy(x => x.Version)
-					.ToArray();
-
-				migrationFunction = (x, y, z) => x.MigrateUp(y, z);
-				result = migrations.Last().Version;
-			}
-			else
-			{
-				migrations = migrations
-					.Where(x => x.Version <= currentVersion)
-					.Where(x => x.Version > targetVersion)
-					.OrderByDescending(x => x.Version)
-					.ToArray();
-
-				migrationFunction = (x, y, z) => x.MigrateDown(y, z);
-				result = migrations.First().Version;
+				return 1;
 			}
 
-			foreach (MigrationBase migration in migrations)
+			if (ReferenceEquals(null, x))
 			{
-				await migrationFunction(migration, connection, cancellationToken);
+				return -1;
 			}
 
-			return result;
+			return x.Version.CompareTo(y.Version);
 		}
 	}
 }

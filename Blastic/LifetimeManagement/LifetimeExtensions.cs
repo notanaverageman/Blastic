@@ -21,6 +21,56 @@ namespace Blastic.LifetimeManagement
 			CompositeDisposable disposable = new();
 			lifetimeChainOptions ??= new LifetimeChainOptions();
 
+			void Subscribe<T>(Command<T> parent, Command<T> child)
+			{
+				IDisposable subscription = parent
+					.Subscribe(x =>
+					{
+						child.Execute(x);
+					});
+
+				disposable.Add(subscription);
+			}
+
+			if (lifetimeChainOptions.InitializeChildrenOnSelfInitialization)
+			{
+				Subscribe(lifetime.Initialization, childLifetime.Initialization);
+			}
+
+			if (lifetimeChainOptions.CloseChildrenOnSelfClose)
+			{
+				Subscribe(lifetime.CanClose, childLifetime.CanClose);
+				Subscribe(lifetime.Closure, childLifetime.Closure);
+			}
+
+			if (lifetimeChainOptions.ActivateChildrenOnSelfActivation)
+			{
+				Subscribe(lifetime.Activation, childLifetime.Activation);
+			}
+
+			if (lifetimeChainOptions.DeactivateChildrenOnSelfDeactivation)
+			{
+				Subscribe(lifetime.Deactivation, childLifetime.Deactivation);
+			}
+
+			return disposable;
+		}
+
+		/// <summary>
+		/// Bind the lifetime of an object to its parent's lifetime.
+		/// </summary>
+		/// <param name="lifetime">Parent's lifetime.</param>
+		/// <param name="childLifetime">Child's lifetime.</param>
+		/// <param name="lifetimeChainOptions">Options to manage the child lifetime.</param>
+		/// <returns>An <see cref="IDisposable"/> that removes the link between lifetimes when disposed.</returns>
+		public static IDisposable AddChildLifetime(
+			this IAsyncLifetime lifetime,
+			IAsyncLifetime childLifetime,
+			LifetimeChainOptions? lifetimeChainOptions = null)
+		{
+			CompositeDisposable disposable = new();
+			lifetimeChainOptions ??= new LifetimeChainOptions();
+
 			void Subscribe<T>(AsyncCommand<T> parent, AsyncCommand<T> child)
 			{
 				IDisposable subscription = parent

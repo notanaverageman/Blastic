@@ -8,7 +8,7 @@ namespace Blastic.Reactive
 {
 	public static class ObservableExtensions
 	{
-		public static IObservable<bool> Not(this IObservable<bool> observable)
+		public static IObservable<bool> Negate(this IObservable<bool> observable)
 		{
 			return observable.Select(x => !x);
 		}

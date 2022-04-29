@@ -1,35 +1,36 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Data.Migrations;
-using Blastic.Data.ProviderSpecific;
 using Blastic.Ordering;
 
 namespace Blastic.Data.Services.Settings
 {
 	public class CreateSettingsTable : MigrationBase
 	{
-		public override Version Version { get; } = new(int.MinValue, 1, 0);
+		public override Version Version { get; }
 
-		public override async Task MigrateUp(Connection connection, CancellationToken cancellationToken)
+		public CreateSettingsTable(Connection connection, Version version) : base(connection)
 		{
-			ProviderSpecifics providerSpecifics = connection.ProviderSpecifics;
-
-			using Command command = connection.CreateCommand();
-
-			command.CommandText = $@"CREATE TABLE Settings (
-                                        Setting NVARCHAR(255) PRIMARY KEY,
-                                        Value   {providerSpecifics.NVarCharMaxColumn}
-                                    );";
-
-			await command.ExecuteNonQuery(cancellationToken);
+			Version = version;
 		}
 
-		public override async Task MigrateDown(Connection connection, CancellationToken cancellationToken)
+		public override void MigrateUp()
 		{
-			using Command command = connection.CreateCommand();
+			using Command command = Connection.CreateCommand();
+
+			command.CommandText = @"
+CREATE TABLE Settings (
+    Key   TEXT PRIMARY KEY,
+    Value TEXT
+);";
+
+			command.ExecuteNonQuery();
+		}
+
+		public override void MigrateDown()
+		{
+			using Command command = Connection.CreateCommand();
 
 			command.CommandText = "DROP TABLE Settings";
-			await command.ExecuteNonQuery(cancellationToken);
+			command.ExecuteNonQuery();
 		}
 	}
 }

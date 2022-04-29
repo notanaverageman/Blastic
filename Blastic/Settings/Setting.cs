@@ -1,7 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Diagnostics;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
@@ -93,11 +91,11 @@ namespace Blastic.Settings
 
 			Lifetime.Initialization.Subscribe(Read);
 
-			Lifetime.Closure.Subscribe(async (x, y) =>
+			Lifetime.Closure.Subscribe((x, _) =>
 			{
-				if (x.Result == true)
+				if (x?.Result == true)
 				{
-					await Save(y);
+					Save();
 				}
 				else
 				{
@@ -109,16 +107,14 @@ namespace Blastic.Settings
 		/// <summary>
 		/// Read the value of this setting from store.
 		/// </summary>
-		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>A task to be awaited.</returns>
-		public abstract Task Read(CancellationToken cancellationToken);
+		public abstract void Read();
 
 		/// <summary>
 		/// Write the value of this setting to store.
 		/// </summary>
-		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>A task to be awaited.</returns>
-		public abstract Task Save(CancellationToken cancellationToken);
+		public abstract void Save();
 
 		/// <summary>
 		/// Sets the <see cref="Setting{T}.SettingValue"/> to the <see cref="Setting{T}.Value"/>.
@@ -225,17 +221,17 @@ namespace Blastic.Settings
 		}
 
 		/// <inheritdoc />
-		public override async Task Read(CancellationToken cancellationToken)
+		public override void Read()
 		{
 			_isReadingValue = true;
 			
 			_isEnabledSubscription?.Dispose();
 			_isEnabledSubscription = Element.IsEnabled.Subscribe(_ => ReactiveSettingValue.TriggerValidation());
 
-			TStored defaultValue = await GetValueBeforeSave(DefaultValue, cancellationToken);
-			TStored storageValue = (await SettingsStorage.Get(Key, defaultValue, cancellationToken))!;
+			TStored defaultValue = GetValueBeforeSave(DefaultValue);
+			TStored storageValue = SettingsStorage.Get(Key, defaultValue);
 
-			T value = await GetValueAfterRead(storageValue, cancellationToken);
+			T value = GetValueAfterRead(storageValue);
 
 			ReactiveValue.Value = value;
 			ReactiveSettingValue.Value = value;
@@ -244,11 +240,11 @@ namespace Blastic.Settings
 		}
 
 		/// <inheritdoc />
-		public override async Task Save(CancellationToken cancellationToken)
+		public override void Save()
 		{
-			TStored value = await GetValueBeforeSave(SettingValue, cancellationToken);
+			TStored value = GetValueBeforeSave(SettingValue);
 
-			await SettingsStorage.Put(Key, value, cancellationToken);
+			SettingsStorage.Put(Key, value);
 			ReactiveValue.Value = SettingValue;
 		}
 
@@ -256,17 +252,15 @@ namespace Blastic.Settings
 		/// Return the setting value corresponding to the value read from store.
 		/// </summary>
 		/// <param name="value">Value read from store.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Return the same object or the setting value constructed from sent value.</returns>
-		protected abstract Task<T> GetValueAfterRead(TStored value, CancellationToken cancellationToken);
+		protected abstract T GetValueAfterRead(TStored value);
 
 		/// <summary>
 		/// Return an object to save to the storage.
 		/// </summary>
 		/// <param name="value">Value to write to store.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Return the same object or the value represents the setting value.</returns>
-		protected abstract Task<TStored> GetValueBeforeSave(T value, CancellationToken cancellationToken);
+		protected abstract TStored GetValueBeforeSave(T value);
 
 		/// <inheritdoc />
 		public override void Revert()
@@ -274,7 +268,7 @@ namespace Blastic.Settings
 			ReactiveSettingValue.Value = Value;
 		}
 
-		private async void OnSettingValueChanged()
+		private void OnSettingValueChanged()
 		{
 			DiagnosticMessagesSource.Clear();
 
@@ -287,7 +281,7 @@ namespace Blastic.Settings
 
 			if (SaveOnChange && !_isReadingValue && DiagnosticMessages.Count == 0)
 			{
-				await Save(CancellationToken.None);
+				Save();
 			}
 		}
 	}
@@ -316,15 +310,15 @@ namespace Blastic.Settings
 		}
 
 		/// <inheritdoc cref="Setting{T,TStored}.GetValueAfterRead"/>
-		protected override Task<T> GetValueAfterRead(T value, CancellationToken cancellationToken)
+		protected override T GetValueAfterRead(T value)
 		{
-			return Task.FromResult(value);
+			return value;
 		}
 
 		/// <inheritdoc cref="Setting{T,TStored}.GetValueAfterRead"/>
-		protected override Task<T> GetValueBeforeSave(T value, CancellationToken cancellationToken)
+		protected override T GetValueBeforeSave(T value)
 		{
-			return Task.FromResult(value);
+			return value;
 		}
 	}
 }

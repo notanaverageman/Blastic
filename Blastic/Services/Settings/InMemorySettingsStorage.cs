@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Blastic.Services.Settings
 {
@@ -21,35 +19,32 @@ namespace Blastic.Services.Settings
 		}
 
 		/// <inheritdoc />
-		public Task<bool> Contains(string key, CancellationToken cancellationToken = default)
+		public bool Contains(string key)
 		{
-			bool contains = _settings.ContainsKey(key);
-			return Task.FromResult(contains);
+			return _settings.ContainsKey(key);
 		}
 
 		/// <inheritdoc />
-		public Task<T> Get<T>(string key, T defaultValue = default, CancellationToken cancellationToken = default)
+		public T? Get<T>(string key, T? defaultValue = default)
 		{
-			if (!_settings.TryGetValue(key, out object? value) || !(value is T t))
+			if (!_settings.TryGetValue(key, out object? value) || value is not T t)
 			{
-				return Task.FromResult(defaultValue);
+				return defaultValue;
 			}
 
-			return Task.FromResult(t);
+			return t;
 		}
 
 		/// <inheritdoc />
-		public Task Put<T>(string key, T value, CancellationToken cancellationToken = default)
+		public void Put<T>(string key, T value)
 		{
 			_settings[key] = value;
-			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />
-		public Task Delete(string key, CancellationToken cancellationToken = default)
+		public void Delete(string key)
 		{
 			_settings.Remove(key);
-			return Task.CompletedTask;
 		}
 	}
 }

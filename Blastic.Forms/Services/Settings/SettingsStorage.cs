@@ -1,6 +1,4 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Services.Settings;
 using Xamarin.Essentials;
 
@@ -8,14 +6,14 @@ namespace Blastic.Forms.Services.Settings
 {
 	public class SettingsStorage : ISettingsStorage
 	{
-		public Task<bool> Contains(string key, CancellationToken cancellationToken)
+		public bool Contains(string key)
 		{
-			return Task.FromResult(Preferences.ContainsKey(key));
+			return Preferences.ContainsKey(key);
 		}
 
-		public async Task<T> Get<T>(string key, T defaultValue, CancellationToken cancellationToken)
+		public T Get<T>(string key, T defaultValue)
 		{
-			bool contains = await Contains(key, cancellationToken);
+			bool contains = Contains(key);
 
 			if (!contains)
 			{
@@ -45,14 +43,14 @@ namespace Blastic.Forms.Services.Settings
 			return (T)value;
 		}
 
-		public Task Put<T>(string key, T value, CancellationToken cancellationToken)
+		public void Put<T>(string key, T value)
 		{
 			Type type = value.GetType();
 
 			if (type.IsEnum)
 			{
 				Preferences.Set(key, Enum.GetName(type, value));
-				return Task.CompletedTask;
+				return;
 			}
 			
 			switch (value)
@@ -81,14 +79,11 @@ namespace Blastic.Forms.Services.Settings
 				default:
 					throw new ArgumentException($"{type} is not supported.");
 			}
-
-			return Task.CompletedTask;
 		}
 
-		public Task Delete(string key, CancellationToken cancellationToken)
+		public void Delete(string key)
 		{
 			Preferences.Remove(key);
-			return Task.CompletedTask;
 		}
 	}
 }

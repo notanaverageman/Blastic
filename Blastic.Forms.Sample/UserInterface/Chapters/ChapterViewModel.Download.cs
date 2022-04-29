@@ -19,7 +19,7 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 			public IReactiveProperty<bool> IsDownloaded { get; }
 			public IReactiveProperty<double> DownloadProgress { get; }
 			
-			public Command DownloadCommand { get; }
+			public AsyncCommand DownloadCommand { get; }
 			public Command DeleteDownloadedFileCommand { get; }
 
 			public DownloadPart(
@@ -37,12 +37,12 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 				DownloadProgress = new ReactiveProperty<double>();
 
 				IObservable<bool> downloaded = IsDownloaded;
-				IObservable<bool> notDownloaded = IsDownloaded.Not();
-				IObservable<bool> notDownloading = IsDownloading.Not();
-				IObservable<bool> notPlaying = mediaPart.IsPlaying.Not();
+				IObservable<bool> notDownloaded = IsDownloaded.Negate();
+				IObservable<bool> notDownloading = IsDownloading.Negate();
+				IObservable<bool> notPlaying = mediaPart.IsPlaying.Negate();
 
 				DownloadCommand = notDownloaded.And(notDownloading)
-					.ToCommand()
+					.ToAsyncCommand()
 					.WithSubscribe(Download);
 
 				DeleteDownloadedFileCommand = downloaded.And(notDownloading).And(notPlaying)

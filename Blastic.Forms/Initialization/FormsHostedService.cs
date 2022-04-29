@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Blastic.Forms.Platform;
 using Blastic.Forms.ViewManagement;
 using Blastic.Platform;
 using Blastic.ViewManagement;
@@ -26,10 +25,10 @@ namespace Blastic.Forms.Initialization
 
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			SynchronizationContext synchronizationContext = SynchronizationContext.Current;
+			SynchronizationContext synchronizationContext = _serviceProvider.GetRequiredService<SynchronizationContext>();
 			SynchronizationContext.SetSynchronizationContext(synchronizationContext);
 
-			PlatformSpecifics.Current = new FormsPlatformSpecifics(synchronizationContext);
+			PlatformSpecifics.Current = _serviceProvider.GetRequiredService<IPlatformSpecifics>();
 			ViewLocator.Current = _serviceProvider.GetRequiredService<IViewLocator<VisualElement>>();
 
 			object mainViewModel = _serviceProvider.GetRequiredService(_builder.MainViewModelType);

@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using Blastic.Data;
 using Blastic.Data.Migrations;
 using Blastic.Forms.Initialization.Extensions;
 using Blastic.Forms.Sample.Data;
@@ -21,6 +20,7 @@ using Blastic.Forms.Sample.UserInterface.Settings.Themes;
 using Blastic.Ordering;
 using Blastic.Services.Localization;
 using Blastic.Services.Notifications;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xamarin.Forms;
@@ -50,7 +50,10 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 							.AddTypeMapper<Notification, NotificationView>()
 							.AddSettingsStorage();
 					})
-				.AddProgramDatabase(DatabaseProvider.SQLite, $"Data Source={databasePath};")
+				.AddProgramDatabase(new SqliteConnectionStringBuilder
+				{
+					DataSource = databasePath
+				})
 				.ConfigureServices(
 					(_, y) =>
 					{
@@ -74,15 +77,11 @@ namespace Blastic.Forms.Sample.Initialization.Extensions
 
 		public static IHostBuilder AddProgramDatabase(
 			this IHostBuilder hostBuilder,
-			DatabaseProvider databaseProvider,
-			string connectionString)
+			SqliteConnectionStringBuilder connectionStringBuilder)
 		{
-			DatabaseConfiguration databaseConfiguration = new(databaseProvider, connectionString);
-
 			hostBuilder.ConfigureServices((_, x) =>
 			{
-				x.AddSingleton(_ => databaseConfiguration);
-				x.AddSingleton<ConnectionFactory>();
+				x.AddSingleton(connectionStringBuilder);
 				x.AddSingleton<ProgramDatabase>();
 				x.AddSingleton<MigrationBase, CreateBooksTable>();
 			});

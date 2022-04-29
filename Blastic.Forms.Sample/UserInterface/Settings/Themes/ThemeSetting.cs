@@ -1,6 +1,4 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Reactive;
@@ -53,21 +51,16 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 			SaveOnChange = true;
 		}
 
-		protected override Task<Theme> GetValueBeforeSave(
-			LocalizedSettingValue<Theme> value,
-			CancellationToken cancellationToken)
+		protected override Theme GetValueBeforeSave(LocalizedSettingValue<Theme> value)
 		{
-			return Task.FromResult(value.Value);
+			return value.Value;
 		}
 
-		protected override Task<LocalizedSettingValue<Theme>> GetValueAfterRead(
-			Theme value,
-			CancellationToken cancellationToken)
+		protected override LocalizedSettingValue<Theme> GetValueAfterRead(Theme value)
 		{
-			return Task.FromResult(
-				new LocalizedSettingValue<Theme>(
+			return new LocalizedSettingValue<Theme>(
 					value,
-					GetName(_localizableProperties, value)));
+					GetName(_localizableProperties, value));
 		}
 
 		private static IReadOnlyReactiveProperty<string> GetName(

@@ -1,12 +1,15 @@
 using System;
 using System.Resources;
+using System.Threading;
 using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
+using Blastic.Forms.Platform;
 using Blastic.Forms.Services.Navigation;
 using Blastic.Forms.Services.Settings;
 using Blastic.Forms.UserInterface;
 using Blastic.Forms.ViewManagement;
 using Blastic.Ordering;
+using Blastic.Platform;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
@@ -83,6 +86,8 @@ namespace Blastic.Forms.Initialization
 
 		private void AddDefaults()
 		{
+			_serviceCollection.AddSingleton(SynchronizationContext.Current);
+			_serviceCollection.AddSingleton<IPlatformSpecifics, FormsPlatformSpecifics>();
 			_serviceCollection.AddSingleton<IViewLocator<VisualElement>, ViewLocator>();
 			_serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
 			_serviceCollection.AddSingleton<INotificationService, NotificationService>();

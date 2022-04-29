@@ -1,14 +1,18 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Ordering;
 
-namespace Blastic.Data.Migrations
-{
-	public abstract class MigrationBase
-	{
-		public abstract Version Version { get; }
+namespace Blastic.Data.Migrations;
 
-		public abstract Task MigrateUp(Connection connection, CancellationToken cancellationToken);
-		public abstract Task MigrateDown(Connection connection, CancellationToken cancellationToken);
+public abstract class MigrationBase
+{
+	public abstract Version Version { get; }
+
+	protected Connection Connection { get; }
+
+	public MigrationBase(Connection connection)
+	{
+		Connection = connection;
 	}
+
+	public abstract void MigrateUp();
+	public abstract void MigrateDown();
 }

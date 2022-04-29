@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.Services.Settings;
@@ -21,15 +19,15 @@ namespace Blastic.Settings
 		}
 
 		/// <inheritdoc />
-		protected override Task<string> GetValueAfterRead(string value, CancellationToken cancellationToken)
+		protected override string GetValueAfterRead(string value)
 		{
-			return Task.FromResult(value);
+			return value;
 		}
 
 		/// <inheritdoc />
-		protected override Task<string> GetValueBeforeSave(string value, CancellationToken cancellationToken)
+		protected override string GetValueBeforeSave(string value)
 		{
-			return Task.FromResult(value);
+			return value;
 		}
 	}
 	

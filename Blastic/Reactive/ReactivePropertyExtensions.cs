@@ -42,5 +42,28 @@ namespace Blastic.Reactive
 		{
 			return property.Subscribe(Observer.Create(onNext), raiseLatestValue);
 		}
+
+		public static void OneActive(params IReactiveProperty<bool>[] properties)
+		{
+			foreach (IReactiveProperty<bool> property in properties)
+			{
+				property.Subscribe(
+					isActive =>
+					{
+						if (!isActive)
+						{
+							return;
+						}
+
+						foreach (IReactiveProperty<bool> other in properties)
+						{
+							if (property != other)
+							{
+								other.Value = false;
+							}
+						}
+					});
+			}
+		}
 	}
 }

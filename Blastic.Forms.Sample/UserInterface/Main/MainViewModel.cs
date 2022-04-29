@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Forms.Sample.Data;
 using Blastic.Forms.Sample.UserInterface.Chapters;
 using Blastic.Forms.Sample.UserInterface.Downloads;
@@ -54,28 +52,22 @@ namespace Blastic.Forms.Sample.UserInterface.Main
 			ItemsSource.AddRange(tabs);
 
 			Lifetime.Initialization.Subscribe(
-				async x =>
-				{
-					await MigrateDatabase(x);
-				},
+				MigrateDatabase,
 				// This order ensures that we are running before child initializations.
 				new Order(int.MinValue));
 
-			Lifetime.Activation.Subscribe(async x =>
-			{
-				await Activate(Items.FirstOrDefault(), x);
-			});
+			Lifetime.Activation.Subscribe(x => Activate(Items.FirstOrDefault(), x));
 		}
 
-		private async Task MigrateDatabase(CancellationToken cancellationToken)
+		private void MigrateDatabase()
 		{
-			if (!await _programDatabase.IsMigrationAvailable(cancellationToken))
+			if (!_programDatabase.IsMigrationAvailable())
 			{
 				return;
 			}
 
 			_logger.LogDebug("Checking and applying migrations.");
-			await _programDatabase.Migrate(cancellationToken);
+			_programDatabase.Migrate();
 			_logger.LogDebug("Finished checking and applying migrations.");
 		}
 	}

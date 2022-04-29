@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using Blastic.Data;
-using Blastic.Data.Migrations;
+using Blastic.Forms.Sample.Data.Migrations;
 using Blastic.Forms.Sample.Data.Tables;
-using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
 
 namespace Blastic.Forms.Sample.Data
 {
@@ -10,14 +9,11 @@ namespace Blastic.Forms.Sample.Data
 	{
 		public BooksTable BooksTable { get; }
 
-		public ProgramDatabase(
-			ConnectionFactory connectionFactory,
-			ILogger<ProgramDatabase> logger,
-			IEnumerable<MigrationBase> migrations)
-			:
-			base(connectionFactory, logger, migrations)
+		public ProgramDatabase(SqliteConnectionStringBuilder connectionStringBuilder) : base(connectionStringBuilder)
 		{
-			BooksTable = new BooksTable(connectionFactory);
+			BooksTable = new BooksTable(Connection);
+
+			AddMigration(new CreateBooksTable(Connection));
 		}
 	}
 }

@@ -89,7 +89,7 @@ namespace Blastic.Commanding
 		private readonly SemaphoreSlim _semaphore;
 
 		private CancellationTokenSource? _cancellationTokenSource;
-		private TaskCompletionSource? _awaitableTask;
+		private TaskCompletionSource<bool>? _awaitableTask;
 		private long _executionNumber;
 
 		/// <inheritdoc />
@@ -359,7 +359,7 @@ namespace Blastic.Commanding
 			}
 
 			bool acquiredSemaphore = false;
-			TaskCompletionSource taskCompletionSource = new();
+			TaskCompletionSource<bool> taskCompletionSource = new();
 
 			try
 			{
@@ -436,16 +436,16 @@ namespace Blastic.Commanding
 					}
 
 					_isExecuting.Value = false;
-					taskCompletionSource.SetResult();
+					taskCompletionSource.SetResult(true);
 
 					_cancellationTokenSource = null;
 				}
 			}
 		}
 
-		public TaskAwaiter GetAwaiter()
+		public TaskAwaiter<bool> GetAwaiter()
 		{
-			return _awaitableTask?.Task.GetAwaiter() ?? Task.CompletedTask.GetAwaiter();
+			return _awaitableTask?.Task.GetAwaiter() ?? Task.FromResult(true).GetAwaiter();
 		}
 
 		private struct OrderedAction

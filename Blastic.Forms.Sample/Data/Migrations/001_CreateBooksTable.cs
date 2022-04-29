@@ -1,8 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Blastic.Data;
 using Blastic.Data.Migrations;
-using Blastic.Data.ProviderSpecific;
 using Blastic.Ordering;
 
 namespace Blastic.Forms.Sample.Data.Migrations
@@ -11,28 +8,30 @@ namespace Blastic.Forms.Sample.Data.Migrations
 	{
 		public override Version Version { get; } = new(1, 0, 0);
 
-		public override async Task MigrateUp(Connection connection, CancellationToken cancellationToken)
+		public CreateBooksTable(Connection connection) : base(connection)
 		{
-			using Command command = connection.CreateCommand();
-
-			ProviderSpecifics providerSpecifics = connection.ProviderSpecifics;
-
-			command.CommandText = $@"CREATE TABLE Books (
-                                        Id              INTEGER PRIMARY KEY {providerSpecifics.IdentityColumn},
-                                        ArchiveOrgId    {providerSpecifics.NVarCharMaxColumn},
-                                        Title           {providerSpecifics.NVarCharMaxColumn},
-                                        Description     {providerSpecifics.NVarCharMaxColumn}
-                                    );";
-
-			await command.ExecuteNonQuery(cancellationToken);
 		}
 
-		public override async Task MigrateDown(Connection connection, CancellationToken cancellationToken)
+		public override void MigrateUp()
 		{
-			using Command command = connection.CreateCommand();
+			using Command command = Connection.CreateCommand();
+			
+			command.CommandText = $@"CREATE TABLE Books (
+                                        Id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        ArchiveOrgId    TEXT,
+                                        Title           TEXT,
+                                        Description     TEXT
+                                    );";
+
+			command.ExecuteNonQuery();
+		}
+
+		public override void MigrateDown()
+		{
+			using Command command = Connection.CreateCommand();
 
 			command.CommandText = "DROP TABLE Books";
-			await command.ExecuteNonQuery(cancellationToken);
+			command.ExecuteNonQuery();
 		}
 	}
 }
