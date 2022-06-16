@@ -27,6 +27,13 @@ namespace Blastic.Reactive
 		{
 			return observable.Select(x => x != null);
 		}
+		
+		public static IObservable<(T?, T?)> WithPrevious<T>(this IObservable<T> observable)
+		{
+			return observable.Scan(
+				(default(T), default(T)),
+				(accumulator, current) => (accumulator.Item2, current));
+		}
 
 		// https://stackoverflow.com/a/65155886/3670437
 		public static IObservable<T> DisposePrevious<T>(this IObservable<T> source) where T : IDisposable
