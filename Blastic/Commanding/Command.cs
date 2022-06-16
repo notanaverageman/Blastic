@@ -11,7 +11,7 @@ using Blastic.Reactive;
 namespace Blastic.Commanding
 {
 	/// <inheritdoc cref="Command{T}"/>
-	public class Command : Command<object?>
+	public class Command : Command<object?>, IReadOnlyCommand
 	{
 		/// <summary>
 		/// The default order of the actions if their order is not specified.
@@ -81,7 +81,7 @@ namespace Blastic.Commanding
 	/// </para>
 	/// </remarks>
 	/// <typeparam name="T"></typeparam>
-	public class Command<T> : ICommand
+	public class Command<T> : ICommand, IReadOnlyCommand<T>
 	{
 		private readonly List<OrderedAction> _actions;
 		private readonly List<OrderedAction> _finallyActions;
@@ -212,45 +212,25 @@ namespace Blastic.Commanding
 			Subscribe(action);
 		}
 		
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable Subscribe(Action action, Order? order = null)
 		{
 			return Subscribe((_, _) => action(), order);
 		}
 
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable Subscribe(Action<T?> action, Order? order = null)
 		{
 			return Subscribe((x, _) =>action(x), order);
 		}
 
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable Subscribe(Action<CancellationToken> action, Order? order = null)
 		{
 			return Subscribe((_, y) => action(y), order);
 		}
 
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable Subscribe(Action<T?, CancellationToken> action, Order? order = null)
 		{
 			order ??= Command.DefaultOrder;
@@ -262,49 +242,26 @@ namespace Blastic.Commanding
 
 			return new Subscription(this, orderedAction);
 		}
-		
-		/// <summary>
-		/// Registers the given action to be executed when the <see cref="Command"/> is executed.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+
+		/// <inheritdoc />
 		public IDisposable SubscribeFinally(Action action, Order? order = null)
 		{
 			return SubscribeFinally((_, _) => action(), order);
 		}
 
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable SubscribeFinally(Action<T?> action, Order? order = null)
 		{
 			return SubscribeFinally((x, _) => action(x), order);
 		}
 
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable SubscribeFinally(Action<CancellationToken> action, Order? order = null)
 		{
 			return SubscribeFinally((_, y) => action(y), order);
 		}
 
-		/// <summary>
-		/// Registers the given action to be executed after all the normal actions are finished. These actions will
-		/// be called even if the execution is cancelled.
-		/// </summary>
-		/// <param name="action">The action to execute.</param>
-		/// <param name="order">Order of the action among other actions.</param>
-		/// <returns>An <see cref="IDisposable"/> that unregisters the action when disposed.</returns>
+		/// <inheritdoc />
 		public IDisposable SubscribeFinally(Action<T?, CancellationToken> action, Order? order = null)
 		{
 			order ??= Command.DefaultOrder;
@@ -443,9 +400,9 @@ namespace Blastic.Commanding
 			}
 		}
 
-		public TaskAwaiter<bool> GetAwaiter()
+		public TaskAwaiter GetAwaiter()
 		{
-			return _awaitableTask?.Task.GetAwaiter() ?? Task.FromResult(true).GetAwaiter();
+			return ((Task?)_awaitableTask?.Task)?.GetAwaiter() ?? Task.CompletedTask.GetAwaiter();
 		}
 
 		private struct OrderedAction
