@@ -43,21 +43,50 @@ namespace Blastic.Reactive
 			return property.Subscribe(Observer.Create(onNext), raiseLatestValue);
 		}
 
-		public static void OneActive(params IReactiveProperty<bool>[] properties)
+		public static void OneActive(
+			IObservable<bool> allowUnselectionObservable,
+			params IReactiveProperty<bool>[] properties)
 		{
-			foreach (IReactiveProperty<bool> property in properties)
+			foreach (IReactiveProperty<bool> thisProperty in properties)
 			{
-				property.Subscribe(
-					isActive =>
+				thisProperty
+					.CombineLatest(allowUnselectionObservable)
+					.Subscribe(x =>
 					{
+						bool isActive = x.First;
+						bool allowUnselection = x.Second;
+
 						if (!isActive)
 						{
+							if (allowUnselection)
+							{
+								return;
+							}
+
+							// Check for other properties so that at least one of them is active. If not,
+							// revert deactivation of this property.
+							bool anotherPropertyIsActive = false;
+
+							foreach (IReactiveProperty<bool> other in properties)
+							{
+								if (thisProperty != other && other.Value)
+								{
+									anotherPropertyIsActive = true;
+									break;
+								}
+							}
+
+							if (!anotherPropertyIsActive)
+							{
+								thisProperty.Value = true;
+							}
+
 							return;
 						}
 
 						foreach (IReactiveProperty<bool> other in properties)
 						{
-							if (property != other)
+							if (thisProperty != other)
 							{
 								other.Value = false;
 							}
