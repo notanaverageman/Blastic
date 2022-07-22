@@ -29,9 +29,9 @@ namespace Blastic.Wpf.ViewManagement
 		}
 
 		/// <inheritdoc />
-		protected override void AttachView(FrameworkElement view, IViewAware viewAware)
+		protected override void SubscribeViewUnloadEvent(FrameworkElement view, IViewAware viewAware)
 		{
-			view.Unloaded += (sender, args) =>
+			view.Unloaded += (_, _) =>
 			{
 				viewAware.View.Value = null;
 			};

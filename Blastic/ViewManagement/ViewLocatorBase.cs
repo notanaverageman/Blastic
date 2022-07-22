@@ -57,22 +57,23 @@ namespace Blastic.ViewManagement
 			{
 				viewAware = (IViewAware)model;
 
-				T? view = LocateCached(viewAware);
+				T? cachedView = LocateCached(viewAware);
 
-				if (view != null)
+				if (cachedView != null)
 				{
-					return view;
+					return cachedView;
 				}
 			}
 
-			T element = Locate(model.GetType(), model);
+			T view = Locate(model.GetType(), model);
 
 			if (viewAware != null)
 			{
-				AttachView(element, viewAware);
+				viewAware.View.Value = view;
+				SubscribeViewUnloadEvent(view, viewAware);
 			}
 			
-			return element;
+			return view;
 		}
 
 		private T? LocateCached(IViewAware viewAware)
@@ -146,10 +147,10 @@ namespace Blastic.ViewManagement
 		protected abstract void PostProcessCreatedView(T view, object model);
 
 		/// <summary>
-		/// Attach the given view to given view aware viewmodel.
+		/// Subscribe the unload event of the view to set the view of the view aware to null.
 		/// </summary>
-		/// <param name="view">The view to attach.</param>
-		/// <param name="viewAware">The viewmodel to attach the view.</param>
-		protected abstract void AttachView(T view, IViewAware viewAware);
+		/// <param name="view">The view to subcribe.</param>
+		/// <param name="viewAware">The viewmodel to set its view property.</param>
+		protected abstract void SubscribeViewUnloadEvent(T view, IViewAware viewAware);
 	}
 }
