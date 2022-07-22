@@ -88,6 +88,12 @@ namespace Blastic.Wpf.Initialization
 			return this;
 		}
 
+		public BlasticApplicationBuilder AddLocalizationSource(ILocalizationSource source)
+		{
+			_serviceCollection.AddSingleton(source);
+			return this;
+		}
+
 		public BlasticApplicationBuilder AddLogsWindow()
 		{
 			_serviceCollection.AddSingleton<UILogger>();
