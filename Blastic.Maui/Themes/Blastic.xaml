@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Maui.Themes.Blastic"
+					xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:dynamicControls="clr-namespace:Blastic.Maui.Themes.DynamicControls;assembly=Blastic.Maui"
+					xmlns:themes="clr-namespace:Blastic.Maui.Themes;assembly=Blastic.Maui">
+
+	<ResourceDictionary.MergedDictionaries>
+		<themes:Colors />
+		<themes:DynamicControl />
+		<dynamicControls:DynamicControls />
+	</ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

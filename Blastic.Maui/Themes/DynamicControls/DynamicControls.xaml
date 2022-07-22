@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Maui.Themes.DynamicControls.DynamicControls"
+					xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:dynamicControls="clr-namespace:Blastic.Maui.Themes.DynamicControls;assembly=Blastic.Maui">
+
+	<ResourceDictionary.MergedDictionaries>
+		<dynamicControls:Button />
+		<dynamicControls:CheckBox />
+		<dynamicControls:Entry />
+		<dynamicControls:Group />
+		<dynamicControls:Label />
+		<dynamicControls:PasswordEntry />
+		<dynamicControls:Picker />
+	</ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

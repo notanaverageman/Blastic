@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Maui.Themes.DynamicControls.CheckBox"
+					xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:presenters="clr-namespace:Blastic.Maui.DynamicControls.Presenters;assembly=Blastic.Maui">
+
+	<Style TargetType="{x:Type presenters:BooleanPresenter}">
+		<Setter Property="VerticalOptions" Value="Center" />
+		<Setter Property="ControlTemplate">
+			<Setter.Value>
+				<ControlTemplate>
+					<Grid ColumnDefinitions="*,Auto">
+						<Label Grid.Column="0"
+							   Text="{TemplateBinding Label.Value}"
+							   VerticalOptions="Center" />
+
+						<Switch x:Name="Switch"
+								Grid.Column="1"
+								IsEnabled="{TemplateBinding IsEnabledReactive.Value}"
+								IsToggled="{TemplateBinding Property.Value}"
+								VerticalOptions="Center" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

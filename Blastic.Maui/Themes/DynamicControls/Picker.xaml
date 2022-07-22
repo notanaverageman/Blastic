@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="Blastic.Maui.Themes.DynamicControls.Picker"
+					xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+					xmlns:presenters="clr-namespace:Blastic.Maui.DynamicControls.Presenters;assembly=Blastic.Maui">
+
+	<Style TargetType="{x:Type presenters:SelectionPresenter}">
+		<Setter Property="VerticalOptions" Value="Center" />
+		<Setter Property="ControlTemplate">
+			<Setter.Value>
+				<ControlTemplate>
+					<Grid>
+						<Picker Title="{TemplateBinding Label.Value}"
+								IsEnabled="{TemplateBinding IsEnabledReactive.Value}"
+								ItemsSource="{TemplateBinding Values}"
+								SelectedItem="{TemplateBinding Property.Value}"
+								VerticalOptions="Center" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>
