@@ -22,12 +22,10 @@ namespace Blastic.Forms.ViewManagement
 		public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)
 		{
 		}
-
+		
 		/// <inheritdoc />
-		protected override void AttachView(VisualElement view, IViewAware viewAware)
+		protected override void SubscribeViewUnloadEvent(VisualElement view, IViewAware viewAware)
 		{
-			viewAware.View.Value = view;
-
 			// TODO: Use parent, navigation? https://forums.xamarin.com/discussion/80435/loaded-unloaded-events-for-views
 			//view. += (sender, args) =>
 			//{
