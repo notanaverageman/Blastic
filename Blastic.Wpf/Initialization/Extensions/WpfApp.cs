@@ -55,7 +55,14 @@ namespace Blastic.Wpf.Initialization.Extensions
 				return;
 			}
 
-			await application.Dispatcher.InvokeAsync(application.Shutdown);
+			try
+			{
+				await application.Dispatcher.InvokeAsync(application.Shutdown);
+			}
+			catch (TaskCanceledException)
+			{
+				// Ignore.
+			}
 		}
 
 		private void UiThreadStart()
