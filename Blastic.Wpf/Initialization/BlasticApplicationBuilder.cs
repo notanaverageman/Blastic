@@ -16,8 +16,8 @@ using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Blastic.Wpf.DynamicControls;
 using Blastic.Wpf.Initialization.Extensions;
+using Blastic.Wpf.Localization;
 using Blastic.Wpf.Platform;
-using Blastic.Wpf.Properties;
 using Blastic.Wpf.Services.Dialog;
 using Blastic.Wpf.Services.Windowing;
 using Blastic.Wpf.UserInterface.Logs;
@@ -133,13 +133,10 @@ namespace Blastic.Wpf.Initialization
 			_serviceCollection.AddSingleton<IWindowManager, WindowManager>();
 			_serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
 			_serviceCollection.AddSingleton<IPresenterSource, PresenterSource>(_ => PresenterSource.Instance);
-
-			// TODO: Uncomment these and remove the line below when following issue is resolved:
-			// https://github.com/dotnet/wpf/issues/3404
-			//_serviceCollection.AddSingleton<LocalizableProperties>();
-			//_serviceCollection.AddSingleton<ILocalizationSource>(new LocalizationSource(Order.AbsoluteMaximum));
-
-			AddLocalizationSource(Resources.ResourceManager, Order.AbsoluteMaximum);
+			
+			_serviceCollection.AddSingleton<LocalizableProperties>();
+			_serviceCollection.AddSingleton<ILocalizationSource>(new LocalizationSource(Order.AbsoluteMaximum));
+			
 			AddTypeMapper(new SuffixTypeMapper("View", "ViewModel", Order.AbsoluteMaximum));
 		}
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -7,40 +8,72 @@ using Microsoft.CodeAnalysis;
 namespace Blastic.CodeGeneration
 {
 	[Generator]
-	public class LocalizablePropertiesGenerator : ISourceGenerator
+	public class LocalizablePropertiesGenerator : IIncrementalGenerator
 	{
-		private const string AttributeName = "CreateLocalizablePropertiesAttribute";
-
 		private const string LocalizationService = "Blastic.Services.Localization.ILocalizationService";
 		private const string ReadOnlyReactiveProperty = "Blastic.Reactive.IReadOnlyReactiveProperty<string>";
 		private const string LocalizableReactiveProperty = "Blastic.Reactive.LocalizableReactiveProperty";
 
-		public void Initialize(GeneratorInitializationContext context)
+		private const string AttributeNamespace = "Blastic.CodeGeneration";
+		private const string AttributeName = "CreateLocalizablePropertiesAttribute";
+		private const string AttributeFullName = $"{AttributeNamespace}.{AttributeName}";
+		private const string AttributeText = $@"
+namespace {AttributeNamespace}
+{{
+	[System.AttributeUsage(System.AttributeTargets.Assembly)]
+	internal class {AttributeName} : System.Attribute
+	{{
+		public string Namespace {{ get; }}
+		public string ClassName {{ get; }}
+
+		public {AttributeName}(string @namespace, string className = ""LocalizableProperties"")
+		{{
+			Namespace = @namespace;
+			ClassName = className;
+		}}
+	}}
+}}";
+
+		public void Initialize(IncrementalGeneratorInitializationContext context)
 		{
+			context.RegisterPostInitializationOutput(i => i.AddSource(
+				$"{AttributeName}.g.cs",
+				AttributeText.Trim()));
+
+			IncrementalValueProvider<ImmutableArray<AdditionalText>> additionalTexts = context.AdditionalTextsProvider
+				.Where(x => x.Path.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
+				.Where(x => x != null)
+				.Collect();
+
+			context.RegisterSourceOutput(
+				context.CompilationProvider.Combine(additionalTexts),
+				static (context, source) => Execute(context, source.Left, source.Right));
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public static void Execute(
+			SourceProductionContext context,
+			Compilation compilation,
+			ImmutableArray<AdditionalText> source)
 		{
-			IAssemblySymbol assembly = context.AddAssemblyAttribute(AttributeName, "LocalizableProperties");
-			(string? @namespace, string? className) = assembly.GetNamespaceAndClassName(AttributeName);
+			(string? @namespace, string? className) = compilation.GetNamespaceAndClassName(AttributeFullName);
 
 			if (string.IsNullOrEmpty(@namespace) || string.IsNullOrEmpty(className))
 			{
 				return;
 			}
-			
-			List<LocalizedText> localizedTexts = context.GetLocalizedTexts();
+
+			List<LocalizedText> localizedTexts = source.GetLocalizedTexts();
 			Tree<string> tree = BuildTree(localizedTexts, className!);
 
 			StringBuilder code = GenerateClass(tree.Root, 0);
 
 			code.WrapWithNamespace(@namespace!);
-			string source = code.ToString();
+			string sourceText = code.ToString();
 
-			context.AddSource(className!, source);
+			context.AddSource(className!, sourceText);
 		}
-		
-		private StringBuilder GenerateClass(Tree<string>.Node node, int indentation)
+
+		private static StringBuilder GenerateClass(Tree<string>.Node node, int indentation)
 		{
 			string id = node.Id;
 			string className = (node.HasParent ? id + "Texts" : id).ToClassName();
@@ -52,7 +85,7 @@ namespace Blastic.CodeGeneration
 			StringBuilder fieldBuilder = new();
 			StringBuilder propertyBuilder = new();
 			StringBuilder disposeBuilder = new();
-			
+
 			classBuilder.Indent(indentation).AppendLine($"public partial class {className} : {baseClass}");
 			classBuilder.Indent(indentation).AppendLine("{");
 
@@ -68,7 +101,7 @@ namespace Blastic.CodeGeneration
 			{
 				constructorBuilder.Indent(indentation + 2).AppendLine($": base(localizationService, \"{GetKey(node)}\")");
 			}
-			
+
 			constructorBuilder.Indent(indentation + 1).AppendLine("{");
 			constructorBuilder.Indent(indentation + 2).AppendLine("_localizationService = localizationService;");
 			constructorBuilder.Indent(indentation + 1).AppendLine("}");
@@ -89,7 +122,7 @@ namespace Blastic.CodeGeneration
 					GenerateProperty(fieldBuilder, propertyBuilder, disposeBuilder, child, indentation);
 					continue;
 				}
-				
+
 				string childId = child.Id;
 				string childClass = childId.ToPropertyName() + "Texts";
 
@@ -134,7 +167,7 @@ namespace Blastic.CodeGeneration
 			return classBuilder;
 		}
 
-		private void GenerateProperty(
+		private static void GenerateProperty(
 			StringBuilder fieldBuilder,
 			StringBuilder propertyBuilder,
 			StringBuilder disposeBuilder,
@@ -143,7 +176,7 @@ namespace Blastic.CodeGeneration
 		{
 			string id = node.Id;
 			string key = GetKey(node);
-			
+
 			fieldBuilder.Indent(indentation + 1).Append($"private {LocalizableReactiveProperty} ");
 			fieldBuilder.AppendLine($"{id.ToFieldName()};");
 
@@ -156,7 +189,7 @@ namespace Blastic.CodeGeneration
 			disposeBuilder.Indent(indentation + 2).AppendLine($"{id.ToFieldName()}?.Dispose();");
 		}
 
-		private string GetKey(Tree<string>.Node node)
+		private static string GetKey(Tree<string>.Node node)
 		{
 			List<string> tokens = new();
 			Tree<string>.Node? nodeIterator = node;
@@ -170,11 +203,11 @@ namespace Blastic.CodeGeneration
 			// This is the name of the generated class.
 			tokens.RemoveAt(tokens.Count - 1);
 			tokens.Reverse();
-			
+
 			return string.Join(".", tokens);
 		}
 
-		private Tree<string> BuildTree(List<LocalizedText> localizedTexts, string className)
+		private static Tree<string> BuildTree(List<LocalizedText> localizedTexts, string className)
 		{
 			Tree<string> tree = new(className);
 

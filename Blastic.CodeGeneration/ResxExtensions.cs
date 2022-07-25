@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -10,11 +11,11 @@ namespace Blastic.CodeGeneration
 {
 	public static class ResxExtensions
 	{
-		public static List<LocalizedText> GetLocalizedTexts(this GeneratorExecutionContext context)
+		public static List<LocalizedText> GetLocalizedTexts(this ImmutableArray<AdditionalText> texts)
 		{
-			List<LocalizedText> localizedTexts = new List<LocalizedText>();
+			List<LocalizedText> localizedTexts = new();
 
-			foreach (AdditionalText resx in context.AdditionalFiles)
+			foreach (AdditionalText resx in texts)
 			{
 				if (!resx.Path.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
 				{
@@ -56,7 +57,7 @@ namespace Blastic.CodeGeneration
 						continue;
 					}
 
-					LocalizedText localizedText = new LocalizedText(
+					LocalizedText localizedText = new(
 						id!,
 						text!,
 						culture,
@@ -76,7 +77,7 @@ namespace Blastic.CodeGeneration
 
 			builder.Insert(0, "{\r\n    ");
 			builder.Insert(0, $"namespace {@namespace}\r\n");
-			
+
 			builder.Replace("    ", "", builder.Length - 4, 4);
 
 			builder.AppendLine("}");

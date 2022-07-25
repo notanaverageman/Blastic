@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -6,27 +8,59 @@ using Microsoft.CodeAnalysis;
 namespace Blastic.CodeGeneration
 {
 	[Generator]
-	public class LocalizationSourceGenerator : ISourceGenerator
+	public class LocalizationSourceGenerator : IIncrementalGenerator
 	{
+		private const string AttributeNamespace = "Blastic.CodeGeneration";
 		private const string AttributeName = "CreateLocalizationSourceAttribute";
+		private const string AttributeFullName = $"{AttributeNamespace}.{AttributeName}";
+		private const string AttributeText = $@"
+namespace {AttributeNamespace}
+{{
+	[System.AttributeUsage(System.AttributeTargets.Assembly)]
+	internal class {AttributeName} : System.Attribute
+	{{
+		public string Namespace {{ get; }}
+		public string ClassName {{ get; }}
 
-		public void Initialize(GeneratorInitializationContext context)
+		public {AttributeName}(string @namespace, string className = ""LocalizationSource"")
+		{{
+			Namespace = @namespace;
+			ClassName = className;
+		}}
+	}}
+}}";
+
+		public void Initialize(IncrementalGeneratorInitializationContext context)
 		{
+			context.RegisterPostInitializationOutput(i => i.AddSource(
+				$"{AttributeName}.g.cs",
+				AttributeText.Trim()));
+
+			IncrementalValueProvider<ImmutableArray<AdditionalText>> additionalTexts = context.AdditionalTextsProvider
+				.Where(x => x.Path.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
+				.Where(x => x != null)
+				.Collect();
+
+			context.RegisterSourceOutput(
+				context.CompilationProvider.Combine(additionalTexts),
+				static (context, source) => Execute(context, source.Left, source.Right));
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		private static void Execute(
+			SourceProductionContext context,
+			Compilation compilation,
+			ImmutableArray<AdditionalText> source)
 		{
-			IAssemblySymbol assembly = context.AddAssemblyAttribute(AttributeName, "LocalizationSource");
-			(string? @namespace, string? className) = assembly.GetNamespaceAndClassName(AttributeName);
+			(string? @namespace, string? className) = compilation.GetNamespaceAndClassName(AttributeFullName);
 
 			if (string.IsNullOrEmpty(@namespace) || string.IsNullOrEmpty(className))
 			{
 				return;
 			}
 
-			List<LocalizedText> localizedTexts = context.GetLocalizedTexts();
+			List<LocalizedText> localizedTexts = source.GetLocalizedTexts();
 
-			StringBuilder classBuilder = new StringBuilder();
+			StringBuilder classBuilder = new();
 			classBuilder.AppendLine($"public partial class {className} : Blastic.Services.Localization.ILocalizationSource");
 			classBuilder.AppendLine("{");
 
@@ -38,7 +72,7 @@ namespace Blastic.CodeGeneration
 			classBuilder.Indent(1).AppendLine("}");
 			classBuilder.Indent(1).AppendLine();
 
-			StringBuilder methodBuilder = new StringBuilder();
+			StringBuilder methodBuilder = new();
 			methodBuilder.Indent(1).AppendLine("public string GetValue(string key, System.Globalization.CultureInfo culture)");
 			methodBuilder.Indent(1).AppendLine("{");
 			methodBuilder.Indent(2).AppendLine("string cultureId = culture.Name.ToLowerInvariant();");
@@ -87,9 +121,9 @@ namespace Blastic.CodeGeneration
 			classBuilder.AppendLine("}");
 
 			classBuilder.WrapWithNamespace(@namespace!);
-			string source = classBuilder.ToString();
+			string sourceText = classBuilder.ToString();
 
-			context.AddSource(className!, source);
+			context.AddSource(className!, sourceText);
 		}
 	}
 }

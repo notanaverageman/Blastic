@@ -54,17 +54,19 @@ namespace Blastic.CodeGeneration
 		}
 
 		public static (string? Namespace, string? ClassName) GetNamespaceAndClassName(
-			this IAssemblySymbol assembly,
-			string attributeName)
+			this Compilation compilation,
+			string attributeFullName)
 		{
-			AttributeData? attributeData = assembly
-				.GetAttributes()
-				.FirstOrDefault(x => x.AttributeClass?.ToString() == $"Blastic.CodeGeneration.{attributeName}");
+			INamedTypeSymbol? attribute = compilation.GetTypeByMetadataName(attributeFullName);
 
-			if (attributeData == null)
+			if (attribute == null)
 			{
 				return (null, null);
 			}
+
+			AttributeData attributeData = compilation.Assembly
+				.GetAttributes()
+				.Single(x => x.AttributeClass?.Equals(attribute, SymbolEqualityComparer.Default) == true);
 
 			ImmutableArray<TypedConstant> attributeArguments = attributeData.ConstructorArguments;
 
