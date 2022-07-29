@@ -8,15 +8,15 @@ namespace Blastic.LifetimeManagement
 		/// <summary>
 		/// Remove all children when the object is deinitialized.
 		/// </summary>
-		public bool ClearItemsOnDeinitialize { get; }
+		public bool ClearItemsOnClosure { get; }
 
 		/// <summary>
-		/// Create a new instance.
+		/// Create a new instance of <see cref="ConductorOptions"/>.
 		/// </summary>
-		/// <param name="clearItemsOnDeinitialize">Remove all children when the object is deinitialized.</param>
-		public ConductorOptions(bool clearItemsOnDeinitialize = false)
+		/// <param name="clearItemsOnClosure">Remove all children when the object is closed.</param>
+		public ConductorOptions(bool clearItemsOnClosure = false)
 		{
-			ClearItemsOnDeinitialize = clearItemsOnDeinitialize;
+			ClearItemsOnClosure = clearItemsOnClosure;
 		}
 	}
 }
