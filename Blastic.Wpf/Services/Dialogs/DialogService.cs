@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Forms;
+using Blastic.Services.Dialogs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
-namespace Blastic.Wpf.Services.Dialog
+namespace Blastic.Wpf.Services.Dialogs
 {
 	public class DialogService : IDialogService
 	{

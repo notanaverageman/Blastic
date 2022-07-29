@@ -2,10 +2,10 @@ using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.DynamicControls.Properties;
+using Blastic.Services.Dialogs;
+using Blastic.Services.Dialogs.FileFilters;
 using Blastic.Services.Settings;
 using Blastic.Settings;
-using Blastic.Wpf.Services.Dialog;
-using Blastic.Wpf.Services.Dialog.FileFilters;
 
 namespace Blastic.Wpf.Settings
 {

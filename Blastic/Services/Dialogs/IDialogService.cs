@@ -1,4 +1,4 @@
-namespace Blastic.Wpf.Services.Dialog
+namespace Blastic.Services.Dialogs
 {
 	public interface IDialogService
 	{
