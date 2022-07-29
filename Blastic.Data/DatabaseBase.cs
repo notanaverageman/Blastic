@@ -14,7 +14,8 @@ public abstract class DatabaseBase : IDisposable
 	protected readonly Connection Connection;
 
 	public MetadataTable Metadata { get; }
-	
+	public bool HasTransaction => Connection.HasTransaction;
+
 	public DatabaseBase(SqliteConnectionStringBuilder connectionStringBuilder)
 	{
 		SqliteConnection sqliteConnection = new(connectionStringBuilder.ConnectionString);
