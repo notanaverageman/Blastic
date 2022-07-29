@@ -11,22 +11,44 @@ namespace Blastic.Data;
 public abstract class DatabaseBase : IDisposable
 {
 	private readonly SortedSet<MigrationBase> _migrations;
+	private readonly SqliteConnection _sqliteConnection;
+
 	protected readonly Connection Connection;
 
 	public MetadataTable Metadata { get; }
+
 	public bool HasTransaction => Connection.HasTransaction;
+	public bool IsInMemory { get; }
 
-	public DatabaseBase(SqliteConnectionStringBuilder connectionStringBuilder)
+	public DatabaseBase(SqliteConnectionStringBuilder? connectionStringBuilder)
 	{
-		SqliteConnection sqliteConnection = new(connectionStringBuilder.ConnectionString);
+		if (connectionStringBuilder == null)
+		{
+			IsInMemory = true;
 
-		Connection = new Connection(sqliteConnection);
+			connectionStringBuilder = new SqliteConnectionStringBuilder()
+			{
+				DataSource = ":memory:"
+			};
+		}
+
+		SetConnectionStringDefaults(connectionStringBuilder);
+
+		_sqliteConnection = new SqliteConnection(connectionStringBuilder.ConnectionString);
+
+		Connection = new Connection(_sqliteConnection);
 		Metadata = new MetadataTable(Connection);
 
 		_migrations = new SortedSet<MigrationBase>(MigrationComparer.Instance)
 		{
 			new CreateMetadataTable(Connection)
 		};
+	}
+
+	private void SetConnectionStringDefaults(SqliteConnectionStringBuilder connectionStringBuilder)
+	{
+		connectionStringBuilder.Pooling = false;
+		connectionStringBuilder.ForeignKeys = true;
 	}
 
 	public void OpenConnection()
@@ -48,7 +70,15 @@ public abstract class DatabaseBase : IDisposable
 	{
 		Connection.RollbackTransaction();
 	}
-	
+
+	public void Clone(SqliteConnectionStringBuilder connectionStringBuilder)
+	{
+		SetConnectionStringDefaults(connectionStringBuilder);
+		using SqliteConnection sqliteConnection = new(connectionStringBuilder.ConnectionString);
+
+		_sqliteConnection.BackupDatabase(sqliteConnection);
+	}
+
 	public void SetPageSize(int bytes)
 	{
 		using Command command = Connection.CreateCommand();
