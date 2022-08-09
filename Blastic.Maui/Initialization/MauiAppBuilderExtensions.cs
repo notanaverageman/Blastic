@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Resources;
+using System.Threading;
 using System.Threading.Tasks;
 using Blastic.DynamicControls;
 using Blastic.LifetimeManagement;
@@ -61,6 +62,18 @@ public static class MauiAppBuilderExtensions
 	public static MauiAppBuilder AddTypeMapper<TViewModel, TView>(this MauiAppBuilder builder, Order? order = null)
 	{
 		builder.AddTypeMapper(new InheritanceTypeMapper(typeof(TViewModel), typeof(TView), order));
+		return builder;
+	}
+
+	public static MauiAppBuilder AddLocalizationSource(this MauiAppBuilder builder, ResourceManager resourceManager, Order? order = null)
+	{
+		builder.Services.AddSingleton<ILocalizationSource>(new ResourceManagerLocalizationSource(resourceManager, order));
+		return builder;
+	}
+
+	public static MauiAppBuilder AddLocalizationSource(this MauiAppBuilder builder, ILocalizationSource source)
+	{
+		builder.Services.AddSingleton(source);
 		return builder;
 	}
 
