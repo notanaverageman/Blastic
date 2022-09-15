@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Blastic.Commanding;
 using Blastic.Reactive;
 
 namespace Blastic.Services.Localization
@@ -19,6 +20,9 @@ namespace Blastic.Services.Localization
 		
 		/// <inheritdoc />
 		public IReactiveProperty<CultureInfo> Culture { get; }
+		
+		/// <inheritdoc />
+		public Command<string> ChangeCultureCommand { get; }
 
 		/// <summary>
 		/// Creates a new instance with given localization sources.
@@ -37,6 +41,23 @@ namespace Blastic.Services.Localization
 
 			Culture = new ReactiveProperty<CultureInfo>(currentCulture);
 			Culture.Subscribe(x => CultureChanged?.Invoke(this, new CultureChangedEventArgs(x)), false);
+
+			ChangeCultureCommand = new Command<string>(x =>
+			{
+				if (string.IsNullOrEmpty(x))
+				{
+					return;
+				}
+
+				CultureInfo cultureInfo = CultureInfo.GetCultureInfo(x);
+
+				CultureInfo.CurrentCulture = cultureInfo;
+				CultureInfo.CurrentUICulture = cultureInfo;
+				CultureInfo.DefaultThreadCurrentCulture = currentCulture;
+				CultureInfo.DefaultThreadCurrentUICulture = currentCulture;
+
+				Culture.Value = cultureInfo;
+			});
 		}
 
 		/// <inheritdoc />

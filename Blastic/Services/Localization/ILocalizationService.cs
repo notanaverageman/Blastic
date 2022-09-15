@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Blastic.Commanding;
 using Blastic.Reactive;
 
 namespace Blastic.Services.Localization
@@ -18,6 +19,11 @@ namespace Blastic.Services.Localization
 		/// An observable property that holds the current culture.
 		/// </summary>
 		IReactiveProperty<CultureInfo> Culture { get; }
+
+		/// <summary>
+		/// A command that takes a string, parses it as CultureInfo and sets the current culture.
+		/// </summary>
+		Command<string> ChangeCultureCommand { get; }
 
 		/// <summary>
 		/// Get localized string for given key.
