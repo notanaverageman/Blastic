@@ -41,7 +41,7 @@ namespace Blastic.LifetimeManagement
 			base(lifetimeChainOptions: new LifetimeChainOptions(activateChildrenOnSelfActivation: false))
 		{
 			ActiveItem = new ReactiveProperty<T?>();
-			ActiveItemIndex = new ReactiveProperty<int>(-1);
+			ActiveItemIndex = new ReactiveProperty<int>();
 
 			_previousActiveItem = ActiveItem
 				.Scan<T?, (T? Previous, T? Current)>(
