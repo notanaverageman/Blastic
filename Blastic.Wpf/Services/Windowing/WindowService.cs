@@ -4,15 +4,16 @@ using System.Windows;
 using System.Windows.Interop;
 using Blastic.LifetimeManagement;
 using Blastic.Ordering;
+using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 
 namespace Blastic.Wpf.Services.Windowing
 {
-	public class WindowManager : IWindowManager
+	public class WindowService : IWindowService
 	{
 		private readonly IViewLocator<FrameworkElement> _viewLocator;
 
-		public WindowManager(IViewLocator<FrameworkElement> viewLocator)
+		public WindowService(IViewLocator<FrameworkElement> viewLocator)
 		{
 			_viewLocator = viewLocator;
 		}

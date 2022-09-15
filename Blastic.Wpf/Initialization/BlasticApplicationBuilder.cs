@@ -12,6 +12,7 @@ using Blastic.Services.Dialogs;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
+using Blastic.Services.Windowing;
 using Blastic.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
@@ -131,7 +132,7 @@ namespace Blastic.Wpf.Initialization
 			_serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
 			_serviceCollection.AddSingleton<INotificationService, NotificationService>();
 			_serviceCollection.AddSingleton<IDialogService, DialogService>();
-			_serviceCollection.AddSingleton<IWindowManager, WindowManager>();
+			_serviceCollection.AddSingleton<IWindowService, WindowService>();
 			_serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
 			_serviceCollection.AddSingleton<IPresenterSource, PresenterSource>(_ => PresenterSource.Instance);
 			
