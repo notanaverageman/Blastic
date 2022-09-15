@@ -19,9 +19,6 @@ namespace Blastic.Data.Services.Settings
 			command.CommandText = """
 				CREATE TABLE Settings (
 				    Key       TEXT PRIMARY KEY NOT NULL,
-				    Type      TEXT NOT NULL,
-				    CreatedAt BIGINT NOT NULL,
-				    UpdatedAt BIGINT,
 				    Value     JSON NOT NULL
 				);
 				""";
