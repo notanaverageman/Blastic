@@ -16,10 +16,18 @@ public class CreateMetadataTable : MigrationBase
 	{
 		using Command command = Connection.CreateCommand();
 
-		command.CommandText = "CREATE TABLE Metadata(Version NVARCHAR(255) PRIMARY KEY)";
+		command.CommandText = """
+			CREATE TABLE Metadata(
+				Version NVARCHAR(255) PRIMARY KEY  
+			)
+			""";
 		command.ExecuteNonQuery();
 
-		command.CommandText = "INSERT INTO Metadata (Version) VALUES (@Version)";
+		command.CommandText = """
+			INSERT INTO Metadata (Version)
+			VALUES (@Version)
+			""";
+
 		command.AddParameterWithValue("@Version", Version.ToString());
 
 		command.ExecuteNonQuery();

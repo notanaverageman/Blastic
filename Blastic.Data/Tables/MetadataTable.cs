@@ -22,23 +22,28 @@ public class MetadataTable : TableBase
 
 		return string.IsNullOrEmpty(versionAsString)
 			? null
-			: Version.Parse(versionAsString);
+			: Version.Parse(versionAsString!);
 	}
 
 	public void SetVersion(Version version)
 	{
 		using Command command = Connection.CreateCommand();
 
-		command.CommandText = "UPDATE Metadata SET Version=@Version";
-		command.AddParameterWithValue("@Version", version.ToString());
+		command.CommandText = """
+			UPDATE Metadata SET Version=@Version
+			""";
 
+		command.AddParameterWithValue("@Version", version.ToString());
 		command.ExecuteNonQuery();
 	}
 
 	private bool Exists()
 	{
 		using Command command = Connection.CreateCommand();
-		command.CommandText = "SELECT 1 FROM sqlite_master WHERE type='table' AND name='Metadata'";
+		command.CommandText = """
+			SELECT 1 FROM sqlite_master
+			WHERE type='table' AND name='Metadata'
+			""";
 
 		int? count = command.ExecuteScalar<int>();
 

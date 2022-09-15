@@ -16,11 +16,15 @@ namespace Blastic.Data.Services.Settings
 		{
 			using Command command = Connection.CreateCommand();
 
-			command.CommandText = @"
-CREATE TABLE Settings (
-    Key   TEXT PRIMARY KEY,
-    Value TEXT
-);";
+			command.CommandText = """
+				CREATE TABLE Settings (
+				    Key       TEXT PRIMARY KEY NOT NULL,
+				    Type      TEXT NOT NULL,
+				    CreatedAt BIGINT NOT NULL,
+				    UpdatedAt BIGINT,
+				    Value     JSON NOT NULL
+				);
+				""";
 
 			command.ExecuteNonQuery();
 		}
