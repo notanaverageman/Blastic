@@ -4,9 +4,9 @@ namespace Blastic.Services.Dialogs
 	{
 		bool? ShowDialog<T>(object viewModel);
 
-		string ShowOpenFileDialog(FileDialogOptions? options = default);
-		string ShowSaveFileDialog(FileDialogOptions? options = default);
+		string? ShowOpenFileDialog(FileDialogOptions? options = default);
+		string? ShowSaveFileDialog(FileDialogOptions? options = default);
 
-		string ShowSelectFolderDialog(FileDialogOptions? options = default);
+		string? ShowSelectFolderDialog(FileDialogOptions? options = default);
 	}
 }

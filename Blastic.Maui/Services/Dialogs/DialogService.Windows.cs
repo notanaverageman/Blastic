@@ -12,7 +12,7 @@ namespace Blastic.Maui.Services.Dialogs
 			return false;
 		}
 
-		public string ShowOpenFileDialog(FileDialogOptions? options)
+		public string? ShowOpenFileDialog(FileDialogOptions? options)
 		{
 			OpenFileDialog openFileDialog = new()
 			{
@@ -25,10 +25,10 @@ namespace Blastic.Maui.Services.Dialogs
 
 			return result == true
 				? openFileDialog.FileName
-				: "";
+				: null;
 		}
 
-		public string ShowSaveFileDialog(FileDialogOptions? options)
+		public string? ShowSaveFileDialog(FileDialogOptions? options)
 		{
 			SaveFileDialog saveFileDialog = new()
 			{
@@ -41,10 +41,10 @@ namespace Blastic.Maui.Services.Dialogs
 
 			return result == true
 				? saveFileDialog.FileName
-				: "";
+				: null;
 		}
 
-		public string ShowSelectFolderDialog(FileDialogOptions? options)
+		public string? ShowSelectFolderDialog(FileDialogOptions? options)
 		{
 			FolderBrowserDialog dialog = new()
 			{
@@ -55,7 +55,7 @@ namespace Blastic.Maui.Services.Dialogs
 
 			return result == DialogResult.OK
 				? dialog.SelectedPath
-				: "";
+				: null;
 		}
 	}
 }

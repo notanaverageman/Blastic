@@ -16,15 +16,15 @@ namespace Blastic.Wpf.Services.Dialogs
 				throw new InvalidOperationException($"{typeof(T)} should inherit from {typeof(Window)}.");
 			}
 
-			Window dialog = (Window) Activator.CreateInstance(typeof(T));
+			Window dialog = (Window)Activator.CreateInstance(typeof(T))!;
 			dialog.DataContext = viewModel;
 
 			return dialog.ShowDialog();
 		}
 
-		public string ShowOpenFileDialog(FileDialogOptions options)
+		public string? ShowOpenFileDialog(FileDialogOptions? options)
 		{
-			OpenFileDialog openFileDialog = new OpenFileDialog
+			OpenFileDialog openFileDialog = new()
 			{
 				Filter = options?.Filter?.GetFileDialogRepresentation() ?? "",
 				Multiselect = options?.IsMultiSelect ?? false,
@@ -35,12 +35,12 @@ namespace Blastic.Wpf.Services.Dialogs
 
 			return result == true
 				? openFileDialog.FileName
-				: "";
+				: null;
 		}
 
-		public string ShowSaveFileDialog(FileDialogOptions options)
+		public string? ShowSaveFileDialog(FileDialogOptions? options)
 		{
-			SaveFileDialog saveFileDialog = new SaveFileDialog
+			SaveFileDialog saveFileDialog = new()
 			{
 				Filter = options?.Filter?.GetFileDialogRepresentation() ?? "",
 				InitialDirectory = options?.InitialDirectory ?? "",
@@ -51,12 +51,12 @@ namespace Blastic.Wpf.Services.Dialogs
 
 			return result == true
 				? saveFileDialog.FileName
-				: "";
+				: null;
 		}
 
-		public string ShowSelectFolderDialog(FileDialogOptions options)
+		public string? ShowSelectFolderDialog(FileDialogOptions? options)
 		{
-			FolderBrowserDialog dialog = new FolderBrowserDialog
+			FolderBrowserDialog dialog = new()
 			{
 				SelectedPath = options?.InitialDirectory ?? ""
 			};
@@ -65,7 +65,7 @@ namespace Blastic.Wpf.Services.Dialogs
 
 			return result == DialogResult.OK
 				? dialog.SelectedPath
-				: "";
+				: null;
 		}
 	}
 }
