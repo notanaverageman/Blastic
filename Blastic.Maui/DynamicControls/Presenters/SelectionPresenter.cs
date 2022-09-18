@@ -39,15 +39,16 @@ public class SelectionPresenter : Presenter
 			// TODO: Remove when following are solved
 			// https://github.com/dotnet/maui/issues/9739
 			// https://github.com/dotnet/maui/issues/9239
+			IList pickerItemsSource = _picker.ItemsSource;
 			List<object> itemsSource = new();
 
-			foreach (object o in _picker.ItemsSource)
+			foreach (object o in pickerItemsSource)
 			{
 				itemsSource.Add(o);
 			}
 
 			_picker.ItemsSource = itemsSource.ToArray();
-			_picker.ItemsSource = itemsSource;
+			_picker.ItemsSource = pickerItemsSource;
 
 			_picker.SelectedIndex = currentSelectedIndex;
 		});
