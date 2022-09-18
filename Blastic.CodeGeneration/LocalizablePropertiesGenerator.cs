@@ -211,7 +211,7 @@ namespace {AttributeNamespace}
 		{
 			Tree<string> tree = new(className);
 
-			foreach (string id in localizedTexts.Select(x => x.Id).Distinct())
+			foreach (string id in localizedTexts.Select(x => x.Id).OrderBy(x => x.Length).Distinct())
 			{
 				string[] tokens = id.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 				Tree<string>.Node node = tree.Root;

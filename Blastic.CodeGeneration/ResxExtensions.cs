@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
@@ -62,25 +61,12 @@ namespace Blastic.CodeGeneration
 						text!,
 						culture,
 						resx.Path);
+
 					localizedTexts.Add(localizedText);
 				}
 			}
 
 			return localizedTexts;
-		}
-
-		public static void WrapWithNamespace(
-			this StringBuilder builder,
-			string @namespace)
-		{
-			builder.Replace("\r\n", "\r\n    ");
-
-			builder.Insert(0, "{\r\n    ");
-			builder.Insert(0, $"namespace {@namespace}\r\n");
-
-			builder.Replace("    ", "", builder.Length - 4, 4);
-
-			builder.AppendLine("}");
 		}
 	}
 }
