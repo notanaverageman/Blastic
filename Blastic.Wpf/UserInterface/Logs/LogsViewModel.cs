@@ -6,6 +6,7 @@ using System.Windows.Data;
 using Blastic.Commanding;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
+using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 using Blastic.Wpf.Services.Windowing;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ namespace Blastic.Wpf.UserInterface.Logs
 	public sealed class LogsViewModel : IViewAware
 	{
 		private readonly UILogger _uiLogger;
-		private readonly IWindowManager _windowManager;
+		private readonly IWindowService _windowService;
 
 		public IReadOnlyReactiveProperty<string> Title { get; }
 
@@ -30,11 +31,11 @@ namespace Blastic.Wpf.UserInterface.Logs
 
 		public LogsViewModel(
 			UILogger uiLogger,
-			IWindowManager windowManager,
+			IWindowService windowService,
 			ILocalizationService localizationService)
 		{
 			_uiLogger = uiLogger;
-			_windowManager = windowManager;
+			_windowService = windowService;
 
 			Title = new LocalizableReactiveProperty(localizationService, "Blastic.Logs.Window.Title");
 

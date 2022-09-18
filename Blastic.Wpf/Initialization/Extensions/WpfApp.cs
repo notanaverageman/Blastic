@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Blastic.Platform;
+using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 using Blastic.Wpf.Platform;
 using Blastic.Wpf.Services.Windowing;
@@ -79,7 +80,7 @@ namespace Blastic.Wpf.Initialization.Extensions
 
 			Application application = _serviceProvider.GetRequiredService<Application>();
 			object mainViewModel = _serviceProvider.GetRequiredService(_builder.MainViewModelType);
-			IWindowManager windowManager = _serviceProvider.GetRequiredService<IWindowManager>();
+			IWindowService windowService = _serviceProvider.GetRequiredService<IWindowService>();
 			IHostApplicationLifetime lifetime = _serviceProvider.GetRequiredService<IHostApplicationLifetime>();
 
 			ViewLocator.Current = _serviceProvider.GetRequiredService<IViewLocator<FrameworkElement>>();
@@ -96,7 +97,7 @@ namespace Blastic.Wpf.Initialization.Extensions
 			{
 				ViewLocator.HookLoadedUnloadedEvents();
 
-				await windowManager.ShowWindow(mainViewModel);
+				await windowService.ShowWindow(mainViewModel);
 			};
 
 			application.Exit += (_, _) =>
