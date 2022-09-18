@@ -44,6 +44,17 @@ namespace Blastic.Reactive
 			return Subscribe(observer, true);
 		}
 
+		/// <inheritdoc cref="IReadOnlyReactiveProperty{Object}.Subscribe(IObserver{Object},bool)"/>
+		public IDisposable Subscribe(IObserver<object?> observer, bool raiseLatestValue)
+		{
+			if (raiseLatestValue)
+			{
+				observer.OnNext(Value);
+			}
+
+			return Disposable.Empty;
+		}
+
 		/// <inheritdoc cref="IReadOnlyReactiveProperty{T}.Subscribe(IObserver{T},bool)"/>
 		public IDisposable Subscribe(IObserver<T> observer, bool raiseLatestValue)
 		{

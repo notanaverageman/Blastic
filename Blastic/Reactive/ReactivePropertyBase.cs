@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
 namespace Blastic.Reactive
@@ -52,6 +53,19 @@ namespace Blastic.Reactive
 		public IDisposable Subscribe(IObserver<T> observer)
 		{
 			return Subscribe(observer, true);
+		}
+
+		/// <inheritdoc cref="IReadOnlyReactiveProperty.Subscribe(IObserver{Object?},bool)"/>
+		public IDisposable Subscribe(IObserver<object?> observer, bool raiseLatestValue)
+		{
+			IDisposable disposable = Source.Select(x => (object?)x).Subscribe(observer);
+
+			if (raiseLatestValue)
+			{
+				observer.OnNext(GetValue());
+			}
+
+			return disposable;
 		}
 
 		/// <inheritdoc cref="IReadOnlyReactiveProperty{T}.Subscribe(IObserver{T},bool)"/>

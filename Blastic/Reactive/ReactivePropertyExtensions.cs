@@ -29,6 +29,19 @@ namespace Blastic.Reactive
 
 			return result;
 		}
+		
+		/// <see cref="IReadOnlyReactiveProperty.Subscribe(IObserver{Object},bool)"/>
+		/// <param name="property">The reactive property.</param>
+		/// <param name="onNext">Action to invoke when the property changes.</param>
+		/// <param name="raiseLatestValue">Whether to emit the current value upon subscription.</param>
+		/// <returns>A disposable that unsubscribes the observer upon disposal.</returns>
+		public static IDisposable Subscribe(
+			this IReadOnlyReactiveProperty property,
+			Action<object?> onNext,
+			bool raiseLatestValue)
+		{
+			return property.Subscribe(Observer.Create(onNext), raiseLatestValue);
+		}
 
 		/// <see cref="IReadOnlyReactiveProperty{T}.Subscribe(IObserver{T},bool)"/>
 		/// <param name="property">The reactive property.</param>

@@ -153,7 +153,7 @@ namespace Blastic.DynamicControls
 		public static T AddSelection<T, TSelection>(
 			this T container,
 			IReactiveProperty<TSelection> property,
-			IEnumerable<TSelection> values,
+			IReadOnlyList<SelectionValueWithLabel<TSelection>> values,
 			Action<SelectionField<TSelection>>? configure = null) where T : IElementContainer
 		{
 			SelectionField<TSelection> element = new(property, values);

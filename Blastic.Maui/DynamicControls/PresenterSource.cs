@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Reactive.Linq;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
@@ -18,28 +17,17 @@ public class PresenterSource : IPresenterSource
 
 	public IPresenter CreatePresenter(IElement element)
 	{
-		Presenter presenter = element switch
+		Presenter? presenter = element switch
 		{
-			ActionElement actionElement => CreateActionPresenter(actionElement),
-			BooleanField                => CreateBooleanPresenter(),
-			GroupElement groupElement   => CreateGroupPresenter(groupElement),
-			LabelField                  => CreateLabelPresenter(),
-			PasswordField               => CreatePasswordPresenter(),
-			TextField textField         => CreateTextPresenter(textField),
+			ActionElement actionElement    => CreateActionPresenter(actionElement),
+			BooleanField                   => CreateBooleanPresenter(),
+			GroupElement groupElement      => CreateGroupPresenter(groupElement),
+			LabelField                     => CreateLabelPresenter(),
+			PasswordField                  => CreatePasswordPresenter(),
+			TextField textField            => CreateTextPresenter(textField),
+			ISelectionField selectionField => CreateSelectionPresenter(selectionField),
 			_ => null
 		};
-
-		if (presenter == null &&
-			element.GetType().IsGenericType &&
-			element.GetType().GetGenericTypeDefinition() == typeof(SelectionField<>))
-		{
-			presenter = new SelectionPresenter
-			{
-				Values = (IEnumerable)element.GetType()
-					.GetProperty(nameof(SelectionField<object>.Values))
-					.GetValue(element)
-			};
-		}
 
 		if (presenter == null)
 		{
@@ -104,6 +92,14 @@ public class PresenterSource : IPresenterSource
 		{
 			Mask = textField.Mask,
 			Keyboard = textField.Keyboard.Select(ToMauiKeyboard).ToReadOnlyReactiveProperty()
+		};
+	}
+
+	private Presenter CreateSelectionPresenter(ISelectionField selectionField)
+	{
+		return new SelectionPresenter(selectionField.LabelsChangedObservable, selectionField.SelectedIndex)
+		{
+			Values = selectionField.Values
 		};
 	}
 

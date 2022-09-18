@@ -27,6 +27,15 @@ namespace Blastic.Reactive
 		/// with the property.
 		/// </remarks>
 		IObservable<bool>? HasErrorObservable { get; }
+
+		/// <summary>
+		/// Subscribe to this observable. if <see cref="raiseLatestValue"/> is true, current value
+		/// will be emitted to the given observer immediately.
+		/// </summary>
+		/// <param name="observer">The observer that will observe this property.</param>
+		/// <param name="raiseLatestValue">Whether to emit the current value upon subscription.</param>
+		/// <returns>A disposable that unsubscribes the observer upon disposal.</returns>
+		IDisposable Subscribe(IObserver<object?> observer, bool raiseLatestValue);
 	}
 
 	/// <summary>

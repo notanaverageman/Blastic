@@ -14,7 +14,7 @@ namespace Blastic.Settings
 			IPresenterSource presenterSource,
 			string key,
 			T defaultValue,
-			IEnumerable<T> allValues)
+			IReadOnlyList<SelectionValueWithLabel<T>> allValues)
 			:
 			base(settingsStorage, presenterSource, key, defaultValue, allValues)
 		{
@@ -60,7 +60,7 @@ namespace Blastic.Settings
 			IPresenterSource presenterSource,
 			string key,
 			T defaultValue,
-			IEnumerable<T> allValues)
+			IReadOnlyList<SelectionValueWithLabel<T>> allValues)
 			:
 			base(settingsStorage, presenterSource, key, defaultValue)
 		{
