@@ -12,6 +12,7 @@ using Blastic.Platform;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
+using Blastic.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +76,20 @@ public static class MauiAppBuilderExtensions
 	{
 		builder.Services.AddSingleton(source);
 		return builder;
+	}
+
+	public static MauiAppBuilder AddSettingGroup<T>(this MauiAppBuilder builder) where T : SettingGroup
+	{
+		builder.RegisterAsBaseAndSelf<SettingGroup, T>();
+		return builder;
+	}
+
+	private static void RegisterAsBaseAndSelf<TBase, TSelf>(this MauiAppBuilder builder)
+		where TBase : class
+		where TSelf : class, TBase
+	{
+		builder.Services.AddSingleton<TSelf>();
+		builder.Services.AddSingleton<TBase>(y => y.GetRequiredService<TSelf>());
 	}
 
 	private static void AddDefaults(MauiAppBuilder builder)
