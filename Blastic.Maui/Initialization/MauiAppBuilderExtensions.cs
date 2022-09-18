@@ -78,9 +78,9 @@ public static class MauiAppBuilderExtensions
 		return builder;
 	}
 
-	public static MauiAppBuilder AddSettingGroup<T>(this MauiAppBuilder builder) where T : SettingGroup
+	public static MauiAppBuilder AddSettingSection<T>(this MauiAppBuilder builder) where T : SettingsSectionViewModel
 	{
-		builder.RegisterAsBaseAndSelf<SettingGroup, T>();
+		builder.RegisterAsBaseAndSelf<SettingsSectionViewModel, T>();
 		return builder;
 	}
 

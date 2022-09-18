@@ -82,6 +82,8 @@ namespace Blastic.Settings
 			Lifetime = new Lifetime();
 			ShowOnUI = new ReactiveProperty<bool>(true);
 
+			SaveOnChange = true;
+
 			DiagnosticMessagesSource
 				.Connect()
 				.Bind(out ReadOnlyObservableCollection<DiagnosticMessage> diagnosticMessages)
