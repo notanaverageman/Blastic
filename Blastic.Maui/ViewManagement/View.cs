@@ -27,7 +27,7 @@ public static class View
 	public static object GetItemTemplate(BindableObject obj) => obj.GetValue(ItemTemplateProperty);
 	public static void SetItemTemplate(BindableObject obj, object value) => obj.SetValue(ItemTemplateProperty, value);
 
-	private static void OnModelChanged(BindableObject bindable, object oldValue, object newValue)
+	private static void OnModelChanged(BindableObject bindable, object? oldValue, object? newValue)
 	{
 		if (newValue == null)
 		{
@@ -44,11 +44,9 @@ public static class View
 		}
 	}
 
-	private static void OnItemTemplateChanged(BindableObject bindable, object oldValue, object newValue)
+	private static void OnItemTemplateChanged(BindableObject bindable, object? oldValue, object? newValue)
 	{
-		Type type = bindable.GetType();
-
-		DataTemplateSelector template = null;
+		DataTemplateSelector? template = null;
 
 		if (newValue != null)
 		{
@@ -58,7 +56,7 @@ public static class View
 		bindable.SetValue(MultiPage<Page>.ItemTemplateProperty, template);
 	}
 
-	private static bool SetContentProperty(object targetLocation, object view)
+	private static bool SetContentProperty(object targetLocation, object? view)
 	{
 		if (view is VisualElement { Parent: { } } f)
 		{
@@ -68,18 +66,18 @@ public static class View
 		return SetContentPropertyCore(targetLocation, view);
 	}
 
-	private static bool SetContentPropertyCore(object targetLocation, object view)
+	private static bool SetContentPropertyCore(object targetLocation, object? view)
 	{
 		Type type = targetLocation.GetType();
 
-		ContentPropertyAttribute contentProperty = type
+		ContentPropertyAttribute? contentProperty = type
 			.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
 			.OfType<ContentPropertyAttribute>()
 			.FirstOrDefault();
 
 		contentProperty ??= DefaultContentProperty;
 
-		PropertyInfo propertyInfo = type.GetProperty(contentProperty.Name);
+		PropertyInfo? propertyInfo = type.GetProperty(contentProperty.Name);
 
 		if (propertyInfo == null)
 		{

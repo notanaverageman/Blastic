@@ -1,4 +1,5 @@
-﻿using System.Resources;
+﻿using System.ComponentModel;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.DynamicControls;
@@ -18,6 +19,7 @@ using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Hosting;
 
 namespace Blastic.Maui.Initialization;
@@ -29,6 +31,8 @@ public static class MauiAppBuilderExtensions
 		where TMainViewModel : class
 	{
 		AddDefaults(builder);
+
+		SubscribeToBindingContext();
 
 		builder.Services.AddSingleton<TApp>();
 		builder.Services.AddSingleton<TMainViewModel>();
@@ -147,5 +151,48 @@ public static class MauiAppBuilderExtensions
 				await (asyncLifetime?.Close() ?? Task.CompletedTask);
 			};
 		};
+	}
+
+	private static void SubscribeToBindingContext()
+	{
+		ViewHandler.ViewMapper.Add(nameof(BindableObject.BindingContext), (_, view) =>
+		{
+			if (view is not BindableObject bindable)
+			{
+				return;
+			}
+
+			object? bindingContext = GetExplicitBindingContext(bindable);
+
+			if (bindingContext is not IViewAware viewAware)
+			{
+				return;
+			}
+
+			viewAware.View.Value = view;
+
+			bindable.PropertyChanged += OnPropertyChanged;
+
+			void OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
+			{
+				if (args.PropertyName != nameof(BindableObject.BindingContext))
+				{
+					return;
+				}
+
+				if (GetExplicitBindingContext(bindable) != null)
+				{
+					return;
+				}
+
+				viewAware.View.Value = null;
+				bindable.PropertyChanged -= OnPropertyChanged;
+			}
+		});
+
+		static object? GetExplicitBindingContext(BindableObject bindableObject)
+		{
+			return bindableObject.GetValue(BindableObject.BindingContextProperty);
+		}
 	}
 }
