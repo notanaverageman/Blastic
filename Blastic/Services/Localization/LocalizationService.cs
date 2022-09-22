@@ -16,11 +16,12 @@ namespace Blastic.Services.Localization
 		/// <inheritdoc />
 		public event EventHandler<CultureChangedEventArgs>? CultureChanged;
 
+		private readonly IReactiveProperty<CultureInfo> _culture;
 		private readonly ILocalizationSource[] _sources;
-		
+
 		/// <inheritdoc />
-		public IReactiveProperty<CultureInfo> Culture { get; }
-		
+		public IReadOnlyReactiveProperty<CultureInfo> Culture => _culture;
+
 		/// <inheritdoc />
 		public Command<string> ChangeCultureCommand { get; }
 
@@ -39,8 +40,8 @@ namespace Blastic.Services.Localization
 				.OrderBy(x => x.Order)
 				.ToArray();
 
-			Culture = new ReactiveProperty<CultureInfo>(currentCulture);
-			Culture.Subscribe(x => CultureChanged?.Invoke(this, new CultureChangedEventArgs(x)), false);
+			_culture = new ReactiveProperty<CultureInfo>(currentCulture);
+			_culture.Subscribe(x => CultureChanged?.Invoke(this, new CultureChangedEventArgs(x)), false);
 
 			ChangeCultureCommand = new Command<string>(x =>
 			{
@@ -56,7 +57,7 @@ namespace Blastic.Services.Localization
 				CultureInfo.DefaultThreadCurrentCulture = currentCulture;
 				CultureInfo.DefaultThreadCurrentUICulture = currentCulture;
 
-				Culture.Value = cultureInfo;
+				_culture.Value = cultureInfo;
 			});
 		}
 

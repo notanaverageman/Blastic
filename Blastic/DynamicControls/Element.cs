@@ -6,8 +6,8 @@ namespace Blastic.DynamicControls
 	public interface IElement
 	{
 		IReadOnlyReactiveProperty<object> Icon { get; set; }
-		IReadOnlyReactiveProperty<string> Label { get; set; }
-		IReadOnlyReactiveProperty<string> Help { get; set; }
+		IReadOnlyReactiveProperty<string?>? Label { get; set; }
+		IReadOnlyReactiveProperty<string?>? Help { get; set; }
 
 		IReactiveProperty<bool> IsEnabled { get; set; }
 
@@ -25,8 +25,8 @@ namespace Blastic.DynamicControls
 	public abstract class Element : IElement
 	{
 		public IReadOnlyReactiveProperty<object> Icon { get; set; }
-		public IReadOnlyReactiveProperty<string> Label { get; set; }
-		public IReadOnlyReactiveProperty<string> Help { get; set; }
+		public IReadOnlyReactiveProperty<string?>? Label { get; set; }
+		public IReadOnlyReactiveProperty<string?>? Help { get; set; }
 
 		public IReactiveProperty<bool> IsEnabled { get; set; }
 
@@ -75,7 +75,7 @@ namespace Blastic.DynamicControls
 			return element;
 		}
 
-		public static T WithLabel<T>(this T element, IReadOnlyReactiveProperty<string> label) where T : IElement
+		public static T WithLabel<T>(this T element, IReadOnlyReactiveProperty<string?> label) where T : IElement
 		{
 			element.Label = label;
 			return element;

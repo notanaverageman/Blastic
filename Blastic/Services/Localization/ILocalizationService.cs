@@ -18,7 +18,7 @@ namespace Blastic.Services.Localization
 		/// <summary>
 		/// An observable property that holds the current culture.
 		/// </summary>
-		IReactiveProperty<CultureInfo> Culture { get; }
+		IReadOnlyReactiveProperty<CultureInfo> Culture { get; }
 
 		/// <summary>
 		/// A command that takes a string, parses it as CultureInfo and sets the current culture.

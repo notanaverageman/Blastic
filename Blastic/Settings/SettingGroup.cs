@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Diagnostics;
 using Blastic.LifetimeManagement;
+using Blastic.Reactive;
 using Blastic.Services.Settings;
 using DynamicData;
 
@@ -14,10 +15,15 @@ namespace Blastic.Settings
 	{
 		public ISettingsStorage SettingsStorage { get; }
 		public ReadOnlyObservableCollection<Setting> SettingsToShow { get; }
-		
-		protected SettingGroup(ISettingsStorage settingsStorage)
+
+		public IReadOnlyReactiveProperty<string?> Title { get; }
+
+		protected SettingGroup(
+			ISettingsStorage settingsStorage,
+			IReadOnlyReactiveProperty<string?> title)
 		{
 			SettingsStorage = settingsStorage;
+			Title = title;
 
 			ItemsSource
 				.Connect()
