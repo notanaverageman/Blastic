@@ -28,7 +28,7 @@ namespace Blastic.Reactive
 			return observable.Select(x => x != null);
 		}
 		
-		public static IObservable<(T?, T?)> WithPrevious<T>(this IObservable<T> observable)
+		public static IObservable<(T? Previous, T?Current)> WithPrevious<T>(this IObservable<T> observable)
 		{
 			return observable.Scan(
 				(default(T), default(T)),
