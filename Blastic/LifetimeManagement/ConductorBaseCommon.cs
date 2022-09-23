@@ -46,7 +46,10 @@ public abstract class ConductorBaseCommon<T>
 		_lifetimeSubscriptions = new Dictionary<T, IDisposable>();
 		_itemsSource = new SourceListWithListMethods();
 
-		_itemsSource.Connect().Subscribe(ItemsChanged);
+		_itemsSource.Connect()
+			.OnItemAdded(HandleAdd)
+			.OnItemRemoved(HandleRemove)
+			.Subscribe();
 
 		ConductorOptions = conductorOptions ?? new ConductorOptions();
 		LifetimeChainOptions = lifetimeChainOptions ?? new LifetimeChainOptions();
@@ -76,64 +79,27 @@ public abstract class ConductorBaseCommon<T>
 
 	protected abstract IDisposable AddChildLifetime(T item);
 
-	private void ItemsChanged(IChangeSet<T> changeSet)
+	private void HandleAdd(T item)
 	{
-		void HandleAdd(T item)
+		if (_lifetimeSubscriptions.ContainsKey(item))
 		{
-			if (_lifetimeSubscriptions.ContainsKey(item))
-			{
-				return;
-			}
-
-			_lifetimeSubscriptions[item] = AddChildLifetime(item);
+			return;
 		}
 
-		void HandleRemove(T item)
-		{
-			if (!_lifetimeSubscriptions.TryGetValue(item, out IDisposable subscription))
-			{
-				return;
-			}
-
-			subscription.Dispose();
-			_lifetimeSubscriptions.Remove(item);
-		}
-
-		foreach (Change<T> change in changeSet)
-		{
-			switch (change.Reason)
-			{
-				case ListChangeReason.Add:
-					HandleAdd(change.Item.Current);
-					break;
-
-				case ListChangeReason.AddRange:
-					foreach (T item in change.Range)
-					{
-						HandleAdd(item);
-					}
-					break;
-
-				case ListChangeReason.Remove:
-					HandleRemove(change.Item.Current);
-					break;
-
-				case ListChangeReason.RemoveRange:
-				case ListChangeReason.Clear:
-					foreach (T item in change.Range)
-					{
-						HandleRemove(item);
-					}
-					break;
-
-				case ListChangeReason.Replace:
-					HandleRemove(change.Item.Previous.Value);
-					HandleAdd(change.Item.Current);
-					break;
-			}
-		}
+		_lifetimeSubscriptions[item] = AddChildLifetime(item);
 	}
 
+	private void HandleRemove(T item)
+	{
+		if (!_lifetimeSubscriptions.TryGetValue(item, out IDisposable subscription))
+		{
+			return;
+		}
+
+		subscription.Dispose();
+		_lifetimeSubscriptions.Remove(item);
+	}
+	
 	private class SourceListWithListMethods : ISourceList<T>, IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
 	{
 		private readonly SourceList<T> _sourceList;
