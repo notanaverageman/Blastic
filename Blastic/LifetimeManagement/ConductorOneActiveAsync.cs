@@ -44,9 +44,7 @@ namespace Blastic.LifetimeManagement
 			ActiveItemIndex = new ReactiveProperty<int>();
 
 			_previousActiveItem = ActiveItem
-				.Scan<T?, (T? Previous, T? Current)>(
-					(default, default),
-					(accumulator, current) => (accumulator.Current, current))
+				.WithPrevious()
 				.Select(x => x.Previous)
 				.ToReadOnlyReactiveProperty();
 
@@ -66,6 +64,25 @@ namespace Blastic.LifetimeManagement
 					await Activate(Items[x]);
 				}
 			});
+
+			Lifetime.Activation.Subscribe(ActivateItemIfNotActive);
+		}
+
+		private async Task ActivateItemIfNotActive()
+		{
+			IAsyncLifetime? lifetime = ActiveItem.Value?.Lifetime;
+
+			if (lifetime == null)
+			{
+				return;
+			}
+
+			if (lifetime.IsActive.Value || lifetime.IsActivating.Value)
+			{
+				return;
+			}
+
+			await lifetime.Activate();
 		}
 
 		/// <summary>
@@ -88,6 +105,11 @@ namespace Blastic.LifetimeManagement
 				index = Items.Count - 1;
 			}
 
+			// This does not cause a stack overflow since equality comparer in ActiveItem.Value
+			// returns early if we set the same item.
+			ActiveItem.Value = item;
+			ActiveItemIndex.Value = index;
+
 			bool isActivating = Lifetime.IsActivating.Value;
 			bool isActive = Lifetime.IsActive.Value;
 
@@ -95,11 +117,6 @@ namespace Blastic.LifetimeManagement
 			{
 				return;
 			}
-
-			// This does not cause a stack overflow since equality comparer in ActiveItem.Value
-			// returns early if we set the same item.
-			ActiveItem.Value = item;
-			ActiveItemIndex.Value = index;
 
 			await ChangeActiveItem(cancellationToken);
 		}
