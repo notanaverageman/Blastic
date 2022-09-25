@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
@@ -11,7 +10,7 @@ using Blastic.Reactive;
 namespace Blastic.Commanding
 {
 	/// <inheritdoc cref="Command{T}"/>
-	public class Command : Command<object?>, IReadOnlyCommand
+	public class Command : Command<object?>
 	{
 		/// <summary>
 		/// The default order of the actions if their order is not specified.
@@ -94,10 +93,8 @@ namespace Blastic.Commanding
 
 		/// <inheritdoc />
 		public event EventHandler? CanExecuteChanged;
-
-		/// <summary>
-		/// An observable property that emits when command's CanExecute property changes.
-		/// </summary>
+		
+		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
 
 		/// <summary>
@@ -275,10 +272,10 @@ namespace Blastic.Commanding
 		}
 		
 		/// <inheritdoc />
-		bool ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
+		bool System.Windows.Input.ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
 
 		/// <inheritdoc />
-		void ICommand.Execute(object? parameter) => Execute((T?)parameter);
+		void System.Windows.Input.ICommand.Execute(object? parameter) => Execute((T?)parameter);
 
 		/// <summary>
 		/// Executes the <see cref="Command"/> with given parameter.

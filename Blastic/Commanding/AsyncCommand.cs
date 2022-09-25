@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
@@ -471,10 +470,10 @@ namespace Blastic.Commanding
 		}
 
 		/// <inheritdoc />
-		bool ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
+		bool System.Windows.Input.ICommand.CanExecute(object? parameter) => CanExecuteObservable.Value;
 
 		/// <inheritdoc />
-		async void ICommand.Execute(object? parameter) => await Execute((T?)parameter);
+		async void System.Windows.Input.ICommand.Execute(object? parameter) => await Execute((T?)parameter);
 
 		/// <summary>
 		/// Executes the <see cref="AsyncCommand"/> with given parameter.
