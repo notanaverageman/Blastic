@@ -58,9 +58,9 @@ public static class View
 
 	private static bool SetContentProperty(object targetLocation, object? view)
 	{
-		if (view is VisualElement { Parent: { } } f)
+		if (view is VisualElement element && element.Parent != null)
 		{
-			SetContentPropertyCore(f.Parent, null);
+			SetContentPropertyCore(element.Parent, null);
 		}
 
 		return SetContentPropertyCore(targetLocation, view);
@@ -84,7 +84,7 @@ public static class View
 			return false;
 		}
 
-		propertyInfo.SetValue(targetLocation, view, null);
+		propertyInfo.SetValue(targetLocation, view);
 
 		return true;
 	}

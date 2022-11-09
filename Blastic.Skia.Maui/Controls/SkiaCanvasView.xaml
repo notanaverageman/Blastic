@@ -1,0 +1,33 @@
+﻿<ContentView x:Class="Blastic.Skia.Maui.Controls.SkiaCanvasView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:touchCanvas="clr-namespace:Blastic.Skia.Maui.TouchCanvas;assembly=Blastic.Skia.Maui"
+             xmlns:scrolling="clr-namespace:Blastic.Skia.Maui.Scrolling;assembly=Blastic.Skia.Maui"
+             x:Name="Root">
+
+	<Grid>
+		<Grid x:Name="SizeProvider"
+		      SizeChanged="OnSizeChanged" />
+
+		<scrolling:FixedContentScrollView x:Name="ScrollViewXaml"
+		                                  MaximumZoomScale="{Binding MaximumZoomScale, Source={x:Reference Root}}"
+		                                  MinimumZoomScale="{Binding MinimumZoomScale, Source={x:Reference Root}}"
+		                                  Orientation="Both"
+		                                  ViewportChanged="OnViewportChanged">
+
+			<scrolling:FixedContentScrollView.Triggers>
+
+				<DataTrigger Binding="{Binding EnableScrolling, Source={x:Reference Root}}"
+				             TargetType="scrolling:FixedContentScrollView"
+				             Value="False">
+
+					<Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+					<Setter Property="VerticalScrollBarVisibility" Value="Never" />
+				</DataTrigger>
+			</scrolling:FixedContentScrollView.Triggers>
+
+			<touchCanvas:TouchCanvasView x:Name="Canvas"
+			                             PaintSurface="OnPaintSurface" />
+		</scrolling:FixedContentScrollView>
+	</Grid>
+</ContentView>
