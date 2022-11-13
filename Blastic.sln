@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.CodeGeneration.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Maui", "Blastic.Maui\Blastic.Maui.csproj", "{F0C66459-53D6-4F86-8094-EEB5D3297586}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blastic.Skia", "Blastic.Skia\Blastic.Skia.csproj", "{0073551E-329D-4A47-B272-02782A9F6745}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Skia", "Blastic.Skia\Blastic.Skia.csproj", "{0073551E-329D-4A47-B272-02782A9F6745}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blastic.Skia.Maui", "Blastic.Skia.Maui\Blastic.Skia.Maui.csproj", "{126AC852-41B6-4664-BEE7-A5E9BA0D240D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blastic.Skia.Maui", "Blastic.Skia.Maui\Blastic.Skia.Maui.csproj", "{126AC852-41B6-4664-BEE7-A5E9BA0D240D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
