@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using Blastic.DynamicControls;
+using Blastic.DynamicControls.Elements;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Reactive;
 using Blastic.Services.Localization;
@@ -9,10 +10,8 @@ using Blastic.Settings;
 
 namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 {
-	public sealed class LanguageSetting : SelectionSetting<LocalizedSettingValue<Language>, Language>
+	public sealed class LanguageSetting : SelectionSetting<Language>
 	{
-		private readonly LocalizableProperties _localizableProperties;
-
 		public LanguageSetting(
 			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
@@ -23,45 +22,33 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Languages
 				settingsStorage,
 				presenterSource,
 				"Sample.Language",
-				new LocalizedSettingValue<Language>(Language.System, GetName(localizableProperties, Language.System)),
-				new LocalizedSettingValue<Language>[]
+				Language.System,
+				new SelectionValueWithLabel<Language>[]
 				{
-					new(Language.System, GetName(localizableProperties, Language.System)),
-					new(Language.English, GetName(localizableProperties, Language.English)),
-					new(Language.Turkish, GetName(localizableProperties, Language.Turkish))
+					new(GetName(localizableProperties, Language.System), Language.System),
+					new(GetName(localizableProperties, Language.English), Language.English),
+					new(GetName(localizableProperties, Language.Turkish), Language.Turkish)
 				})
 		{
-			_localizableProperties = localizableProperties;
-			
 			Element.WithLabel(localizableProperties.Settings.Language);
 
 			ReactiveSettingValue.Subscribe(
 				x =>
 				{
-					localizationService.Culture.Value = x.Value switch
+					CultureInfo culture = x switch
 					{
 						Language.English => CultureInfo.GetCultureInfo("en-US"),
 						Language.Turkish => CultureInfo.GetCultureInfo("tr-TR"),
 						Language.System => CultureInfo.InstalledUICulture,
 						_ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
 					};
+
+					localizationService.ChangeCultureCommand.Execute(culture.DisplayName);
 				});
 
 			SaveOnChange = true;
 		}
-
-		protected override Language GetValueBeforeSave(LocalizedSettingValue<Language> value)
-		{
-			return value.Value;
-		}
-
-		protected override LocalizedSettingValue<Language> GetValueAfterRead(Language value)
-		{
-			return new LocalizedSettingValue<Language>(
-					value,
-					GetName(_localizableProperties, value));
-		}
-
+		
 		private static IReadOnlyReactiveProperty<string> GetName(
 			LocalizableProperties localizableProperties,
 			Language language)

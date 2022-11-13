@@ -6,7 +6,7 @@
 	<ItemGroup>
 		<PackageReference Include="Dragablz" Version="0.0.3.223" />
 		<PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
-		<PackageReference Include="NuGet.Build.Tasks.Pack" Version="5.10.0">
+		<PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.4.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>

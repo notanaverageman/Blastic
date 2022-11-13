@@ -1,5 +1,6 @@
 using System;
 using Blastic.DynamicControls;
+using Blastic.DynamicControls.Elements;
 using Blastic.Forms.Sample.Resources;
 using Blastic.Reactive;
 using Blastic.Services.Settings;
@@ -8,10 +9,8 @@ using Xamarin.Forms;
 
 namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 {
-	public sealed class ThemeSetting : SelectionSetting<LocalizedSettingValue<Theme>, Theme>
+	public sealed class ThemeSetting : SelectionSetting<Theme>
 	{
-		private readonly LocalizableProperties _localizableProperties;
-
 		public ThemeSetting(
 			ISettingsStorage settingsStorage,
 			IPresenterSource presenterSource,
@@ -21,16 +20,14 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 				settingsStorage,
 				presenterSource,
 				"Sample.Theme",
-				new LocalizedSettingValue<Theme>(Theme.System, GetName(localizableProperties, Theme.System)),
-				new LocalizedSettingValue<Theme>[]
+				Theme.System,
+				new SelectionValueWithLabel<Theme>[]
 				{
-					new(Theme.System, GetName(localizableProperties, Theme.System)),
-					new(Theme.Light, GetName(localizableProperties, Theme.Light)),
-					new(Theme.Dark, GetName(localizableProperties, Theme.Dark)),
+					new(GetName(localizableProperties, Theme.System), Theme.System),
+					new(GetName(localizableProperties, Theme.Light), Theme.Light),
+					new(GetName(localizableProperties, Theme.Dark), Theme.Dark),
 				})
 		{
-			_localizableProperties = localizableProperties;
-			
 			Element.WithLabel(localizableProperties.Settings.Theme);
 			Lifetime.Initialization.Subscribe(Initialize);
 		}
@@ -40,7 +37,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 			ReactiveSettingValue.Subscribe(
 				x =>
 				{
-					Application.Current.UserAppTheme = x.Value switch
+					Application.Current.UserAppTheme = x switch
 					{
 						Theme.Dark => OSAppTheme.Dark,
 						Theme.Light => OSAppTheme.Light,
@@ -50,19 +47,7 @@ namespace Blastic.Forms.Sample.UserInterface.Settings.Themes
 
 			SaveOnChange = true;
 		}
-
-		protected override Theme GetValueBeforeSave(LocalizedSettingValue<Theme> value)
-		{
-			return value.Value;
-		}
-
-		protected override LocalizedSettingValue<Theme> GetValueAfterRead(Theme value)
-		{
-			return new LocalizedSettingValue<Theme>(
-					value,
-					GetName(_localizableProperties, value));
-		}
-
+		
 		private static IReadOnlyReactiveProperty<string> GetName(
 			LocalizableProperties localizableProperties,
 			Theme theme)

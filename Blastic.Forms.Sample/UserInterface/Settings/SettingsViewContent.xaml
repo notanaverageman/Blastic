@@ -15,7 +15,7 @@
 		<renderers:Section Title="{Binding ThemeSettings.Title.Value}"
 						   FooterText="{Binding ThemeSettings.Help.Value}">
 			<controls:PickerCellSelectionColorFix Title="{Binding ThemeSettings.Theme.Element.Label.Value}"
-												  DisplayMember="{Binding ThemeSettings.Theme.ReactiveSettingValue.Value.DisplayName.Value}"
+												  DisplayMember="{Binding ThemeSettings.Theme.Element.Label.Value}"
 												  ItemsSource="{Binding ThemeSettings.Theme.SelectionField.Values}"
 												  SelectedItem="{Binding ThemeSettings.Theme.ReactiveSettingValue.Value}"
 												  SelectionMode="Single" />
@@ -24,7 +24,7 @@
 		<renderers:Section Title="{Binding LanguageSettings.Title.Value}"
 						   FooterText="{Binding LanguageSettings.Help.Value}">
 			<controls:PickerCellSelectionColorFix Title="{Binding LanguageSettings.Language.Element.Label.Value}"
-												  DisplayMember="{Binding LanguageSettings.Language.ReactiveSettingValue.Value.DisplayName.Value}"
+												  DisplayMember="{Binding LanguageSettings.Language.Element.Label.Value}"
 												  ItemsSource="{Binding LanguageSettings.Language.SelectionField.Values}"
 												  SelectedItem="{Binding LanguageSettings.Language.ReactiveSettingValue.Value}"
 												  SelectionMode="Single" />
