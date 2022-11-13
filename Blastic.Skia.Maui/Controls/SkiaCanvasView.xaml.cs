@@ -68,6 +68,8 @@ public partial class SkiaCanvasView : ContentView
 	{
 		Canvas.WidthRequest = SizeProvider.Width;
 		Canvas.HeightRequest = SizeProvider.Height;
+
+		Canvas.InvalidateSurface();
 	}
 
 	private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
