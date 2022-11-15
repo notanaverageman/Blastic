@@ -231,7 +231,7 @@ namespace Blastic.Settings
 			_isEnabledSubscription = Element.IsEnabled.Subscribe(_ => ReactiveSettingValue.TriggerValidation());
 
 			TStored defaultValue = GetValueBeforeSave(DefaultValue);
-			TStored storageValue = SettingsStorage.Get<TStored>(Key) ?? defaultValue;
+			TStored storageValue = SettingsStorage.Get(Key, defaultValue);
 
 			T value = GetValueAfterRead(storageValue);
 

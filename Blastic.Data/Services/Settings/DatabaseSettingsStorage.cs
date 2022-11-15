@@ -17,16 +17,16 @@ namespace Blastic.Data.Services.Settings
 			return _settingsTable.Contains(key);
 		}
 
-		public T? Get<T>(string key)
+		public T Get<T>(string key, T defaultValue)
 		{
 			string? serializedData = _settingsTable.Get(key);
 
 			if (serializedData == null)
 			{
-				return default;
+				return defaultValue;
 			}
 
-			return JsonSerializer.Deserialize<T>(serializedData);
+			return JsonSerializer.Deserialize<T>(serializedData) ?? defaultValue;
 		}
 
 		public void Put<T>(string key, T value)

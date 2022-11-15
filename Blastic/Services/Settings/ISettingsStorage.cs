@@ -18,8 +18,9 @@ namespace Blastic.Services.Settings
 		/// </summary>
 		/// <typeparam name="T">Type of the value.</typeparam>
 		/// <param name="key">The key to get corresponding value from store.</param>
+		/// <param name="defaultValue">Default value to return if key does not exist in store.</param>
 		/// <returns>The value corresponding to the key.</returns>
-		T? Get<T>(string key);
+		T Get<T>(string key, T defaultValue);
 
 		/// <summary>
 		/// Writes the given key and value to store.
