@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Reactive.Disposables;
 using Blastic.Platform;
 using DynamicData;
 using Microsoft.Extensions.Logging;
@@ -31,8 +30,8 @@ namespace Blastic.Wpf.UserInterface.Logs
 			LogLevel logLevel,
 			EventId eventId,
 			TState state,
-			Exception exception,
-			Func<TState, Exception, string> formatter)
+			Exception? exception,
+			Func<TState, Exception?, string> formatter)
 		{
 			if (!IsEnabled(logLevel))
 			{
@@ -54,9 +53,9 @@ namespace Blastic.Wpf.UserInterface.Logs
 			return logLevel >= MinimumLogLevel;
 		}
 
-		public IDisposable BeginScope<TState>(TState state)
+		public IDisposable? BeginScope<TState>(TState state) where TState : notnull
 		{
-			return Disposable.Empty;
+			return null;
 		}
 
 		public void Clear()

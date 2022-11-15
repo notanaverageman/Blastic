@@ -18,10 +18,16 @@ namespace Blastic.Wpf.ViewManagement
 	/// </remarks>
 	public class ViewLocator : ViewLocatorBase<FrameworkElement>
 	{
+		private static IViewLocator<FrameworkElement>? _current;
+
 		/// <summary>
 		/// This value should be set on initialization.
 		/// </summary>
-		internal static IViewLocator<FrameworkElement> Current { get; set; }
+		internal static IViewLocator<FrameworkElement> Current
+		{
+			get => _current ?? throw new InvalidOperationException();
+			set => _current = value ?? throw new InvalidOperationException();
+		}
 
 		/// <inheritdoc />
 		public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)
@@ -38,10 +44,10 @@ namespace Blastic.Wpf.ViewManagement
 		}
 
 		/// <inheritdoc />
-		protected override FrameworkElement PostProcessCachedView(FrameworkElement view)
+		protected override FrameworkElement? PostProcessCachedView(FrameworkElement view)
 		{
 			// Check for closed windows. They throw exception when their show method is called.
-			if (!(view is Window window))
+			if (view is not Window window)
 			{
 				return view;
 			}
@@ -88,7 +94,7 @@ namespace Blastic.Wpf.ViewManagement
 
 		private static void OnFrameworkElementLoaded(object o, RoutedEventArgs e)
 		{
-			if (!(o is FrameworkElement frameworkElement))
+			if (o is not FrameworkElement frameworkElement)
 			{
 				return;
 			}
@@ -102,7 +108,7 @@ namespace Blastic.Wpf.ViewManagement
 
 		private static void OnFrameworkElementUnloaded(object o, RoutedEventArgs e)
 		{
-			if (!(o is FrameworkElement frameworkElement))
+			if (o is not FrameworkElement frameworkElement)
 			{
 				return;
 			}
@@ -114,7 +120,7 @@ namespace Blastic.Wpf.ViewManagement
 			SetView(frameworkElement, true);
 		}
 
-		private static void OnDataContextChanged(object x, EventArgs y)
+		private static void OnDataContextChanged(object? x, EventArgs y)
 		{
 			if (!(x is FrameworkElement frameworkElement))
 			{

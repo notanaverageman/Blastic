@@ -68,6 +68,8 @@ namespace {AttributeNamespace}
 			StringBuilder code = GenerateClass(tree.Root, 0);
 
 			code.WrapWithNamespace(@namespace!);
+			code.Insert(0, "#nullable enable\r\n\r\n");
+
 			string sourceText = code.ToString();
 
 			context.AddSource(className!, sourceText);
@@ -106,7 +108,15 @@ namespace {AttributeNamespace}
 			constructorBuilder.Indent(indentation + 2).AppendLine("_localizationService = localizationService;");
 			constructorBuilder.Indent(indentation + 1).AppendLine("}");
 
-			disposeBuilder.Indent(indentation + 1).AppendLine("public void Dispose()");
+			if (node.HasValue)
+			{
+				disposeBuilder.Indent(indentation + 1).AppendLine("public override void Dispose()");
+			}
+			else
+			{
+				disposeBuilder.Indent(indentation + 1).AppendLine("public void Dispose()");
+			}
+
 			disposeBuilder.Indent(indentation + 1).AppendLine("{");
 
 			if (node.HasValue)
@@ -126,7 +136,7 @@ namespace {AttributeNamespace}
 				string childId = child.Id;
 				string childClass = childId.ToPropertyName() + "Texts";
 
-				fieldBuilder.Indent(indentation + 1).Append($"private {childClass} ");
+				fieldBuilder.Indent(indentation + 1).Append($"private {childClass}? ");
 				fieldBuilder.AppendLine($"{childId.ToFieldName()};");
 
 				propertyBuilder.Indent(indentation + 1).Append($"public {childClass} ");
@@ -177,7 +187,7 @@ namespace {AttributeNamespace}
 			string id = node.Id;
 			string key = GetKey(node);
 
-			fieldBuilder.Indent(indentation + 1).Append($"private {LocalizableReactiveProperty} ");
+			fieldBuilder.Indent(indentation + 1).Append($"private {LocalizableReactiveProperty}? ");
 			fieldBuilder.AppendLine($"{id.ToFieldName()};");
 
 			propertyBuilder.Indent(indentation + 1).Append($"public {ReadOnlyReactiveProperty} ");

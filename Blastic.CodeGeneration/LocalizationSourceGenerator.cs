@@ -61,19 +61,23 @@ namespace {AttributeNamespace}
 			List<LocalizedText> localizedTexts = source.GetLocalizedTexts();
 
 			StringBuilder classBuilder = new();
+
+			classBuilder.AppendLine("#nullable enable");
+			classBuilder.AppendLine();
+
 			classBuilder.AppendLine($"public partial class {className} : Blastic.Services.Localization.ILocalizationSource");
 			classBuilder.AppendLine("{");
 
 			classBuilder.Indent(1).AppendLine("public Blastic.Ordering.Order Order { get; }");
 			classBuilder.Indent(1).AppendLine();
-			classBuilder.Indent(1).AppendLine($"public {className}(Blastic.Ordering.Order order = null)");
+			classBuilder.Indent(1).AppendLine($"public {className}(Blastic.Ordering.Order? order = null)");
 			classBuilder.Indent(1).AppendLine("{");
 			classBuilder.Indent(2).AppendLine("Order = order ?? new Blastic.Ordering.Order();");
 			classBuilder.Indent(1).AppendLine("}");
 			classBuilder.Indent(1).AppendLine();
 
 			StringBuilder methodBuilder = new();
-			methodBuilder.Indent(1).AppendLine("public string GetValue(string key, System.Globalization.CultureInfo culture)");
+			methodBuilder.Indent(1).AppendLine("public string? GetValue(string key, System.Globalization.CultureInfo culture)");
 			methodBuilder.Indent(1).AppendLine("{");
 			methodBuilder.Indent(2).AppendLine("string cultureId = culture.Name.ToLowerInvariant();");
 			methodBuilder.Indent(1).AppendLine();

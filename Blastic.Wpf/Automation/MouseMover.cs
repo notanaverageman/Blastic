@@ -12,7 +12,7 @@ namespace Blastic.Wpf.Automation
 	{
 		public static async Task MoveMouseTo(this IViewAware viewAware, object bindingSource, double speed = 1.5)
 		{
-			FrameworkElement element = viewAware.GetView(bindingSource);
+			FrameworkElement? element = viewAware.GetView(bindingSource);
 
 			if (element == null)
 			{
@@ -39,7 +39,7 @@ namespace Blastic.Wpf.Automation
 			[DllImport("user32.dll")]
 			private static extern bool GetCursorPos(out Point p);
 
-			private static readonly Random Random = new Random();
+			private static readonly Random Random = new();
 
 			public static void MoveMouse(int x, int y, double speed)
 			{

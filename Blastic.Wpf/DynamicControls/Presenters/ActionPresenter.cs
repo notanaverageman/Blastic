@@ -5,11 +5,11 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 {
 	public class ActionPresenter : Presenter
 	{
-		public ICommand Command { get; set; }
-
 		static ActionPresenter()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(ActionPresenter), new FrameworkPropertyMetadata(typeof(ActionPresenter)));
 		}
+
+		public ICommand? Command { get; set; }
 	}
 }

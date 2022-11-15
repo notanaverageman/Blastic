@@ -5,13 +5,13 @@ namespace Blastic.DynamicControls
 {
 	public interface IPresenter
 	{
-		IReadOnlyReactiveProperty Property { get; set; }
+		IReadOnlyReactiveProperty? Property { get; set; }
 
-		IReadOnlyReactiveProperty<string> Help { get; set; }
-		IReadOnlyReactiveProperty<string> Label { get; set; }
-		IReadOnlyReactiveProperty<object> Icon { get; set; }
+		IReadOnlyReactiveProperty<string?>? Help { get; set; }
+		IReadOnlyReactiveProperty<string?>? Label { get; set; }
+		IReadOnlyReactiveProperty<object?>? Icon { get; set; }
 
-		IReactiveProperty<bool> IsEnabledReactive { get; set; }
+		IReactiveProperty<bool>? IsEnabledReactive { get; set; }
 
 		GridLength ColumnWidth { get; set; }
 		Thickness IconMargin { get; set; }

@@ -8,7 +8,7 @@ namespace Blastic.Wpf.Initialization.Extensions
 	{
 		public static IHostBuilder ConfigureBlasticApplication(
 			this IHostBuilder hostBuilder,
-			Action<BlasticApplicationBuilder> configureAction = null)
+			Action<BlasticApplicationBuilder>? configureAction = null)
 		{
 			hostBuilder.ConfigureServices(
 				(_, x) =>

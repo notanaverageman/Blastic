@@ -75,7 +75,7 @@ namespace Blastic.Forms.Sample.UserInterface.Search
 
 			Lifetime = new Lifetime();
 			ExecutionContext = new ExecutionContext();
-			View = new ReactiveProperty<object?>();
+			View = new ReactiveProperty<object?>(default);
 
 			Order = new Order(1);
 			Title = localizableProperties.Search.Title;
@@ -89,7 +89,7 @@ namespace Blastic.Forms.Sample.UserInterface.Search
 				.DisposeMany()
 				.Subscribe();
 
-			SearchQuery = new ReactiveProperty<string>();
+			SearchQuery = new ReactiveProperty<string>("");
 			SearchQuery
 				.Throttle(TimeSpan.FromMilliseconds(100), Scheduler.Default)
 				.Select(x => x?.Trim())

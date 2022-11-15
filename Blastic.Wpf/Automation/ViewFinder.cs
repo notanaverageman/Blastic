@@ -6,9 +6,9 @@ namespace Blastic.Wpf.Automation
 {
 	public static partial class AutomationExtensions
 	{
-		public static FrameworkElement GetView(this IViewAware viewAware, object bindingSource)
+		public static FrameworkElement? GetView(this IViewAware viewAware, object bindingSource)
 		{
-			if (!(viewAware.View.Value is FrameworkElement view))
+			if (viewAware.View.Value is not FrameworkElement view)
 			{
 				return null;
 			}

@@ -21,8 +21,8 @@ namespace Blastic.Forms.Sample.UserInterface.MediaPlayer
 		{
 			_audioPlayer = audioPlayer;
 
-			OverlayState = new ReactiveProperty<OverlayState>();
-			CurrentChapter = new ReactiveProperty<ChapterViewModel?>();
+			OverlayState = new ReactiveProperty<OverlayState>(Controls.Overlay.OverlayState.Invisible);
+			CurrentChapter = new ReactiveProperty<ChapterViewModel?>(default);
 
 			ChangeOverlayStateCommand = new Command<OverlayState>(
 				x =>

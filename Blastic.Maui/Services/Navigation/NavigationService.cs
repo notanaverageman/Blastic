@@ -27,14 +27,14 @@ public class NavigationService : INavigationService
 
 	public async Task NavigateTo(IViewAware parent, object model)
 	{
-		if (!(parent.View.Value is Page parentPage))
+		if (parent.View.Value is not Page parentPage)
 		{
 			throw new ArgumentException("The view for parent does not exist or it is not a Page.", nameof(parent));
 		}
 
 		VisualElement element = _viewLocator.Locate(model);
 
-		Page page = element as Page;
+		Page? page = element as Page;
 
 		if (element is ContentView contentView)
 		{

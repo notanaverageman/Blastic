@@ -5,7 +5,6 @@ using Blastic.DynamicControls;
 using Blastic.Forms.DynamicControls;
 using Blastic.Forms.Platform;
 using Blastic.Forms.Services.Navigation;
-using Blastic.Forms.Services.Settings;
 using Blastic.Forms.UserInterface;
 using Blastic.Forms.ViewManagement;
 using Blastic.Ordering;
@@ -13,7 +12,6 @@ using Blastic.Platform;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
 using Blastic.Services.Notifications;
-using Blastic.Services.Settings;
 using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Microsoft.Extensions.DependencyInjection;
@@ -77,13 +75,7 @@ namespace Blastic.Forms.Initialization
 			_serviceCollection.AddSingleton<ILocalizationSource>(new ResourceManagerLocalizationSource(resourceManager, order));
 			return this;
 		}
-
-		public BlasticApplicationBuilder AddSettingsStorage()
-		{
-			_serviceCollection.AddSingleton<ISettingsStorage, SettingsStorage>();
-			return this;
-		}
-
+		
 		private void AddDefaults()
 		{
 			_serviceCollection.AddSingleton(SynchronizationContext.Current);

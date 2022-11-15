@@ -51,7 +51,7 @@ namespace Blastic.Wpf.Settings
 
 		public void Browse()
 		{
-			void SetIfNotEmpty(string path)
+			void SetIfNotEmpty(string? path)
 			{
 				if (!string.IsNullOrEmpty(path))
 				{
@@ -59,17 +59,17 @@ namespace Blastic.Wpf.Settings
 				}
 			}
 
-			FileDialogOptions options = new FileDialogOptions(_filter, initialDirectory: SettingValue);
+			FileDialogOptions options = new(_filter, initialDirectory: SettingValue);
 
 			if (IsFolderPicker)
 			{
-				string folderPath = _dialogService.ShowSelectFolderDialog(options);
+				string? folderPath = _dialogService.ShowSelectFolderDialog(options);
 				SetIfNotEmpty(folderPath);
 
 				return;
 			}
 
-			string filePath = IsSaveFilePicker
+			string? filePath = IsSaveFilePicker
 				? _dialogService.ShowSaveFileDialog(options)
 				: _dialogService.ShowOpenFileDialog(options);
 

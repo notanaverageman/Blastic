@@ -46,7 +46,7 @@ public class SkiaCanvas
 	public SkiaCanvas()
 	{
 		_screenDensity = 1;
-		_canvasSize = new ReactiveProperty<SKSizeI>();
+		_canvasSize = new ReactiveProperty<SKSizeI>(default);
 		
 		InputEvents = new InputEvents(this);
 
@@ -54,17 +54,17 @@ public class SkiaCanvas
 
 		GlobalContentScale = new ReactiveProperty<float>(1);
 
-		Scale = new ReactiveProperty<float>();
-		ScrollX = new ReactiveProperty<float>();
-		ScrollY = new ReactiveProperty<float>();
+		Scale = new ReactiveProperty<float>(1);
+		ScrollX = new ReactiveProperty<float>(0);
+		ScrollY = new ReactiveProperty<float>(0);
 
-		ContentSize = new ReactiveProperty<SKSize>();
-		InsetRatio = new ReactiveProperty<float>();
+		ContentSize = new ReactiveProperty<SKSize>(default);
+		InsetRatio = new ReactiveProperty<float>(0);
 
 		ContentSizeScaled = ContentSize
 			.CombineLatest(GlobalContentScale)
 			.Select(x => new SKSize(x.First.Width * x.Second, x.First.Height * x.Second))
-			.ToReadOnlyReactiveProperty();
+			.ToReadOnlyReactiveProperty(default);
 
 		ResetTransformation();
 
@@ -83,23 +83,23 @@ public class SkiaCanvas
 
 		_marginForCentering = sizesObservable
 			.Select(GetMarginsForCentering)
-			.ToReadOnlyReactiveProperty();
+			.ToReadOnlyReactiveProperty(default);
 
 		InsetSize = sizesObservable
 			.Select(GetInsetSize)
-			.ToReadOnlyReactiveProperty();
+			.ToReadOnlyReactiveProperty(default);
 
 		CanvasContentSize = sizesObservable
 			.Select(GetCanvasContentSize)
-			.ToReadOnlyReactiveProperty();
+			.ToReadOnlyReactiveProperty(default);
 		
 		MaxScrollX = sizesObservable
 			.Select(x => Math.Max(0, GetCanvasContentSize(x).Width - x.CanvasSize.Width))
-			.ToReadOnlyReactiveProperty();
+			.ToReadOnlyReactiveProperty(default);
 
 		MaxScrollY = sizesObservable
 			.Select(x => Math.Max(0, GetCanvasContentSize(x).Height - x.CanvasSize.Height))
-			.ToReadOnlyReactiveProperty();
+			.ToReadOnlyReactiveProperty(default);
 	}
 
 	private void BeforeDraw((SKCanvas Canvas, SKPaint? Paint) args)

@@ -20,9 +20,9 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 			public ViewAnimations()
 			{
-				UnderlineWidth = new ReactiveProperty<double>();
-				Opacity = new ReactiveProperty<double>();
-				Offset = new ReactiveProperty<double>();
+				UnderlineWidth = new ReactiveProperty<double>(0);
+				Opacity = new ReactiveProperty<double>(0);
+				Offset = new ReactiveProperty<double>(0);
 
 				OffsetMax = 10;
 				OffsetAnimationDuration = TimeSpan.FromMilliseconds(400);

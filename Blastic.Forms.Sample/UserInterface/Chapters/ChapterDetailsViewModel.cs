@@ -18,8 +18,8 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 		{
 			LocalizableProperties = localizableProperties;
 			
-			Chapter = new ReactiveProperty<ChapterViewModel?>();
-			State = new ReactiveProperty<OverlayState>();
+			Chapter = new ReactiveProperty<ChapterViewModel?>(default);
+			State = new ReactiveProperty<OverlayState>(OverlayState.Invisible);
 
 			HideCommand = new Command(Hide);
 		}

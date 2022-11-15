@@ -30,6 +30,6 @@ namespace Blastic.Services.Localization
 		/// </summary>
 		/// <param name="key">Key for localized string.</param>
 		/// <returns>The localized string or null if key is not found.</returns>
-		string? GetValue(string key);
+		string GetValue(string key);
 	}
 }

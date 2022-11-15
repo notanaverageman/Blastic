@@ -17,11 +17,13 @@ namespace Blastic.Reactive
 		/// <inheritdoc />
 		object? IReadOnlyReactiveProperty.Value => Value;
 
+#pragma warning disable CS0067
 		/// <inheritdoc/>
 		public event PropertyChangedEventHandler? PropertyChanged;
 
 		/// <inheritdoc/>
 		public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+#pragma warning restore CS0067
 
 		/// <inheritdoc/>
 		public bool HasErrors => false;

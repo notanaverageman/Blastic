@@ -40,7 +40,7 @@ namespace Blastic.Wpf.ControlExtensions
 				return;
 			}
 
-			ScrollViewer scrollViewer = sender as ScrollViewer;
+			ScrollViewer? scrollViewer = sender as ScrollViewer;
 			scrollViewer?.ScrollToBottom();
 		}
 	}

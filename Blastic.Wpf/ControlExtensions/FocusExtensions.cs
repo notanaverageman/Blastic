@@ -58,12 +58,12 @@ namespace Blastic.Wpf.ControlExtensions
 
 		public static void SetFocus(this IViewAware viewAware, object bindingSource)
 		{
-			if (!(viewAware.View.Value is DependencyObject view))
+			if (viewAware.View.Value is not DependencyObject view)
 			{
 				return;
 			}
 
-			FrameworkElement control = VisualTreeExtensions.FindChild(view, bindingSource);
+			FrameworkElement? control = VisualTreeExtensions.FindChild(view, bindingSource);
 
 			if (control == null)
 			{

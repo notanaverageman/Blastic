@@ -10,7 +10,7 @@ public class Presenter : ContentView, IPresenter
 		nameof(Label),
 		typeof(IReadOnlyReactiveProperty<string>),
 		typeof(Presenter));
-	public IReadOnlyReactiveProperty<string> Label
+	public IReadOnlyReactiveProperty<string?>? Label
 	{
 		get => (IReadOnlyReactiveProperty<string>)GetValue(LabelProperty);
 		set => SetValue(LabelProperty, value);
@@ -20,7 +20,7 @@ public class Presenter : ContentView, IPresenter
 		nameof(Property),
 		typeof(IReadOnlyReactiveProperty),
 		typeof(Presenter));
-	public IReadOnlyReactiveProperty Property
+	public IReadOnlyReactiveProperty? Property
 	{
 		get => (IReadOnlyReactiveProperty)GetValue(PropertyProperty);
 		set => SetValue(PropertyProperty, value);
@@ -30,9 +30,9 @@ public class Presenter : ContentView, IPresenter
 		nameof(Help),
 		typeof(IReadOnlyReactiveProperty<string>),
 		typeof(Presenter));
-	public IReadOnlyReactiveProperty<string> Help
+	public IReadOnlyReactiveProperty<string?>? Help
 	{
-		get => (IReadOnlyReactiveProperty<string>)GetValue(HelpProperty);
+		get => (IReadOnlyReactiveProperty<string?>?)GetValue(HelpProperty);
 		set => SetValue(HelpProperty, value);
 	}
 
@@ -40,9 +40,9 @@ public class Presenter : ContentView, IPresenter
 		nameof(Icon),
 		typeof(IReadOnlyReactiveProperty<object>),
 		typeof(Presenter));
-	public IReadOnlyReactiveProperty<object> Icon
+	public IReadOnlyReactiveProperty<object?>? Icon
 	{
-		get => (IReadOnlyReactiveProperty<object>)GetValue(IconProperty);
+		get => (IReadOnlyReactiveProperty<object?>)GetValue(IconProperty);
 		set => SetValue(IconProperty, value);
 	}
 
@@ -50,7 +50,7 @@ public class Presenter : ContentView, IPresenter
 		nameof(IsEnabledReactive),
 		typeof(IReactiveProperty<bool>),
 		typeof(Presenter));
-	public IReactiveProperty<bool> IsEnabledReactive
+	public IReactiveProperty<bool>? IsEnabledReactive
 	{
 		get => (IReactiveProperty<bool>)GetValue(IsEnabledReactiveProperty);
 		set => SetValue(IsEnabledReactiveProperty, value);

@@ -12,7 +12,7 @@ public class GroupPresenter : Presenter
 {
 	private readonly IPresenterSource _presenterSource;
 
-	private Grid _fieldsGrid;
+	private Grid? _fieldsGrid;
 
 	public IEnumerable<IElement> Elements { get; }
 
@@ -50,12 +50,7 @@ public class GroupPresenter : Presenter
 
 		_fieldsGrid.Children.Clear();
 		_fieldsGrid.ColumnDefinitions.Clear();
-
-		if (Elements == null)
-		{
-			return;
-		}
-
+		
 		int column = 0;
 
 		foreach (IElement element in Elements)

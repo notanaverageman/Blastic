@@ -34,7 +34,7 @@ namespace Blastic.Wpf.Initialization
 		private readonly IServiceCollection _serviceCollection;
 
 		public bool StopHostOnApplicationShutdown { get; set; }
-		public Type MainViewModelType { get; set; }
+		public Type? MainViewModelType { get; set; }
 
 		public List<Func<DispatcherUnhandledExceptionEventArgs, Task>> UnhandledExceptionHandlers { get; }
 		

@@ -7,7 +7,6 @@ using Blastic.Platform;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 using Blastic.Wpf.Platform;
-using Blastic.Wpf.Services.Windowing;
 using Blastic.Wpf.ViewManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +21,7 @@ namespace Blastic.Wpf.Initialization.Extensions
 		private readonly ManualResetEvent _dispatcherSetEvent;
 		private readonly ManualResetEvent _startEvent;
 
-		public Dispatcher Dispatcher { get; private set; }
+		public Dispatcher? Dispatcher { get; private set; }
 
 		public WpfApp(IServiceProvider serviceProvider, BlasticApplicationBuilder builder)
 		{
@@ -68,6 +67,11 @@ namespace Blastic.Wpf.Initialization.Extensions
 
 		private void UiThreadStart()
 		{
+			if (_builder.MainViewModelType == null)
+			{
+				throw new InvalidOperationException("Main view model type is not registered.");
+			}
+
 			Dispatcher = Dispatcher.CurrentDispatcher;
 			_dispatcherSetEvent.Set();
 			

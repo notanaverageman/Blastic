@@ -23,14 +23,14 @@ namespace Blastic.Wpf.ControlExtensions
 			AddDefaultDependencyProperty<ButtonBase>(ButtonBase.CommandProperty);
 		}
 
-		public static T FindChild<T>(DependencyObject parent) where T : DependencyObject
+		public static T? FindChild<T>(DependencyObject? parent) where T : DependencyObject
 		{
 			if (parent == null)
 			{
 				return null;
 			}
 
-			T foundChild = null;
+			T? foundChild = null;
 
 			int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
@@ -55,14 +55,14 @@ namespace Blastic.Wpf.ControlExtensions
 			return foundChild;
 		}
 
-		public static FrameworkElement FindChild(DependencyObject parent, object source)
+		public static FrameworkElement? FindChild(DependencyObject? parent, object source)
 		{
 			if (parent == null)
 			{
 				return null;
 			}
 
-			FrameworkElement foundChild = null;
+			FrameworkElement? foundChild = null;
 			int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
 			for (int childIndex = 0; childIndex < childrenCount; childIndex++)
@@ -93,7 +93,7 @@ namespace Blastic.Wpf.ControlExtensions
 			DependencyProperty dependencyProperty,
 			object source)
 		{
-			BindingExpression bindingExpression = BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty);
+			BindingExpression? bindingExpression = BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty);
 
 			if (bindingExpression == null)
 			{
@@ -112,7 +112,7 @@ namespace Blastic.Wpf.ControlExtensions
 				return false;
 			}
 
-			object bindingSource = bindingExpression.ResolvedSource
+			object? bindingSource = bindingExpression.ResolvedSource
 				?.GetType()
 				 .GetProperty(bindingExpression.ResolvedSourcePropertyName)
 				?.GetValue(bindingExpression.ResolvedSource);
@@ -135,7 +135,7 @@ namespace Blastic.Wpf.ControlExtensions
 
 		public static void AddDefaultDependencyProperty<T>(DependencyProperty dependencyProperty)
 		{
-			if (!DefaultDependencyProperties.TryGetValue(typeof(T), out HashSet<DependencyProperty> properties))
+			if (!DefaultDependencyProperties.TryGetValue(typeof(T), out HashSet<DependencyProperty>? properties))
 			{
 				properties = new HashSet<DependencyProperty>();
 				DefaultDependencyProperties[typeof(T)] = properties;

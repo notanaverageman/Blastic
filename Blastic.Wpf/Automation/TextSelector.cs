@@ -14,9 +14,9 @@ namespace Blastic.Wpf.Automation
 			int start,
 			int length)
 		{
-			FrameworkElement element = viewAware.GetView(property);
+			FrameworkElement? element = viewAware.GetView(property);
 
-			if (!(element is TextBox textBox))
+			if (element is not TextBox textBox)
 			{
 				return Task.CompletedTask;
 			}

@@ -32,9 +32,9 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 				_parent = parent;
 				_downloads = downloads;
 
-				IsDownloading = new ReactiveProperty<bool>();
+				IsDownloading = new ReactiveProperty<bool>(false);
 				IsDownloaded = new ReactiveProperty<bool>(File.Exists(GetDownloadedFilePath()));
-				DownloadProgress = new ReactiveProperty<double>();
+				DownloadProgress = new ReactiveProperty<double>(0);
 
 				IObservable<bool> downloaded = IsDownloaded;
 				IObservable<bool> notDownloaded = IsDownloaded.Negate();

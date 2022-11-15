@@ -26,7 +26,7 @@ namespace Blastic.Services.Messaging
 		/// <inheritdoc />
 		public IObservable<T> GetEventBus<T>()
 		{
-			return _subject.OfType<T>().AsObservable();
+			return _subject!.OfType<T>().AsObservable();
 		}
 
 		/// <inheritdoc />

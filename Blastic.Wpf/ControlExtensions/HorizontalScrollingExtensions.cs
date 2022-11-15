@@ -39,7 +39,12 @@ namespace Blastic.Wpf.ControlExtensions
         private static void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
 	        UIElement uiElement = (UIElement)sender;
-            ScrollViewer scrollViewer = GetScrollViewer(uiElement);
+            ScrollViewer? scrollViewer = GetScrollViewer(uiElement);
+
+            if (scrollViewer == null)
+            {
+				return;
+            }
 
             if (Keyboard.Modifiers != ModifierKeys.Shift)
             {
@@ -50,7 +55,7 @@ namespace Blastic.Wpf.ControlExtensions
             e.Handled = true;
         }
 
-        private static ScrollViewer GetScrollViewer(UIElement element)
+        private static ScrollViewer? GetScrollViewer(UIElement? element)
         {
 	        if (element == null)
 	        {
@@ -62,7 +67,7 @@ namespace Blastic.Wpf.ControlExtensions
 		        return s;
 	        }
 
-            ScrollViewer result = null;
+            ScrollViewer? result = null;
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
             {

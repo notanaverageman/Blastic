@@ -50,10 +50,7 @@ namespace Blastic.Wpf.ControlExtensions
 
 		private static void OnColumnDefinitionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			Grid targetGrid = d as Grid;
-			string columns = e.NewValue as string;
-
-			if (targetGrid == null || columns == null)
+			if (d is not Grid targetGrid || e.NewValue is not string columns)
 			{
 				return;
 			}
@@ -65,13 +62,13 @@ namespace Blastic.Wpf.ControlExtensions
 			{
 				string[] tokens = columnDefinition.Trim().Split(':');
 
-				if (tokens.Length < 1 || tokens.Length > 2)
+				if (tokens.Length is < 1 or > 2)
 				{
 					throw new ArgumentException($"Invalid column definition: {columnDefinition}");
 				}
 
 				string size = tokens[0];
-				string group = tokens.Length > 1 ? tokens[1] : null;
+				string? group = tokens.Length > 1 ? tokens[1] : null;
 
 				if (size.Trim() == "")
 				{

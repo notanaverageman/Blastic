@@ -25,7 +25,7 @@ namespace Blastic.Wpf.ControlExtensions
 		
 		private static void OnEnablePaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			if (!(d is FrameworkElement element))
+			if (d is not FrameworkElement element)
 			{
 				return;
 			}
@@ -53,24 +53,26 @@ namespace Blastic.Wpf.ControlExtensions
 			for (int i = 0; i < childCount; i++)
 			{
 				DependencyObject child = VisualTreeHelper.GetChild(element, i);
-				DependencyProperty marginProperty = GetMarginProperty(child);
+				DependencyProperty? marginProperty = GetMarginProperty(child);
 
 				//  If we have a margin property, bind it to the padding.
-				if (marginProperty != null)
+				if (marginProperty == null)
 				{
-					Binding binding = new Binding
-					{
-						Source = element,
-						Path = new PropertyPath(PaddingProperty)
-					};
-
-					//  Bind the child's margin to the grid's padding.
-					BindingOperations.SetBinding(child, marginProperty, binding);
+					continue;
 				}
+
+				Binding binding = new()
+				{
+					Source = element,
+					Path = new PropertyPath(PaddingProperty)
+				};
+
+				//  Bind the child's margin to the grid's padding.
+				BindingOperations.SetBinding(child, marginProperty, binding);
 			}
 		}
 
-		private static DependencyProperty GetMarginProperty(DependencyObject dependencyObject)
+		private static DependencyProperty? GetMarginProperty(DependencyObject dependencyObject)
 		{
 			foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(dependencyObject))
 			{

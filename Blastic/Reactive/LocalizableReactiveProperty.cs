@@ -8,16 +8,16 @@ namespace Blastic.Reactive
 	/// when <see cref="ILocalizationService.Culture"/> changes.
 	/// </summary>
 	[DebuggerDisplay("{" + nameof(Value) + "}")]
-	public class LocalizableReactiveProperty : ReactivePropertyBase<string?>, IReadOnlyReactiveProperty<string?>
+	public class LocalizableReactiveProperty : ReactivePropertyBase<string>, IReadOnlyReactiveProperty<string>
 	{
 		private readonly ILocalizationService _localizationService;
 		private readonly string _key;
 
 		/// <inheritdoc />
-		public string? Value => GetValue();
+		public string Value => GetValue();
 
 		/// <inheritdoc />
-		object? IReadOnlyReactiveProperty.Value => Value;
+		object IReadOnlyReactiveProperty.Value => Value;
 
 		/// <summary>
 		/// Creates a new instance that listens to the changes in given localization service's
@@ -39,7 +39,7 @@ namespace Blastic.Reactive
 
 		private void OnNext(object sender, CultureChangedEventArgs args)
 		{
-			string? value = _localizationService.GetValue(_key);
+			string value = _localizationService.GetValue(_key);
 			SetValue(value);
 		}
 

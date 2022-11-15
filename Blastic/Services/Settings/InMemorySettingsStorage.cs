@@ -25,11 +25,11 @@ namespace Blastic.Services.Settings
 		}
 
 		/// <inheritdoc />
-		public T? Get<T>(string key, T? defaultValue = default)
+		public T? Get<T>(string key)
 		{
 			if (!_settings.TryGetValue(key, out object? value) || value is not T t)
 			{
-				return defaultValue;
+				return default;
 			}
 
 			return t;

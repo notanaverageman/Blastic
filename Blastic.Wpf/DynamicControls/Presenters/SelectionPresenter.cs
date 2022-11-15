@@ -10,6 +10,6 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(SelectionPresenter), new FrameworkPropertyMetadata(typeof(SelectionPresenter)));
 		}
 
-		public IEnumerable Values { get; set; }
+		public IEnumerable? Values { get; set; }
 	}
 }

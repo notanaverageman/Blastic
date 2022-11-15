@@ -10,9 +10,9 @@ public class TextPresenter : Presenter
 		nameof(Mask),
 		typeof(IReadOnlyReactiveProperty<string>),
 		typeof(TextPresenter));
-	public IReadOnlyReactiveProperty<string> Mask
+	public IReadOnlyReactiveProperty<string?>? Mask
 	{
-		get => (IReadOnlyReactiveProperty<string>)GetValue(MaskProperty);
+		get => (IReadOnlyReactiveProperty<string?>?)GetValue(MaskProperty);
 		set => SetValue(MaskProperty, value);
 	}
 
@@ -20,9 +20,9 @@ public class TextPresenter : Presenter
 		nameof(Keyboard),
 		typeof(IReadOnlyReactiveProperty<Keyboard>),
 		typeof(TextPresenter));
-	public IReadOnlyReactiveProperty<Keyboard> Keyboard
+	public IReadOnlyReactiveProperty<Keyboard>? Keyboard
 	{
-		get => (IReadOnlyReactiveProperty<Keyboard>)GetValue(KeyboardProperty);
+		get => (IReadOnlyReactiveProperty<Keyboard>?)GetValue(KeyboardProperty);
 		set => SetValue(KeyboardProperty, value);
 	}
 }

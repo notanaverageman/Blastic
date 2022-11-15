@@ -39,7 +39,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 
 		public IReadOnlyReactiveProperty<string> Title { get; }
 
-		public IReactiveProperty<CityViewModel> MainCity { get; }
+		public IReactiveProperty<CityViewModel?> MainCity { get; }
 		public ObservableCollection<CityViewModel> Cities { get; }
 
 		public IReactiveProperty<CityImage> CityImageSource1 { get; }
@@ -58,7 +58,7 @@ namespace Blastic.Wpf.Sample.UserInterface
 			Order = new Order(1);
 			Title = new ReactiveProperty<string>("TRT World Wheather");
 
-			MainCity = new ReactiveProperty<CityViewModel>();
+			MainCity = new ReactiveProperty<CityViewModel?>(default);
 
 			_random = new Random(1);
 

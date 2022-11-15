@@ -103,7 +103,7 @@ namespace Blastic.Forms.DynamicControls
 			return new TextPresenter
 			{
 				Mask = textField.Mask,
-                Keyboard = textField.Keyboard.Select(ToXamarinKeyboard).ToReadOnlyReactiveProperty()
+                Keyboard = textField.Keyboard.Select(ToXamarinKeyboard).ToReadOnlyReactiveProperty(ToXamarinKeyboard(textField.Keyboard.Value))
 			};
 		}
 

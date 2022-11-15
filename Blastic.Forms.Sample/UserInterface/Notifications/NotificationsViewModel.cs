@@ -27,7 +27,7 @@ namespace Blastic.Forms.Sample.UserInterface.Notifications
 		{
 			NotificationService = notificationService;
 
-			State = new ReactiveProperty<OverlayState>();
+			State = new ReactiveProperty<OverlayState>(OverlayState.Invisible);
 
 			NotificationService.ActiveNotifications
 				.ToObservableChangeSet()
@@ -82,7 +82,7 @@ namespace Blastic.Forms.Sample.UserInterface.Notifications
 				:
 				base(model, showDuration, dismissOnTimeout)
 			{
-				View = new ReactiveProperty<object?>();
+				View = new ReactiveProperty<object?>(default);
 
 				Lifetime.Activation.Subscribe(
 					() =>

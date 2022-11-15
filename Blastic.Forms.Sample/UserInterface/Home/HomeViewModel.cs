@@ -77,7 +77,7 @@ namespace Blastic.Forms.Sample.UserInterface.Home
 
 			Lifetime = new Lifetime();
 			ExecutionContext = new ExecutionContext();
-			View = new ReactiveProperty<object?>();
+			View = new ReactiveProperty<object?>(default);
 
 			Order = new Order(0);
 			Title = localizableProperties.Home.Title;

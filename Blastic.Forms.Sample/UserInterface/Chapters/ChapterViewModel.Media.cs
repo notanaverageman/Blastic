@@ -46,21 +46,21 @@ namespace Blastic.Forms.Sample.UserInterface.Chapters
 				Duration = new ReactiveProperty<TimeSpan>(chapter.Duration);
 				SizeLabel = new ReactiveProperty<string>(ToReadableString(chapter.SizeInBytes));
 
-				PlayedPercent = new ReactiveProperty<double>();
-				SeekTime = new ReactiveProperty<TimeSpan>();
+				PlayedPercent = new ReactiveProperty<double>(0);
+				SeekTime = new ReactiveProperty<TimeSpan>(default);
 
 				PlayedDurationLabel = PlayedPercent
 					.Select(x => ToTimeString(ToTime(x)))
-					.ToReadOnlyReactiveProperty();
+					.ToReadOnlyReactiveProperty("");
 
 				RemainingDurationLabel = PlayedPercent
 					.Select(x => ToTimeString(ToTime(1 - x)))
-					.ToReadOnlyReactiveProperty();
+					.ToReadOnlyReactiveProperty("");
 
 				SeekStartedCommand = new Command(SeekStarted);
 				SeekCompletedCommand = new Command(SeekCompleted);
 
-				IsPlaying = new ReactiveProperty<bool>();
+				IsPlaying = new ReactiveProperty<bool>(false);
 
 				TogglePlayCommand = new Command(TogglePlay);
 				SkipBackwardCommand = new Command(SkipBackward);

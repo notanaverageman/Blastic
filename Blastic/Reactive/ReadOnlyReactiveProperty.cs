@@ -28,7 +28,7 @@ namespace Blastic.Reactive
 		/// <param name="equalityComparer">Equality comparer for the values.</param>
 		public ReadOnlyReactiveProperty(
 			IObservable<T> source,
-			T initialValue = default,
+			T initialValue,
 			IEqualityComparer<T>? equalityComparer = null)
 			:
 			base(initialValue, equalityComparer)
@@ -61,12 +61,28 @@ namespace Blastic.Reactive
 		/// <param name="equalityComparer">Equality comparer for the values.</param>
 		public static ReadOnlyReactiveProperty<T> ToReadOnlyReactiveProperty<T>(
 			this IObservable<T> source,
-			T initialValue = default,
+			T initialValue,
 			IEqualityComparer<T>? equalityComparer = null)
 		{
 			return new ReadOnlyReactiveProperty<T>(
 				source,
 				initialValue,
+				equalityComparer);
+		}
+
+		/// <summary>
+		/// Creates a new <see cref="IReadOnlyReactiveProperty{T}"/> that listens to the given observable
+		/// with an optional initial value and an optional equality comparer.
+		/// </summary>
+		/// <param name="source">Observable to listen to.</param>
+		/// <param name="equalityComparer">Equality comparer for the values.</param>
+		public static ReadOnlyReactiveProperty<T> ToReadOnlyReactiveProperty<T>(
+			this IReactiveProperty<T> source,
+			IEqualityComparer<T>? equalityComparer = null)
+		{
+			return new ReadOnlyReactiveProperty<T>(
+				source,
+				source.Value,
 				equalityComparer);
 		}
 	}

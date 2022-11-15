@@ -13,10 +13,16 @@ namespace Blastic.Maui.ViewManagement;
 /// </summary>
 public class ViewLocator : ViewLocatorBase<VisualElement>
 {
+	private static IViewLocator<VisualElement>? _current;
+
 	/// <summary>
 	/// This value should be set on initialization.
 	/// </summary>
-	internal static IViewLocator<VisualElement> Current { get; set; }
+	internal static IViewLocator<VisualElement> Current
+	{
+		get => _current ?? throw new InvalidOperationException();
+		set => _current = value ?? throw new InvalidOperationException();
+	}
 
 	/// <inheritdoc />
 	public ViewLocator(IEnumerable<ITypeMapper> typeMappers) : base(typeMappers)

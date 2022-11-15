@@ -22,7 +22,7 @@ namespace Blastic.Wpf.ControlExtensions
 			typeof(INotifyCollectionChanged),
 			typeof(DataGridColumnSizeExtensions),
 			new PropertyMetadata(default(INotifyCollectionChanged)));
-		public static INotifyCollectionChanged GetDataGridItemsSource(DependencyObject obj) => (INotifyCollectionChanged)obj.GetValue(DataGridItemsSourceProperty);
+		public static INotifyCollectionChanged? GetDataGridItemsSource(DependencyObject obj) => (INotifyCollectionChanged?)obj.GetValue(DataGridItemsSourceProperty);
 		public static void SetDataGridItemsSource(DependencyObject obj, INotifyCollectionChanged value) => obj.SetValue(DataGridItemsSourceProperty, value);
 
 		public static readonly DependencyProperty CollectionChangedActionProperty = DependencyProperty.RegisterAttached(
@@ -30,14 +30,12 @@ namespace Blastic.Wpf.ControlExtensions
 			typeof(NotifyCollectionChangedEventHandler),
 			typeof(DataGridColumnSizeExtensions),
 			new PropertyMetadata(default(NotifyCollectionChangedEventHandler)));
-		public static NotifyCollectionChangedEventHandler GetCollectionChangedAction(DependencyObject obj) => (NotifyCollectionChangedEventHandler)obj.GetValue(CollectionChangedActionProperty);
+		public static NotifyCollectionChangedEventHandler? GetCollectionChangedAction(DependencyObject obj) => (NotifyCollectionChangedEventHandler?)obj.GetValue(CollectionChangedActionProperty);
 		public static void SetCollectionChangedAction(DependencyObject obj, NotifyCollectionChangedEventHandler value) => obj.SetValue(CollectionChangedActionProperty, value);
 
 		private static void OnFixColumnFillSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			DataGrid dataGrid = d as DataGrid;
-
-			if (dataGrid == null)
+			if (d is not DataGrid dataGrid)
 			{
 				return;
 			}
@@ -54,31 +52,27 @@ namespace Blastic.Wpf.ControlExtensions
 			}
 		}
 
-		private static void OnItemsSourceChanged(object sender, EventArgs e)
+		private static void OnItemsSourceChanged(object? sender, EventArgs e)
 		{
-			DataGrid dataGrid = sender as DataGrid;
-
-			if (dataGrid == null)
+			if (sender is not DataGrid dataGrid)
 			{
 				return;
 			}
 
-			INotifyCollectionChanged oldItemsSource = GetDataGridItemsSource(dataGrid);
+			INotifyCollectionChanged? oldItemsSource = GetDataGridItemsSource(dataGrid);
 
 			if (oldItemsSource != null)
 			{
-				NotifyCollectionChangedEventHandler collectionChangedAction = GetCollectionChangedAction(dataGrid);
+				NotifyCollectionChangedEventHandler? collectionChangedAction = GetCollectionChangedAction(dataGrid);
 				oldItemsSource.CollectionChanged -= collectionChangedAction;
 			}
 
-			INotifyCollectionChanged observableCollection = dataGrid.ItemsSource as INotifyCollectionChanged;
-
-			if (observableCollection == null)
+			if (dataGrid.ItemsSource is not INotifyCollectionChanged observableCollection)
 			{
 				return;
 			}
 
-			void Action(object o, NotifyCollectionChangedEventArgs a)
+			void Action(object? o, NotifyCollectionChangedEventArgs a)
 			{
 				FixColumnSizes(dataGrid);
 			}
@@ -87,12 +81,12 @@ namespace Blastic.Wpf.ControlExtensions
 			observableCollection.CollectionChanged += Action;
 
 			FixColumnSizes(dataGrid);
-			SetDataGridItemsSource(dataGrid, (INotifyCollectionChanged)dataGrid.ItemsSource);
+			SetDataGridItemsSource(dataGrid, observableCollection);
 		}
 
 		private static void FixColumnSizes(DataGrid dataGrid)
 		{
-			DataGridColumn firstColumn = dataGrid?.Columns.FirstOrDefault();
+			DataGridColumn? firstColumn = dataGrid.Columns.FirstOrDefault();
 
 			if (firstColumn == null)
 			{

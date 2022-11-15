@@ -63,7 +63,7 @@ namespace Blastic.Forms.Sample.UserInterface.Downloads
 				.Zip(_available, (x, _) => x.Current)
 				.Subscribe(async x => await Start(x));
 
-			State = new ReactiveProperty<OverlayState>();
+			State = new ReactiveProperty<OverlayState>(OverlayState.Invisible);
 
 			HideCommand = new Command(Hide);
 			RemoveCommand = new Command<DownloadData>(Remove);

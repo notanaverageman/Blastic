@@ -15,7 +15,7 @@ namespace Blastic.Wpf.Material.DynamicControls
 
 		public static T WithIcon<T>(this T element, IReactiveProperty<PackIconKind> icon) where T : IElement
 		{
-			element.Icon = icon.Select(x => (object)x).ToReadOnlyReactiveProperty();
+			element.Icon = icon.Select(x => (object)x).ToReadOnlyReactiveProperty(icon.Value);
 			return element;
 		}
 	}

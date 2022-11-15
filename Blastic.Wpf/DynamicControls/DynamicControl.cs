@@ -19,13 +19,13 @@ namespace Blastic.Wpf.DynamicControls
 			typeof(DynamicModel),
 			typeof(DynamicControl),
 			new PropertyMetadata(default(DynamicModel), OnFormChanged));
-		public DynamicModel Model
+		public DynamicModel? Model
 		{
-			get => (DynamicModel)GetValue(ModelProperty);
+			get => (DynamicModel?)GetValue(ModelProperty);
 			set => SetValue(ModelProperty, value);
 		}
 
-		private Grid _rootGrid;
+		private Grid? _rootGrid;
 
 		public override void OnApplyTemplate()
 		{

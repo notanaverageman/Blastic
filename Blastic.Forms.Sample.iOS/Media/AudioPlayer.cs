@@ -28,7 +28,7 @@ namespace Blastic.Forms.Sample.iOS.Media
 
 		public AudioPlayer()
 		{
-			Progress = new ReactiveProperty<TimeSpan>();
+			Progress = new ReactiveProperty<TimeSpan>(default);
 
 			RemotePlayCommand = new Command();
 			RemotePauseCommand = new Command();

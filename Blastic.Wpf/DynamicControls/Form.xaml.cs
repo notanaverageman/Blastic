@@ -7,7 +7,7 @@ namespace Blastic.Wpf.DynamicControls
 {
 	public partial class Form
 	{
-		private IDisposable _formSubscription;
+		private IDisposable? _formSubscription;
 
 		public static readonly DependencyProperty ExecutionContextProperty = DependencyProperty.Register(
 			nameof(ExecutionContextProperty).Replace("Property", ""),
@@ -15,7 +15,7 @@ namespace Blastic.Wpf.DynamicControls
 			typeof(Form),
 			new PropertyMetadata(default(ExecutionContext), OnExecutionContextChanged));
 
-		public ExecutionContext ExecutionContext
+		public ExecutionContext? ExecutionContext
 		{
 			get => (ExecutionContext)GetValue(ExecutionContextProperty);
 			set => SetValue(ExecutionContextProperty, value);
@@ -28,12 +28,12 @@ namespace Blastic.Wpf.DynamicControls
 		{
 			InitializeComponent();
 
-			Ok = new AsyncCommand().WithSubscribe(x =>
+			Ok = new AsyncCommand().WithSubscribe(_ =>
 			{
 				ExecutionContext?.Form.Value?.Ok();
 			});
 
-			Cancel = new AsyncCommand().WithSubscribe(x =>
+			Cancel = new AsyncCommand().WithSubscribe(_ =>
 			{
 				ExecutionContext?.Form.Value?.Cancel();
 			});
@@ -45,7 +45,12 @@ namespace Blastic.Wpf.DynamicControls
 			
 			form._formSubscription?.Dispose();
 
-			form._formSubscription = ((ExecutionContext) e.NewValue)?.Form?.Subscribe(x =>
+			if (e.NewValue is not ExecutionContext executionContext)
+			{
+				return;
+			}
+
+			form._formSubscription = executionContext.Form.Subscribe(x =>
 			{
 				if (x?.MinWidth == 0)
 				{

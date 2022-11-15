@@ -10,6 +10,6 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(TextPresenter), new FrameworkPropertyMetadata(typeof(TextPresenter)));
 		}
 
-		public IReactiveProperty<string> Mask { get; set; }
+		public IReactiveProperty<string?>? Mask { get; set; }
 	}
 }

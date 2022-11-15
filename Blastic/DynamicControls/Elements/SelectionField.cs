@@ -42,7 +42,7 @@ namespace Blastic.DynamicControls.Elements
 				.Select(_ => Unit.Default)
 				.ObserveOnUI();
 
-			SelectedIndex = new ReactiveProperty<int>();
+			SelectedIndex = new ReactiveProperty<int>(0);
 
 			Property.Subscribe(x =>
 			{

@@ -16,7 +16,7 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupPresenter), new FrameworkPropertyMetadata(typeof(GroupPresenter)));
 		}
 
-		private Grid _fieldsGrid;
+		private Grid? _fieldsGrid;
 
 		public IEnumerable<IElement> Elements { get; }
 
@@ -56,7 +56,7 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 
 			foreach (IElement element in Elements)
 			{
-				ColumnDefinition columnDefinition = new ColumnDefinition
+				ColumnDefinition columnDefinition = new()
 				{
 					Width = element.ColumnWidth.ToWpf()
 				};

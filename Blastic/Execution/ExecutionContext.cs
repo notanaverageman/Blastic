@@ -25,7 +25,7 @@ namespace Blastic.Execution
 		public CancellationTokenSource CancellationTokenSource { get; private set; }
 
 		public IReactiveProperty<bool> IsShowingForm { get; }
-		public IReactiveProperty<DynamicModel> Form { get; }
+		public IReactiveProperty<DynamicModel?> Form { get; }
 
 		public ExecutionContext()
 		{
@@ -39,14 +39,14 @@ namespace Blastic.Execution
 
 			ProgressDetails = progressDetails;
 			
-			IsBusy = new ReactiveProperty<bool>();
-			ProgressMessage = new ReactiveProperty<string>();
+			IsBusy = new ReactiveProperty<bool>(false);
+			ProgressMessage = new ReactiveProperty<string>("");
 
-			IsCancellationSupported = new ReactiveProperty<bool>();
+			IsCancellationSupported = new ReactiveProperty<bool>(false);
 			CancellationTokenSource = new CancellationTokenSource();
 
-			IsShowingForm = new ReactiveProperty<bool>();
-			Form = new ReactiveProperty<DynamicModel>();
+			IsShowingForm = new ReactiveProperty<bool>(false);
+			Form = new ReactiveProperty<DynamicModel?>(default);
 		}
 
 		public async Task Execute(

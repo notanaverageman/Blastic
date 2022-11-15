@@ -24,7 +24,7 @@ namespace Blastic.Reactive
 		object? IReactiveProperty.Value
 		{
 			get => Value;
-			set => Value = (T)value;
+			set => Value = (T)value!;
 		}
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace Blastic.Reactive
 		/// <param name="initialValue">Initial value of this property.</param>
 		/// <param name="equalityComparer">Equality comparer for the values.</param>
 		public ReactiveProperty(
-			T initialValue = default,
+			T initialValue,
 			IEqualityComparer<T>? equalityComparer = null)
 			:
 			base(initialValue, equalityComparer)

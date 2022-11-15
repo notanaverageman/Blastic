@@ -21,32 +21,29 @@ namespace Blastic.Wpf.ControlExtensions
 	        typeof(Regex),
 	        typeof(TextBoxMasking));
 
-        public static string GetMask(TextBox textBox)
+        public static string? GetMask(TextBox textBox)
         {
             return textBox.GetValue(MaskProperty) as string;
         }
 
-        public static void SetMask(TextBox textBox, string mask)
+        public static void SetMask(TextBox textBox, string? mask)
         {
             textBox.SetValue(MaskProperty, mask);
         }
 
-        private static Regex GetMaskExpression(TextBox textBox)
+        private static Regex? GetMaskExpression(TextBox textBox)
         {
             return textBox.GetValue(MaskExpressionProperty) as Regex;
         }
 
-        private static void SetMaskExpression(TextBox textBox, Regex regex)
+        private static void SetMaskExpression(TextBox textBox, Regex? regex)
         {
             textBox.SetValue(MaskExpressionProperty, regex);
         }
 
         private static void OnMaskChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            TextBox textBox = dependencyObject as TextBox;
-            string mask = e.NewValue as string;
-
-            if (textBox == null)
+			if (dependencyObject is not TextBox textBox)
             {
                 return;
             }
@@ -58,7 +55,7 @@ namespace Blastic.Wpf.ControlExtensions
             DataObject.RemoveCopyingHandler(textBox, NoDragCopy);
             CommandManager.RemovePreviewExecutedHandler(textBox, NoCutting);
 
-            if (mask == null)
+            if (e.NewValue is not string mask)
             {
                 textBox.ClearValue(MaskProperty);
                 textBox.ClearValue(MaskExpressionProperty);
@@ -95,8 +92,12 @@ namespace Blastic.Wpf.ControlExtensions
 
         private static void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            Regex maskExpression = GetMaskExpression(textBox);
+	        if (sender is not TextBox textBox)
+            {
+				return;
+            }
+
+            Regex? maskExpression = GetMaskExpression(textBox);
 
             if (maskExpression == null)
             {
@@ -112,28 +113,27 @@ namespace Blastic.Wpf.ControlExtensions
         }
 
         private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            Regex maskExpression = GetMaskExpression(textBox);
+		{
+			if (sender is not TextBox textBox)
+			{
+				return;
+			}
 
-            if (maskExpression == null)
+			Regex? maskExpression = GetMaskExpression(textBox);
+			
+			if (maskExpression == null)
             {
                 return;
             }
 
-            string proposedText = null;
+			string? proposedText = e.Key switch
+			{
+				Key.Space => GetProposedText(textBox, " "),
+				Key.Back => GetProposedTextBackspace(textBox),
+				_ => null
+			};
 
-            switch (e.Key)
-            {
-                case Key.Space:
-                    proposedText = GetProposedText(textBox, " ");
-                    break;
-                case Key.Back:
-                    proposedText = GetProposedTextBackspace(textBox);
-                    break;
-            }
-
-            if (proposedText != null && !maskExpression.IsMatch(proposedText))
+			if (proposedText != null && !maskExpression.IsMatch(proposedText))
             {
                 e.Handled = true;
             }
@@ -141,18 +141,22 @@ namespace Blastic.Wpf.ControlExtensions
         }
 
         private static void Pasting(object sender, DataObjectPastingEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            Regex maskExpression = GetMaskExpression(textBox);
+		{
+			if (sender is not TextBox textBox)
+			{
+				return;
+			}
 
-            if (maskExpression == null)
+			Regex? maskExpression = GetMaskExpression(textBox);
+
+			if (maskExpression == null)
             {
                 return;
             }
 
             if (e.DataObject.GetDataPresent(typeof(string)))
             {
-                string pastedText = e.DataObject.GetData(typeof(string)) as string;
+                string pastedText = (string)e.DataObject.GetData(typeof(string))!;
                 string proposedText = GetProposedText(textBox, pastedText);
 
                 if (!maskExpression.IsMatch(proposedText))

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
 using Blastic.Wpf.DynamicControls.Presenters;
@@ -8,7 +7,7 @@ namespace Blastic.Wpf.DynamicControls
 {
 	public class PresenterSource : IPresenterSource
 	{
-		public static readonly PresenterSource Instance = new PresenterSource();
+		public static readonly PresenterSource Instance = new();
 
 		private PresenterSource()
 		{
@@ -16,26 +15,22 @@ namespace Blastic.Wpf.DynamicControls
 
 		public IPresenter CreatePresenter(IElement element)
 		{
-			Presenter presenter = element switch
+			Presenter? presenter = element switch
 			{
 				ActionElement actionElement => CreateActionPresenter(actionElement),
-				BooleanField _ => CreateBooleanPresenter(),
+				BooleanField => CreateBooleanPresenter(),
 				GroupElement groupElement => CreateGroupPresenter(groupElement),
-				LabelField _ => CreateLabelPresenter(),
-				PasswordField _ => CreatePasswordPresenter(),
+				LabelField => CreateLabelPresenter(),
+				PasswordField => CreatePasswordPresenter(),
 				TextField textField => CreateTextPresenter(textField),
 				_ => null
 			};
 
-			if (presenter == null &&
-			    element.GetType().IsGenericType &&
-			    element.GetType().GetGenericTypeDefinition() == typeof(SelectionField<>))
+			if (presenter == null && element is ISelectionField selectionField)
 			{
 				presenter = new SelectionPresenter
 				{
-					Values = (IEnumerable) element.GetType()
-						.GetProperty(nameof(SelectionField<object>.Values))
-						.GetValue(element)
+					Values = selectionField.Values
 				};
 			}
 

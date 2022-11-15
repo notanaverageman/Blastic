@@ -21,12 +21,12 @@ namespace Blastic.Wpf.Sample.UserInterface
 			Lifetime = new Lifetime();
 
 			City = city;
-			Weather = new ReactiveProperty<Weather>();
+			Weather = new ReactiveProperty<Weather>(default);
 
-			Temperature = new ReactiveProperty<int>();
+			Temperature = new ReactiveProperty<int>(0);
 			TemperatureText = Temperature
 				.Select(x => x + "°")
-				.ToReadOnlyReactiveProperty();
+				.ToReadOnlyReactiveProperty("");
 
 			Animations = new ViewAnimations();
 			

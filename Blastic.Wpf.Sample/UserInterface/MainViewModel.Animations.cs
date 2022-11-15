@@ -37,12 +37,12 @@ namespace Blastic.Wpf.Sample.UserInterface
 				_cities = cities;
 				_isCityImage1Active = true;
 
-				Opacity = new ReactiveProperty<double>();
-				CityTextOffset = new ReactiveProperty<double>();
-				TemperatureOffset = new ReactiveProperty<double>();
-				WeatherOffset = new ReactiveProperty<double>();
-				CityImage1Offset = new ReactiveProperty<double>();
-				CityImage2Offset = new ReactiveProperty<double>();
+				Opacity = new ReactiveProperty<double>(0);
+				CityTextOffset = new ReactiveProperty<double>(0);
+				TemperatureOffset = new ReactiveProperty<double>(0);
+				WeatherOffset = new ReactiveProperty<double>(0);
+				CityImage1Offset = new ReactiveProperty<double>(0);
+				CityImage2Offset = new ReactiveProperty<double>(0);
 
 				CityTextAppearOffsetMax = 50;
 				CityTextDisappearOffsetMax = 300;

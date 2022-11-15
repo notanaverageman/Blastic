@@ -62,7 +62,7 @@ namespace Blastic.Services.Localization
 		}
 
 		/// <inheritdoc />
-		public string? GetValue(string key)
+		public string GetValue(string key)
 		{
 			string? result = null;
 			CultureInfo culture = Culture.Value;
@@ -75,6 +75,11 @@ namespace Blastic.Services.Localization
 				{
 					break;
 				}
+			}
+
+			if (result == null)
+			{
+				throw new ArgumentException($"Can't find localized string for key {key}", nameof(key));
 			}
 
 			return result;

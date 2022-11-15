@@ -17,13 +17,13 @@ namespace Blastic.Data.Services.Settings
 			return _settingsTable.Contains(key);
 		}
 
-		public T? Get<T>(string key, T? defaultValue)
+		public T? Get<T>(string key)
 		{
 			string? serializedData = _settingsTable.Get(key);
 
 			if (serializedData == null)
 			{
-				return defaultValue;
+				return default;
 			}
 
 			return JsonSerializer.Deserialize<T>(serializedData);

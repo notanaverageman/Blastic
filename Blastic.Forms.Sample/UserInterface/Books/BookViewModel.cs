@@ -80,9 +80,9 @@ namespace Blastic.Forms.Sample.UserInterface.Books
 			string imageUrl = ArchiveOrgService.ArchiveOrgImageUrlPrefix + "/" + Book.ArchiveOrgId;
 
 			ImageUrl = new ReactiveProperty<string>(imageUrl);
-			TotalDuration = new ReactiveProperty<TimeSpan>();
+			TotalDuration = new ReactiveProperty<TimeSpan>(default);
 
-			DescriptionExpanded = new ReactiveProperty<bool>();
+			DescriptionExpanded = new ReactiveProperty<bool>(false);
 			DescriptionToggleLabel = new ReactiveProperty<IReadOnlyReactiveProperty<string>>(LocalizableProperties.Home.Book.Description.More);
 
 			_chaptersSource = new SourceCache<ChapterViewModel, string>(x => x.Media.Url.Value);

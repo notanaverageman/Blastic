@@ -46,9 +46,9 @@ namespace Blastic.LifetimeManagement
 		/// </summary>
 		public AsyncLifetime()
 		{
-			_isInitialized = new ReactiveProperty<bool>();
-			_isActive = new ReactiveProperty<bool>();
-			_isActivating = new ReactiveProperty<bool>();
+			_isInitialized = new ReactiveProperty<bool>(false);
+			_isActive = new ReactiveProperty<bool>(false);
+			_isActivating = new ReactiveProperty<bool>(false);
 
 			Initialization = IsInitialized
 				.Select(x => !x)

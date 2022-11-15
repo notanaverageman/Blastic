@@ -8,39 +8,34 @@ namespace Blastic.Wpf.Converters
 {
 	public class MultiValueConverterGroup : List<object>, IMultiValueConverter
 	{
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+		public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			object result = DependencyProperty.UnsetValue;
+			object? result = DependencyProperty.UnsetValue;
 
-			object converterInput = values;
+			object? converterInput = values;
 			object[] multiConverterInput = values;
 
 			for (int i = 0; i < Count; i++)
 			{
 				object converter = this[i];
-				object nextConverter = i < Count - 1 ? this[i + 1] : null;
+				object? nextConverter = i < Count - 1 ? this[i + 1] : null;
 
-				switch (converter)
+				result = converter switch
 				{
-					case IMultiValueConverter multiValueConverter:
-						result = multiValueConverter.Convert(multiConverterInput, targetType, parameter, culture);
-						break;
-					case IValueConverter valueConverter:
-						result = valueConverter.Convert(converterInput, targetType, parameter, culture);
-						break;
-					default:
-						throw new ArgumentException(nameof(converter));
-				}
-					
+					IMultiValueConverter multiValueConverter => multiValueConverter.Convert(multiConverterInput, targetType, parameter, culture),
+					IValueConverter valueConverter => valueConverter.Convert(converterInput, targetType, parameter, culture),
+					_ => throw new ArgumentException(nameof(converter))
+				};
+
 				switch (nextConverter)
 				{
-					case IMultiValueConverter _ when result is object[] array:
+					case IMultiValueConverter when result is object[] array:
 						multiConverterInput = array;
 						break;
-					case IMultiValueConverter _:
+					case IMultiValueConverter:
 						multiConverterInput = new[] { result };
 						break;
-					case IValueConverter _:
+					case IValueConverter:
 						converterInput = result;
 						break;
 				}

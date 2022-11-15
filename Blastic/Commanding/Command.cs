@@ -123,10 +123,10 @@ namespace Blastic.Commanding
 		{
 			_actions = new List<OrderedAction>();
 			_finallyActions = new List<OrderedAction>();
-			_isExecuting = new ReactiveProperty<bool>();
+			_isExecuting = new ReactiveProperty<bool>(false);
 			_semaphore = new SemaphoreSlim(1, 1);
 
-			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty() ?? Singletons.TrueReadOnlyReactiveProperty;
+			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty(false) ?? Singletons.TrueReadOnlyReactiveProperty;
 
 			CanExecuteObservable
 				.ObserveOnUI()

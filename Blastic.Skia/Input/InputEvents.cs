@@ -26,7 +26,7 @@ public class InputEvents
 	{
 		_canvas = canvas;
 
-		IsEnabled = new ReactiveProperty<bool>();
+		IsEnabled = new ReactiveProperty<bool>(false);
 
 		Pan = Observable
 			.FromEventPattern<PanEventArgs>(

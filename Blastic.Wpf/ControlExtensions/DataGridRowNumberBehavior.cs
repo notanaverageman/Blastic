@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -26,7 +27,7 @@ namespace Blastic.Wpf.ControlExtensions
 
         private static void OnDisplayRowNumberChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
         {
-	        if (!(target is DataGrid dataGrid))
+	        if (target is not DataGrid dataGrid)
             {
                 return;
             }
@@ -36,7 +37,7 @@ namespace Blastic.Wpf.ControlExtensions
 		        return;
 	        }
 
-	        void LoadedRowHandler(object sender, DataGridRowEventArgs ea)
+	        void LoadedRowHandler(object? sender, DataGridRowEventArgs ea)
 	        {
 		        if (GetDisplayRowNumber(dataGrid) == false)
 		        {
@@ -58,16 +59,28 @@ namespace Blastic.Wpf.ControlExtensions
 			        dataGrid.ItemContainerGenerator.ItemsChanged -= ItemsChangedHandler;
 			        return;
 		        }
-		        GetVisualChildCollection<DataGridRow>(dataGrid).ForEach(d => d.Header = d.GetIndex());
+
+		        IReadOnlyList<DataGridRow> children = GetVisualChildCollection<DataGridRow>(dataGrid);
+
+		        foreach (DataGridRow child in children)
+		        {
+			        child.Header = child.GetIndex();
+		        }
 	        }
 
 	        dataGrid.ItemContainerGenerator.ItemsChanged += ItemsChangedHandler;
         }
 
-        private static List<T> GetVisualChildCollection<T>(object parent) where T : Visual
+        private static IReadOnlyList<T> GetVisualChildCollection<T>(object parent) where T : Visual
         {
-            List<T> visualCollection = new List<T>();
-            GetVisualChildCollection(parent as DependencyObject, visualCollection);
+	        if (parent is not DependencyObject dependencyObject)
+	        {
+		        return Array.Empty<T>();
+	        }
+
+            List<T> visualCollection = new();
+            GetVisualChildCollection(dependencyObject, visualCollection);
+
             return visualCollection;
         }
 

@@ -91,7 +91,7 @@ public class PresenterSource : IPresenterSource
 		return new TextPresenter
 		{
 			Mask = textField.Mask,
-			Keyboard = textField.Keyboard.Select(ToMauiKeyboard).ToReadOnlyReactiveProperty()
+			Keyboard = textField.Keyboard.Select(ToMauiKeyboard).ToReadOnlyReactiveProperty(Microsoft.Maui.Keyboard.Plain)
 		};
 	}
 

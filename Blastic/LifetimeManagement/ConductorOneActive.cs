@@ -40,13 +40,13 @@ namespace Blastic.LifetimeManagement
 			:
 			base(lifetimeChainOptions: new LifetimeChainOptions(activateChildrenOnSelfActivation: false))
 		{
-			ActiveItem = new ReactiveProperty<T?>();
-			ActiveItemIndex = new ReactiveProperty<int>();
+			ActiveItem = new ReactiveProperty<T?>(default);
+			ActiveItemIndex = new ReactiveProperty<int>(-1);
 
 			_previousActiveItem = ActiveItem
 				.WithPrevious()
 				.Select(x => x.Previous)
-				.ToReadOnlyReactiveProperty();
+				.ToReadOnlyReactiveProperty(default);
 
 			ActiveItem.Subscribe(x =>
 			{

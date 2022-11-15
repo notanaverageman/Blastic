@@ -30,8 +30,8 @@ namespace Blastic.Forms.Sample.UserInterface.Downloads
 
 			_cancellationTokenSource = new CancellationTokenSource();
 
-			Size = new ReactiveProperty<string>();
-			Progress = new ReactiveProperty<double>();
+			Size = new ReactiveProperty<string>("");
+			Progress = new ReactiveProperty<double>(0);
 		}
 
 		public void Cancel()
