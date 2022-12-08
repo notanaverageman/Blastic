@@ -80,7 +80,7 @@ namespace Blastic.Commanding
 	/// </para>
 	/// </remarks>
 	/// <typeparam name="T"></typeparam>
-	public class Command<T> : ICommand, IReadOnlyCommand<T>
+	public class Command<T> : ICommand, IReadOnlyCommand<T>, IObserver<bool>
 	{
 		private readonly List<OrderedAction> _actions;
 		private readonly List<OrderedAction> _finallyActions;
@@ -130,7 +130,7 @@ namespace Blastic.Commanding
 
 			CanExecuteObservable
 				.ObserveOnUI()
-				.Subscribe(_ => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+				.Subscribe(this);
 		}
 
 		/// <summary>
@@ -439,6 +439,19 @@ namespace Blastic.Commanding
 			{
 				return Comparer<Order>.Default.Compare(x.Order, y.Order);
 			}
+		}
+
+		void IObserver<bool>.OnCompleted()
+		{
+		}
+
+		void IObserver<bool>.OnError(Exception error)
+		{
+		}
+
+		void IObserver<bool>.OnNext(bool value)
+		{
+			CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }
