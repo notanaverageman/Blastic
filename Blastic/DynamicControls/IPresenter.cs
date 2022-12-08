@@ -9,9 +9,9 @@ namespace Blastic.DynamicControls
 
 		IReadOnlyReactiveProperty<string?>? Help { get; set; }
 		IReadOnlyReactiveProperty<string?>? Label { get; set; }
-		IReadOnlyReactiveProperty<object?>? Icon { get; set; }
+		IReadOnlyReactiveProperty? Icon { get; set; }
 
-		IReactiveProperty<bool>? IsEnabledReactive { get; set; }
+		IReadOnlyReactiveProperty<bool>? IsEnabledReactive { get; set; }
 
 		GridLength ColumnWidth { get; set; }
 		Thickness IconMargin { get; set; }

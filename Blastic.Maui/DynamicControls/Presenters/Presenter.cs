@@ -38,21 +38,21 @@ public class Presenter : ContentView, IPresenter
 
 	public static readonly BindableProperty IconProperty = BindableProperty.Create(
 		nameof(Icon),
-		typeof(IReadOnlyReactiveProperty<object>),
+		typeof(IReadOnlyReactiveProperty),
 		typeof(Presenter));
-	public IReadOnlyReactiveProperty<object?>? Icon
+	public IReadOnlyReactiveProperty? Icon
 	{
-		get => (IReadOnlyReactiveProperty<object?>)GetValue(IconProperty);
+		get => (IReadOnlyReactiveProperty)GetValue(IconProperty);
 		set => SetValue(IconProperty, value);
 	}
 
 	public static readonly BindableProperty IsEnabledReactiveProperty = BindableProperty.Create(
 		nameof(IsEnabledReactive),
-		typeof(IReactiveProperty<bool>),
+		typeof(IReadOnlyReactiveProperty<bool>),
 		typeof(Presenter));
-	public IReactiveProperty<bool>? IsEnabledReactive
+	public IReadOnlyReactiveProperty<bool>? IsEnabledReactive
 	{
-		get => (IReactiveProperty<bool>)GetValue(IsEnabledReactiveProperty);
+		get => (IReadOnlyReactiveProperty<bool>)GetValue(IsEnabledReactiveProperty);
 		set => SetValue(IsEnabledReactiveProperty, value);
 	}
 
