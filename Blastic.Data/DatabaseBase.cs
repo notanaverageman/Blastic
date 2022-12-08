@@ -18,30 +18,20 @@ public abstract class DatabaseBase : IDisposable
 	public MetadataTable Metadata { get; }
 
 	public bool HasTransaction => Connection.HasTransaction;
-	public bool IsInMemory { get; }
+	public bool IsInMemory => string.IsNullOrEmpty(_sqliteConnection.DataSource);
 
-	public DatabaseBase(SqliteConnectionStringBuilder? connectionStringBuilder)
+	public DatabaseBase(SqliteConnectionStringBuilder connectionStringBuilder, string tableName)
 	{
-		if (connectionStringBuilder == null)
-		{
-			IsInMemory = true;
-
-			connectionStringBuilder = new SqliteConnectionStringBuilder()
-			{
-				DataSource = ":memory:"
-			};
-		}
-
 		SetConnectionStringDefaults(connectionStringBuilder);
 
 		_sqliteConnection = new SqliteConnection(connectionStringBuilder.ConnectionString);
 
 		Connection = new Connection(_sqliteConnection);
-		Metadata = new MetadataTable(Connection);
+		Metadata = new MetadataTable(Connection, tableName);
 
 		_migrations = new SortedSet<MigrationBase>(MigrationComparer.Instance)
 		{
-			new CreateMetadataTable(Connection)
+			new CreateMetadataTable(Connection, tableName)
 		};
 	}
 
@@ -74,9 +64,20 @@ public abstract class DatabaseBase : IDisposable
 	public void Clone(SqliteConnectionStringBuilder connectionStringBuilder)
 	{
 		SetConnectionStringDefaults(connectionStringBuilder);
+		
 		using SqliteConnection sqliteConnection = new(connectionStringBuilder.ConnectionString);
+		sqliteConnection.Open();
 
 		_sqliteConnection.BackupDatabase(sqliteConnection);
+	}
+
+	public void MoveTo(SqliteConnectionStringBuilder connectionStringBuilder)
+	{
+		Clone(connectionStringBuilder);
+
+		_sqliteConnection.Close();
+		_sqliteConnection.ConnectionString = connectionStringBuilder.ConnectionString;
+		_sqliteConnection.Open();
 	}
 
 	public void SetPageSize(int bytes)

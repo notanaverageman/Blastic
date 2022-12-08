@@ -4,27 +4,30 @@ namespace Blastic.Data.Migrations;
 
 public class CreateMetadataTable : MigrationBase
 {
+	private readonly string _tableName;
+
 	public static readonly Version StaticVersion = new(0, 0, 0, 0);
 
 	public override Version Version => StaticVersion;
 
-	public CreateMetadataTable(Connection connection) : base(connection)
+	public CreateMetadataTable(Connection connection, string tableName) : base(connection)
 	{
+		_tableName = tableName;
 	}
 
 	public override void MigrateUp()
 	{
 		using Command command = Connection.CreateCommand();
 
-		command.CommandText = """
-			CREATE TABLE Metadata(
+		command.CommandText = $"""
+			CREATE TABLE {_tableName}(
 				Version NVARCHAR(255) PRIMARY KEY  
 			)
 			""";
 		command.ExecuteNonQuery();
 
-		command.CommandText = """
-			INSERT INTO Metadata (Version)
+		command.CommandText = $"""
+			INSERT INTO {_tableName} (Version)
 			VALUES (@Version)
 			""";
 
