@@ -1,4 +1,5 @@
-using System.Reactive.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.LifetimeManagement.Contexts;
@@ -13,7 +14,7 @@ namespace Blastic.LifetimeManagement
 	/// <typeparam name="T">A type with a lifetime.</typeparam>
 	public class ConductorOneActiveAsync<T> : ConductorBaseAsync<T> where T : class, IHasAsyncLifetime
 	{
-		private readonly IReadOnlyReactiveProperty<T?> _previousActiveItem;
+		private readonly List<T?> _activeItemStack;
 
 		/// <summary>
 		/// An observable property that holds the currently active item. Has a null value
@@ -43,26 +44,18 @@ namespace Blastic.LifetimeManagement
 			ActiveItem = new ReactiveProperty<T?>(default);
 			ActiveItemIndex = new ReactiveProperty<int>(-1);
 
-			_previousActiveItem = ActiveItem
-				.WithPrevious()
-				.Select(x => x.Previous)
-				.ToReadOnlyReactiveProperty(default);
+			_activeItemStack = new List<T?>();
 
-			ActiveItem.SubscribeAsync(async x =>
+			ActiveItem.SubscribeAsync(async _ =>
 			{
-				await Activate(x);
+				await ActivateItemAlreadySet();
 			});
 
-			ActiveItemIndex.SubscribeAsync(async x =>
+			ActiveItemIndex.Subscribe(x =>
 			{
-				if (x < 0 || x >= Items.Count)
-				{
-					await Activate(null);
-				}
-				else
-				{
-					await Activate(Items[x]);
-				}
+				ActiveItem.Value = x < 0 || x >= Items.Count
+					? null
+					: Items[x];
 			});
 
 			Lifetime.Activation.Subscribe(ActivateItemIfNotActive);
@@ -85,40 +78,51 @@ namespace Blastic.LifetimeManagement
 			await lifetime.Activate();
 		}
 
-		/// <summary>
-		/// Activate the given item. Adds the item to children if it is not added before
-		/// and the given item is not null.
-		/// </summary>
-		/// <remarks>
-		/// This deactivates the currently active item if there is one.
-		/// </remarks>
-		/// <param name="item">Item to activate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>A task to be awaited.</returns>
-		public async Task Activate(T? item, CancellationToken cancellationToken = default)
-		{
-			int index = item != null ? Items.IndexOf(item) : -1;
 
-			if (item != null && index < 0)
+		private async Task ActivateItemAlreadySet()
+		{
+			T? newActiveItem = ActiveItem.Value;
+
+			int index = newActiveItem != null
+				? Items.IndexOf(newActiveItem)
+				: -1;
+
+			if (index < 0 && newActiveItem != null)
 			{
-				ItemsSource.Add(item);
-				index = Items.Count - 1;
+				throw new ArgumentException("Item is not a child of this object.");
 			}
 
-			// This does not cause a stack overflow since equality comparer in ActiveItem.Value
-			// returns early if we set the same item.
-			ActiveItem.Value = item;
-			ActiveItemIndex.Value = index;
+			// Last element is the current active item.
+			T? currentActiveItem = _activeItemStack.Count == 0
+				? null
+				: _activeItemStack[_activeItemStack.Count - 1];
 
-			bool isActivating = Lifetime.IsActivating.Value;
-			bool isActive = Lifetime.IsActive.Value;
-
-			if (!(isActivating || isActive))
+			if (newActiveItem == null && currentActiveItem == null)
 			{
+				// Nothing to do.
 				return;
 			}
 
-			await ChangeActiveItem(cancellationToken);
+			// We will deactivate the current active item if it is not null.
+			if (currentActiveItem != null)
+			{
+				await currentActiveItem.Lifetime.Deactivate();
+			}
+
+			// If new active item is null, we will update the index property and return.
+			if (newActiveItem == null)
+			{
+				ActiveItemIndex.Value = -1;
+				return;
+			}
+
+			// New active item is not null. Add it to the active items stack and activate its lifetime.
+			PushToActiveItemStack(newActiveItem);
+			await ActivateItemIfPossible(newActiveItem);
+
+			// Update the index property. It will not call the activate method again since equality comparer
+			// will shortcut it.
+			ActiveItemIndex.Value = index;
 		}
 
 		/// <summary>
@@ -131,12 +135,18 @@ namespace Blastic.LifetimeManagement
 		/// <param name="item">The item to close.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="result">The result of the closure operation.</param>
-		/// <returns>A task to be awaited.</returns>
 		public async Task Close(
 			T item,
-			CancellationToken cancellationToken = default,
-			bool result = false)
+			bool result = false,
+			CancellationToken cancellationToken = default)
 		{
+			if (!Items.Contains(item))
+			{
+				throw new ArgumentException("Item is not a child of this object.");
+			}
+
+			bool isActiveItem = IsActiveItem(item);
+
 			ClosureContext context = new(result);
 
 			await item.Lifetime.Close(cancellationToken, context);
@@ -151,33 +161,57 @@ namespace Blastic.LifetimeManagement
 				return;
 			}
 
-			if (Equals(item, ActiveItem.Value))
+			RemoveFromActiveItemStack(item);
+			// Remove the item from list at the end to prevent external listeners to act on
+			// notifications and set the active item to null.
+
+			// Active item is not changing, just return.
+			if (!isActiveItem)
 			{
-				ActiveItem.Value = _previousActiveItem.Value;
+				ItemsSource.Remove(item);
+				return;
 			}
+
+			// The last element will be the previous active element as we have removed current item from stack.
+			T? previousActiveItem = _activeItemStack.Count == 0
+				? null
+				: _activeItemStack[_activeItemStack.Count - 1];
+
+			// We are closing the active item, we should activate the item that was previously active.
+			ActiveItem.Value = previousActiveItem;
 
 			ItemsSource.Remove(item);
 		}
 
-		private async Task ChangeActiveItem(CancellationToken cancellationToken)
+		private async Task ActivateItemIfPossible(T item)
 		{
-			IHasAsyncLifetime? previousActiveItem = _previousActiveItem.Value;
-			IHasAsyncLifetime? activeItem = ActiveItem.Value;
+			bool isActivating = Lifetime.IsActivating.Value;
+			bool isActive = Lifetime.IsActive.Value;
 
-			if (Equals(previousActiveItem, activeItem))
+			if (!(isActivating || isActive))
 			{
 				return;
 			}
 
-			if (previousActiveItem != null)
-			{
-				await previousActiveItem.Lifetime.Deactivate(cancellationToken);
-			}
+			await item.Lifetime.Activate();
+		}
 
-			if (activeItem != null)
-			{
-				await activeItem.Lifetime.Activate(cancellationToken);
-			}
+		private void PushToActiveItemStack(T item)
+		{
+			// Remove it first in case it is already in stack.
+			_activeItemStack.Remove(item);
+			_activeItemStack.Add(item);
+		}
+
+		private void RemoveFromActiveItemStack(T item)
+		{
+			_activeItemStack.Remove(item);
+		}
+
+		private bool IsActiveItem(T item)
+		{
+			// Don't use equality operator as it returns wrong values.
+			return Equals(item, ActiveItem.Value);
 		}
 	}
 }
