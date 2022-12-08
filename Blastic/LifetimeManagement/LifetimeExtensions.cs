@@ -7,6 +7,22 @@ namespace Blastic.LifetimeManagement
 	public static class LifetimeExtensions
 	{
 		/// <summary>
+		/// Activate lifetime if it is deactive or vice versa.
+		/// </summary>
+		/// <param name="lifetime">Lifetime to toggle its activation.</param>
+		public static void ToggleActivation(this ILifetime lifetime)
+		{
+			if (lifetime.IsActive.Value)
+			{
+				lifetime.Deactivate();
+			}
+			else
+			{
+				lifetime.Activate();
+			}
+		}
+
+		/// <summary>
 		/// Bind the lifetime of an object to its parent's lifetime.
 		/// </summary>
 		/// <param name="lifetime">Parent's lifetime.</param>
@@ -19,7 +35,12 @@ namespace Blastic.LifetimeManagement
 			LifetimeChainOptions? lifetimeChainOptions = null)
 		{
 			CompositeDisposable disposable = new();
-			lifetimeChainOptions ??= new LifetimeChainOptions();
+			lifetimeChainOptions ??= LifetimeChainOptions.All;
+
+			if (lifetimeChainOptions == LifetimeChainOptions.None)
+			{
+				return Disposable.Empty;
+			}
 
 			void Subscribe<T>(Command<T> parent, Command<T> child)
 			{
