@@ -1,4 +1,5 @@
-﻿using Blastic.Services.Dialogs;
+﻿using System.Threading.Tasks;
+using Blastic.Services.Dialogs;
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -7,12 +8,12 @@ namespace Blastic.Maui.Services.Dialogs
 {
 	public class DialogService : IDialogService
 	{
-		public bool? ShowDialog<T>(object viewModel)
+		public Task<bool?> ShowDialog(object viewModel)
 		{
-			return false;
+			return Task.FromResult<bool?>(null);
 		}
 
-		public string? ShowOpenFileDialog(FileDialogOptions? options)
+		public Task<string?> ShowOpenFileDialog(FileDialogOptions? options)
 		{
 			OpenFileDialog openFileDialog = new()
 			{
@@ -23,12 +24,14 @@ namespace Blastic.Maui.Services.Dialogs
 
 			bool? result = openFileDialog.ShowDialog();
 
-			return result == true
+			string? fileName = result == true
 				? openFileDialog.FileName
 				: null;
+
+			return Task.FromResult(fileName);
 		}
 
-		public string? ShowSaveFileDialog(FileDialogOptions? options)
+		public Task<string?> ShowSaveFileDialog(FileDialogOptions? options)
 		{
 			SaveFileDialog saveFileDialog = new()
 			{
@@ -39,12 +42,14 @@ namespace Blastic.Maui.Services.Dialogs
 
 			bool? result = saveFileDialog.ShowDialog();
 
-			return result == true
+			string? fileName = result == true
 				? saveFileDialog.FileName
 				: null;
+
+			return Task.FromResult(fileName);
 		}
 
-		public string? ShowSelectFolderDialog(FileDialogOptions? options)
+		public Task<string?> ShowSelectFolderDialog(FileDialogOptions? options)
 		{
 			FolderBrowserDialog dialog = new()
 			{
@@ -53,9 +58,11 @@ namespace Blastic.Maui.Services.Dialogs
 
 			DialogResult result = dialog.ShowDialog();
 
-			return result == DialogResult.OK
+			string? folderPath = result == DialogResult.OK
 				? dialog.SelectedPath
 				: null;
+
+			return Task.FromResult(folderPath);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Blastic.Commanding;
 using Blastic.DynamicControls;
 using Blastic.DynamicControls.Elements;
@@ -49,7 +50,7 @@ namespace Blastic.Wpf.Settings
 			// TODO: Icon
 		}
 
-		public void Browse()
+		public async Task Browse()
 		{
 			void SetIfNotEmpty(string? path)
 			{
@@ -63,15 +64,15 @@ namespace Blastic.Wpf.Settings
 
 			if (IsFolderPicker)
 			{
-				string? folderPath = _dialogService.ShowSelectFolderDialog(options);
+				string? folderPath = await _dialogService.ShowSelectFolderDialog(options);
 				SetIfNotEmpty(folderPath);
 
 				return;
 			}
 
 			string? filePath = IsSaveFilePicker
-				? _dialogService.ShowSaveFileDialog(options)
-				: _dialogService.ShowOpenFileDialog(options);
+				? await _dialogService.ShowSaveFileDialog(options)
+				: await _dialogService.ShowOpenFileDialog(options);
 
 			SetIfNotEmpty(filePath);
 		}

@@ -9,7 +9,9 @@ namespace Blastic.Forms.Sample.Data
 	{
 		public BooksTable BooksTable { get; }
 
-		public ProgramDatabase(SqliteConnectionStringBuilder connectionStringBuilder) : base(connectionStringBuilder)
+		public ProgramDatabase(SqliteConnectionStringBuilder connectionStringBuilder)
+			:
+			base(connectionStringBuilder, "ProgramMetadata")
 		{
 			BooksTable = new BooksTable(Connection);
 

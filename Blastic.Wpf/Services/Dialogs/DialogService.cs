@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Blastic.Services.Dialogs;
+using Blastic.ViewManagement;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
@@ -9,20 +11,29 @@ namespace Blastic.Wpf.Services.Dialogs
 {
 	public class DialogService : IDialogService
 	{
-		public bool? ShowDialog<T>(object viewModel)
+		private readonly IViewLocator<FrameworkElement> _viewLocator;
+
+		public DialogService(IViewLocator<FrameworkElement> viewLocator)
 		{
-			if (typeof(Window).IsAssignableFrom(typeof(T)))
-			{
-				throw new InvalidOperationException($"{typeof(T)} should inherit from {typeof(Window)}.");
-			}
-
-			Window dialog = (Window)Activator.CreateInstance(typeof(T))!;
-			dialog.DataContext = viewModel;
-
-			return dialog.ShowDialog();
+			_viewLocator = viewLocator;
 		}
 
-		public string? ShowOpenFileDialog(FileDialogOptions? options)
+		public Task<bool?> ShowDialog(object viewModel)
+		{
+			FrameworkElement view = _viewLocator.Locate(viewModel);
+
+			if (view is not Window window)
+			{
+				throw new InvalidOperationException($"{view.GetType()} should inherit from {typeof(Window)}.");
+			}
+			
+			window.DataContext = viewModel;
+			bool? result = window.ShowDialog();
+
+			return Task.FromResult(result);
+		}
+
+		public Task<string?> ShowOpenFileDialog(FileDialogOptions? options)
 		{
 			OpenFileDialog openFileDialog = new()
 			{
@@ -33,12 +44,14 @@ namespace Blastic.Wpf.Services.Dialogs
 
 			bool? result = openFileDialog.ShowDialog();
 
-			return result == true
+			string? fileName = result == true
 				? openFileDialog.FileName
 				: null;
+
+			return Task.FromResult(fileName);
 		}
 
-		public string? ShowSaveFileDialog(FileDialogOptions? options)
+		public Task<string?> ShowSaveFileDialog(FileDialogOptions? options)
 		{
 			SaveFileDialog saveFileDialog = new()
 			{
@@ -49,12 +62,14 @@ namespace Blastic.Wpf.Services.Dialogs
 
 			bool? result = saveFileDialog.ShowDialog();
 
-			return result == true
+			string? fileName = result == true
 				? saveFileDialog.FileName
 				: null;
+
+			return Task.FromResult(fileName);
 		}
 
-		public string? ShowSelectFolderDialog(FileDialogOptions? options)
+		public Task<string?> ShowSelectFolderDialog(FileDialogOptions? options)
 		{
 			FolderBrowserDialog dialog = new()
 			{
@@ -63,9 +78,11 @@ namespace Blastic.Wpf.Services.Dialogs
 
 			DialogResult result = dialog.ShowDialog();
 
-			return result == DialogResult.OK
+			string? folderPath = result == DialogResult.OK
 				? dialog.SelectedPath
 				: null;
+
+			return Task.FromResult(folderPath);
 		}
 	}
 }

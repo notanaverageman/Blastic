@@ -56,7 +56,7 @@ namespace Blastic.Forms.Sample.UserInterface.Main
 				// This order ensures that we are running before child initializations.
 				new Order(int.MinValue));
 
-			Lifetime.Activation.Subscribe(x => Activate(Items.FirstOrDefault(), x));
+			Lifetime.Activation.Subscribe(() => ActiveItem.Value = Items.FirstOrDefault());
 		}
 
 		private void MigrateDatabase()

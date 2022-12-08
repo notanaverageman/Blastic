@@ -11,9 +11,9 @@ namespace Blastic.Wpf.DynamicControls.Presenters
 
 		public IReadOnlyReactiveProperty<string?>? Help { get; set; }
 		public IReadOnlyReactiveProperty<string?>? Label { get; set; }
-		public IReadOnlyReactiveProperty<object?>? Icon { get; set; }
+		public IReadOnlyReactiveProperty? Icon { get; set; }
 
-		public IReactiveProperty<bool>? IsEnabledReactive { get; set; }
+		public IReadOnlyReactiveProperty<bool>? IsEnabledReactive { get; set; }
 
 		public GridLength ColumnWidth { get; set; }
 		public Thickness IconMargin { get; set; }

@@ -1,27 +1,28 @@
 ﻿using Blastic.Services.Dialogs;
+using System.Threading.Tasks;
 
 namespace Blastic.Maui.Services.Dialogs
 {
 	public class DialogService : IDialogService
 	{
-		public bool? ShowDialog<T>(object viewModel)
+		public Task<bool?> ShowDialog(object viewModel)
 		{
-			return false;
+			return Task.FromResult<bool?>(null);
 		}
 
-		public string? ShowOpenFileDialog(FileDialogOptions? options)
+		public Task<string?> ShowOpenFileDialog(FileDialogOptions? options)
 		{
-			return null;
+			return Task.FromResult<string?>(null);
 		}
 
-		public string? ShowSaveFileDialog(FileDialogOptions? options)
+		public Task<string?> ShowSaveFileDialog(FileDialogOptions? options)
 		{
-			return null;
+			return Task.FromResult<string?>(null);
 		}
 
-		public string? ShowSelectFolderDialog(FileDialogOptions? options)
+		public Task<string?> ShowSelectFolderDialog(FileDialogOptions? options)
 		{
-			return null;
+			return Task.FromResult<string?>(null);
 		}
 	}
 }
