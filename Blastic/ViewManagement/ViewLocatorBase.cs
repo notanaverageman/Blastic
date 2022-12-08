@@ -78,7 +78,7 @@ namespace Blastic.ViewManagement
 
 		private T? LocateCached(IViewAware viewAware)
 		{
-			if (!(viewAware.View.Value is T view))
+			if (viewAware.View.Value is not T view)
 			{
 				return default;
 			}
@@ -117,10 +117,16 @@ namespace Blastic.ViewManagement
 				return CreateNotFoundView(viewType, $"Cannot create {viewType}");
 			}
 
-			T view = (T)Activator.CreateInstance(viewType);
+			T view = CreateViewOverride(viewType);
 
 			PostProcessCreatedView(view, model);
 
+			return view;
+		}
+
+		protected virtual T CreateViewOverride(Type viewType)
+		{
+			T view = (T)Activator.CreateInstance(viewType);
 			return view;
 		}
 

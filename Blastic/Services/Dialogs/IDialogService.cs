@@ -1,12 +1,14 @@
+using System.Threading.Tasks;
+
 namespace Blastic.Services.Dialogs
 {
 	public interface IDialogService
 	{
-		bool? ShowDialog<T>(object viewModel);
+		Task<bool?> ShowDialog(object viewModel);
 
-		string? ShowOpenFileDialog(FileDialogOptions? options = default);
-		string? ShowSaveFileDialog(FileDialogOptions? options = default);
+		Task<string?> ShowOpenFileDialog(FileDialogOptions? options = default);
+		Task<string?> ShowSaveFileDialog(FileDialogOptions? options = default);
 
-		string? ShowSelectFolderDialog(FileDialogOptions? options = default);
+		Task<string?> ShowSelectFolderDialog(FileDialogOptions? options = default);
 	}
 }

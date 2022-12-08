@@ -16,11 +16,11 @@ public class InputEvents
 	public event EventHandler<PointerPressEventArgs>? PointerPressed;
 	public event EventHandler<PointerReleaseEventArgs>? PointerReleased;
 
-	public IObservable<PanEventArgs> Pan { get; }
-	public IObservable<TapEventArgs> Tap { get; }
-	public IObservable<PointerMoveEventArgs> PointerMove { get; }
-	public IObservable<PointerPressEventArgs> PointerPress { get; }
-	public IObservable<PointerReleaseEventArgs> PointerRelease { get; }
+	public IReadOnlyReactiveProperty<PanEventArgs> Pan { get; }
+	public IReadOnlyReactiveProperty<TapEventArgs> Tap { get; }
+	public IReadOnlyReactiveProperty<PointerMoveEventArgs> PointerMove { get; }
+	public IReadOnlyReactiveProperty<PointerPressEventArgs> PointerPress { get; }
+	public IReadOnlyReactiveProperty<PointerReleaseEventArgs> PointerRelease { get; }
 
 	public InputEvents(SkiaCanvas canvas)
 	{
@@ -32,31 +32,42 @@ public class InputEvents
 			.FromEventPattern<PanEventArgs>(
 				x => Panned += x,
 				x => Panned -= x)
-			.Select(x => x.EventArgs);
+			.Select(x => x.EventArgs)
+			.ToReadOnlyReactiveProperty(default);
 
 		Tap = Observable
 			.FromEventPattern<TapEventArgs>(
 				x => Tapped += x,
 				x => Tapped -= x)
-			.Select(x => x.EventArgs);
+			.Select(x => x.EventArgs)
+			.ToReadOnlyReactiveProperty(
+				default,
+				equalityComparer: AlwaysFalseEqualityComparer<TapEventArgs>.Instance);
 
 		PointerMove = Observable
 			.FromEventPattern<PointerMoveEventArgs>(
 				x => PointerMoved += x,
 				x => PointerMoved -= x)
-			.Select(x => x.EventArgs);
+			.Select(x => x.EventArgs)
+			.ToReadOnlyReactiveProperty(default);
 
 		PointerPress = Observable
 			.FromEventPattern<PointerPressEventArgs>(
 				x => PointerPressed += x,
 				x => PointerPressed -= x)
-			.Select(x => x.EventArgs);
+			.Select(x => x.EventArgs)
+			.ToReadOnlyReactiveProperty(
+				default,
+				equalityComparer: AlwaysFalseEqualityComparer<PointerPressEventArgs>.Instance);
 
 		PointerRelease = Observable
 			.FromEventPattern<PointerReleaseEventArgs>(
 				x => PointerReleased += x,
 				x => PointerReleased -= x)
-			.Select(x => x.EventArgs);
+			.Select(x => x.EventArgs)
+			.ToReadOnlyReactiveProperty(
+				default,
+				equalityComparer: AlwaysFalseEqualityComparer<PointerReleaseEventArgs>.Instance);
 	}
 
 	public void FirePan(PanEventArgs args)
@@ -102,5 +113,20 @@ public class InputEvents
 	private SKPoint GetPosition(SKPoint position)
 	{
 		return _canvas.GetContentPosition(position);
+	}
+
+	private class AlwaysFalseEqualityComparer<T> : IEqualityComparer<T>
+	{
+		public static readonly AlwaysFalseEqualityComparer<T> Instance = new();
+
+		public bool Equals(T x, T y)
+		{
+			return false;
+		}
+
+		public int GetHashCode(T obj)
+		{
+			return obj == null ? 0 : obj.GetHashCode();
+		}
 	}
 }

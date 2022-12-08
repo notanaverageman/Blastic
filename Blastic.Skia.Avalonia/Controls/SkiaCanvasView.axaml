@@ -1,0 +1,40 @@
+<UserControl x:Class="Blastic.Skia.Avalonia.Controls.SkiaCanvasView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Blastic.Skia.Avalonia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+
+	<UserControl.Styles>
+		<Style Selector="ScrollViewer">
+			<Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+			<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+		</Style>
+		<Style Selector="ScrollViewer.noScroll">
+			<Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+			<Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+		</Style>
+	</UserControl.Styles>
+
+	<Grid>
+		<Grid x:Name="SizeProvider" />
+
+		<controls:FixedContentScrollViewer Name="ScrollViewer"
+		                                   Classes.noScroll="{Binding !$parent[controls:SkiaCanvasView].EnableScrolling}"
+		                                   ContentToFix="{Binding #Canvas}"
+		                                   HorizontalScrollBarVisibility="Disabled"
+		                                   VerticalScrollBarVisibility="Disabled">
+
+			<Grid>
+				<Control Name="ScrollViewerSizer" />
+
+				<controls:AvaloniaSkiaCanvas Name="Canvas"
+				                             Width="{Binding #ScrollViewer.Viewport.Width}"
+				                             Height="{Binding #ScrollViewer.Viewport.Height}"
+				                             HorizontalAlignment="Left"
+				                             VerticalAlignment="Top" />
+			</Grid>
+		</controls:FixedContentScrollViewer>
+	</Grid>
+</UserControl>

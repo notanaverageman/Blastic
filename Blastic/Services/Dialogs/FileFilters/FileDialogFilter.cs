@@ -23,16 +23,16 @@ public class FileDialogFilter : List<string>, IFileDialogFilter
 			throw new ArgumentException("No file extension is defined.");
 		}
 
-		StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new();
 
 		builder.Append(Explanation);
 
 		builder.Append(" (");
-		builder.Append(string.Join(", *.", this.Select(e => "*." + e)));
+		builder.Append(string.Join(", *.", this.Select(e => "*." + e.Trim('.'))));
 		builder.Append(")");
 
 		builder.Append("|");
-		builder.Append(string.Join(";", this.Select(e => "*." + e)));
+		builder.Append(string.Join(";", this.Select(e => "*." + e.Trim('.'))));
 
 		return builder.ToString();
 	}
