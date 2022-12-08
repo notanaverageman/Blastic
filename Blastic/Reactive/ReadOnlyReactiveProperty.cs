@@ -9,7 +9,7 @@ namespace Blastic.Reactive
 	/// </summary>
 	/// <typeparam name="T">Type of the value.</typeparam>
 	[DebuggerDisplay("{" + nameof(Value) + "}")]
-	public class ReadOnlyReactiveProperty<T> : ReactivePropertyBase<T>, IReadOnlyReactiveProperty<T>
+	public class ReadOnlyReactiveProperty<T> : ReactivePropertyBase<T>, IReadOnlyReactiveProperty<T>, IObserver<T>
 	{
 		private readonly IDisposable _sourceSubscription;
 
@@ -33,10 +33,18 @@ namespace Blastic.Reactive
 			:
 			base(initialValue, equalityComparer)
 		{
-			_sourceSubscription = source.Subscribe(OnNext);
+			_sourceSubscription = source.Subscribe(this);
 		}
 
-		private void OnNext(T value)
+		void IObserver<T>.OnCompleted()
+		{
+		}
+
+		void IObserver<T>.OnError(Exception error)
+		{
+		}
+
+		void IObserver<T>.OnNext(T value)
 		{
 			SetValue(value);
 		}
