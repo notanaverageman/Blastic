@@ -1,0 +1,146 @@
+﻿<ContentPage x:Class="Blastic.Maui.Sample.MainView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Blastic.Skia.Maui.Controls;assembly=Blastic.Skia.Maui"
+             xmlns:controls1="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             xmlns:sample="using:Blastic.Maui.Sample"
+             x:Name="Root"
+             x:DataType="sample:MainViewModel">
+
+	<Grid>
+		<controls:SkiaCanvasView MaximumZoomScale="3"
+		                         MinimumZoomScale="0.5"
+		                         SkiaCanvas="{Binding SkiaCanvas}" />
+
+		<Grid CascadeInputTransparent="False"
+		      InputTransparent="True">
+			<VerticalStackLayout Background="White"
+			                     HorizontalOptions="Center"
+			                     IsVisible="{Binding IsSettlementSelectorVisible.Value}"
+			                     VerticalOptions="Center">
+
+				<HorizontalStackLayout BindableLayout.ItemsSource="{Binding Players}"
+				                       Spacing="4">
+
+					<BindableLayout.ItemTemplate>
+						<DataTemplate x:DataType="sample:Player">
+							<Button Command="{Binding BindingContext.BuildSettlementCommand, Source={x:Reference Root}}"
+							        CommandParameter="{Binding}"
+							        ContentLayout="Top"
+							        Text="{Binding Name.Value}">
+								<Button.ImageSource>
+									<controls1:SKImageImageSource Image="{Binding VillageImage}" />
+								</Button.ImageSource>
+							</Button>
+						</DataTemplate>
+					</BindableLayout.ItemTemplate>
+				</HorizontalStackLayout>
+
+				<HorizontalStackLayout BindableLayout.ItemsSource="{Binding Players}"
+				                       Spacing="4">
+
+					<BindableLayout.ItemTemplate>
+						<DataTemplate x:DataType="sample:Player">
+							<Button Command="{Binding BindingContext.BuildCityCommand, Source={x:Reference Root}}"
+							        CommandParameter="{Binding}"
+							        ContentLayout="Top"
+							        Text="{Binding Name.Value}">
+								<Button.ImageSource>
+									<controls1:SKImageImageSource Image="{Binding CityImage}" />
+								</Button.ImageSource>
+							</Button>
+						</DataTemplate>
+					</BindableLayout.ItemTemplate>
+				</HorizontalStackLayout>
+			</VerticalStackLayout>
+
+			<HorizontalStackLayout Background="White"
+			                       BindableLayout.ItemsSource="{Binding Players}"
+			                       HorizontalOptions="Center"
+			                       IsVisible="{Binding IsRoadSelectorVisible.Value}"
+			                       Spacing="4"
+			                       VerticalOptions="Center">
+
+				<BindableLayout.ItemTemplate>
+					<DataTemplate x:DataType="sample:Player">
+						<Button Command="{Binding BindingContext.BuildRoadCommand, Source={x:Reference Root}}"
+						        CommandParameter="{Binding}"
+						        ContentLayout="Top"
+						        Text="{Binding Name.Value}">
+							<Button.ImageSource>
+								<controls1:SKImageImageSource Image="{Binding RoadImage}" />
+							</Button.ImageSource>
+						</Button>
+					</DataTemplate>
+				</BindableLayout.ItemTemplate>
+			</HorizontalStackLayout>
+		</Grid>
+
+		<VerticalStackLayout HorizontalOptions="Start"
+		                     VerticalOptions="Start">
+			<HorizontalStackLayout VerticalOptions="Start">
+				<Button Command="{Binding GameActionManager.UndoCommand}"
+				        Text="Undo" />
+
+				<Button Command="{Binding GameActionManager.RedoCommand}"
+				        Text="Redo" />
+			</HorizontalStackLayout>
+
+			<HorizontalStackLayout Spacing="16">
+				<Button Command="{Binding RollDiceCommand}"
+				        Text="Roll Dice" />
+
+				<HorizontalStackLayout>
+					<Image>
+						<Image.Source>
+							<controls1:SKImageImageSource Image="{Binding FirstDice.Value}" />
+						</Image.Source>
+					</Image>
+					<Image>
+						<Image.Source>
+							<controls1:SKImageImageSource Image="{Binding SecondDice.Value}" />
+						</Image.Source>
+					</Image>
+				</HorizontalStackLayout>
+			</HorizontalStackLayout>
+		</VerticalStackLayout>
+
+		<VerticalStackLayout HorizontalOptions="Start"
+		                     VerticalOptions="End">
+			<Switch IsToggled="{Binding IsGenerateMapEnabled.Value}" />
+
+			<Button Command="{Binding GenerateMapCommand}"
+			        HorizontalOptions="Start"
+			        Text="Generate Map" />
+		</VerticalStackLayout>
+
+		<VerticalStackLayout BindableLayout.ItemsSource="{Binding DiceHistogram}"
+		                     HorizontalOptions="End"
+		                     VerticalOptions="Start">
+
+			<BindableLayout.ItemTemplate>
+				<DataTemplate x:DataType="sample:DiceHistogramEntry">
+					<HorizontalStackLayout Spacing="10">
+						<Grid HeightRequest="20"
+						      HorizontalOptions="End"
+						      WidthRequest="100">
+
+							<Rectangle BackgroundColor="DarkSlateGray" />
+
+							<Rectangle AnchorX="1"
+							           BackgroundColor="Red"
+							           ScaleX="{Binding Ratio.Value}" />
+
+							<Label HorizontalOptions="Center"
+							       Text="{Binding Count.Value}" />
+						</Grid>
+
+						<Label Text="{Binding Number}"
+						       TextColor="White"
+						       WidthRequest="20" />
+					</HorizontalStackLayout>
+				</DataTemplate>
+			</BindableLayout.ItemTemplate>
+		</VerticalStackLayout>
+	</Grid>
+</ContentPage>

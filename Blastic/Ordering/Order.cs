@@ -32,12 +32,12 @@ namespace Blastic.Ordering
 		/// <summary>
 		/// The order that is less than every other order.
 		/// </summary>
-		public static readonly Order AbsoluteMinimum = new Order(true, false);
+		public static readonly Order AbsoluteMinimum = new(true, false);
 
 		/// <summary>
 		/// The order that is greater than every other order.
 		/// </summary>
-		public static readonly Order AbsoluteMaximum = new Order(false, true);
+		public static readonly Order AbsoluteMaximum = new(false, true);
 
 		private readonly bool _isAbsoluteMinimum;
 		private readonly bool _isAbsoluteMaximum;
@@ -84,7 +84,17 @@ namespace Blastic.Ordering
 		/// <inheritdoc />
 		public override int GetHashCode()
 		{
-			return _numbers.GetHashCode();
+			unchecked
+			{
+				int hash = 19;
+
+				foreach (int number in _numbers)
+				{
+					hash = hash * 31 + number.GetHashCode();
+				}
+
+				return hash;
+			}
 		}
 
 		public static bool operator ==(Order? left, Order? right)

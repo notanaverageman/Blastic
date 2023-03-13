@@ -69,7 +69,7 @@ namespace Blastic.Commanding
 	/// first and actions with the same order will be executed concurrently.
 	/// </para>
 	/// <para>
-	/// SCommand's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
+	/// Command's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
 	/// Reentrancy can be disabled by setting <see cref="ReentrancyMode"/> method to
 	/// <see cref="Commanding.ReentrancyMode.IgnoreReentrant"/> or <see cref="Commanding.ReentrancyMode.RunLatestCancelRunning"/>.
 	/// </para>

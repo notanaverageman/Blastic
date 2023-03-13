@@ -35,4 +35,16 @@ namespace Blastic.ViewManagement.TypeMappers
 			return _baseType.IsAssignableFrom(type) ? _output : null;
 		}
 	}
+
+	/// <summary>
+	/// A type mapper that return its view type if the given viewmodel type is the same
+	/// as or inherits from its viewmodel type.
+	/// </summary>
+	public class InheritanceTypeMapper<TViewModel, TView> : InheritanceTypeMapper
+	{
+		/// <inheritdoc />
+		public InheritanceTypeMapper(Order? order = null) : base(typeof(TViewModel), typeof(TView), order)
+		{
+		}
+	}
 }

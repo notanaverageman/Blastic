@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bindables.Maui" Version="1.4.0" />
+    <PackageReference Include="Jab" Version="0.8.6" />
   </ItemGroup>
 
   <ItemGroup>

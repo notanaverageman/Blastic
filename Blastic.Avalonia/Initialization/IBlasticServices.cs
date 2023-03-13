@@ -10,11 +10,11 @@ using Jab;
 
 namespace Blastic.Avalonia.Initialization;
 
-[Singleton(typeof(IViewLocator<StyledElement>), typeof(ViewLocator))]
-[Singleton(typeof(IPlatformSpecifics), typeof(AvaloniaPlatformSpecifics))]
-[Singleton(typeof(ILocalizationService), typeof(LocalizationService))]
-[Singleton(typeof(INotificationService), typeof(NotificationService))]
-[Singleton(typeof(IEventAggregator), typeof(EventAggregator))]
+[Singleton<IEventAggregator, EventAggregator>]
+[Singleton<ILocalizationService, LocalizationService>]
+[Singleton<INotificationService, NotificationService>]
+[Singleton<IPlatformSpecifics, AvaloniaPlatformSpecifics>]
+[Singleton<IViewLocator<StyledElement>, ViewLocator>]
 
 [ServiceProviderModule]
 public interface IBlasticServices

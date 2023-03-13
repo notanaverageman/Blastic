@@ -3,19 +3,17 @@ using System.Reactive.Concurrency;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Platform;
-using Microsoft.Maui.Dispatching;
+using Microsoft.Maui.ApplicationModel;
 
 namespace Blastic.Maui.Platform;
 
 public class MauiPlatformSpecifics : IPlatformSpecifics
 {
-	private readonly IDispatcher _dispatcher;
-
 	public IScheduler UIThreadScheduler { get; }
 
-	public MauiPlatformSpecifics(IDispatcher dispatcher, SynchronizationContext synchronizationContext)
+	public MauiPlatformSpecifics()
 	{
-		_dispatcher = dispatcher;
+		SynchronizationContext synchronizationContext = MainThread.GetMainThreadSynchronizationContextAsync().Result;
 		UIThreadScheduler = new SynchronizationContextScheduler(synchronizationContext);
 	}
 
@@ -28,17 +26,17 @@ public class MauiPlatformSpecifics : IPlatformSpecifics
 
 	public void OnUIThread(Action action)
 	{
-		if (!_dispatcher.IsDispatchRequired)
+		if (MainThread.IsMainThread)
 		{
 			action();
 			return;
 		}
 
-		_dispatcher.Dispatch(action);
+		MainThread.BeginInvokeOnMainThread(action);
 	}
 
 	public async Task OnUIThread(Func<Task> func)
 	{
-		await _dispatcher.DispatchAsync(func);
+		await MainThread.InvokeOnMainThreadAsync(func);
 	}
 }

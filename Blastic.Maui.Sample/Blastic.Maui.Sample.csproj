@@ -1,0 +1,131 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-ios</TargetFrameworks>
+		<!--<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>-->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+		<OutputType>Exe</OutputType>
+		<RootNamespace>Blastic.Maui.Sample</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Display name -->
+		<ApplicationTitle>Blastic.Maui.Sample</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.companyname.blastic.maui.sample</ApplicationId>
+		<ApplicationIdGuid>ce31c27d-764c-4895-a4af-7e6f3546f744</ApplicationIdGuid>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+    <ProvisioningType>manual</ProvisioningType>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.4</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<PackageCertificateKeyFile>Blastic.Maui.Sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <PackageReference Include="Jab" Version="0.8.6" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.3" />
+    <PackageReference Include="Svg.SourceGenerator.Skia" Version="0.5.18" />
+  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Blastic.Data\Blastic.Data.csproj" />
+	  <ProjectReference Include="..\Blastic.Maui\Blastic.Maui.csproj" />
+	  <ProjectReference Include="..\Blastic.Skia.Maui\Blastic.Skia.Maui.csproj" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Resources\Svg\robber.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Robber" />
+
+    <AdditionalFiles Include="Resources\Svg\village_green.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageGreen" />
+    <AdditionalFiles Include="Resources\Svg\village_blue.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageBlue" />
+    <AdditionalFiles Include="Resources\Svg\village_red.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageRed" />
+    <AdditionalFiles Include="Resources\Svg\village_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageBlack" />
+
+    <AdditionalFiles Include="Resources\Svg\city_green.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityGreen" />
+    <AdditionalFiles Include="Resources\Svg\city_blue.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityBlue" />
+    <AdditionalFiles Include="Resources\Svg\city_red.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityRed" />
+    <AdditionalFiles Include="Resources\Svg\city_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityBlack" />
+
+    <AdditionalFiles Include="Resources\Svg\road_green.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadGreen" />
+    <AdditionalFiles Include="Resources\Svg\road_blue.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadBlue" />
+    <AdditionalFiles Include="Resources\Svg\road_red.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadRed" />
+    <AdditionalFiles Include="Resources\Svg\road_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadBlack" />
+
+    <AdditionalFiles Include="Resources\Svg\port.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Port" />
+    <AdditionalFiles Include="Resources\Svg\port_brick.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortBrick" />
+    <AdditionalFiles Include="Resources\Svg\port_grain.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortGrain" />
+    <AdditionalFiles Include="Resources\Svg\port_ore.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortOre" />
+    <AdditionalFiles Include="Resources\Svg\port_sheep.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortSheep" />
+    <AdditionalFiles Include="Resources\Svg\port_wood.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortWood" />
+
+    <AdditionalFiles Include="Resources\Svg\tile_brick.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileBrick" />
+    <AdditionalFiles Include="Resources\Svg\tile_desert.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileDesert" />
+    <AdditionalFiles Include="Resources\Svg\tile_grain.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileGrain" />
+    <AdditionalFiles Include="Resources\Svg\tile_ore.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileOre" />
+    <AdditionalFiles Include="Resources\Svg\tile_sheep.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileSheep" />
+    <AdditionalFiles Include="Resources\Svg\tile_wood.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileWood" />
+
+    <AdditionalFiles Include="Resources\Svg\dice_1.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice1" />
+    <AdditionalFiles Include="Resources\Svg\dice_2.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice2" />
+    <AdditionalFiles Include="Resources\Svg\dice_3.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice3" />
+    <AdditionalFiles Include="Resources\Svg\dice_4.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice4" />
+    <AdditionalFiles Include="Resources\Svg\dice_5.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice5" />
+    <AdditionalFiles Include="Resources\Svg\dice_6.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice6" />
+
+    <AdditionalFiles Include="Resources\Svg\number_2.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number2" />
+    <AdditionalFiles Include="Resources\Svg\number_3.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number3" />
+    <AdditionalFiles Include="Resources\Svg\number_4.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number4" />
+    <AdditionalFiles Include="Resources\Svg\number_5.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number5" />
+    <AdditionalFiles Include="Resources\Svg\number_6.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number6" />
+    <AdditionalFiles Include="Resources\Svg\number_8.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number8" />
+    <AdditionalFiles Include="Resources\Svg\number_9.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number9" />
+    <AdditionalFiles Include="Resources\Svg\number_10.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number10" />
+    <AdditionalFiles Include="Resources\Svg\number_11.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number11" />
+    <AdditionalFiles Include="Resources\Svg\number_12.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="Resources\Svg\road_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadBlack" />
+  </ItemGroup>
+
+</Project>
