@@ -26,8 +26,7 @@
 						<DataTemplate x:DataType="sample:Player">
 							<Button Command="{Binding BindingContext.BuildSettlementCommand, Source={x:Reference Root}}"
 							        CommandParameter="{Binding}"
-							        ContentLayout="Top"
-							        Text="{Binding Name.Value}">
+							        ContentLayout="Top">
 								<Button.ImageSource>
 									<controls1:SKImageImageSource Image="{Binding VillageImage}" />
 								</Button.ImageSource>
@@ -43,8 +42,7 @@
 						<DataTemplate x:DataType="sample:Player">
 							<Button Command="{Binding BindingContext.BuildCityCommand, Source={x:Reference Root}}"
 							        CommandParameter="{Binding}"
-							        ContentLayout="Top"
-							        Text="{Binding Name.Value}">
+							        ContentLayout="Top">
 								<Button.ImageSource>
 									<controls1:SKImageImageSource Image="{Binding CityImage}" />
 								</Button.ImageSource>
@@ -65,8 +63,7 @@
 					<DataTemplate x:DataType="sample:Player">
 						<Button Command="{Binding BindingContext.BuildRoadCommand, Source={x:Reference Root}}"
 						        CommandParameter="{Binding}"
-						        ContentLayout="Top"
-						        Text="{Binding Name.Value}">
+						        ContentLayout="Top">
 							<Button.ImageSource>
 								<controls1:SKImageImageSource Image="{Binding RoadImage}" />
 							</Button.ImageSource>

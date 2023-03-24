@@ -10,7 +10,6 @@ using Blastic.Skia;
 using Blastic.Skia.Input;
 using DynamicData;
 using SkiaSharp;
-using Animation = Blastic.Animations.Animation;
 using Command = Blastic.Commanding.Command;
 
 namespace Blastic.Maui.Sample;
@@ -186,11 +185,11 @@ public class MainViewModel : IHasLifetime
 
 	private void RollDice()
 	{
-		Animation
-			.Create(TimeSpan.FromSeconds(1))
-			.Buffer(TimeSpan.FromMilliseconds(80))
+		Observable
+			.Interval(TimeSpan.FromMilliseconds(100))
+			.Take(10)
 			.Subscribe(
-				onNext: x =>
+				onNext: _ =>
 				{
 					int animationFirst = _diceAnimationRandom.Next(6) + 1;
 					int animationSecond = _diceAnimationRandom.Next(6) + 1;
@@ -215,6 +214,37 @@ public class MainViewModel : IHasLifetime
 					{
 						histogramEntry.DiceCount.Value++;
 					}
+
+					HighlightTiles(sum);
+				});
+	}
+
+	private void HighlightTiles(int number)
+	{
+		Observable
+			.Interval(TimeSpan.FromMilliseconds(500))
+			.Take(6)
+			.Subscribe(
+				onNext: index =>
+				{
+					if (index % 2 == 0)
+					{
+						foreach (Tile tile in _board.Tiles.Where(x => x.Number == number))
+						{
+							_board.AddTileToHighlight(tile);
+						}
+					}
+					else
+					{
+						_board.ClearTilesToHighlight();
+					}
+
+					SkiaCanvas.Redraw();
+				},
+				onCompleted: () =>
+				{
+					_board.ClearTilesToHighlight();
+					SkiaCanvas.Redraw();
 				});
 	}
 

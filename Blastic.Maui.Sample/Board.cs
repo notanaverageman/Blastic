@@ -78,6 +78,7 @@ public class Board
 	private readonly List<SKPoint> _highlightedPoints;
 
 	private readonly Dictionary<SKPoint, Tile> _tiles;
+	private readonly List<Tile> _tilesToHighlight;
 	
 	private SKPicture _picture;
 	private SKPoint _robberPosition;
@@ -85,11 +86,14 @@ public class Board
 	private List<Edge> _edges;
 
 	public SKRect Bounds { get; private set; }
+	public IReadOnlyCollection<Tile> Tiles => _tiles.Values;
+
 
 	public Board(SkiaCanvas skiaCanvas)
 	{
 		_skiaCanvas = skiaCanvas;
 		_tiles = new Dictionary<SKPoint, Tile>();
+		_tilesToHighlight = new List<Tile>();
 		
 		_highlightedPoints = new List<SKPoint>();
 
@@ -247,6 +251,16 @@ public class Board
 		_skiaCanvas.Redraw();
 	}
 
+	public void AddTileToHighlight(Tile tile)
+	{
+		_tilesToHighlight.Add(tile);
+	}
+
+	public void ClearTilesToHighlight()
+	{
+		_tilesToHighlight.Clear();
+	}
+
 	public void HoverPoint(SKPoint point)
 	{
 		_highlightedPoints.Clear();
@@ -308,6 +322,15 @@ public class Board
 			canvas.Translate(_robberPosition);
 			canvas.Translate(-0.4f, 0f);
 			canvas.DrawPictureCentered(Assets.Robber.Picture);
+		}
+
+		foreach (Tile tile in _tilesToHighlight)
+		{
+			using (new SKAutoCanvasRestore(canvas))
+			{
+				canvas.Translate(tile.Bounds.Location);
+				tile.DrawHighlight(canvas);
+			}
 		}
 
 		foreach (SKPoint point in _highlightedPoints)

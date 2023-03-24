@@ -36,16 +36,21 @@ public class Tile
 	{
 		canvas.DrawPictureCentered(GetTilePicture(ResourceType), scale: 4);
 
-		if (Number != 0)
+		if (Number == 0)
 		{
-			using (new SKAutoCanvasRestore(canvas))
-			{
-				canvas.Translate(0, 0.3f);
-				canvas.DrawPictureCentered(GetNumberPicture(Number));
-			}
+			return;
 		}
 
-		return;
+		using (new SKAutoCanvasRestore(canvas))
+		{
+			canvas.Translate(0, 0.3f);
+			canvas.DrawPictureCentered(GetNumberPicture(Number));
+		}
+	}
+
+	public void DrawHighlight(SKCanvas canvas)
+	{
+		canvas.DrawPictureCentered(GetTilePicture(ResourceType), scale: 4);
 	}
 
 	private static SKPoint[] GetCorners()
