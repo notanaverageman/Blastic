@@ -23,9 +23,24 @@ namespace Blastic.LifetimeManagement
 		IReadOnlyReactiveProperty<bool> IsActive { get; }
 
 		/// <summary>
+		/// An observable property that returns true if the object is currently being initialized.
+		/// </summary>
+		IReadOnlyReactiveProperty<bool> IsInitializing { get; }
+
+		/// <summary>
 		/// An observable property that returns true if the object is currently being activated.
 		/// </summary>
 		IReadOnlyReactiveProperty<bool> IsActivating { get; }
+
+		/// <summary>
+		/// An observable property that returns true if the object is currently being deactivated.
+		/// </summary>
+		IReadOnlyReactiveProperty<bool> IsDeactivating { get; }
+
+		/// <summary>
+		/// An observable property that returns true if the object is currently being closed.
+		/// </summary>
+		IReadOnlyReactiveProperty<bool> IsClosing { get; }
 
 		/// <summary>
 		/// Command that is executed to initialize the object. Subscribe to this command

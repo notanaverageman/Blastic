@@ -14,7 +14,10 @@ namespace Blastic.LifetimeManagement
 	{
 		private readonly IReactiveProperty<bool> _isInitialized;
 		private readonly IReactiveProperty<bool> _isActive;
+		private readonly IReactiveProperty<bool> _isInitializing;
 		private readonly IReactiveProperty<bool> _isActivating;
+		private readonly IReactiveProperty<bool> _isDeactivating;
+		private readonly IReactiveProperty<bool> _isClosing;
 
 		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> IsInitialized => _isInitialized;
@@ -23,7 +26,16 @@ namespace Blastic.LifetimeManagement
 		public IReadOnlyReactiveProperty<bool> IsActive => _isActive;
 
 		/// <inheritdoc />
+		public IReadOnlyReactiveProperty<bool> IsInitializing => _isInitializing;
+
+		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> IsActivating => _isActivating;
+
+		/// <inheritdoc />
+		public IReadOnlyReactiveProperty<bool> IsDeactivating => _isDeactivating;
+
+		/// <inheritdoc />
+		public IReadOnlyReactiveProperty<bool> IsClosing => _isClosing;
 
 		/// <inheritdoc />
 		public Command<InitializationContext> Initialization { get; }
@@ -47,28 +59,37 @@ namespace Blastic.LifetimeManagement
 		{
 			_isInitialized = new ReactiveProperty<bool>(false);
 			_isActive = new ReactiveProperty<bool>(false);
+			_isInitializing = new ReactiveProperty<bool>(false);
 			_isActivating = new ReactiveProperty<bool>(false);
+			_isDeactivating = new ReactiveProperty<bool>(false);
+			_isClosing = new ReactiveProperty<bool>(false);
 
 			Initialization = IsInitialized
+				.And(_isInitializing.Negate())
 				.Select(x => !x)
 				.ToCommand<InitializationContext>()
+				.WithSubscribe(BeforeInitialization, Order.AbsoluteMinimum)
 				.WithSubscribe(AfterInitialization, Order.AbsoluteMaximum);
 
 			CanClose = new Command<ClosureContext>();
 
 			Closure = IsInitialized
+				.And(_isClosing.Negate())
 				.ToCommand<ClosureContext>()
 				.WithSubscribe(BeforeClosure, Order.AbsoluteMinimum)
 				.WithSubscribe(AfterClosure, Order.AbsoluteMaximum);
 
 			Activation = IsActive
-				.Select(x => !x)
+				.And(_isActivating)
+				.Negate()
 				.ToCommand<ActivationContext>()
 				.WithSubscribe(BeforeActivation, Order.AbsoluteMinimum)
 				.WithSubscribe(AfterActivation, Order.AbsoluteMaximum);
 
 			Deactivation = IsActive
+				.And(_isDeactivating.Negate())
 				.ToCommand<DeactivationContext>()
+				.WithSubscribe(BeforeDeactivation, Order.AbsoluteMinimum)
 				.WithSubscribe(AfterDeactivation, Order.AbsoluteMaximum);
 		}
 
@@ -108,8 +129,14 @@ namespace Blastic.LifetimeManagement
 			Closure.Execute(context, cancellationToken);
 		}
 
+		private void BeforeInitialization()
+		{
+			_isInitializing.Value = true;
+		}
+
 		private void AfterInitialization()
 		{
+			_isInitializing.Value = false;
 			_isInitialized.Value = true;
 		}
 
@@ -122,13 +149,15 @@ namespace Blastic.LifetimeManagement
 				return;
 			}
 
-			DeactivationContext deactivationContext = new();
+			_isClosing.Value = true;
 
+			DeactivationContext deactivationContext = new();
 			Deactivation.Execute(deactivationContext, cancellationToken);
 		}
 
 		private void AfterClosure()
 		{
+			_isClosing.Value = false;
 			_isInitialized.Value = false;
 		}
 
@@ -137,7 +166,6 @@ namespace Blastic.LifetimeManagement
 			_isActivating.Value = true;
 
 			InitializationContext initializationContext = new();
-
 			Initialization.Execute(initializationContext, cancellationToken);
 		}
 
@@ -147,8 +175,14 @@ namespace Blastic.LifetimeManagement
 			_isActive.Value = true;
 		}
 
+		private void BeforeDeactivation()
+		{
+			_isDeactivating.Value = true;
+		}
+
 		private void AfterDeactivation()
 		{
+			_isDeactivating.Value = false;
 			_isActive.Value = false;
 		}
 	}
