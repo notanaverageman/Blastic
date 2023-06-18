@@ -1,4 +1,6 @@
+using System;
 using System.Threading;
+using Blastic.LifetimeManagement.Contexts;
 using DynamicData;
 
 namespace Blastic.LifetimeManagement
@@ -23,7 +25,7 @@ namespace Blastic.LifetimeManagement
 
 			if (!Items.Contains(item))
 			{
-				ItemsSource.Add(item);
+				throw new ArgumentException("Item is not a child of this object.");
 			}
 
 			item.Lifetime.Activate(cancellationToken);
@@ -38,10 +40,26 @@ namespace Blastic.LifetimeManagement
 		{
 			if (!Items.Contains(item))
 			{
-				ItemsSource.Add(item);
+				throw new ArgumentException("Item is not a child of this object.");
 			}
 
 			item.Lifetime.Deactivate(cancellationToken);
+		}
+
+		public override void Close(
+			T item,
+			bool result = false,
+			CancellationToken cancellationToken = default)
+		{
+			if (!Items.Contains(item))
+			{
+				throw new ArgumentException("Item is not a child of this object.");
+			}
+
+			ClosureContext context = new(result);
+			item.Lifetime.Close(cancellationToken, context);
+
+			ItemsSource.Remove(item);
 		}
 	}
 }

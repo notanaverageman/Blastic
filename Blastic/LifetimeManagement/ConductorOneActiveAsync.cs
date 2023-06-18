@@ -125,17 +125,12 @@ namespace Blastic.LifetimeManagement
 			ActiveItemIndex.Value = index;
 		}
 
-		/// <summary>
-		/// Close the given item and remove it from children.
-		/// </summary>
+		/// <inheritdoc cref="ConductorBaseAsync{T}.Close"/>
 		/// <remarks>
 		/// If the given item is the active item and there was another item that was
 		/// active prior to this item, that previous item is activated.
 		/// </remarks>
-		/// <param name="item">The item to close.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <param name="result">The result of the closure operation.</param>
-		public async Task Close(
+		public override async Task Close(
 			T item,
 			bool result = false,
 			CancellationToken cancellationToken = default)

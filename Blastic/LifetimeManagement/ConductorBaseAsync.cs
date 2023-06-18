@@ -1,4 +1,7 @@
 using System;
+using System.Reactive.Disposables;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blastic.LifetimeManagement
 {
@@ -7,7 +10,7 @@ namespace Blastic.LifetimeManagement
 	/// are managed by this class.
 	/// </summary>
 	/// <typeparam name="T">A type with a lifecycle.</typeparam>
-	public class ConductorBaseAsync<T> : ConductorBaseCommon<T>, IHasAsyncLifetime where T : IHasAsyncLifetime
+	public abstract class ConductorBaseAsync<T> : ConductorBaseCommon<T>, IHasAsyncLifetime where T : IHasAsyncLifetime
 	{
 		/// <inheritdoc />
 		public IAsyncLifetime Lifetime { get; }
@@ -30,7 +33,25 @@ namespace Blastic.LifetimeManagement
 
 		protected override IDisposable AddChildLifetime(T item)
 		{
-			return Lifetime.AddChildLifetime(item.Lifetime, LifetimeChainOptions);
+			IDisposable closure = item.Lifetime.Closure.Subscribe(async (context, cancellationToken) =>
+			{
+				await Close(item, context?.Result == true, cancellationToken);
+			});
+
+			IDisposable childLifetime = Lifetime.AddChildLifetime(item.Lifetime, LifetimeChainOptions);
+
+			return new CompositeDisposable(closure, childLifetime);
 		}
+
+		/// <summary>
+		/// Close the given item and remove it from children.
+		/// </summary>
+		/// <param name="item">The item to close.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="result">The result of the closure operation.</param>
+		public abstract Task Close(
+			T item,
+			bool result = false,
+			CancellationToken cancellationToken = default);
 	}
 }
