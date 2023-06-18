@@ -68,12 +68,7 @@ namespace {AttributeNamespace}
 			classBuilder.AppendLine($"public partial class {className} : Blastic.Services.Localization.ILocalizationSource");
 			classBuilder.AppendLine("{");
 
-			classBuilder.Indent(1).AppendLine("public Blastic.Ordering.Order Order { get; }");
-			classBuilder.Indent(1).AppendLine();
-			classBuilder.Indent(1).AppendLine($"public {className}(Blastic.Ordering.Order? order = null)");
-			classBuilder.Indent(1).AppendLine("{");
-			classBuilder.Indent(2).AppendLine("Order = order ?? new Blastic.Ordering.Order();");
-			classBuilder.Indent(1).AppendLine("}");
+			classBuilder.Indent(1).AppendLine("public Blastic.Ordering.Order Order { get; } = new Blastic.Ordering.Order();");
 			classBuilder.Indent(1).AppendLine();
 
 			StringBuilder methodBuilder = new();

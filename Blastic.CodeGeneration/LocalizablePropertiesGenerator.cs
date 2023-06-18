@@ -154,8 +154,11 @@ namespace {AttributeNamespace}
 			classBuilder.Append(propertyBuilder);
 			classBuilder.AppendLine();
 
-			classBuilder.Append(constructorBuilder);
-			classBuilder.AppendLine();
+			if (node.HasParent)
+			{
+				classBuilder.Append(constructorBuilder);
+				classBuilder.AppendLine();
+			}
 
 			disposeBuilder.Indent(indentation + 1).AppendLine("}");
 			classBuilder.Append(disposeBuilder);
