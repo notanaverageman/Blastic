@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,10 +83,11 @@ namespace Blastic.Commanding
 	/// <typeparam name="T"></typeparam>
 	public class Command<T> : ICommand, IReadOnlyCommand<T>, IObserver<bool>
 	{
-		private readonly List<OrderedAction> _actions;
-		private readonly List<OrderedAction> _finallyActions;
 		private readonly IReactiveProperty<bool> _isExecuting;
 		private readonly SemaphoreSlim _semaphore;
+
+		private ImmutableArray<OrderedAction> _actions;
+		private ImmutableArray<OrderedAction> _finallyActions;
 
 		private CancellationTokenSource? _cancellationTokenSource;
 		private TaskCompletionSource<bool>? _awaitableTask;
@@ -121,8 +123,8 @@ namespace Blastic.Commanding
 		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
 		public Command(IObservable<bool>? canExecute)
 		{
-			_actions = new List<OrderedAction>();
-			_finallyActions = new List<OrderedAction>();
+			_actions = ImmutableArray<OrderedAction>.Empty;
+			_finallyActions = ImmutableArray<OrderedAction>.Empty;
 			_isExecuting = new ReactiveProperty<bool>(false);
 			_semaphore = new SemaphoreSlim(1, 1);
 
@@ -233,11 +235,11 @@ namespace Blastic.Commanding
 			order ??= Command.DefaultOrder;
 
 			OrderedAction orderedAction = new(action, order);
+			
+			_actions = _actions.Add(orderedAction);
+			_actions = _actions.Sort(ActionSorter.Instance);
 
-			_actions.Add(orderedAction);
-			_actions.Sort(ActionSorter.Instance);
-
-			return new Subscription(this, orderedAction);
+			return new Subscription(this, orderedAction, isFinally: false);
 		}
 
 		/// <inheritdoc />
@@ -265,10 +267,10 @@ namespace Blastic.Commanding
 
 			OrderedAction orderedAction = new(action, order);
 
-			_finallyActions.Add(orderedAction);
-			_finallyActions.Sort(ActionSorter.Instance);
+			_finallyActions = _finallyActions.Add(orderedAction);
+			_finallyActions = _finallyActions.Sort(ActionSorter.Instance);
 
-			return new Subscription(this, orderedAction);
+			return new Subscription(this, orderedAction, isFinally: true);
 		}
 		
 		/// <inheritdoc />
@@ -418,16 +420,25 @@ namespace Blastic.Commanding
 		{
 			private readonly Command<T> _command;
 			private readonly OrderedAction _action;
+			private readonly bool _isFinally;
 
-			public Subscription(Command<T> command, OrderedAction action)
+			public Subscription(Command<T> command, OrderedAction action, bool isFinally)
 			{
 				_command = command;
 				_action = action;
+				_isFinally = isFinally;
 			}
 
 			public void Dispose()
 			{
-				_command._actions.Remove(_action);
+				if (_isFinally)
+				{
+					_command._finallyActions = _command._finallyActions.Remove(_action);
+				}
+				else
+				{
+					_command._actions = _command._actions.Remove(_action);
+				}
 			}
 		}
 
