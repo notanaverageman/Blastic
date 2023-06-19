@@ -1,6 +1,8 @@
 ﻿using Avalonia;
+using Blastic.Avalonia.DynamicControls;
 using Blastic.Avalonia.Platform;
 using Blastic.Avalonia.ViewManagement;
+using Blastic.DynamicControls;
 using Blastic.Platform;
 using Blastic.Services.Localization;
 using Blastic.Services.Messaging;
@@ -19,6 +21,7 @@ public partial class BlasticServices
 		AddSingleton<ILocalizationService, LocalizationService>();
 		AddSingleton<INotificationService, NotificationService>();
 		AddSingleton<IPlatformSpecifics, AvaloniaPlatformSpecifics>();
+		AddSingleton<IPresenterSource>(_ => PresenterSource.Instance);
 		AddSingleton<IViewLocator<StyledElement>, ViewLocator>();
 	}
 }
