@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
@@ -10,13 +11,22 @@ namespace Blastic.CodeGeneration
 {
 	public static class ResxExtensions
 	{
-		public static List<LocalizedText> GetLocalizedTexts(this ImmutableArray<AdditionalText> texts)
+		public static List<LocalizedText> GetLocalizedTexts(
+			this ImmutableArray<AdditionalText> texts,
+			IReadOnlyList<string> resources)
 		{
 			List<LocalizedText> localizedTexts = new();
 
 			foreach (AdditionalText resx in texts)
 			{
-				if (!resx.Path.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
+				string resxPath = resx.Path;
+
+				if (!resxPath.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
+				{
+					continue;
+				}
+
+				if (resources.All(x => !resxPath.EndsWith(x)))
 				{
 					continue;
 				}
@@ -38,7 +48,7 @@ namespace Blastic.CodeGeneration
 					continue;
 				}
 
-				string fileName = Path.GetFileNameWithoutExtension(resx.Path);
+				string fileName = Path.GetFileNameWithoutExtension(resxPath);
 				string culture = Path.GetExtension(fileName).Trim('.');
 
 				foreach (XElement element in document.Elements("data"))
@@ -60,7 +70,7 @@ namespace Blastic.CodeGeneration
 						id!,
 						text!,
 						culture,
-						resx.Path);
+						resxPath);
 
 					localizedTexts.Add(localizedText);
 				}

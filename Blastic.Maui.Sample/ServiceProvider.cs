@@ -1,38 +1,35 @@
-﻿using Jab;
-using Blastic.Maui.Initialization;
+﻿using Blastic.Maui.Initialization;
 using Blastic.Maui.Sample.Data;
 using Blastic.Skia;
 using Blastic.ViewManagement.TypeMappers;
+using Depso;
 
 namespace Blastic.Maui.Sample;
-
-[Import<IBlasticServices>]
-
-[Singleton<App>]
-
-[Singleton<MainViewModel>]
-[Singleton<MainView>]
-[Singleton<ITypeMapper>(Factory = nameof(MainView))]
-
-[Singleton<Board>]
-[Singleton<SkiaCanvas>]
-[Singleton<Game>]
-[Singleton<GameDatabase>]
-[Singleton<GameDatabaseOptions>(Factory = nameof(GameDatabaseOptions))]
-[Singleton<GameActionManager>]
 
 [ServiceProvider]
 public partial class ServiceProvider
 {
-	private IServiceScopeFactory CreateScopeFactory() => this;
-
-	private	static ITypeMapper MainView() => new DirectTypeMapper<MainViewModel, MainView>();
-
-	private static GameDatabaseOptions GameDatabaseOptions() => new()
+	private void RegisterServices()
 	{
-		ConnectionStringBuilder =
+		ImportModule<BlasticServices>();
+
+		AddSingleton<App>();
+
+		AddSingleton<MainViewModel>();
+		AddSingleton<MainView>();
+		AddSingleton<ITypeMapper, DirectTypeMapper<MainViewModel, MainView>>();
+
+		AddSingleton<Board>();
+		AddSingleton<SkiaCanvas>();
+		AddSingleton<Game>();
+		AddSingleton<GameDatabase>();
+		AddSingleton<GameActionManager>();
+		AddSingleton(_ => new GameDatabaseOptions
 		{
-			DataSource = Path.Combine(FileSystem.AppDataDirectory, "games.db")
-		}
-	};
+			ConnectionStringBuilder =
+			{
+				DataSource = Path.Combine(FileSystem.AppDataDirectory, "games.db")
+			}
+		});
+	}
 }

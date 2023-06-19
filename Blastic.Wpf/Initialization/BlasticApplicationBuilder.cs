@@ -18,7 +18,6 @@ using Blastic.ViewManagement;
 using Blastic.ViewManagement.TypeMappers;
 using Blastic.Wpf.DynamicControls;
 using Blastic.Wpf.Initialization.Extensions;
-using Blastic.Wpf.Localization;
 using Blastic.Wpf.Platform;
 using Blastic.Wpf.Services.Dialogs;
 using Blastic.Wpf.Services.Windowing;
@@ -135,9 +134,6 @@ namespace Blastic.Wpf.Initialization
 			_serviceCollection.AddSingleton<IWindowService, WindowService>();
 			_serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
 			_serviceCollection.AddSingleton<IPresenterSource, PresenterSource>(_ => PresenterSource.Instance);
-			
-			_serviceCollection.AddSingleton<LocalizableProperties>();
-			_serviceCollection.AddSingleton<ILocalizationSource>(new LocalizationSource(Order.AbsoluteMaximum));
 			
 			AddTypeMapper(new SuffixTypeMapper("View", "ViewModel", Order.AbsoluteMaximum));
 		}

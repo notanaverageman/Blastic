@@ -24,7 +24,7 @@ namespace Blastic.CodeGeneration.Test
 
 		private static string GenerateSource(params string[] resxPaths)
 		{
-			List<MetadataReference> references = new List<MetadataReference>();
+			List<MetadataReference> references = new();
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
 			foreach (Assembly assembly in assemblies)
@@ -35,15 +35,30 @@ namespace Blastic.CodeGeneration.Test
 				}
 			}
 
-			List<SyntaxTree> syntaxTrees = new List<SyntaxTree>();
-			List<AdditionalText> additionalTexts = new List<AdditionalText>();
+			List<SyntaxTree> syntaxTrees = new();
+			List<AdditionalText> additionalTexts = new();
 
 			foreach (string resxPath in resxPaths)
 			{
 				AdditionalText additionalText = new ResxAdditionalText(resxPath);
 				additionalTexts.Add(additionalText);
 			}
-			
+
+			syntaxTrees.Add(CSharpSyntaxTree.ParseText("""
+				[Blastic.CodeGeneration.ResxLocalizationSource("Resources.resx")]
+				[Blastic.CodeGeneration.ResxLocalizationSource("Resources.tr-tr.resx")]
+				public partial class Strings
+				{
+				}
+
+				[Blastic.CodeGeneration.ResxLocalizableProperties("Resources.resx")]
+				[Blastic.CodeGeneration.ResxLocalizableProperties("Resources.tr-tr.resx")]
+				public partial class Localization
+				{
+				}
+				"""));
+
+
 			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizationSource(\"Test\", className: \"Source\")]"));
 			syntaxTrees.Add(CSharpSyntaxTree.ParseText("[assembly:Blastic.CodeGeneration.CreateLocalizableProperties(\"Test\")]"));
 
@@ -54,8 +69,8 @@ namespace Blastic.CodeGeneration.Test
 				new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
 			GeneratorDriver driver = CSharpGeneratorDriver.Create(
-				new LocalizationSourceGenerator(),
-				new LocalizablePropertiesGenerator());
+				new ResxLocalizationSourceGenerator(),
+				new ResxLocalizablePropertiesGenerator());
 
 			driver = driver.AddAdditionalTexts(ImmutableArray.CreateRange(additionalTexts));
 			

@@ -1,9 +1,6 @@
 ﻿using System.Windows;
 using Blastic.CodeGeneration;
 
-[assembly: CreateLocalizationSource("Blastic.Wpf.Localization")]
-[assembly: CreateLocalizableProperties("Blastic.Wpf.Localization")]
-
 [assembly:ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
                              //(used if a resource is not found in the page,
