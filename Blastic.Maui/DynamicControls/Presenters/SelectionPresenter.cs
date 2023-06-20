@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reactive;
 using Blastic.Reactive;
 using Microsoft.Maui.Controls;
@@ -35,19 +34,9 @@ public class SelectionPresenter : Presenter
 			}
 
 			int currentSelectedIndex = _picker.SelectedIndex;
-
-			// TODO: Remove when following are solved
-			// https://github.com/dotnet/maui/issues/9739
-			// https://github.com/dotnet/maui/issues/9239
 			IList pickerItemsSource = _picker.ItemsSource;
-			List<object> itemsSource = new();
-
-			foreach (object o in pickerItemsSource)
-			{
-				itemsSource.Add(o);
-			}
-
-			_picker.ItemsSource = itemsSource.ToArray();
+			
+			_picker.ItemsSource = null;
 			_picker.ItemsSource = pickerItemsSource;
 
 			_picker.SelectedIndex = currentSelectedIndex;
