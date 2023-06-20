@@ -75,7 +75,7 @@ public static class MauiAppBuilderExtensions
 				await (asyncLifetime?.Deactivate() ?? Task.CompletedTask);
 			};
 
-			window.Stopped += async (_, _) =>
+			window.Destroying += async (_, _) =>
 			{
 				lifetime?.Close();
 				await (asyncLifetime?.Close() ?? Task.CompletedTask);
