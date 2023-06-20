@@ -48,7 +48,7 @@ public class RunLatestCancelRunningReentrancyHandler : IReentrancyHandler
 		_cancellationTokenSource?.Dispose();
 		_cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-		return new PreExecuteResult(false, _cancellationTokenSource.Token);
+		return new PreExecuteResult(true, _cancellationTokenSource.Token);
 	}
 
 	/// <inheritdoc />
