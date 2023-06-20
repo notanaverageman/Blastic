@@ -32,7 +32,7 @@ public abstract class ConductorBaseCommon<T>
 	/// <summary>
 	/// Options for managing the lifecycles of the children.
 	/// </summary>
-	public LifetimeChainOptions LifetimeChainOptions { get; }
+	public LifetimeChainOptions LifetimeChainOptions { get; set; }
 
 	/// <summary>
 	/// Creates a new instance with default options.
