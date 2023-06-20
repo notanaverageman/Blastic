@@ -89,6 +89,9 @@ namespace Blastic.Commanding
 
 		private readonly IReactiveProperty<bool> _isExecuting;
 
+		private IReadOnlyReactiveProperty<bool> _canExecuteObservable;
+		private IDisposable? _canExecuteSubscription;
+
 		private ImmutableArray<OrderedAction> _actions;
 		private ImmutableArray<OrderedAction> _finallyActions;
 
@@ -96,9 +99,21 @@ namespace Blastic.Commanding
 
 		/// <inheritdoc />
 		public event EventHandler? CanExecuteChanged;
-		
+
 		/// <inheritdoc />
-		public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
+		public IReadOnlyReactiveProperty<bool> CanExecuteObservable
+		{
+			get => _canExecuteObservable;
+			set
+			{
+				_canExecuteSubscription?.Dispose();
+				_canExecuteObservable = value;
+
+				_canExecuteSubscription = _canExecuteObservable
+					.ObserveOnUI()
+					.Subscribe(this);
+			}
+		}
 
 		/// <summary>
 		/// An observable property that emits true when the <see cref="Command"/> starts execution and
@@ -127,13 +142,14 @@ namespace Blastic.Commanding
 			_actions = ImmutableArray<OrderedAction>.Empty;
 			_finallyActions = ImmutableArray<OrderedAction>.Empty;
 			_isExecuting = new ReactiveProperty<bool>(false);
+			_canExecuteObservable = Singletons.TrueReadOnlyReactiveProperty;
 
 			ReentrancyHandler = IgnoreReentrantReentrancyHandler.Instance;
-			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty(false) ?? Singletons.TrueReadOnlyReactiveProperty;
 
-			CanExecuteObservable
-				.ObserveOnUI()
-				.Subscribe(this);
+			if (canExecute != null)
+			{
+				CanExecuteObservable = canExecute.ToReadOnlyReactiveProperty(false);
+			}
 		}
 
 		/// <summary>

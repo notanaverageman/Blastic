@@ -14,7 +14,7 @@ public interface IReadOnlyCommand
 	/// <summary>
 	/// An observable property that emits when command's CanExecute property changes.
 	/// </summary>
-	public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; }
+	public IReadOnlyReactiveProperty<bool> CanExecuteObservable { get; set; }
 
 	/// <summary>
 	/// Registers the given action to be executed when the <see cref="Command"/> is executed.
