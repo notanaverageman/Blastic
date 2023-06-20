@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding.Concurrency;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
@@ -71,8 +72,7 @@ namespace Blastic.Commanding
 	/// </para>
 	/// <para>
 	/// Command's state can be observed via <see cref="CanExecuteObservable"/> and <see cref="IsExecuting"/>.
-	/// Reentrancy can be disabled by setting <see cref="ReentrancyMode"/> method to
-	/// <see cref="Commanding.ReentrancyMode.IgnoreReentrant"/> or <see cref="Commanding.ReentrancyMode.RunLatestCancelRunning"/>.
+	/// Reentrancy behavior can be specified by setting <see cref="ReentrancyHandler"/>.
 	/// </para>
 	/// <para>
 	/// You can register an action via the constructor or the <see cref="Subscribe(Action, Order?)"/> methods.
@@ -84,14 +84,11 @@ namespace Blastic.Commanding
 	public class Command<T> : ICommand, IReadOnlyCommand<T>, IObserver<bool>
 	{
 		private readonly IReactiveProperty<bool> _isExecuting;
-		private readonly SemaphoreSlim _semaphore;
 
 		private ImmutableArray<OrderedAction> _actions;
 		private ImmutableArray<OrderedAction> _finallyActions;
 
-		private CancellationTokenSource? _cancellationTokenSource;
 		private TaskCompletionSource<bool>? _awaitableTask;
-		private long _executionNumber;
 
 		/// <inheritdoc />
 		public event EventHandler? CanExecuteChanged;
@@ -108,7 +105,7 @@ namespace Blastic.Commanding
 		/// <summary>
 		/// Property that defines the behavior of the command when it is executed concurrently.
 		/// </summary>
-		public ReentrancyMode ReentrancyMode { get; set; }
+		public IReentrancyHandler ReentrancyHandler { get; set; }
 
 		/// <summary>
 		/// Default constructor that creates an always executable <see cref="Command"/>.
@@ -126,8 +123,8 @@ namespace Blastic.Commanding
 			_actions = ImmutableArray<OrderedAction>.Empty;
 			_finallyActions = ImmutableArray<OrderedAction>.Empty;
 			_isExecuting = new ReactiveProperty<bool>(false);
-			_semaphore = new SemaphoreSlim(1, 1);
 
+			ReentrancyHandler = IgnoreReentrantReentrancyHandler.Instance;
 			CanExecuteObservable = canExecute?.ToReadOnlyReactiveProperty(false) ?? Singletons.TrueReadOnlyReactiveProperty;
 
 			CanExecuteObservable
@@ -309,52 +306,21 @@ namespace Blastic.Commanding
 				return;
 			}
 
-			if (_isExecuting.Value && ReentrancyMode == ReentrancyMode.IgnoreReentrant)
+			if (_isExecuting.Value && !ReentrancyHandler.AllowConcurrentExecution)
 			{
 				return;
 			}
-
-			bool acquiredSemaphore = false;
+			
 			TaskCompletionSource<bool> taskCompletionSource = new();
+			PreExecuteResult preExecuteResult = default;
 
 			try
 			{
-				CancellationTokenSource cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-				cancellationToken = cancellationTokenSource.Token;
+				preExecuteResult = ReentrancyHandler.PreExecute(cancellationToken);
 
-				if (ReentrancyMode is ReentrancyMode.RunLatest or ReentrancyMode.RunLatestCancelRunning)
+				if (!preExecuteResult.ContinueExecution)
 				{
-					long currentExecutionNumber = Interlocked.Increment(ref _executionNumber);
-
-					try
-					{
-						if (ReentrancyMode is ReentrancyMode.RunLatestCancelRunning)
-						{
-							_cancellationTokenSource?.Cancel();
-						}
-
-						_semaphore.Wait(cancellationToken);
-						acquiredSemaphore = true;
-					}
-					catch (OperationCanceledException)
-					{
-						return;
-					}
-					
-					if (currentExecutionNumber < _executionNumber)
-					{
-						if (ReentrancyMode is ReentrancyMode.RunLatestCancelRunning)
-						{
-							cancellationTokenSource.Cancel();
-						}
-
-						return;
-					}
-				}
-
-				if (ReentrancyMode is ReentrancyMode.RunLatestCancelRunning)
-				{
-					_cancellationTokenSource = cancellationTokenSource;
+					return;
 				}
 
 				_awaitableTask = taskCompletionSource;
@@ -379,22 +345,20 @@ namespace Blastic.Commanding
 			{
 				try
 				{
-					foreach (OrderedAction orderedAction in _finallyActions)
+					if (preExecuteResult.ContinueExecution)
 					{
-						orderedAction.Action(value, cancellationToken);
+						foreach (OrderedAction orderedAction in _finallyActions)
+						{
+							orderedAction.Action(value, cancellationToken);
+						}
 					}
 				}
 				finally
 				{
-					if (acquiredSemaphore)
-					{
-						_semaphore.Release();
-					}
+					ReentrancyHandler.PostExecute();
 
 					_isExecuting.Value = false;
 					taskCompletionSource.SetResult(true);
-
-					_cancellationTokenSource = null;
 				}
 			}
 		}

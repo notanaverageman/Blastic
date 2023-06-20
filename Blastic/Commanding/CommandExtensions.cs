@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Blastic.Commanding.Concurrency;
 using Blastic.Ordering;
 
 namespace Blastic.Commanding
@@ -51,11 +52,11 @@ namespace Blastic.Commanding
 		/// Fluent method that sets the reentrancy mode and returns the command.
 		/// </summary>
 		/// <param name="command">The command whose property to be set.</param>
-		/// <param name="reentrancyMode">Reentrancy mode to set.</param>
+		/// <param name="reentrancyHandler">Reentrancy handler to set.</param>
 		/// <returns>The given command.</returns>
-		public static Command WithReentrancyMode(this Command command, ReentrancyMode reentrancyMode)
+		public static Command WithReentrancy(this Command command, IReentrancyHandler reentrancyHandler)
 		{
-			command.ReentrancyMode = reentrancyMode;
+			command.ReentrancyHandler = reentrancyHandler;
 			return command;
 		}
 
@@ -63,11 +64,11 @@ namespace Blastic.Commanding
 		/// Fluent method that sets the reentrancy mode and returns the command.
 		/// </summary>
 		/// <param name="command">The command whose property to be set.</param>
-		/// <param name="reentrancyMode">Reentrancy mode to set.</param>
+		/// <param name="reentrancyHandler">Reentrancy handler to set.</param>
 		/// <returns>The given command.</returns>
-		public static Command<T> WithReentrancyMode<T>(this Command<T> command, ReentrancyMode reentrancyMode)
+		public static Command<T> WithReentrancy<T>(this Command<T> command, IReentrancyHandler reentrancyHandler)
 		{
-			command.ReentrancyMode = reentrancyMode;
+			command.ReentrancyHandler = reentrancyHandler;
 			return command;
 		}
 
@@ -75,11 +76,11 @@ namespace Blastic.Commanding
 		/// Fluent method that sets the reentrancy mode and returns the command.
 		/// </summary>
 		/// <param name="command">The command whose property to be set.</param>
-		/// <param name="reentrancyMode">Reentrancy mode to set.</param>
+		/// <param name="reentrancyHandler">Reentrancy handler to set.</param>
 		/// <returns>The given command.</returns>
-		public static AsyncCommand WithReentrancyMode(this AsyncCommand command, ReentrancyMode reentrancyMode)
+		public static AsyncCommand WithReentrancy(this AsyncCommand command, IReentrancyHandler reentrancyHandler)
 		{
-			command.ReentrancyMode = reentrancyMode;
+			command.ReentrancyHandler = reentrancyHandler;
 			return command;
 		}
 
@@ -87,11 +88,11 @@ namespace Blastic.Commanding
 		/// Fluent method that sets the reentrancy mode and returns the command.
 		/// </summary>
 		/// <param name="command">The command whose property to be set.</param>
-		/// <param name="reentrancyMode">Reentrancy mode to set.</param>
+		/// <param name="reentrancyHandler">Reentrancy handler to set.</param>
 		/// <returns>The given command.</returns>
-		public static AsyncCommand<T> WithReentrancyMode<T>(this AsyncCommand<T> command, ReentrancyMode reentrancyMode)
+		public static AsyncCommand<T> WithReentrancy<T>(this AsyncCommand<T> command, IReentrancyHandler reentrancyHandler)
 		{
-			command.ReentrancyMode = reentrancyMode;
+			command.ReentrancyHandler = reentrancyHandler;
 			return command;
 		}
 

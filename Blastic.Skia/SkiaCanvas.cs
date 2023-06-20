@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Reactive.Linq;
 using Blastic.Commanding;
+using Blastic.Commanding.Concurrency;
 using Blastic.Ordering;
 using Blastic.Reactive;
 using Blastic.Skia.Input;
@@ -69,7 +70,7 @@ public class SkiaCanvas
 		ResetTransformation();
 
 		DrawCommand = new Command<(SKCanvas, SKPaint?)>()
-			.WithReentrancyMode(ReentrancyMode.RunLatestCancelRunning)
+			.WithReentrancy(new RunLatestCancelRunningReentrancyHandler())
 			.WithSubscribe(BeforeDraw, Order.AbsoluteMinimum)
 			.WithSubscribeFinally(AfterDraw, Order.AbsoluteMaximum);
 		
