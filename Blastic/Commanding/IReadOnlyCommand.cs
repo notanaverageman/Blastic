@@ -3,11 +3,14 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Blastic.Ordering;
 using Blastic.Reactive;
+using UnhandledExceptionEventArgs = Blastic.Commanding.ErrorHandling.UnhandledExceptionEventArgs;
 
 namespace Blastic.Commanding;
 
 public interface IReadOnlyCommand
 {
+	event EventHandler<UnhandledExceptionEventArgs>? UnhandledException;
+
 	/// <summary>
 	/// An observable property that emits when command's CanExecute property changes.
 	/// </summary>

@@ -5,9 +5,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding.Concurrency;
+using Blastic.Commanding.ErrorHandling;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
+using UnhandledExceptionEventArgs = Blastic.Commanding.ErrorHandling.UnhandledExceptionEventArgs;
 
 namespace Blastic.Commanding
 {
@@ -83,6 +85,8 @@ namespace Blastic.Commanding
 	/// <typeparam name="T"></typeparam>
 	public class Command<T> : ICommand, IReadOnlyCommand<T>, IObserver<bool>
 	{
+		public event EventHandler<UnhandledExceptionEventArgs>? UnhandledException;
+
 		private readonly IReactiveProperty<bool> _isExecuting;
 
 		private ImmutableArray<OrderedAction> _actions;
@@ -325,7 +329,7 @@ namespace Blastic.Commanding
 
 				_awaitableTask = taskCompletionSource;
 				_isExecuting.Value = true;
-				
+
 				foreach (OrderedAction orderedAction in _actions)
 				{
 					if (cancellationToken.IsCancellationRequested)
@@ -341,6 +345,16 @@ namespace Blastic.Commanding
 					orderedAction.Action(value, cancellationToken);
 				}
 			}
+			catch (Exception exception)
+			{
+				UnhandledExceptionEventArgs args = new(UnhandledExceptionSource.Action, exception);
+				UnhandledException?.Invoke(this, args);
+
+				if (args.Rethrow)
+				{
+					throw;
+				}
+			}
 			finally
 			{
 				try
@@ -351,6 +365,16 @@ namespace Blastic.Commanding
 						{
 							orderedAction.Action(value, cancellationToken);
 						}
+					}
+				}
+				catch (Exception exception)
+				{
+					UnhandledExceptionEventArgs args = new(UnhandledExceptionSource.FinallyAction, exception);
+					UnhandledException?.Invoke(this, args);
+
+					if (args.Rethrow)
+					{
+						throw;
 					}
 				}
 				finally

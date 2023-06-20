@@ -4,9 +4,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Blastic.Commanding.Concurrency;
+using Blastic.Commanding.ErrorHandling;
 using Blastic.Ordering;
 using Blastic.Platform;
 using Blastic.Reactive;
+using UnhandledExceptionEventArgs = Blastic.Commanding.ErrorHandling.UnhandledExceptionEventArgs;
 
 namespace Blastic.Commanding
 {
@@ -106,6 +108,8 @@ namespace Blastic.Commanding
 	/// <typeparam name="T"></typeparam>
 	public class AsyncCommand<T> : ICommand, IReadOnlyAsyncCommand<T>, IObserver<bool>
 	{
+		public event EventHandler<UnhandledExceptionEventArgs>? UnhandledException;
+
 		private readonly List<OrderedAction> _actions;
 		private readonly List<OrderedAction> _finallyActions;
 		private readonly IReactiveProperty<bool> _isExecuting;
@@ -537,6 +541,16 @@ namespace Blastic.Commanding
 					await orderedAction.Action(value, cancellationToken);
 				}
 			}
+			catch (Exception exception)
+			{
+				UnhandledExceptionEventArgs args = new(UnhandledExceptionSource.Action, exception);
+				UnhandledException?.Invoke(this, args);
+
+				if (args.Rethrow)
+				{
+					throw;
+				}
+			}
 			finally
 			{
 				try
@@ -547,6 +561,16 @@ namespace Blastic.Commanding
 						{
 							await orderedAction.Action(value, cancellationToken);
 						}
+					}
+				}
+				catch (Exception exception)
+				{
+					UnhandledExceptionEventArgs args = new(UnhandledExceptionSource.FinallyAction, exception);
+					UnhandledException?.Invoke(this, args);
+
+					if (args.Rethrow)
+					{
+						throw;
 					}
 				}
 				finally
