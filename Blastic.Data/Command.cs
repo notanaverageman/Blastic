@@ -56,6 +56,11 @@ public class Command : IDisposable
 			value = dateTime.ToFileTimeUtc();
 		}
 
+		if (value is DateTimeOffset dateTimeOffset)
+		{
+			value = dateTimeOffset.ToFileTime();
+		}
+
 		if (DataReader.IsListOfEnums(value))
 		{
 			IEnumerable<object> list = ((IList)value).Cast<object>();

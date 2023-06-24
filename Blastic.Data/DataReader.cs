@@ -79,6 +79,11 @@ public class DataReader : IDisposable
 			return (T)(object)DateTime.FromFileTimeUtc((long)value);
 		}
 
+		if (typeof(T) == typeof(DateTimeOffset) || typeof(T) == typeof(DateTimeOffset?))
+		{
+			return (T)(object)DateTimeOffset.FromFileTime((long)value);
+		}
+
 		return (T)value;
 	}
 
