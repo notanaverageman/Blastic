@@ -5,8 +5,29 @@ using DynamicData;
 
 namespace Blastic.Reactive;
 
-public class SourceListExtensions
+public static class SourceListExtensions
 {
+	public static ReadOnlyObservableCollection<T> Bind<T>(
+		this SourceList<T> source,
+		IPlatformSpecifics platformSpecifics,
+		Func<IObservable<IChangeSet<T>>, IObservable<IChangeSet<T>>>? modifier = null)
+	{
+		IObservable<IChangeSet<T>> observeOnUI = source
+			.Connect()
+			.ObserveOnUI(platformSpecifics);
+
+		if (modifier != null)
+		{
+			observeOnUI = modifier(observeOnUI);
+		}
+
+		observeOnUI
+			.Bind(out ReadOnlyObservableCollection<T> collection)
+			.Subscribe();
+
+		return collection;
+	}
+
 	public static (SourceList<T> Source, ReadOnlyObservableCollection<T> Collection) CreateAndBind<T>(IPlatformSpecifics platformSpecifics)
 	{
 		SourceList<T> source = new();
