@@ -8,30 +8,44 @@ using Version = Blastic.Ordering.Version;
 
 namespace Blastic.Data;
 
-public abstract class DatabaseBase : IDisposable
+public abstract class DatabaseBase : DatabaseBase<MetadataTable>
+{
+	protected DatabaseBase(
+		SqliteConnectionStringBuilder connectionStringBuilder,
+		string metadataTableName)
+		:
+		base(connectionStringBuilder, x => new MetadataTable(x, metadataTableName))
+	{
+	}
+}
+
+public abstract class DatabaseBase<T> : IDisposable where T : MetadataTable
 {
 	private readonly SortedSet<MigrationBase> _migrations;
 	private readonly SqliteConnection _sqliteConnection;
 
 	protected readonly Connection Connection;
 
-	public MetadataTable Metadata { get; }
+	public T Metadata { get; }
 
 	public bool HasTransaction => Connection.HasTransaction;
 	public bool IsInMemory => string.IsNullOrEmpty(_sqliteConnection.DataSource);
+	public string DataSource => _sqliteConnection.DataSource;
 
-	public DatabaseBase(SqliteConnectionStringBuilder connectionStringBuilder, string tableName)
+	public DatabaseBase(
+		SqliteConnectionStringBuilder connectionStringBuilder,
+		Func<Connection, T> metadataTableFactory)
 	{
 		SetConnectionStringDefaults(connectionStringBuilder);
 
 		_sqliteConnection = new SqliteConnection(connectionStringBuilder.ConnectionString);
 
 		Connection = new Connection(_sqliteConnection);
-		Metadata = new MetadataTable(Connection, tableName);
+		Metadata = metadataTableFactory(Connection);
 
 		_migrations = new SortedSet<MigrationBase>(MigrationComparer.Instance)
 		{
-			new CreateMetadataTable(Connection, tableName)
+			new CreateMetadataTable(Connection, Metadata.TableName)
 		};
 	}
 

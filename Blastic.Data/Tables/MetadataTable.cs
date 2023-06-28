@@ -4,11 +4,11 @@ namespace Blastic.Data.Tables;
 
 public class MetadataTable : TableBase
 {
-	private readonly string _tableName;
+	public string TableName { get; }
 
 	public MetadataTable(Connection connection, string tableName) : base(connection)
 	{
-		_tableName = tableName;
+		TableName = tableName;
 	}
 
 	public Version? GetVersion()
@@ -19,7 +19,7 @@ public class MetadataTable : TableBase
 		}
 
 		using Command command = Connection.CreateCommand();
-		command.CommandText = $"SELECT Version FROM {_tableName}";
+		command.CommandText = $"SELECT Version FROM {TableName}";
 
 		string? versionAsString = command.ExecuteScalar<string>();
 
@@ -33,7 +33,7 @@ public class MetadataTable : TableBase
 		using Command command = Connection.CreateCommand();
 
 		command.CommandText = $"""
-			UPDATE {_tableName} SET Version=@Version
+			UPDATE {TableName} SET Version=@Version
 			""";
 
 		command.AddParameterWithValue("@Version", version.ToString());
@@ -45,7 +45,7 @@ public class MetadataTable : TableBase
 		using Command command = Connection.CreateCommand();
 		command.CommandText = $"""
 			SELECT 1 FROM sqlite_master
-			WHERE type='table' AND name='{_tableName}'
+			WHERE type='table' AND name='{TableName}'
 			""";
 
 		int? count = command.ExecuteScalar<int>();
