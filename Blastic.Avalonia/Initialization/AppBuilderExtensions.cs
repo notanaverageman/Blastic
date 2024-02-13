@@ -11,8 +11,7 @@ namespace Blastic.Avalonia.Initialization;
 
 public static class AppBuilderExtensions
 {
-	public static TAppBuilder UseBlastic<TAppBuilder, TMainViewModel>(this TAppBuilder builder, IServiceProvider services)
-		where TAppBuilder : AppBuilderBase<TAppBuilder>, new()
+	public static AppBuilder UseBlastic<TMainViewModel>(this AppBuilder builder, IServiceProvider services)
 		where TMainViewModel : class
 	{
 		builder.AfterPlatformServicesSetup(_ =>

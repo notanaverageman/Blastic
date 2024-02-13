@@ -17,25 +17,25 @@ public partial class SkiaCanvasView : UserControl
 	public static readonly StyledProperty<bool> EnableScrollingProperty =
 		AvaloniaProperty.Register<Border, bool>(nameof(EnableScrolling), defaultValue: true);
 
-	public static readonly AvaloniaProperty<SkiaCanvas?> SkiaCanvasProperty =
+	public static readonly DirectProperty<SkiaCanvasView, SkiaCanvas?> SkiaCanvasProperty =
 		AvaloniaProperty.RegisterDirect<SkiaCanvasView, SkiaCanvas?>(
 			nameof(SkiaCanvas),
 			x => x.SkiaCanvas,
 			(x, y) => x.SkiaCanvas = y);
 
-	public static readonly AvaloniaProperty<float> MinimumZoomScaleProperty =
+	public static readonly DirectProperty<SkiaCanvasView, float> MinimumZoomScaleProperty =
 		AvaloniaProperty.RegisterDirect<SkiaCanvasView, float>(
 			nameof(MinimumZoomScale),
 			x => x.MinimumZoomScale,
 			(x, y) => x.MinimumZoomScale = y);
 
-	public static readonly AvaloniaProperty<float> MaximumZoomScaleProperty =
+	public static readonly DirectProperty<SkiaCanvasView, float> MaximumZoomScaleProperty =
 		AvaloniaProperty.RegisterDirect<SkiaCanvasView, float>(
 			nameof(MaximumZoomScale),
 			x => x.MaximumZoomScale,
 			(x, y) => x.MaximumZoomScale = y);
 
-	public static readonly AvaloniaProperty<float> RequestedZoomScaleProperty =
+	public static readonly DirectProperty<SkiaCanvasView, float> RequestedZoomScaleProperty =
 		AvaloniaProperty.RegisterDirect<SkiaCanvasView, float>(
 			nameof(RequestedZoomScale),
 			x => x.RequestedZoomScale,

@@ -1,4 +1,5 @@
 using System.Reactive.Concurrency;
+using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Blastic.Platform;
 
@@ -6,7 +7,7 @@ namespace Blastic.Avalonia.Platform;
 
 public class AvaloniaPlatformSpecifics : IPlatformSpecifics
 {
-	private readonly IDispatcher _dispatcher;
+	private readonly Dispatcher _dispatcher;
 
 	public IScheduler UIThreadScheduler { get; }
 

@@ -1,15 +1,14 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace Blastic.Skia.Avalonia.Controls;
 
-public class FixedContentScrollViewer : ScrollViewer, IStyleable
+public class FixedContentScrollViewer : ScrollViewer
 {
-	Type IStyleable.StyleKey => typeof(ScrollViewer);
+	protected override Type StyleKeyOverride => typeof(ScrollViewer);
 
-	public static readonly AvaloniaProperty<Control?> ContentToFixProperty =
+	public static readonly DirectProperty<FixedContentScrollViewer, Control?> ContentToFixProperty =
 		AvaloniaProperty.RegisterDirect<FixedContentScrollViewer, Control?>(
 			nameof(ContentToFix),
 			x => x.ContentToFix,

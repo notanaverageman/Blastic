@@ -41,13 +41,13 @@ public class View
 
 	private static bool SetContentPropertyCore(object targetLocation, object? view)
 	{
-		if (targetLocation is IContentControl contentControl)
+		if (targetLocation is ContentControl contentControl)
 		{
 			contentControl.Content = view;
 			return true;
 		}
 
-		if (targetLocation is IContentPresenter contentPresenter)
+		if (targetLocation is ContentPresenter contentPresenter)
 		{
 			contentPresenter.Content = view;
 			return true;
