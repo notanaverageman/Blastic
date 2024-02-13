@@ -28,6 +28,27 @@ public static class SourceListExtensions
 		return collection;
 	}
 
+	public static ReadOnlyObservableCollection<T> Bind<T, TKey>(
+		this SourceCache<T, TKey> source,
+		IPlatformSpecifics platformSpecifics,
+		Func<IObservable<IChangeSet<T, TKey>>, IObservable<IChangeSet<T, TKey>>>? modifier = null) where TKey : notnull
+	{
+		IObservable<IChangeSet<T, TKey>> observeOnUI = source
+			.Connect()
+			.ObserveOnUI(platformSpecifics);
+
+		if (modifier != null)
+		{
+			observeOnUI = modifier(observeOnUI);
+		}
+
+		observeOnUI
+			.Bind(out ReadOnlyObservableCollection<T> collection)
+			.Subscribe();
+
+		return collection;
+	}
+
 	public static (SourceList<T> Source, ReadOnlyObservableCollection<T> Collection) CreateAndBind<T>(IPlatformSpecifics platformSpecifics)
 	{
 		SourceList<T> source = new();
