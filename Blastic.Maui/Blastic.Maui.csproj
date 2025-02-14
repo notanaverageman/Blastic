@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net9.0-ios</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <Nullable>enable</Nullable>
     <SingleProject>true</SingleProject>
@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bindables.Maui" Version="1.4.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>

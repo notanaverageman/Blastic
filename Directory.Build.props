@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
 
-    <!--<AvaloniaVersion>11.0.999-cibuild0026613-beta</AvaloniaVersion>-->
     <AvaloniaVersion>11.0.6</AvaloniaVersion>
   </PropertyGroup>
 </Project>
