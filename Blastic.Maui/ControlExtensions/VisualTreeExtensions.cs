@@ -47,7 +47,7 @@ namespace Blastic.Maui.ControlExtensions
 					break;
 				}
 			}
-			
+
 			return foundChild;
 		}
 
@@ -153,14 +153,29 @@ namespace Blastic.Maui.ControlExtensions
 
 		private static Binding? GetBinding(this BindableObject bindable, BindableProperty property)
 		{
-			MethodInfo? methodInfo = typeof(BindableObject)
+			object? context = typeof(BindableObject)
 				.GetTypeInfo()
-				.GetDeclaredMethod("GetContext");
+				.GetDeclaredMethod("GetContext")
+				?.Invoke(bindable, [property]);
 
-			object? context = methodInfo?.Invoke(bindable, new object?[] { property });
+			object? bindings = context
+				?.GetType()
+				.GetTypeInfo()
+				.GetDeclaredField("Bindings")
+				?.GetValue(context);
 
-			FieldInfo? propertyInfo = context?.GetType().GetTypeInfo().GetDeclaredField("Binding");
-			return propertyInfo?.GetValue(context) as Binding;
+			object? values = bindings
+				?.GetType()
+				.GetTypeInfo()
+				.GetDeclaredProperty("Values")
+				?.GetValue(bindings);
+
+			if (values is not IList<BindingBase> bindingList)
+			{
+				throw new InvalidOperationException("Reflection is not successful while getting bindings.");
+			}
+
+			return bindingList.LastOrDefault() as Binding;
 		}
 
 		private static object? GetBindingExpression(this Binding self)
