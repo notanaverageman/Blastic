@@ -12,20 +12,7 @@ public static class SourceListExtensions
 		IPlatformSpecifics platformSpecifics,
 		Func<IObservable<IChangeSet<T>>, IObservable<IChangeSet<T>>>? modifier = null)
 	{
-		IObservable<IChangeSet<T>> observeOnUI = source
-			.Connect()
-			.ObserveOnUI(platformSpecifics);
-
-		if (modifier != null)
-		{
-			observeOnUI = modifier(observeOnUI);
-		}
-
-		observeOnUI
-			.Bind(out ReadOnlyObservableCollection<T> collection)
-			.Subscribe();
-
-		return collection;
+		return source.AsObservableList().Bind<T>(platformSpecifics, modifier);
 	}
 
 	public static ReadOnlyObservableCollection<T> Bind<T, TKey>(
