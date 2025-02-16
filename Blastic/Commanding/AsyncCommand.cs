@@ -603,7 +603,7 @@ namespace Blastic.Commanding
 			return ((Task?)_awaitableTask?.Task)?.GetAwaiter() ?? Task.CompletedTask.GetAwaiter();
 		}
 		
-		private struct OrderedAction
+		private record struct OrderedAction
 		{
 			public Func<T?, CancellationToken, Task> Action { get; }
 			public Order Order { get; }
