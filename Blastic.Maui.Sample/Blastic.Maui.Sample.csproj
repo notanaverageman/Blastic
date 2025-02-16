@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-ios</TargetFrameworks>
-		<!--<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>-->
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-ios</TargetFrameworks>
+		<!--<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>-->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Blastic.Maui.Sample</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -60,10 +60,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\OpenSource\notanaverageman\Depso\Depso\Depso.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="Depso" Version="1.0.2" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
     <PackageReference Include="Svg.SourceGenerator.Skia" Version="0.5.18" />
   </ItemGroup>
 
