@@ -11,6 +11,8 @@ public static class ObservableListExtensions
 		this IObservableList<T> source,
 		IPlatformSpecifics platformSpecifics,
 		Func<IObservable<IChangeSet<T>>, IObservable<IChangeSet<TResult>>> modifier)
+		where T : notnull
+		where TResult : notnull
 	{
 		IObservable<IChangeSet<T>> observeOnUI = source
 			.Connect()
@@ -29,6 +31,7 @@ public static class ObservableListExtensions
 		this IObservableList<T> source,
 		IPlatformSpecifics platformSpecifics,
 		Func<IObservable<IChangeSet<T>>, IObservable<IChangeSet<T>>>? modifier = null)
+		where T : notnull
 	{
 		return source.Connect().Bind(platformSpecifics, modifier);
 	}
@@ -37,6 +40,7 @@ public static class ObservableListExtensions
 		this IObservable<IChangeSet<T>> source,
 		IPlatformSpecifics platformSpecifics,
 		Func<IObservable<IChangeSet<T>>, IObservable<IChangeSet<T>>>? modifier = null)
+		where T : notnull
 	{
 		IObservable<IChangeSet<T>> observeOnUI = source.ObserveOnUI(platformSpecifics);
 

@@ -9,7 +9,7 @@ using DynamicData;
 
 namespace Blastic.LifetimeManagement;
 
-public abstract class ConductorBaseCommon<T>
+public abstract class ConductorBaseCommon<T> where T : notnull
 {
 	private readonly Dictionary<T, IDisposable> _lifetimeSubscriptions;
 	private readonly SourceListWithListMethods _itemsSource;
@@ -107,7 +107,7 @@ public abstract class ConductorBaseCommon<T>
 		public bool IsReadOnly => false;
 		public int Count => _sourceList.Count;
 		public IObservable<int> CountChanged => _sourceList.CountChanged;
-		public IEnumerable<T> Items => _sourceList.Items;
+		public IReadOnlyList<T> Items => _sourceList.Items;
 		public ReadOnlyObservableCollection<T> ReadOnlyObservableCollection { get; }
 
 		public SourceListWithListMethods()

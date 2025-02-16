@@ -11,6 +11,7 @@ public static class SourceListExtensions
 		this SourceList<T> source,
 		IPlatformSpecifics platformSpecifics,
 		Func<IObservable<IChangeSet<T>>, IObservable<IChangeSet<T>>>? modifier = null)
+		where T : notnull
 	{
 		return source.AsObservableList().Bind<T>(platformSpecifics, modifier);
 	}
@@ -18,7 +19,9 @@ public static class SourceListExtensions
 	public static ReadOnlyObservableCollection<T> Bind<T, TKey>(
 		this SourceCache<T, TKey> source,
 		IPlatformSpecifics platformSpecifics,
-		Func<IObservable<IChangeSet<T, TKey>>, IObservable<IChangeSet<T, TKey>>>? modifier = null) where TKey : notnull
+		Func<IObservable<IChangeSet<T, TKey>>, IObservable<IChangeSet<T, TKey>>>? modifier = null)
+		where T : notnull
+		where TKey : notnull
 	{
 		IObservable<IChangeSet<T, TKey>> observeOnUI = source
 			.Connect()
@@ -36,7 +39,9 @@ public static class SourceListExtensions
 		return collection;
 	}
 
-	public static (SourceList<T> Source, ReadOnlyObservableCollection<T> Collection) CreateAndBind<T>(IPlatformSpecifics platformSpecifics)
+	public static (SourceList<T> Source, ReadOnlyObservableCollection<T> Collection) CreateAndBind<T>(
+		IPlatformSpecifics platformSpecifics)
+		where T : notnull
 	{
 		SourceList<T> source = new();
 
