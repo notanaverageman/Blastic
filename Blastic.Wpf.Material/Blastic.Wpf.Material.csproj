@@ -1,23 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
+
+  <PropertyGroup>
 		<TargetFramework>net9.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="Dragablz" Version="0.0.3.223" />
-		<PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
-		<PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.4.0">
+		<PackageReference Include="Dragablz" />
+		<PackageReference Include="MaterialDesignThemes" />
+		<PackageReference Include="NuGet.Build.Tasks.Pack">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Blastic.Wpf\Blastic.Wpf.csproj" />
 		<ProjectReference Include="..\Blastic\Blastic.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Themes\NotificationView.xaml">
-			<SubType>Designer</SubType>
-		</Page>
-	</ItemGroup>
+
 </Project>

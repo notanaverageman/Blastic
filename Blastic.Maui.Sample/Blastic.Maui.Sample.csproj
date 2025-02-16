@@ -60,11 +60,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="Depso" Version="1.0.2" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
-    <PackageReference Include="Svg.SourceGenerator.Skia" Version="0.5.18" />
+    <PackageReference Include="Depso" />
+		<PackageReference Include="Microsoft.Data.Sqlite" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" />
+    <PackageReference Include="Svg.SourceGenerator.Skia" />
   </ItemGroup>
 
 	<ItemGroup>

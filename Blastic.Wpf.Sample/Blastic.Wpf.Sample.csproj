@@ -1,38 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
+
+  <PropertyGroup>
 		<TargetFramework>net9.0-windows</TargetFramework>
 		<OutputType>WinExe</OutputType>
 		<UseWPF>true</UseWPF>
 		<StartupObject>Blastic.Wpf.Sample.Program</StartupObject>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="DynamicData" Version="7.12.1" />
-		<PackageReference Include="InputSimulatorStandard" Version="1.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-		<PackageReference Include="SharpVectors" Version="1.7.1" />
+		<PackageReference Include="DynamicData" />
+		<PackageReference Include="InputSimulatorStandard" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="SharpVectors" />
 	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Blastic.Wpf.Material\Blastic.Wpf.Material.csproj" />
 		<ProjectReference Include="..\Blastic.Wpf\Blastic.Wpf.csproj" />
 	</ItemGroup>
+
 	<ItemGroup>
 	  <Resource Include="Resources\*" />
 	</ItemGroup>
-	<ItemGroup>
-		<Compile Update="Properties\Resource.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resource.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resource.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resource.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
+
 	<ItemGroup>
 		<None Update="AppSettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
