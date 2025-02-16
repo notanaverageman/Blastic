@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Diagnostics.CodeAnalysis;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using Blastic.ViewManagement;
@@ -12,15 +13,15 @@ namespace Blastic.Avalonia.ViewManagement;
 public class ViewLocator : ViewLocatorBase<StyledElement>
 {
 	private readonly IServiceProvider _serviceProvider;
-	private static IViewLocator<StyledElement>? _current;
 
 	/// <summary>
 	/// This value should be set on initialization.
 	/// </summary>
+	[field: AllowNull, MaybeNull]
 	internal static IViewLocator<StyledElement> Current
 	{
-		get => _current ?? throw new InvalidOperationException();
-		set => _current = value ?? throw new InvalidOperationException();
+		get => field ?? throw new InvalidOperationException();
+		set => field = value ?? throw new InvalidOperationException();
 	}
 
 	/// <inheritdoc />

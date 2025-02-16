@@ -50,14 +50,9 @@ public partial class SkiaCanvasView : UserControl
 		});
 	}
 
-	private SkiaCanvas? _skiaCanvas;
 	private IDisposable? _canvasSubscriptions;
 	private bool _isUserScrolling;
 	private bool _isUserZooming;
-
-	private float _minimumZoomScale = 1;
-	private float _maximumZoomScale = 1;
-	private float _requestedZoomScale = 1;
 
 	public bool EnableScrolling
 	{
@@ -67,31 +62,35 @@ public partial class SkiaCanvasView : UserControl
 
 	public SkiaCanvas? SkiaCanvas
 	{
-		get => _skiaCanvas;
-		set => SetAndRaise(SkiaCanvasProperty, ref _skiaCanvas, value);
+		get;
+		set => SetAndRaise(SkiaCanvasProperty, ref field, value);
 	}
 
 	public float MinimumZoomScale
 	{
-		get => _minimumZoomScale;
-		set => SetAndRaise(MinimumZoomScaleProperty, ref _minimumZoomScale, value);
+		get;
+		set => SetAndRaise(MinimumZoomScaleProperty, ref field, value);
 	}
 
 	public float MaximumZoomScale
 	{
-		get => _maximumZoomScale;
-		set => SetAndRaise(MaximumZoomScaleProperty, ref _maximumZoomScale, value);
+		get;
+		set => SetAndRaise(MaximumZoomScaleProperty, ref field, value);
 	}
 
 	public float RequestedZoomScale
 	{
-		get => _requestedZoomScale;
-		set => SetAndRaise(RequestedZoomScaleProperty, ref _requestedZoomScale, value);
+		get;
+		set => SetAndRaise(RequestedZoomScaleProperty, ref field, value);
 	}
 
 	public SkiaCanvasView()
 	{
 		InitializeComponent();
+
+		MinimumZoomScale = 1;
+		MaximumZoomScale = 1;
+		RequestedZoomScale = 1;
 
 		Canvas.Draw += OnDraw;
 		Canvas.PointerWheelChanged += OnWheelChanged;

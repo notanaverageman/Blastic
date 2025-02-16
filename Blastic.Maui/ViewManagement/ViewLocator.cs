@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Blastic.DynamicControls;
 using Blastic.Maui.DynamicControls;
 using Blastic.ViewManagement;
@@ -13,15 +14,14 @@ namespace Blastic.Maui.ViewManagement;
 /// </summary>
 public class ViewLocator : ViewLocatorBase<VisualElement>
 {
-	private static IViewLocator<VisualElement>? _current;
-
 	/// <summary>
 	/// This value should be set on initialization.
 	/// </summary>
+	[field: AllowNull, MaybeNull]
 	internal static IViewLocator<VisualElement> Current
 	{
-		get => _current ?? throw new InvalidOperationException();
-		set => _current = value ?? throw new InvalidOperationException();
+		get => field ?? throw new InvalidOperationException();
+		set => field = value ?? throw new InvalidOperationException();
 	}
 
 	/// <inheritdoc />

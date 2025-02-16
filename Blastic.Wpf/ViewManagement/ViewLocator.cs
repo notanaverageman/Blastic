@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -18,15 +19,14 @@ namespace Blastic.Wpf.ViewManagement
 	/// </remarks>
 	public class ViewLocator : ViewLocatorBase<FrameworkElement>
 	{
-		private static IViewLocator<FrameworkElement>? _current;
-
 		/// <summary>
 		/// This value should be set on initialization.
 		/// </summary>
+		[field: AllowNull, MaybeNull]
 		internal static IViewLocator<FrameworkElement> Current
 		{
-			get => _current ?? throw new InvalidOperationException();
-			set => _current = value ?? throw new InvalidOperationException();
+			get => field ?? throw new InvalidOperationException();
+			set => field = value ?? throw new InvalidOperationException();
 		}
 
 		/// <inheritdoc />
@@ -122,7 +122,7 @@ namespace Blastic.Wpf.ViewManagement
 
 		private static void OnDataContextChanged(object? x, EventArgs y)
 		{
-			if (!(x is FrameworkElement frameworkElement))
+			if (x is not FrameworkElement frameworkElement)
 			{
 				return;
 			}
@@ -132,7 +132,7 @@ namespace Blastic.Wpf.ViewManagement
 
 		private static void SetView(FrameworkElement frameworkElement, bool shouldSetNull)
 		{
-			if (!(frameworkElement.DataContext is IViewAware viewAware))
+			if (frameworkElement.DataContext is not IViewAware viewAware)
 			{
 				return;
 			}

@@ -114,7 +114,6 @@ namespace Blastic.Commanding
 		private readonly List<OrderedAction> _finallyActions;
 		private readonly IReactiveProperty<bool> _isExecuting;
 
-		private IReadOnlyReactiveProperty<bool> _canExecuteObservable;
 		private IDisposable? _canExecuteSubscription;
 
 		private TaskCompletionSource<bool>? _awaitableTask;
@@ -127,13 +126,13 @@ namespace Blastic.Commanding
 		/// </summary>
 		public IReadOnlyReactiveProperty<bool> CanExecuteObservable
 		{
-			get => _canExecuteObservable;
+			get;
 			set
 			{
 				_canExecuteSubscription?.Dispose();
-				_canExecuteObservable = value;
+				field = value;
 
-				_canExecuteSubscription = _canExecuteObservable
+				_canExecuteSubscription = field
 					.ObserveOnUI()
 					.Subscribe(this);
 			}
@@ -166,7 +165,7 @@ namespace Blastic.Commanding
 			_actions = [];
 			_finallyActions = [];
 			_isExecuting = new ReactiveProperty<bool>(false);
-			_canExecuteObservable = Singletons.TrueReadOnlyReactiveProperty;
+			CanExecuteObservable = Singletons.TrueReadOnlyReactiveProperty;
 
 			ReentrancyHandler = IgnoreReentrantReentrancyHandler.Instance;
 

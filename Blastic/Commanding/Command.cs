@@ -89,7 +89,6 @@ namespace Blastic.Commanding
 
 		private readonly IReactiveProperty<bool> _isExecuting;
 
-		private IReadOnlyReactiveProperty<bool> _canExecuteObservable;
 		private IDisposable? _canExecuteSubscription;
 
 		private ImmutableArray<OrderedAction> _actions;
@@ -103,13 +102,13 @@ namespace Blastic.Commanding
 		/// <inheritdoc />
 		public IReadOnlyReactiveProperty<bool> CanExecuteObservable
 		{
-			get => _canExecuteObservable;
+			get;
 			set
 			{
 				_canExecuteSubscription?.Dispose();
-				_canExecuteObservable = value;
+				field = value;
 
-				_canExecuteSubscription = _canExecuteObservable
+				_canExecuteSubscription = field
 					.ObserveOnUI()
 					.Subscribe(this);
 			}
@@ -142,7 +141,7 @@ namespace Blastic.Commanding
 			_actions = ImmutableArray<OrderedAction>.Empty;
 			_finallyActions = ImmutableArray<OrderedAction>.Empty;
 			_isExecuting = new ReactiveProperty<bool>(false);
-			_canExecuteObservable = Singletons.TrueReadOnlyReactiveProperty;
+			CanExecuteObservable = Singletons.TrueReadOnlyReactiveProperty;
 
 			ReentrancyHandler = IgnoreReentrantReentrancyHandler.Instance;
 
