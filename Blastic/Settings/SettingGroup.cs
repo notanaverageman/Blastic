@@ -37,7 +37,7 @@ namespace Blastic.Settings
 
 		public virtual Task<IEnumerable<DiagnosticMessage>> GetDiagnosticMessages(CancellationToken cancellationToken)
 		{
-			List<DiagnosticMessage> diagnosticMessages = new();
+			List<DiagnosticMessage> diagnosticMessages = [];
 
 			foreach (Setting setting in Items)
 			{

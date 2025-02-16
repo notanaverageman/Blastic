@@ -26,7 +26,7 @@ namespace Blastic.DynamicControls
 
 		public ElementContainer()
 		{
-			Elements = new List<IElement>();
+			Elements = [];
 		}
 
 		public void AddElement<TElement>(TElement element, Action<TElement>? configure) where TElement : IElement

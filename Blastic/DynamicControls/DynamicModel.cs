@@ -13,7 +13,7 @@ namespace Blastic.DynamicControls
 
 		public DynamicModel()
 		{
-			_taskCompletionSources = new ConcurrentBag<TaskCompletionSource<bool>>();
+			_taskCompletionSources = [];
 		}
 
 		public void Ok()

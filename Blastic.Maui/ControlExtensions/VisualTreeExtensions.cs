@@ -130,7 +130,7 @@ namespace Blastic.Maui.ControlExtensions
 		private static IEnumerable<BindableProperty> GetDefaultDependencyProperties(BindableObject bindable)
 		{
 			Type objectType = bindable.GetType();
-			IEnumerable<BindableProperty> result = Enumerable.Empty<BindableProperty>();
+			IEnumerable<BindableProperty> result = [];
 
 			foreach (Type index in DefaultProperties.Keys.Where(x => x.IsAssignableFrom(objectType)))
 			{
@@ -144,7 +144,7 @@ namespace Blastic.Maui.ControlExtensions
 		{
 			if (!DefaultProperties.TryGetValue(typeof(T), out HashSet<BindableProperty>? properties))
 			{
-				properties = new HashSet<BindableProperty>();
+				properties = [];
 				DefaultProperties[typeof(T)] = properties;
 			}
 
@@ -198,7 +198,7 @@ namespace Blastic.Maui.ControlExtensions
 				.GetDeclaredMethod("TryGetValue");
 
 			object? value = null;
-			object?[] parameters = { source, value };
+			object?[] parameters = [source, value];
 
 			methodInfo?.Invoke(part, parameters);
 			value = parameters[1];

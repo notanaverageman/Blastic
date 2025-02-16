@@ -52,13 +52,13 @@ public class DialogService : IDialogService
 
 			if (options.Filter != null)
 			{
-				filePickerOpenOptions.FileTypeFilter = new FilePickerFileType[]
-				{
+				filePickerOpenOptions.FileTypeFilter =
+				[
 					new(options.Filter.Explanation)
 					{
 						Patterns = options.Filter.Extensions.Select(x => $"*{x}").ToList()
 					}
-				};
+				];
 			}
 		}
 

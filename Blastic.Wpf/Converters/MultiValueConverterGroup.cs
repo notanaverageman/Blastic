@@ -33,7 +33,7 @@ namespace Blastic.Wpf.Converters
 						multiConverterInput = array;
 						break;
 					case IMultiValueConverter:
-						multiConverterInput = new[] { result };
+						multiConverterInput = [result];
 						break;
 					case IValueConverter:
 						converterInput = result;

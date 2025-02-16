@@ -263,7 +263,7 @@ public class ResxLocalizablePropertiesGenerator : IIncrementalGenerator
 
 	private static string GetKey(Tree<string>.Node node)
 	{
-		List<string> tokens = new();
+		List<string> tokens = [];
 		Tree<string>.Node? nodeIterator = node;
 
 		while (nodeIterator != null)
@@ -285,7 +285,7 @@ public class ResxLocalizablePropertiesGenerator : IIncrementalGenerator
 
 		foreach (string id in localizedTexts.Select(x => x.Id).OrderBy(x => x.Length).Distinct())
 		{
-			string[] tokens = id.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] tokens = id.Split(['.'], StringSplitOptions.RemoveEmptyEntries);
 			Tree<string>.Node node = tree.Root;
 
 			for (int i = 0; i < tokens.Length; i++)

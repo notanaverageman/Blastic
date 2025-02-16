@@ -42,7 +42,7 @@ namespace Blastic.Wpf.Initialization
 			_serviceCollection = serviceCollection;
 
 			StopHostOnApplicationShutdown = true;
-			UnhandledExceptionHandlers = new List<Func<DispatcherUnhandledExceptionEventArgs, Task>>();
+			UnhandledExceptionHandlers = [];
 
 			AddDefaults();
 		}

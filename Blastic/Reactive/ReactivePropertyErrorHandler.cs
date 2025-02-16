@@ -22,11 +22,11 @@ namespace Blastic.Reactive
 		public ReactivePropertyErrorHandler(ReactivePropertyBase<T> source)
 		{
 			_source = source;
-			_errors = new List<string>();
+			_errors = [];
 
-			_validators = new List<Func<T, string?>>();
+			_validators = [];
 
-			_reactiveValidators = new List<Func<T, IReadOnlyReactiveProperty<string>?>>();
+			_reactiveValidators = [];
 			_reactiveValidatorSubscriptions = new Dictionary<Func<T, IReadOnlyReactiveProperty<string>?>, IDisposable>();
 
 			HasErrorObservable = Observable

@@ -10,7 +10,7 @@ namespace Blastic.DynamicControls.Elements
 
 		public GroupElement()
 		{
-			Elements = new List<IElement>();
+			Elements = [];
 
 			Margin = new Thickness(0, 0, 8, 0);
 		}

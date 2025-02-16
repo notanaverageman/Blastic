@@ -37,15 +37,15 @@ namespace Blastic.Wpf.UserInterface.Logs
 			MinimumLogLevel = new ReactiveProperty<LogLevel>(LogLevel.Error);
 			MinimumLogLevel.Subscribe(OnMinimumLogLevelChanged);
 
-			LogLevels = new[]
-			{
+			LogLevels =
+			[
 				LogLevel.Critical,
 				LogLevel.Error,
 				LogLevel.Warning,
 				LogLevel.Information,
 				LogLevel.Debug,
 				LogLevel.Trace
-			};
+			];
 
 			View = new ReactiveProperty<object?>(default);
 

@@ -163,8 +163,8 @@ namespace Blastic.Commanding
 		/// <param name="canExecute">An observable that determines the can execute property. Can execute will always be true if this parameter is null.</param>
 		public AsyncCommand(IObservable<bool>? canExecute)
 		{
-			_actions = new List<OrderedAction>();
-			_finallyActions = new List<OrderedAction>();
+			_actions = [];
+			_finallyActions = [];
 			_isExecuting = new ReactiveProperty<bool>(false);
 			_canExecuteObservable = Singletons.TrueReadOnlyReactiveProperty;
 

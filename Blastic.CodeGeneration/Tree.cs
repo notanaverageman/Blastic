@@ -23,7 +23,7 @@ namespace Blastic.CodeGeneration
 				Id = value;
 				Parent = parent;
 				HasValue = hasValue;
-				Children = new List<Node>();
+				Children = [];
 			}
 
 			public Node AddChild(T value, bool hasValue)

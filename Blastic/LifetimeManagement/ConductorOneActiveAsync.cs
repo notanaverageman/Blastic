@@ -44,7 +44,7 @@ namespace Blastic.LifetimeManagement
 			ActiveItem = new ReactiveProperty<T?>(default);
 			ActiveItemIndex = new ReactiveProperty<int>(-1);
 
-			_activeItemStack = new List<T?>();
+			_activeItemStack = [];
 
 			ActiveItem.SubscribeAsync(async _ =>
 			{

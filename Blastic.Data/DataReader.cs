@@ -100,9 +100,9 @@ public class DataReader : IDisposable
 		}
 
 		string valueAsString = (string)value;
-		string[] tokens = valueAsString.Split(new[] { ListSeparator }, StringSplitOptions.RemoveEmptyEntries);
+		string[] tokens = valueAsString.Split([ListSeparator], StringSplitOptions.RemoveEmptyEntries);
 
-		List<T> result = new();
+		List<T> result = [];
 
 		foreach (string token in tokens)
 		{

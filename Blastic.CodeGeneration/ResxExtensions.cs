@@ -15,7 +15,7 @@ namespace Blastic.CodeGeneration
 			this ImmutableArray<AdditionalText> texts,
 			IReadOnlyList<string> resources)
 		{
-			List<LocalizedText> localizedTexts = new();
+			List<LocalizedText> localizedTexts = [];
 
 			foreach (AdditionalText resx in texts)
 			{

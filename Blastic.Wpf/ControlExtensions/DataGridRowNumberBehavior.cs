@@ -78,7 +78,7 @@ namespace Blastic.Wpf.ControlExtensions
 		        return Array.Empty<T>();
 	        }
 
-            List<T> visualCollection = new();
+            List<T> visualCollection = [];
             GetVisualChildCollection(dependencyObject, visualCollection);
 
             return visualCollection;

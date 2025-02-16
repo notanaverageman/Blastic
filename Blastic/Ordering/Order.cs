@@ -63,7 +63,7 @@ namespace Blastic.Ordering
 			_isAbsoluteMinimum = isAbsoluteMinimum;
 			_isAbsoluteMaximum = isAbsoluteMaximum;
 
-			_numbers = new List<int>(0);
+			_numbers = [];
 		}
 
 		/// <inheritdoc />

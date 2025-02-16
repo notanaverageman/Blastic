@@ -123,7 +123,7 @@ namespace Blastic.Wpf.ControlExtensions
 		private static IEnumerable<DependencyProperty> GetDefaultDependencyProperties(DependencyObject dependencyObject)
 		{
 			Type objectType = dependencyObject.GetType();
-			IEnumerable<DependencyProperty> result = Enumerable.Empty<DependencyProperty>();
+			IEnumerable<DependencyProperty> result = [];
 
 			foreach (Type index in DefaultDependencyProperties.Keys.Where(x => x.IsAssignableFrom(objectType)))
 			{
@@ -137,7 +137,7 @@ namespace Blastic.Wpf.ControlExtensions
 		{
 			if (!DefaultDependencyProperties.TryGetValue(typeof(T), out HashSet<DependencyProperty>? properties))
 			{
-				properties = new HashSet<DependencyProperty>();
+				properties = [];
 				DefaultDependencyProperties[typeof(T)] = properties;
 			}
 
