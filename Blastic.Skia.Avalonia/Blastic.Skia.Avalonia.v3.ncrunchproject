@@ -1,5 +1,7 @@
 ﻿<ProjectConfiguration>
   <Settings>
-    <InstrumentOutputAssembly>False</InstrumentOutputAssembly>
+    <AdditionalFilesToIncludeForProject>
+      <Value>**.axaml</Value>
+    </AdditionalFilesToIncludeForProject>
   </Settings>
 </ProjectConfiguration>
