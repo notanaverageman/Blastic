@@ -167,7 +167,7 @@ namespace Blastic.Maui.ControlExtensions
 			object? values = bindings
 				?.GetType()
 				.GetTypeInfo()
-				.GetDeclaredProperty("Values")
+				.GetDeclaredField("_values")
 				?.GetValue(bindings);
 
 			if (values is not IList<BindingBase> bindingList)

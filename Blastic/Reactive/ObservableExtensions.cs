@@ -28,6 +28,11 @@ namespace Blastic.Reactive
 			return observable.Select(x => x != null);
 		}
 		
+		public static IObservable<bool> IsNotNullOrWhiteSpace(this IObservable<string> observable)
+		{
+			return observable.Select(x => !string.IsNullOrWhiteSpace(x));
+		}
+		
 		public static IObservable<(T? Previous, T?Current)> WithPrevious<T>(this IObservable<T> observable)
 		{
 			return observable.Scan(
