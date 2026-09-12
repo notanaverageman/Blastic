@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-ios</TargetFrameworks>
-		<!--<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>-->
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net10.0-ios</TargetFrameworks>
+		<!--<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>-->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net10.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Blastic.Maui.Sample</RootNamespace>
 		<UseMaui>true</UseMaui>
+    <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 
@@ -32,8 +33,7 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-		<PackageCertificateKeyFile>Blastic.Maui.Sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+		<AppxPackageSigningEnabled Condition="'$(PackageCertificateKeyFile)' == '' And '$(PackageCertificateThumbprint)' == ''">False</AppxPackageSigningEnabled>
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
@@ -62,9 +62,11 @@
 	<ItemGroup>
     <PackageReference Include="Depso" />
 		<PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
     <PackageReference Include="SkiaSharp.Views.Maui.Controls" />
-    <PackageReference Include="Svg.SourceGenerator.Skia" />
+    <PackageReference Include="Svg.Skia" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -74,58 +76,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Resources\Svg\robber.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Robber" />
-
-    <AdditionalFiles Include="Resources\Svg\village_green.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageGreen" />
-    <AdditionalFiles Include="Resources\Svg\village_blue.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageBlue" />
-    <AdditionalFiles Include="Resources\Svg\village_red.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageRed" />
-    <AdditionalFiles Include="Resources\Svg\village_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="VillageBlack" />
-
-    <AdditionalFiles Include="Resources\Svg\city_green.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityGreen" />
-    <AdditionalFiles Include="Resources\Svg\city_blue.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityBlue" />
-    <AdditionalFiles Include="Resources\Svg\city_red.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityRed" />
-    <AdditionalFiles Include="Resources\Svg\city_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="CityBlack" />
-
-    <AdditionalFiles Include="Resources\Svg\road_green.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadGreen" />
-    <AdditionalFiles Include="Resources\Svg\road_blue.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadBlue" />
-    <AdditionalFiles Include="Resources\Svg\road_red.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadRed" />
-    <AdditionalFiles Include="Resources\Svg\road_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadBlack" />
-
-    <AdditionalFiles Include="Resources\Svg\port.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Port" />
-    <AdditionalFiles Include="Resources\Svg\port_brick.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortBrick" />
-    <AdditionalFiles Include="Resources\Svg\port_grain.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortGrain" />
-    <AdditionalFiles Include="Resources\Svg\port_ore.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortOre" />
-    <AdditionalFiles Include="Resources\Svg\port_sheep.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortSheep" />
-    <AdditionalFiles Include="Resources\Svg\port_wood.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="PortWood" />
-
-    <AdditionalFiles Include="Resources\Svg\tile_brick.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileBrick" />
-    <AdditionalFiles Include="Resources\Svg\tile_desert.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileDesert" />
-    <AdditionalFiles Include="Resources\Svg\tile_grain.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileGrain" />
-    <AdditionalFiles Include="Resources\Svg\tile_ore.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileOre" />
-    <AdditionalFiles Include="Resources\Svg\tile_sheep.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileSheep" />
-    <AdditionalFiles Include="Resources\Svg\tile_wood.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="TileWood" />
-
-    <AdditionalFiles Include="Resources\Svg\dice_1.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice1" />
-    <AdditionalFiles Include="Resources\Svg\dice_2.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice2" />
-    <AdditionalFiles Include="Resources\Svg\dice_3.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice3" />
-    <AdditionalFiles Include="Resources\Svg\dice_4.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice4" />
-    <AdditionalFiles Include="Resources\Svg\dice_5.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice5" />
-    <AdditionalFiles Include="Resources\Svg\dice_6.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Dice6" />
-
-    <AdditionalFiles Include="Resources\Svg\number_2.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number2" />
-    <AdditionalFiles Include="Resources\Svg\number_3.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number3" />
-    <AdditionalFiles Include="Resources\Svg\number_4.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number4" />
-    <AdditionalFiles Include="Resources\Svg\number_5.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number5" />
-    <AdditionalFiles Include="Resources\Svg\number_6.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number6" />
-    <AdditionalFiles Include="Resources\Svg\number_8.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number8" />
-    <AdditionalFiles Include="Resources\Svg\number_9.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number9" />
-    <AdditionalFiles Include="Resources\Svg\number_10.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number10" />
-    <AdditionalFiles Include="Resources\Svg\number_11.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number11" />
-    <AdditionalFiles Include="Resources\Svg\number_12.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="Number12" />
+    <EmbeddedResource Include="Resources\Svg\*.svg" />
   </ItemGroup>
-
-  <ItemGroup>
-    <BundleResource Include="Resources\Svg\road_black.svg" NamespaceName="Blastic.Maui.Sample.Assets" ClassName="RoadBlack" />
-  </ItemGroup>
-
 </Project>

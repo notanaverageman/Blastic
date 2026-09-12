@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Blastic.Maui.Sample.Data;
+﻿namespace Blastic.Maui.Sample.Data;
 
 public class EntryNotFoundException : Exception
 {
@@ -13,10 +11,6 @@ public class EntryNotFoundException : Exception
 	}
 
 	public EntryNotFoundException(string message, Exception innerException) : base(message, innerException)
-	{
-	}
-
-	protected EntryNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
 	{
 	}
 }

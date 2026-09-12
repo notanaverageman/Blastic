@@ -2,6 +2,7 @@
 <ResourceDictionary x:Class="Blastic.Maui.Themes.DynamicControls.Picker"
                     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:elements="clr-namespace:Blastic.DynamicControls.Elements;assembly=Blastic"
                     xmlns:presenters="clr-namespace:Blastic.Maui.DynamicControls.Presenters;assembly=Blastic.Maui">
 
 	<Style TargetType="{x:Type presenters:SelectionPresenter}">
@@ -12,7 +13,7 @@
 					<Picker x:Name="Picker"
 					        Title="{TemplateBinding Label.Value}"
 					        IsEnabled="{TemplateBinding IsEnabledReactive.Value}"
-					        ItemDisplayBinding="{Binding Label.Value}"
+					        ItemDisplayBinding="{Binding Label.Value, x:DataType=elements:ISelectionValueWithLabel}"
 					        ItemsSource="{TemplateBinding Values}"
 					        SelectedIndex="{TemplateBinding SelectedIndex.Value}"
 					        VerticalOptions="Center" />

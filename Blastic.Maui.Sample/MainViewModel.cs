@@ -18,12 +18,12 @@ public class MainViewModel : IHasLifetime
 {
 	private static readonly Dictionary<int, SKImage> DiceImages = new()
 	{
-		{ 1, Assets.Dice1.Picture.CreateImage() },
-		{ 2, Assets.Dice2.Picture.CreateImage() },
-		{ 3, Assets.Dice3.Picture.CreateImage() },
-		{ 4, Assets.Dice4.Picture.CreateImage() },
-		{ 5, Assets.Dice5.Picture.CreateImage() },
-		{ 6, Assets.Dice6.Picture.CreateImage() },
+		{ 1, Assets.Dice1.CreateImage() },
+		{ 2, Assets.Dice2.CreateImage() },
+		{ 3, Assets.Dice3.CreateImage() },
+		{ 4, Assets.Dice4.CreateImage() },
+		{ 5, Assets.Dice5.CreateImage() },
+		{ 6, Assets.Dice6.CreateImage() },
 	};
 
 	private readonly Random _diceRandom;
@@ -138,9 +138,9 @@ public class MainViewModel : IHasLifetime
 		}
 	}
 
-	private void BuildSettlement(Player player)
+	private void BuildSettlement(Player? player)
 	{
-		if (!_selectedCornerPosition.HasValue)
+		if (player is null || !_selectedCornerPosition.HasValue)
 		{
 			return;
 		}
@@ -153,9 +153,9 @@ public class MainViewModel : IHasLifetime
 		IsSettlementSelectorVisible.Value = false;
 	}
 
-	private void BuildCity(Player player)
+	private void BuildCity(Player? player)
 	{
-		if (!_selectedCornerPosition.HasValue)
+		if (player is null || !_selectedCornerPosition.HasValue)
 		{
 			return;
 		}
@@ -168,9 +168,9 @@ public class MainViewModel : IHasLifetime
 		IsSettlementSelectorVisible.Value = false;
 	}
 
-	private void BuildRoad(Player player)
+	private void BuildRoad(Player? player)
 	{
-		if (!_selectedEdgePosition.HasValue)
+		if (player is null || !_selectedEdgePosition.HasValue)
 		{
 			return;
 		}

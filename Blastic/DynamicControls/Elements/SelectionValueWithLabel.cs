@@ -2,7 +2,12 @@
 
 namespace Blastic.DynamicControls.Elements;
 
-public class SelectionValueWithLabel<T>
+public interface ISelectionValueWithLabel
+{
+	IReadOnlyReactiveProperty<string?> Label { get; }
+}
+
+public class SelectionValueWithLabel<T> : ISelectionValueWithLabel
 {
 	public IReadOnlyReactiveProperty<string?> Label { get; }
 	public T Value { get; }

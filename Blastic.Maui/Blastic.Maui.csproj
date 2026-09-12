@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bindables.Maui" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
     <PackageReference Include="Depso" />
     <PackageReference Include="Microsoft.Maui.Controls" />
   </ItemGroup>
@@ -46,4 +47,7 @@
     <ProjectReference Include="..\Blastic\Blastic.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+  </ItemGroup>
 </Project>

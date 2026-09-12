@@ -74,12 +74,12 @@ public class Tile
 	{
 		return resourceType switch
 		{
-			ResourceType.Brick => Assets.TileBrick.Picture,
-			ResourceType.Desert => Assets.TileDesert.Picture,
-			ResourceType.Grain => Assets.TileGrain.Picture,
-			ResourceType.Ore => Assets.TileOre.Picture,
-			ResourceType.Sheep => Assets.TileSheep.Picture,
-			ResourceType.Wood => Assets.TileWood.Picture,
+			ResourceType.Brick => Assets.TileBrick,
+			ResourceType.Desert => Assets.TileDesert,
+			ResourceType.Grain => Assets.TileGrain,
+			ResourceType.Ore => Assets.TileOre,
+			ResourceType.Sheep => Assets.TileSheep,
+			ResourceType.Wood => Assets.TileWood,
 			_ => throw new ArgumentOutOfRangeException(nameof(resourceType), resourceType, null)
 		};
 	}
@@ -88,16 +88,16 @@ public class Tile
 	{
 		return number switch
 		{
-			2 => Assets.Number2.Picture,
-			3 => Assets.Number3.Picture,
-			4 => Assets.Number4.Picture,
-			5 => Assets.Number5.Picture,
-			6 => Assets.Number6.Picture,
-			8 => Assets.Number8.Picture,
-			9 => Assets.Number9.Picture,
-			10 => Assets.Number10.Picture,
-			11 => Assets.Number11.Picture,
-			12 => Assets.Number12.Picture,
+			2 => Assets.Number2,
+			3 => Assets.Number3,
+			4 => Assets.Number4,
+			5 => Assets.Number5,
+			6 => Assets.Number6,
+			8 => Assets.Number8,
+			9 => Assets.Number9,
+			10 => Assets.Number10,
+			11 => Assets.Number11,
+			12 => Assets.Number12,
 			_ => throw new ArgumentOutOfRangeException(nameof(number), number, null)
 		};
 	}

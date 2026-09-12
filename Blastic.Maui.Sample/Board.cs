@@ -1,4 +1,5 @@
-﻿using Blastic.Skia;
+﻿using System.Diagnostics.CodeAnalysis;
+using Blastic.Skia;
 using SkiaSharp;
 
 namespace Blastic.Maui.Sample;
@@ -109,6 +110,7 @@ public class Board
 		Generate();
 	}
 
+	[MemberNotNull(nameof(_picture), nameof(_corners), nameof(_edges))]
 	public void Generate()
 	{
 		List<SKPoint> allTilePositions = TilePositions.ToList();
@@ -321,7 +323,7 @@ public class Board
 		{
 			canvas.Translate(_robberPosition);
 			canvas.Translate(-0.4f, 0f);
-			canvas.DrawPictureCentered(Assets.Robber.Picture);
+			canvas.DrawPictureCentered(Assets.Robber);
 		}
 
 		foreach (Tile tile in _tilesToHighlight)
@@ -376,12 +378,12 @@ public class Board
 	{
 		return portType switch
 		{
-			PortType.ThreeToOne => Assets.Port.Picture,
-			PortType.Brick => Assets.PortBrick.Picture,
-			PortType.Grain => Assets.PortGrain.Picture,
-			PortType.Ore => Assets.PortOre.Picture,
-			PortType.Sheep => Assets.PortSheep.Picture,
-			PortType.Wood => Assets.PortWood.Picture,
+			PortType.ThreeToOne => Assets.Port,
+			PortType.Brick => Assets.PortBrick,
+			PortType.Grain => Assets.PortGrain,
+			PortType.Ore => Assets.PortOre,
+			PortType.Sheep => Assets.PortSheep,
+			PortType.Wood => Assets.PortWood,
 			_ => throw new ArgumentOutOfRangeException(nameof(portType), portType, null)
 		};
 	}

@@ -12,7 +12,7 @@ namespace Blastic.CodeGeneration.Test
 	{
 		public static void Main()
 		{
-			string source = GenerateSource(
+			string? source = GenerateSource(
 				"../../../../Blastic.Forms.Sample/Properties/Resources.resx",
 				"../../../../Blastic.Forms.Sample/Properties/Resources.tr-tr.resx");
 
@@ -22,7 +22,7 @@ namespace Blastic.CodeGeneration.Test
 			}
 		}
 
-		private static string GenerateSource(params string[] resxPaths)
+		private static string? GenerateSource(params string[] resxPaths)
 		{
 			List<MetadataReference> references = new();
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();

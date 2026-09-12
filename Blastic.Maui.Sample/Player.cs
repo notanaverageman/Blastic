@@ -51,10 +51,10 @@ public class Player
 	{
 		return id switch
 		{
-			0 => Assets.VillageRed.Picture,
-			1 => Assets.VillageBlue.Picture,
-			2 => Assets.VillageGreen.Picture,
-			3 => Assets.VillageBlack.Picture,
+			0 => Assets.VillageRed,
+			1 => Assets.VillageBlue,
+			2 => Assets.VillageGreen,
+			3 => Assets.VillageBlack,
 			_ => throw new ArgumentOutOfRangeException(nameof(id), id, null)
 		};
 	}
@@ -63,10 +63,10 @@ public class Player
 	{
 		return id switch
 		{
-			0 => Assets.CityRed.Picture,
-			1 => Assets.CityBlue.Picture,
-			2 => Assets.CityGreen.Picture,
-			3 => Assets.CityBlack.Picture,
+			0 => Assets.CityRed,
+			1 => Assets.CityBlue,
+			2 => Assets.CityGreen,
+			3 => Assets.CityBlack,
 			_ => throw new ArgumentOutOfRangeException(nameof(id), id, null)
 		};
 	}
@@ -75,10 +75,10 @@ public class Player
 	{
 		return id switch
 		{
-			0 => Assets.RoadRed.Picture,
-			1 => Assets.RoadBlue.Picture,
-			2 => Assets.RoadGreen.Picture,
-			3 => Assets.RoadBlack.Picture,
+			0 => Assets.RoadRed,
+			1 => Assets.RoadBlue,
+			2 => Assets.RoadGreen,
+			3 => Assets.RoadBlack,
 			_ => throw new ArgumentOutOfRangeException(nameof(id), id, null)
 		};
 	}

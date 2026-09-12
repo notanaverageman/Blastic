@@ -24,7 +24,7 @@
 
 					<BindableLayout.ItemTemplate>
 						<DataTemplate x:DataType="sample:Player">
-							<Button Command="{Binding BindingContext.BuildSettlementCommand, Source={x:Reference Root}}"
+							<Button Command="{Binding BuildSettlementCommand, Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type sample:MainViewModel}}, x:DataType=sample:MainViewModel}"
 							        CommandParameter="{Binding}"
 							        ContentLayout="Top">
 								<Button.ImageSource>
@@ -40,7 +40,7 @@
 
 					<BindableLayout.ItemTemplate>
 						<DataTemplate x:DataType="sample:Player">
-							<Button Command="{Binding BindingContext.BuildCityCommand, Source={x:Reference Root}}"
+							<Button Command="{Binding BuildCityCommand, Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type sample:MainViewModel}}, x:DataType=sample:MainViewModel}"
 							        CommandParameter="{Binding}"
 							        ContentLayout="Top">
 								<Button.ImageSource>
@@ -61,7 +61,7 @@
 
 				<BindableLayout.ItemTemplate>
 					<DataTemplate x:DataType="sample:Player">
-						<Button Command="{Binding BindingContext.BuildRoadCommand, Source={x:Reference Root}}"
+						<Button Command="{Binding BuildRoadCommand, Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type sample:MainViewModel}}, x:DataType=sample:MainViewModel}"
 						        CommandParameter="{Binding}"
 						        ContentLayout="Top">
 							<Button.ImageSource>

@@ -275,6 +275,9 @@ public class SkiaCanvas
 	{
 		return FitMode switch
 		{
+			CanvasFitMode.ScaleToFit       => Math.Min(
+				sizes.CanvasSize.Width / sizes.ContentSize.Width,
+				sizes.CanvasSize.Height / sizes.ContentSize.Height),
 			CanvasFitMode.ScaleToFitWidth  => sizes.CanvasSize.Width / sizes.ContentSize.Width,
 			CanvasFitMode.FixedWidth       => 1,
 			CanvasFitMode.ScaleToFitHeight => sizes.CanvasSize.Height / sizes.ContentSize.Height,

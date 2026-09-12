@@ -6,6 +6,7 @@ using Blastic.Maui.ViewManagement;
 using Blastic.Platform;
 using Blastic.ViewManagement;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Handlers;
@@ -21,23 +22,31 @@ public static class MauiAppBuilderExtensions
 	{
 		SubscribeToBindingContext();
 
+		builder.Services.AddSingleton<IWindowCreator>(new MainWindowCreator<TMainViewModel>(services));
+
 		builder.UseMauiApp(_ =>
 		{
 			PlatformSpecifics.Current = services.GetRequiredService<IPlatformSpecifics>();
 			ViewLocator.Current = services.GetRequiredService<IViewLocator<VisualElement>>();
 
-			TMainViewModel mainViewModel = services.GetRequiredService<TMainViewModel>();
-			TApp application = services.GetRequiredService<TApp>();
-
-			Page? mainPage = ViewLocator.Current.Locate(mainViewModel) as Page;
-			application.MainPage = mainPage;
-
-			SubscribeToLifecycleEvents(mainPage, mainViewModel);
-
-			return application;
+			return services.GetRequiredService<TApp>();
 		});
 
 		return builder;
+	}
+
+	private sealed class MainWindowCreator<TMainViewModel>(IServiceProvider services) : IWindowCreator where TMainViewModel : class
+	{
+		public Window CreateWindow(Application app, IActivationState? activationState)
+		{
+			TMainViewModel mainViewModel = services.GetRequiredService<TMainViewModel>();
+			Page mainPage = ViewLocator.Current.Locate(mainViewModel) as Page
+				?? throw new InvalidOperationException("The main view must be a Page.");
+
+			SubscribeToLifecycleEvents(mainPage, mainViewModel);
+			
+			return new Window(mainPage);
+		}
 	}
 
 	private static void SubscribeToLifecycleEvents(Page? mainPage, object mainViewModel)

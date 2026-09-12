@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary x:Class="Blastic.Maui.Themes.DynamicControls.Button"
-					xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-					xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-					xmlns:presenters="clr-namespace:Blastic.Maui.DynamicControls.Presenters;assembly=Blastic.Maui">
+                    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:presenters="clr-namespace:Blastic.Maui.DynamicControls.Presenters;assembly=Blastic.Maui">
 
 	<Style TargetType="{x:Type presenters:ActionPresenter}">
 		<Setter Property="VerticalOptions" Value="Center" />
 		<Setter Property="ControlTemplate">
 			<Setter.Value>
-				<ControlTemplate>
+				<ControlTemplate x:DataType="{x:Type presenters:ActionPresenter}">
 					<Grid>
 						<Button Command="{TemplateBinding Command}"
-								Text="{TemplateBinding Label.Value}" />
+						        Text="{TemplateBinding Label.Value}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
