@@ -8,10 +8,6 @@
 	<ItemGroup>
 		<PackageReference Include="Dragablz" />
 		<PackageReference Include="MaterialDesignThemes" />
-		<PackageReference Include="NuGet.Build.Tasks.Pack">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
