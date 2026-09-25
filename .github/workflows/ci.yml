@@ -91,7 +91,7 @@ jobs:
           foreach ($project in $projects) {
             dotnet pack $project `
               --configuration $env:CONFIGURATION `
-              --no-build `
+              --no-restore `
               --output artifacts `
               -p:Authors="Yusuf Tarık Günaydın" `
               -p:Version=$version
