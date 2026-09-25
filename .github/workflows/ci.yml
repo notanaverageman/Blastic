@@ -78,7 +78,8 @@ jobs:
       - name: Pack NuGet packages
         shell: pwsh
         run: |
-          $version = "1.0.0-beta-${{ github.run_number }}"
+          $date = Get-Date -Format "yyyyMMdd"
+          $version = "1.0.0-beta-$date.${{ github.run_number }}"
           $projects = @(
             "Blastic/Blastic.csproj"
             "Blastic.CodeGeneration/Blastic.CodeGeneration.csproj"
