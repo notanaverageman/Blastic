@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Blastic.Services.Dialogs;
+using Blastic.Wpf.Services.Windowing;
+using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -18,7 +20,7 @@ namespace Blastic.Wpf.Services.Dialogs
 			_viewLocator = viewLocator;
 		}
 
-		public Task<bool?> ShowDialog(object viewModel)
+		public async Task<bool?> ShowDialog(object viewModel)
 		{
 			FrameworkElement view = _viewLocator.Locate(viewModel);
 
@@ -28,9 +30,11 @@ namespace Blastic.Wpf.Services.Dialogs
 			}
 			
 			window.DataContext = viewModel;
+			WindowLifetime lifetime = WindowLifetimeBinding.Attach(window, viewModel);
+			await lifetime.OnCreated();
 			bool? result = window.ShowDialog();
 
-			return Task.FromResult(result);
+			return result;
 		}
 
 		public Task<string?> ShowOpenFileDialog(FileDialogOptions? options)

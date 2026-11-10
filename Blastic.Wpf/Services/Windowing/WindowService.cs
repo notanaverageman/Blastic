@@ -2,8 +2,6 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using Blastic.LifetimeManagement;
-using Blastic.Ordering;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 
@@ -28,6 +26,8 @@ namespace Blastic.Wpf.Services.Windowing
 			}
 
 			window.DataContext = model;
+			WindowLifetime lifetime = WindowLifetimeBinding.Attach(window, model);
+			await lifetime.OnCreated();
 
 			if (window.IsLoaded && new WindowInteropHelper(window).Handle != IntPtr.Zero)
 			{
@@ -36,33 +36,6 @@ namespace Blastic.Wpf.Services.Windowing
 			else
 			{
 				window.Show();
-			}
-
-			if (model is IHasLifetime hasLifetime)
-			{
-				IDisposable? closeSubscription = null;
-				
-				closeSubscription = hasLifetime.Lifetime.Closure.Subscribe(() =>
-				{
-					window.Close();
-					closeSubscription?.Dispose();
-				}, Order.AbsoluteMaximum);
-
-				hasLifetime.Lifetime.Activate();
-			}
-			else if (model is IHasAsyncLifetime hasAsyncLifetime)
-			{
-				IDisposable? closeSubscription = null;
-				
-				closeSubscription = hasAsyncLifetime.Lifetime.Closure.Subscribe(() =>
-				{
-					window.Close();
-					closeSubscription?.Dispose();
-
-					return Task.CompletedTask;
-				}, Order.AbsoluteMaximum);
-
-				await hasAsyncLifetime.Lifetime.Activate();
 			}
 		}
 	}

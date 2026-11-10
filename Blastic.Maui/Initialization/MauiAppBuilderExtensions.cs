@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using Blastic.LifetimeManagement;
 using Blastic.Maui.ViewManagement;
+using Blastic.Maui.Services.Windowing;
 using Blastic.Platform;
 using Blastic.ViewManagement;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,13 +15,16 @@ namespace Blastic.Maui.Initialization;
 
 public static class MauiAppBuilderExtensions
 {
-	public static MauiAppBuilder UseBlastic<TApp, TMainViewModel>(this MauiAppBuilder builder, IServiceProvider services)
+	public static MauiAppBuilder UseBlastic<TApp, TMainViewModel>(
+		this MauiAppBuilder builder,
+		IServiceProvider services,
+		bool shutdownOnMainWindowClose = false)
 		where TApp : Application, new()
 		where TMainViewModel : class
 	{
 		SubscribeToBindingContext();
 
-		builder.Services.AddSingleton<IWindowCreator>(new MainWindowCreator<TMainViewModel>(services));
+		builder.Services.AddSingleton<IWindowCreator>(new MainWindowCreator<TMainViewModel>(services, shutdownOnMainWindowClose));
 
 		builder.UseMauiApp(_ =>
 		{
@@ -35,7 +37,7 @@ public static class MauiAppBuilderExtensions
 		return builder;
 	}
 
-	private sealed class MainWindowCreator<TMainViewModel>(IServiceProvider services) : IWindowCreator where TMainViewModel : class
+	private sealed class MainWindowCreator<TMainViewModel>(IServiceProvider services, bool shutdownOnMainWindowClose) : IWindowCreator where TMainViewModel : class
 	{
 		public Window CreateWindow(Application app, IActivationState? activationState)
 		{
@@ -43,53 +45,11 @@ public static class MauiAppBuilderExtensions
 			Page mainPage = ViewLocator.Current.Locate(mainViewModel) as Page
 				?? throw new InvalidOperationException("The main view must be a Page.");
 
-			SubscribeToLifecycleEvents(mainPage, mainViewModel);
-			
-			return new Window(mainPage);
+			Window window = new(mainPage);
+			WindowLifetimeBinding.Attach(window, mainViewModel, shutdownOnMainWindowClose ? app.Quit : null);
+
+			return window;
 		}
-	}
-
-	private static void SubscribeToLifecycleEvents(Page? mainPage, object mainViewModel)
-	{
-		if (mainPage == null)
-		{
-			return;
-		}
-
-		mainPage.ParentChanged += (_, _) =>
-		{
-			if (mainPage.Parent is not Window window)
-			{
-				return;
-			}
-
-			ILifetime? lifetime = (mainViewModel as IHasLifetime)?.Lifetime;
-			IAsyncLifetime? asyncLifetime = (mainViewModel as IHasAsyncLifetime)?.Lifetime;
-
-			window.Created += async (_, _) =>
-			{
-				lifetime?.Initialize();
-				await (asyncLifetime?.Initialize() ?? Task.CompletedTask);
-			};
-
-			window.Activated += async (_, _) =>
-			{
-				lifetime?.Activate();
-				await (asyncLifetime?.Activate() ?? Task.CompletedTask);
-			};
-
-			window.Deactivated += async (_, _) =>
-			{
-				lifetime?.Deactivate();
-				await (asyncLifetime?.Deactivate() ?? Task.CompletedTask);
-			};
-
-			window.Destroying += async (_, _) =>
-			{
-				lifetime?.Close();
-				await (asyncLifetime?.Close() ?? Task.CompletedTask);
-			};
-		};
 	}
 
 	private static void SubscribeToBindingContext()

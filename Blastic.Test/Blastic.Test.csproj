@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="Avalonia.Headless" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <ProjectReference Include="..\Blastic\Blastic.csproj" />
+    <ProjectReference Include="..\Blastic.Avalonia\Blastic.Avalonia.csproj" />
+  </ItemGroup>
+</Project>

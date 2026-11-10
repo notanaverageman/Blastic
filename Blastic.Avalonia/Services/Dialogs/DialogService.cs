@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using Blastic.Services.Dialogs;
+using Blastic.Avalonia.Services.Windowing;
+using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 
 namespace Blastic.Avalonia.Services.Dialogs;
@@ -31,6 +33,9 @@ public class DialogService : IDialogService
 		{
 			throw new InvalidOperationException($"{view.GetType()} should inherit from {typeof(Window)}.");
 		}
+
+		WindowLifetime lifetime = WindowLifetimeBinding.Attach(window, viewModel);
+		await lifetime.OnCreated();
 
 		return await window.ShowDialog<bool?>(mainWindow);
 	}

@@ -1,7 +1,8 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Blastic.Avalonia.ViewManagement;
+using Blastic.Avalonia.Services.Windowing;
 using Blastic.LifetimeManagement;
 using Blastic.Platform;
 using Blastic.ViewManagement;
@@ -33,7 +34,7 @@ public static class AppBuilderExtensions
 					throw new ArgumentException("The resolved view for main viewmodel is not a Window.");
 				}
 
-				SubscribeToLifecycleEvents(mainWindow, mainViewModel);
+				WindowLifetimeBinding.Attach(mainWindow, mainViewModel);
 
 				desktop.MainWindow = mainWindow;
 			}
@@ -51,36 +52,6 @@ public static class AppBuilderExtensions
 		});
 
 		return builder;
-	}
-
-	private static void SubscribeToLifecycleEvents(Window mainWindow, object mainViewModel)
-	{
-		ILifetime? lifetime = (mainViewModel as IHasLifetime)?.Lifetime;
-		IAsyncLifetime? asyncLifetime = (mainViewModel as IHasAsyncLifetime)?.Lifetime;
-
-		mainWindow.Initialized += async (_, _) =>
-		{
-			lifetime?.Initialize();
-			await (asyncLifetime?.Initialize() ?? Task.CompletedTask);
-		};
-
-		mainWindow.Loaded += async (_, _) =>
-		{
-			lifetime?.Activate();
-			await (asyncLifetime?.Activate() ?? Task.CompletedTask);
-		};
-
-		mainWindow.Unloaded += async (_, _) =>
-		{
-			lifetime?.Deactivate();
-			await (asyncLifetime?.Deactivate() ?? Task.CompletedTask);
-		};
-
-		mainWindow.Closed += async (_, _) =>
-		{
-			lifetime?.Close();
-			await (asyncLifetime?.Close() ?? Task.CompletedTask);
-		};
 	}
 
 	private static void SubscribeToLifecycleEvents(Control control, object mainViewModel)

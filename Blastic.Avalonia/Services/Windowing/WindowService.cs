@@ -1,7 +1,6 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
-using Blastic.LifetimeManagement;
-using Blastic.Ordering;
+using Avalonia.Controls.ApplicationLifetimes;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 
@@ -33,41 +32,24 @@ public class WindowService : IWindowService
 		}
 
 		window.DataContext = viewModel;
+		WindowLifetime lifetime = WindowLifetimeBinding.Attach(window, viewModel);
+		await lifetime.OnCreated();
 
 		if (window.IsLoaded)
 		{
 			window.Activate();
 		}
+		else if (window.WindowStartupLocation == WindowStartupLocation.CenterOwner
+			&& application.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+			&& desktop.MainWindow is Window owner
+			&& owner != window
+			&& owner.IsVisible)
+		{
+			window.Show(owner);
+		}
 		else
 		{
 			window.Show();
-		}
-
-		if (viewModel is IHasLifetime hasLifetime)
-		{
-			IDisposable? closeSubscription = null;
-
-			closeSubscription = hasLifetime.Lifetime.Closure.Subscribe(() =>
-			{
-				window.Close();
-				closeSubscription?.Dispose();
-			}, Order.AbsoluteMaximum);
-
-			hasLifetime.Lifetime.Activate();
-		}
-		else if (viewModel is IHasAsyncLifetime hasAsyncLifetime)
-		{
-			IDisposable? closeSubscription = null;
-
-			closeSubscription = hasAsyncLifetime.Lifetime.Closure.Subscribe(() =>
-			{
-				window.Close();
-				closeSubscription?.Dispose();
-
-				return Task.CompletedTask;
-			}, Order.AbsoluteMaximum);
-
-			await hasAsyncLifetime.Lifetime.Activate();
 		}
 	}
 }

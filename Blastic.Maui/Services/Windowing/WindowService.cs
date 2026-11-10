@@ -1,7 +1,5 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Blastic.LifetimeManagement;
-using Blastic.Ordering;
 using Blastic.Services.Windowing;
 using Blastic.ViewManagement;
 using Microsoft.Maui.Controls;
@@ -35,34 +33,15 @@ public class WindowService : IWindowService
 
 		page.BindingContext = viewModel;
 
+		if (page.Window is Window existingWindow)
+		{
+			application.ActivateWindow(existingWindow);
+			return;
+		}
+
 		Window window = new(page);
+		WindowLifetime lifetime = WindowLifetimeBinding.Attach(window, viewModel);
+		await lifetime.OnCreated();
 		application.OpenWindow(window);
-
-		if (viewModel is IHasLifetime hasLifetime)
-		{
-			IDisposable? closeSubscription = null;
-
-			closeSubscription = hasLifetime.Lifetime.Closure.Subscribe(() =>
-			{
-				application.CloseWindow(window);
-				closeSubscription?.Dispose();
-			}, Order.AbsoluteMaximum);
-
-			hasLifetime.Lifetime.Activate();
-		}
-		else if (viewModel is IHasAsyncLifetime hasAsyncLifetime)
-		{
-			IDisposable? closeSubscription = null;
-
-			closeSubscription = hasAsyncLifetime.Lifetime.Closure.Subscribe(() =>
-			{
-				application.CloseWindow(window);
-				closeSubscription?.Dispose();
-
-				return Task.CompletedTask;
-			}, Order.AbsoluteMaximum);
-
-			await hasAsyncLifetime.Lifetime.Activate();
-		}
 	}
 }
